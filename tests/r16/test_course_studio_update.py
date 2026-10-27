@@ -179,8 +179,11 @@ class Package(unittest.TestCase):
             'GIT_AUTHOR_NAME':'Studio package fixture','GIT_AUTHOR_EMAIL':'fixture@example.invalid',
             'GIT_COMMITTER_NAME':'Studio package fixture','GIT_COMMITTER_EMAIL':'fixture@example.invalid'}
         def git(*args):return subprocess.check_output(['git','-C',str(ROOT),*args],env=env,stderr=subprocess.DEVNULL).decode().strip()
-        git('read-tree','HEAD');git('add','scripts/infra/course_studio_update.py','scripts/infra/build_course_studio_update.py')
-        cls.commit=git('commit-tree',git('write-tree'),'-p','HEAD','-m','Studio package private verification snapshot')
+        # This operator intentionally installs frozen Studio2600. A later app
+        # candidate must not silently change the fixture's accepted source tree.
+        frozen='62b0da2020bc27569c0bd4f8ac96b676f29b7490'
+        git('read-tree',frozen);git('add','scripts/infra/course_studio_update.py','scripts/infra/build_course_studio_update.py')
+        cls.commit=git('commit-tree',git('write-tree'),'-p',frozen,'-m','Studio2600 package private verification snapshot')
         with contextlib.redirect_stdout(io.StringIO()):cls.artifact=b.build(cls.commit,cls.root/'one')
 
     def test_offline_file_ignores_adjacent_poison_module(self):

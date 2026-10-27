@@ -482,193 +482,16 @@ foreach ($DB->get_records_sql($sql) as $row) {
 }
 
 
-/*
- * Duplicate detection is deliberately conservative:
- *
- * same normalized title + same USTAR type.
- *
- * We do NOT delete or merge anything automatically.
- */
-
-$duplicatecounts = [];
-
-$alltitles =
-    $DB->get_records(
-        'local_ustar_content',
-        null,
-        '',
-        'id,type,title'
-    );
-
-
-foreach ($alltitles as $item) {
-
-    $normalized =
-        preg_replace(
-            '/\s+/u',
-            ' ',
-            trim(
-                core_text::strtolower(
-                    $item->title
-                )
-            )
-        );
-
-    $key =
-        $item->type
-        .
-        '|'
-        .
-        $normalized;
-
-    $duplicatecounts[$key] =
-        ($duplicatecounts[$key] ?? 0)
-        + 1;
-}
-
-
-/*
- * ------------------------------------------------------------
- * FILTERED CATALOG
- * ------------------------------------------------------------
- */
-
-$where = [];
-$params = [];
-
-
-if (
-    $type !== 'all'
-    &&
-    isset($typelabels[$type])
-) {
-
-    $where[] =
-        'uc.type = :type';
-
-    $params['type'] =
-        $type;
-}
-
-
-if (
-    $status !== 'all'
-    &&
-    isset($statuslabels[$status])
-) {
-
-    $where[] =
-        'uc.status = :status';
-
-    $params['status'] =
-        $status;
-}
-
-
-if ($parentid > 0) {
-    $where[] = 'uc.parentid = :parentid';
-    $params['parentid'] = $parentid;
-} else {
-    $where[] = 'uc.parentid IS NULL';
-}
-
-
-if ($q !== '') {
-
-    $like =
-        '%'
-        .
-        $DB->sql_like_escape($q)
-        .
-        '%';
-
-    $where[] = '
-        (
-            '
-            .
-            $DB->sql_like(
-                'uc.title',
-                ':qtitle',
-                false
-            )
-            .
-            '
-            OR
-            '
-            .
-            $DB->sql_like(
-                'uc.summary',
-                ':qsummary',
-                false
-            )
-            .
-            '
-            OR
-            '
-            .
-            $DB->sql_like(
-                'cr.fullname',
-                ':qcourse',
-                false
-            )
-            .
-            '
-        )
-    ';
-
-    $params['qtitle'] = $like;
-    $params['qsummary'] = $like;
-    $params['qcourse'] = $like;
-}
-
-
-$wheresql =
-    $where
-        ? 'WHERE ' . implode(' AND ', $where)
-        : '';
-
-
-$sql = "
-    SELECT
-        uc.*,
-
-        cm.visible AS cmvisible,
-
-        m.name AS modname,
-
-        cr.fullname AS coursename,
-        cr.shortname AS courseshortname,
-        cr.visible AS coursevisible
-
-      FROM {local_ustar_content} uc
-
- LEFT JOIN {course_modules} cm
-        ON cm.id = uc.cmid
-
- LEFT JOIN {modules} m
-        ON m.id = cm.module
-
- LEFT JOIN {course} cr
-        ON cr.id = uc.courseid
-
-        {$wheresql}
-
-  ORDER BY
-        CASE uc.status
-            WHEN 'published' THEN 1
-            WHEN 'draft' THEN 2
-            ELSE 3
-        END,
-        uc.title ASC,
-        uc.id ASC
-";
-
-
-$records =
-    $DB->get_records_sql(
-        $sql,
-        $params
-    );
+/* The reader bounds the catalogue and loads a selected detail independently. */
+$pageno=max(0,optional_param('page',0,PARAM_INT));
+$listing=\local_ustar\material_catalog::read([
+    'q'=>$q,'type'=>isset($typelabels[$type])?$type:'all',
+    'status'=>$status,'parent'=>$parentid,
+],$pageno,$detailpage?$contentid:0);
+$records=$listing['records'];$pageno=$listing['page'];$filteredtotal=$listing['total'];
+$visuals=\local_ustar\material_catalog::file_labels($records,(int)$context->id);
+$duplicates=\local_ustar\material_catalog::duplicates($records);
+$canwrite=$canmanage && !\local_ustar\view_as::active();
 
 
 /*
@@ -750,252 +573,6 @@ foreach ($DB->get_records('local_ustar_content', ['type' => 'folder'], 'title AS
 
 
 /*
- * ============================================================
- * USTAR 2706 MATERIAL EXPLORER TYPE MODEL
- * ============================================================
- * Resolve an Explorer-style visual type from the actual content.
- */
-$materialvisual = static function(\stdClass $record) use ($context): array {
-
-    if ((string)$record->type === 'folder') {
-        return [
-            'label' => 'ПАПКА',
-            'class' => 'folder',
-            'filename' => '',
-        ];
-    }
-
-    $filename = '';
-    $extension = '';
-
-    /*
-     * Native USTAR file:
-     * local_ustar / content_version / current version id.
-     */
-    if (
-        (string)$record->sourcekind
-        ===
-        \local_ustar\content::SOURCE_FILE
-    ) {
-        try {
-            $version =
-                \local_ustar\content::current_version(
-                    (int)$record->id
-                );
-
-            if ($version) {
-                $fs = get_file_storage();
-
-                $files = $fs->get_area_files(
-                    $context->id,
-                    'local_ustar',
-                    'content_version',
-                    (int)$version->id,
-                    'id ASC',
-                    false
-                );
-
-                if ($files) {
-                    $file = reset($files);
-
-                    $filename =
-                        (string)$file->get_filename();
-
-                    $extension =
-                        core_text::strtolower(
-                            pathinfo(
-                                $filename,
-                                PATHINFO_EXTENSION
-                            )
-                        );
-                }
-            }
-        } catch (\Throwable $e) {
-            // Fall back to catalog/Moodle type below.
-        }
-    }
-
-    /*
-     * Existing Moodle Resource:
-     * try to determine its real uploaded file extension too.
-     */
-    if (
-        $extension === ''
-        &&
-        (string)$record->sourcekind
-            ===
-            \local_ustar\content::SOURCE_MOODLE
-        &&
-        core_text::strtolower((string)$record->modname)
-            ===
-            'resource'
-        &&
-        !empty($record->cmid)
-    ) {
-        try {
-            $modulecontext =
-                \context_module::instance(
-                    (int)$record->cmid,
-                    IGNORE_MISSING
-                );
-
-            if ($modulecontext) {
-                $fs = get_file_storage();
-
-                $files = $fs->get_area_files(
-                    $modulecontext->id,
-                    'mod_resource',
-                    'content',
-                    0,
-                    'sortorder ASC, id ASC',
-                    false
-                );
-
-                if ($files) {
-                    $file = reset($files);
-
-                    $filename =
-                        (string)$file->get_filename();
-
-                    $extension =
-                        core_text::strtolower(
-                            pathinfo(
-                                $filename,
-                                PATHINFO_EXTENSION
-                            )
-                        );
-                }
-            }
-        } catch (\Throwable $e) {
-            // Fall back to module type.
-        }
-    }
-
-    $extensions = [
-        'pdf' => ['PDF', 'pdf'],
-
-        'doc' => ['DOC', 'doc'],
-        'docx' => ['DOCX', 'doc'],
-
-        'xls' => ['XLS', 'xls'],
-        'xlsx' => ['XLSX', 'xls'],
-        'csv' => ['CSV', 'xls'],
-
-        'ppt' => ['PPT', 'ppt'],
-        'pptx' => ['PPTX', 'ppt'],
-
-        'zip' => ['ZIP', 'archive'],
-        'rar' => ['RAR', 'archive'],
-        '7z' => ['7Z', 'archive'],
-
-        'jpg' => ['JPG', 'image'],
-        'jpeg' => ['JPG', 'image'],
-        'png' => ['PNG', 'image'],
-        'gif' => ['GIF', 'image'],
-        'webp' => ['WEBP', 'image'],
-        'svg' => ['SVG', 'image'],
-
-        'mp4' => ['MP4', 'video'],
-        'webm' => ['WEBM', 'video'],
-        'mov' => ['MOV', 'video'],
-        'mkv' => ['MKV', 'video'],
-
-        'mp3' => ['MP3', 'audio'],
-        'wav' => ['WAV', 'audio'],
-        'm4a' => ['M4A', 'audio'],
-        'ogg' => ['OGG', 'audio'],
-
-        'txt' => ['TXT', 'text'],
-        'md' => ['MD', 'text'],
-
-        'html' => ['HTML', 'web'],
-        'htm' => ['HTML', 'web'],
-
-        'json' => ['JSON', 'data'],
-        'xml' => ['XML', 'data'],
-    ];
-
-    if (
-        $extension !== ''
-        &&
-        isset($extensions[$extension])
-    ) {
-        return [
-            'label' => $extensions[$extension][0],
-            'class' => $extensions[$extension][1],
-            'filename' => $filename,
-        ];
-    }
-
-    $module =
-        core_text::strtolower(
-            trim((string)$record->modname)
-        );
-
-    $modules = [
-        'scorm' => ['SCORM', 'scorm'],
-        'quiz' => ['ТЕСТ', 'quiz'],
-        'page' => ['СТРАНИЦА', 'page'],
-        'lesson' => ['УРОК', 'lesson'],
-        'forum' => ['ФОРУМ', 'forum'],
-        'database' => ['БАЗА', 'data'],
-        'url' => ['ССЫЛКА', 'link'],
-        'assign' => ['ЗАДАНИЕ', 'assignment'],
-        'book' => ['КНИГА', 'book'],
-        'h5pactivity' => ['H5P', 'interactive'],
-        'resource' => ['FILE', 'file'],
-    ];
-
-    if (
-        $module !== ''
-        &&
-        isset($modules[$module])
-    ) {
-        return [
-            'label' => $modules[$module][0],
-            'class' => $modules[$module][1],
-            'filename' => $filename,
-        ];
-    }
-
-    $type =
-        core_text::strtolower(
-            trim((string)$record->type)
-        );
-
-    $types = [
-        'document' => ['FILE', 'file'],
-        'article' => ['СТАТЬЯ', 'page'],
-        'quiz' => ['ТЕСТ', 'quiz'],
-        'scorm' => ['SCORM', 'scorm'],
-        'lesson' => ['УРОК', 'lesson'],
-        'forum' => ['ФОРУМ', 'forum'],
-        'database' => ['БАЗА', 'data'],
-        'video' => ['ВИДЕО', 'video'],
-        'link' => ['ССЫЛКА', 'link'],
-        'assignment' => ['ЗАДАНИЕ', 'assignment'],
-        'interactive' => ['ИНТЕРАКТИВ', 'interactive'],
-        'collection' => ['КОЛЛЕКЦИЯ', 'collection'],
-    ];
-
-    if (isset($types[$type])) {
-        return [
-            'label' => $types[$type][0],
-            'class' => $types[$type][1],
-            'filename' => $filename,
-        ];
-    }
-
-    return [
-        'label' => 'FILE',
-        'class' => 'file',
-        'filename' => $filename,
-    ];
-};
-
-
-
-/*
  * USTAR 2706 MATERIAL SEMANTIC LABELS
  *
  * Technical file type remains visible (PNG/DOCX/MP4/etc),
@@ -1038,29 +615,7 @@ $materialvisualcategories = [
 
 foreach ($records as $record) {
 
-    $normalized =
-        preg_replace(
-            '/\s+/u',
-            ' ',
-            trim(
-                core_text::strtolower(
-                    $record->title
-                )
-            )
-        );
-
-    $duplicatekey =
-        $record->type
-        .
-        '|'
-        .
-        $normalized;
-
-
-    $isduplicate =
-        ($duplicatecounts[$duplicatekey] ?? 0)
-        > 1;
-
+    $isduplicate = !empty($duplicates[(int)$record->id]);
 
     $coursehidden =
         $record->sourcekind === 'moodle_cm'
@@ -1080,10 +635,7 @@ foreach ($records as $record) {
 
     $isfolder = (string)$record->type === 'folder';
 
-    $visual =
-        $materialvisual(
-            $record
-        );
+    $visual=$visuals[(int)$record->id];
 
     $urlparams = [
         'type' => $type,
@@ -1103,6 +655,8 @@ foreach ($records as $record) {
 
 
     $row = [
+        'canopenstudio' => $canwrite && \local_ustar\course_studio_material::supported($record,$visual['filename']),
+        'openstudiourl' => (new moodle_url('/local/ustar/course_studio.php',['materialid'=>(int)$record->id]))->out(false),
 
         'id' =>
             (int)$record->id,
@@ -1111,10 +665,10 @@ foreach ($records as $record) {
             (int)$record->timemodified,
 
         'canmove' =>
-            $canmanage,
+            $canwrite,
 
         'candelete' =>
-            $canmanage && (string)$record->status !== 'archived',
+            $canwrite && (string)$record->status !== 'archived',
 
         'folderoptions' =>
             array_values(array_filter(
@@ -1140,10 +694,8 @@ foreach ($records as $record) {
         'filename' =>
             $visual['filename'],
 
-        'title' =>
-            format_string(
-                $record->title
-            ),
+        'title' => html_entity_decode(strip_tags(format_string($record->title)),ENT_QUOTES|ENT_HTML5,'UTF-8'),
+        'summary' => shorten_text(trim(preg_replace('/\s+/u',' ',strip_tags(html_entity_decode((string)$record->summary,ENT_QUOTES|ENT_HTML5,'UTF-8')))),180),
 
         'type' =>
             $record->type,
@@ -1730,6 +1282,8 @@ if ($selectedrecord) {
 
 
     $detail = [
+        'canopenstudio' => $canwrite && \local_ustar\course_studio_material::supported($selectedrecord,$visuals[(int)$selectedrecord->id]['filename']),
+        'openstudiourl' => (new moodle_url('/local/ustar/course_studio.php',['materialid'=>(int)$selectedrecord->id]))->out(false),
 
         'id' =>
             (int)$selectedrecord->id,
@@ -1814,8 +1368,7 @@ if ($selectedrecord) {
             $activityhidden,
 
         'duplicate' =>
-            ($duplicatecounts[$duplicatekey] ?? 0)
-            > 1,
+            !empty($duplicates[(int)$selectedrecord->id]),
 
         'accesscount' =>
             $accesscount,
@@ -1944,7 +1497,7 @@ if ($selectedrecord) {
                 : '',
 
         'cannewversion' =>
-            $canmanage
+            $canwrite
             &&
             $selectedrecord->sourcekind
                 ===
@@ -1986,7 +1539,7 @@ if ($selectedrecord) {
             (bool)$openurl,
 
         'canmanage' =>
-            $canmanage,
+            $canwrite,
 
         'sesskey' =>
             sesskey(),
@@ -2047,7 +1600,7 @@ foreach (
  * ------------------------------------------------------------
  */
 $breadcrumbs = [];
-$currentfoldertitle = 'Корень';
+$currentfoldertitle = 'Все материалы';
 $parenturl = '';
 if ($parentid > 0) {
     $cursor = $DB->get_record('local_ustar_content', ['id' => $parentid, 'type' => 'folder'], 'id,parentid,title');
@@ -2063,7 +1616,7 @@ if ($parentid > 0) {
         $breadcrumbs[] = [
             'id' => (int)$folder->id,
             'title' => format_string($folder->title),
-            'url' => (new moodle_url('/local/ustar/materials.php', ['parent' => (int)$folder->id]))->out(false),
+            'url' => (new moodle_url('/local/ustar/materials.php', ['parent' => (int)$folder->id,'q'=>$q,'type'=>$type,'status'=>$status]))->out(false),
             'iscurrent' => $index === $lastbreadcrumb,
         ];
     }
@@ -2071,7 +1624,7 @@ if ($parentid > 0) {
     if ($current) {
         $currentfoldertitle = format_string($current->title);
         $up = (int)($current->parentid ?? 0);
-        $parenturl = (new moodle_url('/local/ustar/materials.php', $up > 0 ? ['parent' => $up] : []))->out(false);
+        $parenturl = (new moodle_url('/local/ustar/materials.php', ['parent'=>$up,'q'=>$q,'type'=>$type,'status'=>$status]))->out(false);
     }
 }
 
@@ -2142,9 +1695,7 @@ $PAGE->requires->css(
     )
 );
 
-$PAGE->requires->js_init_code(
-    "document.body.classList.add('u-materials-fullwidth-page');"
-);
+$PAGE->add_body_class('u-materials-fullwidth-page');
 
 
 $output =
@@ -2153,12 +1704,29 @@ $output =
     );
 
 
+$pagecount=(int)ceil($filteredtotal/\local_ustar\material_catalog::PAGE_SIZE);
+$pagination=[];$previous=null;
+$indexes=array_values(array_unique(array_filter([0,$pagecount-1,$pageno-2,$pageno-1,$pageno,$pageno+1,$pageno+2],
+    static fn($n)=>$n>=0 && $n<$pagecount)));
+sort($indexes);
+foreach($indexes as $n){
+    if($previous!==null && $n>$previous+1){$pagination[]=['gap'=>true];}
+    $pagination[]=['number'=>$n+1,'current'=>$n===$pageno,'url'=>(new moodle_url('/local/ustar/materials.php',
+        ['parent'=>$parentid,'q'=>$q,'type'=>$type,'status'=>$status,'page'=>$n]))->out(false)];$previous=$n;
+}
+
 $data = [
+    'viewkey'=>'ustar-materials-'.substr(hash('sha256',$CFG->wwwroot),0,16).'-'.$USER->id.':view',
+    'rooturl'=>(new moodle_url('/local/ustar/materials.php',['q'=>$q,'type'=>$type,'status'=>$status]))->out(false),
+    'filteredtotal'=>$filteredtotal,
+    'rangefrom'=>$filteredtotal?$pageno*\local_ustar\material_catalog::PAGE_SIZE+1:0,
+    'rangeto'=>$pageno*\local_ustar\material_catalog::PAGE_SIZE+count($rows),
+    'haspagination'=>$pagecount>1,'pagination'=>$pagination,
     'assessmentstudiourl' => (new moodle_url('/local/ustar/assessment_studio.php'))->out(false),
     'studiourl' => (new moodle_url('/local/ustar/course_studio.php'))->out(false),
 
     'canmanage' =>
-        $canmanage,
+        $canwrite,
 
     'detailbackurl' =>
         (
@@ -2207,7 +1775,7 @@ $data = [
         count($rows),
 
     'q' =>
-        s($q),
+        $q,
 
     'currenttype' =>
         $type,

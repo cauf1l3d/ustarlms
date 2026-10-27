@@ -76,7 +76,22 @@ final class course_studio {
             return ['hash'=>$hash,'size'=>(int)$file->get_filesize(),'type'=>$file->get_mimetype()];
         } finally { $lock->release(); }
     }
+    /** Serialize every material/source writer in the existing canonical lock order. */
+    private static function write_lock(int $actorid, callable $operation): mixed {
+        self::require_author($actorid,true);
+        $lock=\core\lock\lock_config::get_lock_factory('local_ustar_content')->get_lock('hierarchy',10);
+        if (!$lock) { throw new course_studio_conflict(); }
+        try { return $operation(); } finally { $lock->release(); }
+    }
     public static function save(\stdClass $p,int $base,int $modified,string $mutation,int $actorid): array {
+        return self::write_lock($actorid,static fn()=>self::store($p,$base,$modified,$mutation,$actorid));
+    }
+    /** Entry point for the source adapter; keeps copy/event/audience in one transaction. */
+    public static function open_material(int $id,int $actorid,?\stdClass $project=null,string $token=''): array {
+        return self::write_lock($actorid,static fn()=>course_studio_material::open_locked($id,$actorid,$project,$token,
+            static fn($p)=>self::store($p,0,0,'material-open-'.bin2hex(random_bytes(12)),$actorid)));
+    }
+    private static function store(\stdClass $p,int $base,int $modified,string $mutation,int $actorid): array {
         global $DB;
         self::require_author($actorid,true);
         if (!material_studio::available()) { throw new \invalid_parameter_exception('Сначала обновите Академию.'); }
@@ -89,8 +104,6 @@ final class course_studio {
             }
         }
         $factory=\core\lock\lock_config::get_lock_factory('local_ustar_content');
-        $hierarchy=$factory->get_lock('hierarchy',10);
-        if (!$hierarchy) { throw new course_studio_conflict(); }
         $lock=null;$tx=null;
         try {
             $row=self::find($p->data->code);
@@ -136,7 +149,7 @@ final class course_studio {
                     'title'=>$p->data->title,'summary'=>'','kind'=>'scorm','source'=>$source]),'timecreated'=>time()]);
             $tx->allow_commit();return self::get($p->data->code,$actorid);
         } catch (\Throwable $e) { if ($tx) { $tx->rollback($e); } throw $e; }
-        finally { if ($lock) { $lock->release(); } $hierarchy->release(); }
+        finally { if ($lock) { $lock->release(); } }
     }
     public static function prepare(string $code,int $revision,int $modified,int $actorid): array {
         self::require_author($actorid,true);

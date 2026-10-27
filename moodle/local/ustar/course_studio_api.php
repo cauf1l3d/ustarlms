@@ -52,6 +52,22 @@ try {
             $bytes=file_get_contents('php://input',false,null,0,25*1024*1024+1);
             $result=\local_ustar\course_studio::put_asset($match[1],$bytes,strtolower(trim(explode(';',$_SERVER['CONTENT_TYPE'] ?? '')[0])),$actor);
         } else { throw new invalid_parameter_exception('Неподдерживаемый метод.'); }
+    } else if (preg_match('~^materials/([1-9][0-9]*)/(open|import|file)$~D',$route,$match)) {
+        $id=(int)$match[1];
+        if ($method==='POST' && $match[2]==='open') {
+            $result=\local_ustar\course_studio_material::open($id,$actor);
+        } else if ($method==='POST' && $match[2]==='import') {
+            $raw=file_get_contents('php://input',false,null,0,5*1024*1024+1);
+            if (strlen($raw)>5*1024*1024) { throw new invalid_parameter_exception('Проект превышает 5 МБ без ресурсов.'); }
+            $input=json_decode($raw,false,64,JSON_THROW_ON_ERROR);
+            if (!(($input->course ?? null) instanceof \stdClass)) { throw new invalid_parameter_exception('Некорректный проект материала.'); }
+            $result=\local_ustar\course_studio_material::complete($id,$input->course,(string)($input->sourceToken ?? ''),$actor);
+        } else if ($method==='GET' && $match[2]==='file') {
+            $file=\local_ustar\course_studio_material::file($id,$actor);
+            header('Content-Type: application/octet-stream');
+            header("Content-Security-Policy: sandbox; default-src 'none'");
+            send_stored_file($file,0,0,true);exit;
+        } else { throw new invalid_parameter_exception('Неподдерживаемый метод.'); }
     } else if ($method==='POST' && $route==='prepare') {
         $input=json_decode(file_get_contents('php://input',false,null,0,8192),false,16,JSON_THROW_ON_ERROR);
         $result=\local_ustar\course_studio::prepare((string)($input->code ?? ''),(int)($input->revision ?? 0),

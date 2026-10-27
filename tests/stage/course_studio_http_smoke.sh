@@ -7,6 +7,7 @@ BASE=http://127.0.0.1:8087/local/ustar
 COOKIE=/artifacts/shell-cookies.txt
 code=$(curl -sS --max-time 30 -b "$COOKIE" -o /artifacts/studio.html -w '%{http_code}' "$BASE/course_studio.php")
 test "$code" = 200
+php -r '$s=file_get_contents("/artifacts/studio.html");foreach(["u-topbar", "u-course-studio-page", "class=\"u-course-studio\"", "id=\"u-main\""] as $part)if(!str_contains($s,$part))throw new RuntimeException("Studio is missing the native shell: ".$part);if(substr_count($s,"<main")!==1)throw new RuntimeException("Nested main landmark");'
 php -r '$s=file_get_contents("/artifacts/studio.html");if(!preg_match("/window.COURSE_STUDIO=(.*?);window.RC_HOSTED_SYNC/s",$s,$m)||preg_match("/Debug info:|Stack trace:|ChatGPT/",$s))exit(1);$d=json_decode($m[1],true,512,JSON_THROW_ON_ERROR);file_put_contents("/artifacts/studio-sesskey",$d["sesskey"]);file_put_contents("/artifacts/studio-user",$d["userId"]);'
 sesskey=$(cat /artifacts/studio-sesskey)
 actor=$(cat /artifacts/studio-user)
@@ -27,4 +28,16 @@ php -r '$a=json_decode(file_get_contents("/artifacts/studio-ready-1.json"),true,
 code=$(curl -sS --max-time 30 -b "$COOKIE" -H 'X-RC-Owner: other-user' -o /artifacts/studio-wrong-user.json -w '%{http_code}' "$BASE/course_studio_api.php?route=courses")
 test "$code" = 409
 if grep -E 'USTAR_STUDIO_FAILURE|course_studio_api.php.*mutated the session' /artifacts/shell-http-server.log; then exit 1; fi
+contentid=$(php -r '$d=json_decode(file_get_contents("/artifacts/studio-save-1.json"),true);echo (int)$d["contentid"];')
+for repeat in 1 2; do
+    code=$(curl -sS --max-time 30 -b "$COOKIE" -H "X-Moodle-Sesskey: $sesskey" -H "X-RC-Owner: $actor" -X POST -o "/artifacts/studio-material-open-$repeat.json" -w '%{http_code}' "$BASE/course_studio_api.php?route=materials%2F$contentid%2Fopen")
+    test "$code" = 200
+ done
+php -r '$a=json_decode(file_get_contents("/artifacts/studio-material-open-1.json"),true,512,JSON_THROW_ON_ERROR);$b=json_decode(file_get_contents("/artifacts/studio-material-open-2.json"),true,512,JSON_THROW_ON_ERROR);$s=json_decode(file_get_contents("/artifacts/studio-save-1.json"),true);if($a["kind"]!=="project"||$a["code"]!=="HTTP-01"||$a["contentid"]!==$s["contentid"]||$b!==$a)exit(1);'
+code=$(curl -sS --max-time 30 -b "$COOKIE" -o /artifacts/studio-material-detail.html -w '%{http_code}' "$BASE/material.php?id=$contentid")
+test "$code" = 200
+code=$(curl -sS --max-time 30 -b "$COOKIE" -o /artifacts/studio-material-catalog.html -w '%{http_code}' "$BASE/materials.php?page=9999")
+test "$code" = 200
+php -r '$s=file_get_contents("/artifacts/studio-material-detail.html");if(!str_contains($s,"Открыть в студии")||!str_contains($s,"course_studio.php?materialid="))exit(1);$s.=file_get_contents("/artifacts/studio-material-catalog.html");foreach(["data-materials-view", "data-u-material-view=\"list\"", "data-u-material-view=\"blocks\"", "data-u-material-view=\"cards\""] as $part)if(!str_contains($s,$part))exit(1);if(preg_match("/Debug info:|Stack trace:|Warning:/",$s))exit(1);'
+echo 'COURSE_STUDIO_MATERIAL_HTTP=PASS open exact-draft retry actor session'
 echo 'COURSE_STUDIO_AUTHENTICATED_HTTP=PASS csrf shared-create retry prepare actor'

@@ -78,6 +78,8 @@ jobs:
           tests.r16.test_connect_academy_installer.Transaction.test_real_uid33_and_root_gid_activation_and_restore -v
       - run: php tests/release_20260912/route_flow.php
       - run: php tests/release_20260912/career.php
+      - run: php tests/release_20260912/course_studio_source.php
+      - run: php tests/release_20260912/material_catalog.php
       - run: php tests/release_20260912/course_studio_codec.php
       - run: php tests/release_20260912/course_studio_csrf.php
       - run: npm ci --prefix tests/release_20260912
@@ -86,6 +88,7 @@ jobs:
       - run: cd tests/mobile && npx playwright install --with-deps chromium
       - run: npm test --prefix tests/mobile
       - run: node tests/release_20260912/course_studio_browser.cjs
+      - run: node tests/release_20260912/materials_browser.cjs
       - name: Native notification acknowledgement controls with synthetic UI transport
         run: node tests/mobile/notification_ack.cjs
       - name: Verify narrow Connect onboarding UI with synthetic API

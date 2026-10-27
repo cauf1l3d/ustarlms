@@ -1,0 +1,81 @@
+# Execution ledger — plan: docs/superpowers/plans/2026-10-27-materials-studio-polish.md
+
+Base:4aa92556; worktree codex/materials-studio-polish-20261027. AGENTS forbids subagents.
+User explicitly requested implementation; native execution and routine technical choices are delegated.
+Spec and plan self-reviewed. No production mutation, deployment or automatic merge.
+
+Pre-flight: Tasks1/2 share normalized course/assets and the existing CloudSync manifest.
+Task3 preserves editor IDs and scopes CSS; Task4 supplies material actions to Task2.
+Ruling: immutable origin workflow events bind imports; client catalogue fields never authorize a binding.
+Ruling: published sources open as linked drafts to preserve active content and learner attempts.
+Ruling: local Word processing uses existing JSZip; no new application dependency.
+
+Baseline: source and all Studio codec/sync/DOM/PDF checks PASS. Initial full Python
+run failed on missing local MCP/PHP PDO SQLite; test environment repaired. Repeat
+1254tests/45environment skips PASS (106.112s), unchanged production source.
+
+## Task1 — Word codec and UI
+
+RED observed: missing codec; unique drawing ids; empty document rejection; chapter
+boundary and highlight preservation; missing Word import action. All corrected.
+GREEN: six Studio JS suites, actual Chromium PDF+DOCX import/edit/download/re-import,
+invalid-file preservation and desktop/mobile PASS. Independent python-docx reads
+two screens, table grid and embedded image; valid default paragraph style.
+Word ZIP central directory/stream sizes, CRC, DTD/entities, active objects, external
+images, Unicode and resources checked. Safe hyperlink relationships retained.
+Ruling: JSDOM uses the real vendored JSZip Node loader with host typed arrays so
+its event scheduler/cross-realm checks match Node; actual browser runs unmodified JSZip.
+Task1 code complete; catalogue/material integration and shell remain Tasks2–4.
+
+
+## Task2 — Material source bridge
+
+Pure PHP source conversion RED→GREEN: rich text/tables/images, active HTML removal,
+bounds and unsupported media. DOM direct-open and authorized file conversion PASS:
+exact selected draft, no phantom empty course, inherited revision/content timestamp,
+source token and CSRF. PHP→browser manifest test caught and fixed canonical property
+ordering before delivery. Existing CSRF/session guards still PASS.
+Native Moodle tests added for copy/retry, source scope/runtime preservation, learner
+refusal, assessment separation, stale file tokens and module File API images; these
+require the CI Moodle runtime and are not claimed run locally yet.
+Ruling: source copy events belong to the draft entity; reason links the original id,
+so lookup is indexed without database-specific JSON functions or new schema.
+Ruling: source copy, audience and event share an outer transaction under the existing
+hierarchy lock; the standard save core is reused, avoiding nested lock acquisition.
+Ruling: split pure source codec from File API/DB adapter; the former can be tested
+locally without a fake Moodle database. No network fetch of imported image URLs.
+
+Ruling for Task3: native shell does not register material.php/course_studio.php as
+Materials routes. Add only those two paths and bump theme2700, preserving global
+styles. Keeping theme0202 would leave the new page in the wrong navigation context.
+
+## Task3 — Native Academy shell and usable editor
+
+Studio now renders the same editor fragment inside native ustar header/navigation.
+Only material.php/course_studio.php navigation registration changes in the theme.
+All editor selectors are scoped; controls use actual Academy tokens and Inter.
+Container-width drawers preserve the full mobile canvas, Escape/focus return works,
+menu keyboard navigation and responsive geometry verified at390/768/1440.
+Browser regression caught a wrong id lookup in the new menu focus handler; corrected
+and covered by DOM plus actual Chromium. Shell controls retain their own CSS.
+Save indicators distinguish local copy from Academy synchronization; revoked account
+locks survive asynchronous busy cleanup. View-as page explains why editing is disabled.
+GREEN: full npm, source397PHP/33JS/100tables/57templates, existing CSRF fixture.
+Native actual header/nav/one-main landmark assertions added to stage HTTP smoke; CI pending.
+Local visual fixture tests shell geometry only, not claimed actual native rendering.
+
+## Task4 — Catalogue views and bounded reader
+
+One DOM now supports list/blocks/cards with per-user/site preference for readers and
+authors. Menus close on Escape/outside click and keep focus; drag retains revision
+preconditions in every view. Source actions stay separate from the detail link.
+Extracted material_catalog reader pages60 rows with deterministic folder/status/title/id
+order and a separate detail lookup independent of filters/page. Metadata requires at
+most2 queries; current native version and actual Moodle resource main file are selected.
+Duplicate warnings now concern repeated published titles; editing drafts are intentional.
+Removed Windows-like gradients and tiny metadata; native tokens, visible actions,
+search labels, breadcrumbs/filter preservation and pagination use the same shell.
+GREEN: full npm including reader/author view/drag/keyboard/storage tests; real SQL
+fixture checks paging/current files/mainfile/duplicates. Actual Chromium checks all
+3views at390/768/1440, menu bounds and phone folder creation, no horizontal overflow.
+Four native Moodle reader/File API/query-count cases added; CI remains pending.

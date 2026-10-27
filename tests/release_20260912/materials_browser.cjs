@@ -13,7 +13,7 @@ const data={canmanage:true,viewkey:'browser:materials:2',total:125,visiblecount:
  statusoptions:[{id:'all',label:'Все статусы',selected:true},{id:'draft',label:'Черновики'}],
  typefilters:[{id:'all',label:'Все',count:125,selected:true},{id:'document',label:'Документы',count:54},{id:'scorm',label:'Курсы',count:36},{id:'quiz',label:'Тесты',count:15}],
  haspagination:true,pagination:[{number:1,current:true},{number:2,url:'?page=1'},{number:3,url:'?page=2'}]};
-const html='<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+fs.readFileSync(theme+'/_tokens.scss','utf8')+fs.readFileSync(theme+'/_materials.scss','utf8')+'body{margin:0;background:var(--u-canvas);font:14px/1.5 var(--u-font-ui,Inter,system-ui,sans-serif)}*{box-sizing:border-box}.u-topbar{padding:18px 24px;background:var(--u-surface);border-bottom:1px solid var(--u-border)}.u-main{padding:24px;max-width:1440px;margin:auto}.sr-only{position:absolute;width:1px;height:1px;clip:rect(0,0,0,0);overflow:hidden}</style><style>'+fs.readFileSync(root+'/materials_fullwidth.css','utf8')+'</style></head><body class="u-materials-fullwidth-page"><header class="u-topbar"><b>USTAR | Академия</b></header><main class="u-main"><div class="u-container">'+mustache.render(fs.readFileSync(root+'/templates/materials.mustache','utf8'),data)+'</div></main><script>window.define=(d,f)=>f().init();</script><script>'+fs.readFileSync(root+'/amd/build/materials.min.js','utf8')+'</script></body></html>';
+const html='<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+fs.readFileSync(theme+'/_tokens.scss','utf8')+fs.readFileSync(theme+'/_materials.scss','utf8')+'body{margin:0;background:var(--u-canvas);font:14px/1.5 var(--u-font-ui,Inter,system-ui,sans-serif)}*{box-sizing:border-box}.u-topbar{padding:18px 24px;background:var(--u-surface);border-bottom:1px solid var(--u-border)}.u-main{padding:24px;max-width:1440px;margin:auto}.u-bottomnav{display:none}@media(max-width:767px){.u-bottomnav{display:block;position:fixed;bottom:0;left:0;right:0;height:62px;z-index:100;background:var(--u-surface)}}.sr-only{position:absolute;width:1px;height:1px;clip:rect(0,0,0,0);overflow:hidden}</style><style>'+fs.readFileSync(root+'/materials_fullwidth.css','utf8')+'</style></head><body class="u-materials-fullwidth-page"><header class="u-topbar"><b>USTAR | Академия</b></header><main class="u-main"><div class="u-container">'+mustache.render(fs.readFileSync(root+'/templates/materials.mustache','utf8'),data)+'</div></main><nav class="u-bottomnav">Навигация Академии</nav><script>window.define=(d,f)=>f().init();</script><script>'+fs.readFileSync(root+'/amd/build/materials.min.js','utf8')+'</script></body></html>';
 const server=http.createServer((req,res)=>{res.setHeader('content-type','text/html; charset=utf-8');res.end(html)});
 (async()=>{
  await new Promise(r=>server.listen(0,'127.0.0.1',r));const browser=await chromium.launch({headless:true,...(process.env.USTAR_CHROMIUM?{executablePath:process.env.USTAR_CHROMIUM,args:['--no-sandbox','--disable-dev-shm-usage']}: {})});
@@ -34,6 +34,13 @@ const server=http.createServer((req,res)=>{res.setHeader('content-type','text/ht
     await page.keyboard.press('Escape');assert.equal(await menu.getAttribute('open'),null);assert(await menu.locator('summary').evaluate(el=>el===document.activeElement));
    }
   }
+  await page.setViewportSize({width:390,height:644});
+  const middle=page.locator('.u-material-row-menu').nth(2);
+  await middle.locator('summary').evaluate(el=>window.scrollBy(0,el.getBoundingClientRect().top-310));
+  await middle.locator('summary').click();await middle.locator('.u-material-row-menu__panel').waitFor({state:'visible'});
+  const panel=await middle.locator('.u-material-row-menu__panel').boundingBox(),footer=await page.locator('.u-bottomnav').boundingBox();
+  assert(panel.y>=0 && panel.y+panel.height<=footer.y,'menu must remain usable above Academy mobile navigation: '+JSON.stringify({panel,footer}));
+  await page.keyboard.press('Escape');await page.setViewportSize({width:390,height:844});
   await page.locator('.u-materials-folder-create summary').click();
   const folder=await page.locator('.u-materials-folder-create__form').boundingBox();assert(folder.x>=0 && folder.x+folder.width<=390,'folder creation stays inside phone viewport');
   await page.keyboard.press('Escape');

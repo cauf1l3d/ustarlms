@@ -24,7 +24,9 @@ final class course_studio_material_test extends \advanced_testcase {
         $this->assertNotSame($id,$first['contentid']);
         $this->assertEquals($before,$DB->get_record('local_ustar_content',['id'=>$id]));
         $this->assertSame(2,$DB->count_records('local_ustar_content'));
-        $this->assertSame(1,$DB->count_records('local_ustar_workflow_events',['entitytype'=>'studio_material_open','entityid'=>$first['contentid'],'reason'=>(string)$id]));
+        $this->assertSame(1,$DB->count_records_select('local_ustar_workflow_events',
+            'entitytype=:type AND entityid=:draft AND '.$DB->sql_compare_text('reason').'=:source',
+            ['type'=>'studio_material_open','draft'=>$first['contentid'],'source'=>(string)$id]));
         $scope=$DB->get_record('local_ustar_content_access',['contentid'=>$first['contentid']], '*',MUST_EXIST);
         $this->assertSame('position',$scope->scopetype);$this->assertSame(17,(int)$scope->scopeid);
         $project=course_studio::get($first['code'],$USER->id);
@@ -72,6 +74,9 @@ final class course_studio_material_test extends \advanced_testcase {
     }
     public function test_file_source_token_prevents_import_of_a_changed_material(): void {
         global $USER,$DB;
+        // The refusal rolls back its real request transaction. The next call models
+        // a new HTTP request, outside PHPUnit's enclosing transaction.
+        $this->preventResetByRollback();
         $id=$DB->insert_record('local_ustar_content',(object)['title'=>'Инструкция','type'=>'document',
             'sourcekind'=>content::SOURCE_FILE,'status'=>'published','timemodified'=>123]);
         $version=$DB->insert_record('local_ustar_content_versions',(object)['contentid'=>$id,'versionno'=>1,

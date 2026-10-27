@@ -20,7 +20,7 @@ full RC40434525376/context40434525438/infra40434525375 PASS. Both schemas100tabl
   alternate is the exact accepted two omissions only; no repairs/adoption.
 - [ ] Verify archive CRC/content/SHA and packaged plan; run appropriate source/context/
   native CI. Publish tool source without changing the qualified application.
-- [ ] Deliver concrete upload/check, systemd upgrade/status and recover commands;
+- [x] Deliver concrete upload/check, systemd upgrade/status and recover commands;
   explicit destructive restore flag after public writes. Persist owner-ready archive
   and commands through the repository/delivery channel, no secrets in the package.
 

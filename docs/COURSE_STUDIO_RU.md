@@ -32,7 +32,8 @@
 ## Production-приёмка по решению владельца27Oct
 
 Владелец выбрал приёмку на production и запросил отдельный архив/команды.
-Готовится фиксированный application2300→Studio2600 updater на принятом paired engine.
+Подготовлен фиксированный application2300→Studio2600 updater на принятом paired engine.
+[Архив и точные production-команды](COURSE_STUDIO_PROD_DEPLOY_20261027_RU.md).
 Он сначала проверяет source/SQL/прежние журналы/worker/cron/HTTPS и место, затем в
 явно выбранное окно создаёт свежий HDD-бэкап и холодную пару code/data/PG, активирует
 проверенные582файла и дважды запускает официальный upgrade. Версия cron меняется

@@ -14,7 +14,24 @@
     "local_ustar": 2026102600,
     "theme_ustar": 2026100202
   },
-  "operator_package": "in_preparation",
+  "operator_package": "prepared_pending_CI_qualification",
   "deployment_executed": false,
-  "scope": "Existing paired application/cron update. Existing worker, keys, SQLite journal, fence and HTTPS unchanged. No Docker recreate."
+  "scope": "Existing paired application/cron update. Existing worker, keys, SQLite journal, fence and HTTPS unchanged. No Docker recreate.",
+  "tool_commit": "62b0da2020bc27569c0bd4f8ac96b676f29b7490",
+  "archive": {
+    "name": "ustar-studio-install-62b0da20.tar.gz",
+    "sha256": "98f486fe525b3abdcb5ef899d0948ab9083712317ff392e7c8fa0f4aa05ec9cf",
+    "update_py_sha256": "7cb18a45dbd54dcdb6af50c44e11008989ed2702a3c3337494442e6de964343c",
+    "members": 4,
+    "secrets_included": false
+  },
+  "local_qualification": {
+    "r16_tests": 1254,
+    "r16_skips": 64,
+    "result": "pass",
+    "actual_UID33": "pending_mandatory_CI;local_GID33_mapping_unavailable",
+    "model_limits": "Actual file copies/cron/public boundary tested;Docker and SQL are modeled in transaction unit fixtures",
+    "offline_package": "PLAN_ONLY;no host access"
+  },
+  "runbook": "docs/COURSE_STUDIO_PROD_DEPLOY_20261027_RU.md"
 }

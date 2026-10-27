@@ -630,8 +630,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 8078,
-      "sha256": "7f2c642f8377e8ba0e94b5baa9f5822e19665b475548e5d5b13c6659fe24dee3"
+      "size": 8101,
+      "sha256": "84996c9beff1e8f6852913473cabaed7245b2ef1be91c526b8803049a845c96b"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -1446,8 +1446,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 2626,
-      "sha256": "6dc6c430d121cd3dc35e0651b247b26c04a6703ea1389e9a98076bc7def11c10"
+      "size": 3177,
+      "sha256": "93706953da8d455e4d6adb1d79f3dd93a806de2228746cca0d4168c893703129"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -1458,8 +1458,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 8631,
-      "sha256": "4b28a84558314131aa21ba4dfc963470403c2c10dce4a8b8b658a0fad7bc304f"
+      "size": 8654,
+      "sha256": "ecc1117425294a28cb1c424e9fa9578b4106517080bbebbf4a56cd6d431155f1"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -2202,8 +2202,8 @@
     {
       "path": "context/runtime/course_studio_production_intent_20261027.json",
       "domain": "runtime",
-      "size": 812,
-      "sha256": "e2391c3a5f9cc0a538af33f5834dd83ef154b0485ba2df0671c1c2ba0263b77d"
+      "size": 1598,
+      "sha256": "66643dd3bd38ad6680aebbe9daf97223e1f00835ddeb834a25f7270586ffb8a3"
     },
     {
       "path": "context/runtime/course_studio_readiness_20261027.json",
@@ -3402,8 +3402,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3568,
-      "sha256": "9b35214be5446122bf13d76b36df6ad4342f1785eb61501b5f13878509b22fe6"
+      "size": 3657,
+      "sha256": "574aaef182759b252d414cf244400319a1e407c83896f79a5313e85c9ff75bc0"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

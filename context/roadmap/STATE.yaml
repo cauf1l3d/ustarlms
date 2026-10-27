@@ -3,8 +3,8 @@ updated_at: '2026-10-27'
 project: USTAR Academy
 stage: repository_reconciliation_complete
 stage_label: Accepted production source and verified current review in main
-current_activity: Owner27Oct chooses Studio acceptance on production; preparing fixed
-  2300-to-2600 deployment archive and commands; no agent server mutation.
+current_activity: Owner27Oct chooses Studio acceptance on production; prepared fixed
+  2300-to-2600 operator62b0da20 and commands, CI qualification pending; no agent server mutation.
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []

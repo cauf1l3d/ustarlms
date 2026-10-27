@@ -34,3 +34,13 @@ retry/prepare/actor PASS, no closed-session mutation warning or preparation500.
 Context40433022926 and native infra40433023023 passed. Downloaded release artifact
 12702982632 CRC/digest verified; PDF dependencies present. Candidate qualified for
 test-copy acceptance; source7eb1a3f6 unchanged. Production not deployed.
+
+
+## 27Oct — owner chooses production acceptance for Studio
+
+Owner requests production archive/commands, overriding the prior test-copy route.
+Fixed operator62b0da20 reuses the existing paired engine; application2d95137a and
+worker6c56 remain immutable. Local1254tests/64environment skips passed; actual
+UID33 permission qualification is required in CI. Package plan/CRC/hashes and
+no adjacent imports tested. No agent SSH/server/provider mutation. Operator/check/
+upgrade/status/recover instructions: docs/COURSE_STUDIO_PROD_DEPLOY_20261027_RU.md.

@@ -129,7 +129,7 @@ jobs:
         run: sudo -n env USTAR_REQUIRE_CON02_OWNER=1 python3 -m unittest discover -s tests/r16 -p test_connect_con02_state.py -v
       - name: Build fixed Studio production updater without host access
         run: |
-          python3 scripts/infra/build_course_studio_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/studio-production-deploy
+          python3 scripts/infra/build_course_studio_update.py --commit 62b0da2020bc27569c0bd4f8ac96b676f29b7490 --output-dir artifacts/studio-production-deploy
           python3 -I -B artifacts/studio-production-deploy/ustar-studio-update-*.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

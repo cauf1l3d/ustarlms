@@ -9,9 +9,10 @@
 [проект](../../docs/superpowers/specs/2026-10-26-studio-readiness-design.md).
 Full RC40433022865 на c4250205 пройден: обе Moodle матрицы335tests/1500assertions,
 HTTP save/retry/prepare/actor PASS. Context40433022926 и infra40433023023 зелёные.
-Владелец27Oct выбрал приёмку на production и запросил архив/команды. Готовится
+Владелец27Oct выбрал приёмку на production и запросил архив/команды. Подготовлен
 фиксированный2300→2600 updater на существующем paired engine; агент не подключается
 к серверу. Состояние production не изменено; запуск выполняет владелец.
+[Команды и архив](../../docs/COURSE_STUDIO_PROD_DEPLOY_20261027_RU.md).
 
 ## Принятая основа
 

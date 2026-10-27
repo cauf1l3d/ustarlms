@@ -5,7 +5,7 @@
 Поручение: штатный дизайн Академии для студии, «Открыть в студии» из материалов,
 редактируемый импорт, Word .docx, каталог список/блоки/карточки и исправления UX.
 Реализовано в отдельном worktree без субагентов. Локальные codec/DOM/SQL/Chromium
-проверки проходят; полный native CI2700 ожидается. Кандидат не установлен, PR107
+проверки и full RC2700 пройдены: обе Moodle347тестов/1671проверка, HTTP PASS. [Квалификация](../runtime/studio_materials_qualification_20261028.json). Кандидат не установлен, PR107
 не сливать автоматически. [План](../../docs/superpowers/plans/2026-10-27-materials-studio-polish.md),
 [прогресс](../runtime/studio_materials_polish_progress_20261027.md),
 [инструкция автора](../../docs/COURSE_STUDIO_RU.md).

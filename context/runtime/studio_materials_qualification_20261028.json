@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "recorded_date_msk": "2026-10-28",
+  "kind": "qualified_unmerged_application_not_production_deployment",
+  "application_commit": "20ed966e146378a21016c085d31ce4defaa809a8",
+  "qualification_commit": "3795299732609e1c2b17fe8e5beca71ae703e921",
+  "PR": 107,
+  "branch": "codex/shared-course-studio-20261026",
+  "versions": {
+    "local_ustar": 2026102700,
+    "theme_ustar": 2026102700
+  },
+  "source_files": 589,
+  "tables": 100,
+  "new_schema": false,
+  "deployed": false,
+  "main_merged": false,
+  "agent_SSH": false,
+  "worker_rollout": false,
+  "CI": {
+    "review_full_RC": 40602646743,
+    "context": 40602646904,
+    "infrastructure": 40602646779,
+    "console": 40602646737,
+    "all": "success",
+    "source_matrices": {
+      "PHP8.2": {
+        "job": 122534344208,
+        "R16_tests": 1257,
+        "environment_skips": 228,
+        "result": "success"
+      },
+      "PHP8.3": {
+        "job": 122534344534,
+        "R16_tests": 1257,
+        "environment_skips": 228,
+        "result": "success"
+      }
+    },
+    "native_Moodle": [
+      {
+        "runtime": "historical",
+        "job": 122536376895,
+        "tests": 347,
+        "assertions": 1671,
+        "result": "success"
+      },
+      {
+        "runtime": "patch-518",
+        "job": 122536377039,
+        "tests": 347,
+        "assertions": 1671,
+        "result": "success"
+      }
+    ],
+    "authenticated_HTTP": [
+      "native Academy shell and single main landmark",
+      "CSRF shared-create retry prepare actor",
+      "material open exact draft retry",
+      "material detail and paginated catalogue"
+    ],
+    "HTTP_result": "PASS",
+    "upgrade_fresh_repeat_and_DB": "PASS",
+    "rollback_restore_drill": "PASS",
+    "connect_db_job": "not_required_by_change_scope"
+  },
+  "local": {
+    "R16": {
+      "tests": 1254,
+      "environment_skips": 45,
+      "elapsed_seconds": 228.145,
+      "result": "PASS"
+    },
+    "npm": "PASS",
+    "PHP_source_SQL_CSRF": "PASS",
+    "Chromium": "Word/PDF import edit export malformed-file preservation; catalogue list/blocks/cards at390/768/1440; keyboard menus drawers persistence and short-phone navigation PASS",
+    "independent_DOCX_reader": "python-docx reads headings, table grid and embedded image"
+  },
+  "source_artifact": {
+    "run": 40602646743,
+    "id": 12780160112,
+    "name": "frozen-release-candidate",
+    "ZIP_sha256": "1576f8e66579ab1dd2a9527506f1f758e7ad59a3e26c4dc1eb72a2e5fc21f95f",
+    "ZIP_CRC": "PASS",
+    "source_tar_filename": "ustar-materials-studio-2700-source-37952997.tar.gz",
+    "source_tar_sha256": "5ad3da3d93d4f5c944c6447772f08164cdfeaee85d96fe6f147d3382065d5e6c",
+    "source_tar_bytes": 18231920,
+    "all589_member_hashes": "match release manifest",
+    "independent_local_Git_archive": "byte-identical to downloaded CI archive",
+    "package_kind": "application source, not a new production updater"
+  },
+  "review_fixes": [
+    "exact generated native source remains editable after catalogue title rename",
+    "native course/assessment type filters remain effective",
+    "PAGE context established before material text formatting",
+    "Moodle text-column fixture uses sql_compare_text",
+    "multi-request rollback fixture opts out of PHPUnit enclosing transaction without removing assertions"
+  ],
+  "initial_failed_attempt": {
+    "head": "3421a280b21f62d2e3c77e6acaca2fa36a1af07d",
+    "review_run": 40600516703,
+    "native_tests": 347,
+    "native_assertions": 1663,
+    "fixture_errors": 2,
+    "HTTP_detail": "developer-mode500 due late PAGE context",
+    "superseded_by_this_qualification": true
+  },
+  "production": {
+    "receipt": "context/runtime/course_studio_post_deploy_owner_20261028.json",
+    "payload_commit": "2d95137ac85a09ad4c513edae8a792152153c840",
+    "local_ustar": 2026102600,
+    "theme_ustar": 2026100202,
+    "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+    "new2700_not_installed": true
+  },
+  "boundaries": [
+    "Word support is .docx; binary .doc must be converted first",
+    "PDF import extracts text; scan OCR and complex layout/images are separate",
+    "Proprietary SCORM without compatible source is not made editable",
+    "Existing operator62b0 remains fixed2300-to2600;2700 requires a separately verified successor handoff",
+    "CI and source artifact are not a fresh production host census or owner functional acceptance of2700"
+  ]
+}

@@ -85,7 +85,7 @@ USTAR `editor.json`/`window.COURSE`; наличие ZIP само по себе �
 CSRF fixtures; реальный Chromium проверяет Word/PDF и три вида каталога на390/768/1440.
 Native Moodle CI проверяет File API, права, копирование источника/аудитории, повторное
 открытие, SQL-пагинацию и число запросов, HTTP в штатной оболочке и upgrade/rollback.
-Точный итоговый SHA и результаты фиксируются в dated receipt после завершения CI.
+Квалификация37952997: [full RC40602646743](https://github.com/cauf1l3d/ustarlms/actions/runs/40602646743) PASS; обе Moodle347тестов/1671проверка, HTTP и rollback PASS. Context40602646904, infra40602646779 и console40602646737 SUCCESS. [Точная квитанция и SHA256](../context/runtime/studio_materials_qualification_20261028.json).
 
 Production2600 установлен фиксированным оператором62b0da20, описанным в
 [отдельной инструкции](COURSE_STUDIO_PROD_DEPLOY_20261027_RU.md). Этот неизменный

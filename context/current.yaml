@@ -82,10 +82,10 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: Owner status confirms app_ready/DB/services and scheduled cron exit0,
-    no new failures; basic Studio opening/import works. Implemented Academy shell,
-    editable material bridge, Word and catalogue views; qualify exact2700 candidate
-    in PR107, no production mutation or merge.
+  activity: 'Academy Studio shell, editable material bridge, Word and catalogue views
+    implemented and pushed to PR107. Full RC40602646743: both native Moodle347tests/1671assertions,
+    HTTP, source8.2/8.3 and rollback PASS; context/infra/console SUCCESS.2700 not
+    deployed or merged; owner production2600 receipt preserved.'
   next_task: STUDIO-01
   ready_tasks: []
   task_statuses:

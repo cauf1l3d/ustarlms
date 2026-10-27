@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-10-28'
 project: USTAR Academy
-stage: studio_materials_polish_qualification
-stage_label: Studio2600 owner status and basic import accepted; Academy materials/Word2700 candidate under
-  qualification
-current_activity: Owner status confirms app_ready/DB/services and scheduled cron exit0, no new failures;
-  basic Studio opening/import works. Implemented Academy shell, editable material bridge, Word and catalogue
-  views; qualify exact2700 candidate in PR107, no production mutation or merge.
+stage: studio_materials_qualified_candidate
+stage_label: Academy materials/Word2700 qualified; production2600 unchanged
+current_activity: 'Academy Studio shell, editable material bridge, Word and catalogue views implemented
+  and pushed to PR107. Full RC40602646743: both native Moodle347tests/1671assertions, HTTP, source8.2/8.3
+  and rollback PASS; context/infra/console SUCCESS.2700 not deployed or merged; owner production2600 receipt
+  preserved.'
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []
@@ -175,9 +175,15 @@ development_candidate:
   local_ustar_version: 2026102700
   theme_ustar_version: 2026102700
   PR: 107
-  status: native_CI_retry_after_fixture_and_HTTP_context_fixes
+  status: qualified_not_deployed
   deployed: false
   production_predecessor_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
   source_manifest_scope: Unmerged2700 application tree; actual production stays2d95137a/local2600/theme0202
+  qualification_commit: 3795299732609e1c2b17fe8e5beca71ae703e921
+  full_RC_run: 40602646743
+  context_run: 40602646904
+  infrastructure_run: 40602646779
+  console_run: 40602646737
+  readiness_receipt: context/runtime/studio_materials_qualification_20261028.json
 studio_production_intent: context/runtime/course_studio_production_intent_20261027.json
 studio_latest_owner_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json

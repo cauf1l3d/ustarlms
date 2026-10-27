@@ -121,3 +121,16 @@ New reviewed source20ed966e146378a21016c085d31ce4defaa809a8; native repeat pendi
 Historical source artifact12777873527 ZIP CRC/SHA and589member hashes verified, exact
 local git archive match (source tar SHA621e4aa68c90474586b1a80a6b22f7fdb4c26a6049e583eb7836a0571c3aac2f).
 That artifact belongs to the failed attempt; do not deliver it as a qualified release.
+
+## Final qualification
+
+Head3795299732609e1c2b17fe8e5beca71ae703e921 / application20ed966e146378a21016c085d31ce4defaa809a8:
+review/full RC40602646743, context40602646904, infra40602646779, console40602646737 SUCCESS.
+Both native Moodle matrices347tests/1671assertions; authenticated Studio/material
+HTTP, source8.2/8.3 and rollback PASS. All three first-attempt failures are resolved.
+Qualified source artifact12780160112: ZIP CRC/SHA,589member hashes and independent
+Git archive equality verified; source tar SHA5ad3da3d93d4f5c944c6447772f08164cdfeaee85d96fe6f147d3382065d5e6c.
+Receipt: context/runtime/studio_materials_qualification_20261028.json.
+Finishing skill applied with the already-authorized push/PR choice; no menu or
+merge approval repeated. Worktrees retained; no main merge or production mutation.
+Final receipt/context follow-up changes no application file; source qualifier remains37952997.

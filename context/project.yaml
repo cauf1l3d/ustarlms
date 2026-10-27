@@ -38,7 +38,8 @@ current_work:
   task: STUDIO-01
   spec: docs/superpowers/specs/2026-10-27-materials-studio-polish-design.md
   PR: 107
-  status: Academy_materials_Word2700_qualification
+  status: qualified2700_not_deployed
   frontend_scope: native local_ustar; author rights and shared revisions preserved
   next_after_studio: PERF-01 and verified backlog
   deployment_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
+  qualification_receipt: context/runtime/studio_materials_qualification_20261028.json

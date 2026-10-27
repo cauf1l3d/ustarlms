@@ -1,0 +1,7 @@
+[
+  {
+    "block": "pg_query_stats",
+    "reason": "unavailable",
+    "status": "error"
+  }
+]

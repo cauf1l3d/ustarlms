@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "evidence": "owner_terminal_and_local_reproduction",
+  "date": "2026-10-21",
+  "source_commit": "a86e208029b6104150e85d0e90384f84da214c22",
+  "pilot_userids": [
+    130
+  ],
+  "activation": {
+    "last_checkpoint": "receiver_switch",
+    "phase": "refused",
+    "reason": "host_command_failed",
+    "recovery_state": "inactive"
+  },
+  "failed_unit": "ustar-connect-probe.service",
+  "error": "Python cannot open current/receiver.pyz: EACCES",
+  "failed_at_utc": "2026-10-21T11:35:56Z",
+  "old_receiver_restarted_utc": "2026-10-21T11:35:57Z",
+  "after": {
+    "pilot_phase": "notification_pilot_inactive",
+    "receiver": "active/running",
+    "notify": "inactive/dead",
+    "sender_active": false
+  },
+  "diagnosis": "staged release Path.mkdir(0755) under CLI umask077 yields0700; reproduced by regression test",
+  "targeted_tests": {
+    "count": 9,
+    "result": "pass"
+  },
+  "full_suite": {
+    "tests": 937,
+    "environment_skips": 50,
+    "result": "pass",
+    "environment": "exact tests/stage dependencies in isolated local venv"
+  },
+  "live_repair": "pending",
+  "subagents": 0,
+  "recovery_command_fixture": [
+    "normal_and_idempotent",
+    "changed_code_refused",
+    "extra_file_refused",
+    "symlink_refused",
+    "wrong_current_refused",
+    "writable_parent_refused"
+  ],
+  "new_strict_UID33_CI": "pending"
+}

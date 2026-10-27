@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "kind": "redacted_owner_terminal_followup",
+  "source": "owner_pasted_tokenless_server1_date_getent_and_direct_curl_IPv4_IPv6",
+  "received_at_utc": "2026-10-17T22:26:35Z",
+  "printed_date_utc": "2026-10-17T22:26:10Z",
+  "individual_probe_timestamps": null,
+  "included_in_archive_checksums": false,
+  "independently_reexecuted_by_agent": false,
+  "endpoint": "api.telegram.org",
+  "getent_ahosts": {"IPv4": ["149.154.166.110"], "IPv6_rows_present": false},
+  "direct_IPv4_curl": {
+    "curlrc_disabled": true,
+    "proxy_disabled": true,
+    "connect_timeout_seconds": 5,
+    "maximum_seconds": 12,
+    "exit_code": 28,
+    "reported_connect_timeout_ms": 5002,
+    "HTTP_code": "000",
+    "printed_ssl_verify_result": 0,
+    "TCP_connection_established": false,
+    "TLS_certificate_verification_confirmed": false,
+    "token_or_Bot_API_method_used": false
+  },
+  "direct_IPv6_curl": {
+    "exit_code": 6,
+    "error": "Could not resolve host: api.telegram.org",
+    "HTTP_code": "000",
+    "printed_ssl_verify_result": 0,
+    "usable_IPv6_resolution_in_this_command": false,
+    "authoritative_AAAA_absence_or_global_IPv6_failure_established": false
+  },
+  "assessment": "IPv4 name resolution returned an address, but this direct TCP443 attempt timed out before TLS/API authentication. The location/cause of failure remains unknown; the IPv6 command did not obtain a usable address. A zero SSL verification field without a connection is not a successful TLS check.",
+  "not_yet_measured": ["general_direct_HTTPS_control", "same_endpoint_from_corporate_Windows", "server_route_and_firewall_policy", "proxy_requirement", "destination_resolution_against_other_trusted_resolvers"],
+  "bot_token_authenticated_by_API": false,
+  "numeric_ID_obtained": false,
+  "persistent_configuration_or_receiver_ACK_confirmed": false,
+  "next_step": "bounded_no_token_direct_HTTPS_control_and_repeat_from_server; TCP443_to_same_public_endpoint_from_Windows_in_same_corporate_LAN",
+  "credentials_or_server_network_coordinates_exported": false,
+  "agent_production_changes": false,
+  "scope_note": "The public destination address is retained for endpoint comparison; server/client/gateway coordinates and login/password exchanges are omitted. This does not identify corporate/provider filtering, prove token validity, or test Tailscale. No firewall/DNS/route changes are authorized by this read-only diagnostic receipt."
+}

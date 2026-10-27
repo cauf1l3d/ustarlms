@@ -1,0 +1,23 @@
+# Execution ledger — plan: USTAR_CONNECT_CON01C2_PLAN_20261019.md
+
+Base cdd4909d, PR106 unchanged at owner request19Oct12:55MSK. Clean isolated feature branch codex/connect-link-management-20261019, no agents. Prior C1 exact green receipt verified in PR. Token from chat never copied to files/tools/API; owner advised to revoke. Public username only: ustarcorp_bot.
+
+Pre-flight: identity_service owns actor/session/lock and two-sided confirmation; existing bridge link.claim consumes provider-bound proof; worker already has telegram_link_payload for signed uc1_. Reuse all three, no second auth writer. RAM link receipt must be disjoint from onboarding entry.
+
+Ruling: finish existing-account confirmed link as independent C2 slice; defer full remote login/recovery and sensitive actor step-up — canonical Moodle auth/MFA must not be bypassed; cost: initial linking requires an existing trusted Academy session.
+
+Native PHP absent locally. Native RED/GREEN evidence must come from exact CI, not local source assertions. Plan and durable ledger live in context/proposals per repository convention; existing owner authorization covers this continuation and PR publication, no repeated approval gate.
+
+Worker task:8new WSGI tests first observed RED (missing uc1_ routing/receipt/rejections). One hostile-input test originally exhausted the existing3launch limit; corrected to independent browser fixtures. Implementation then31web tests GREEN. Existing unsigned-start regression exposed None.start_param handling; exact previous/new regression RED→GREEN with explicit string check. Fixed errors only; token was not used. Full local647r16 OK/30environment skips after installing pinned test-only requirements in /tmp/connect-c2-venv. Initial run without test dependencies had3mcp import errors; resolved with declared requirements, no product dependency added.
+
+Local Chromium installation failed: CDN returned an invalid/truncated archive. No local browser execution claimed; actual assets browser test is in CI. Native test-first d9114daa: Context39234234941 SUCCESS and source8.2/8.3 SUCCESS; connect-db118000193045 still running at this note. PHP not locally available.
+
+Native RED observed d9114daa / Review39234234916 / connect-db118000193045:84tests/399assertions, exactly6errors missing link_management class; prior78tests still passed. Fresh/upgrade/repeat comparisons reached PHPunit successfully. DBartifact12179035104 records expected failure, not acceptance. Implement native adapter only after reading this log. Browser test-only next snapshot exercises actual new link receipt assets before their implementation.
+
+Browser RED observed2c971f93 / Review39235237752 / source118002600128: existing60mobile and20onboarding PASS, new real-assets link test fails waiting for confirmation heading. Only then added UI receipt state/instructions. Native adapter/page/template added after exact6missing-class errors from d9114daa. Shared CSS reused, no schema change. Candidate now546files/99tables/local2026101903.
+
+Ruling: native owner page requires HTTPS Academy origin as well as Moodle session — a local-only HTTP login cannot safely issue a browser binding secret; cost: existing Academy TLS remains an activation gate separate from Mini App/CrazeDNS certificate. Neither the console CA nor Mini App public address alone closes that gate.
+
+Review personally: provider tenant/username come only from exact public server config; no token in it, no arbitrary URL. Existing signed start_param verifier and link.claim reused; browser receipt cannot register/read employee data or complete login; uncertainty fixed before upstream mutation. Native current actor/session/CSRF and canonical confirm/revoke unchanged. Numeric own Telegram ID returned once from verified proof for cross-check, not retained in RAM receipt. Added ID response test observed missing-key RED→GREEN. Native page has no-store/no-referrer, no GET code/actions, escaped Mustache output and fixed error texts. Native runtime/MFA/public HTTPS/forwarded metadata and real WebView acceptance remain deployment work. No independent review per explicit owner prohibition.
+
+Pre-publication verification:31web tests PASS, full647r16 OK/30environment skips; structural24JS/99tables/57Mustache and context546files/99tables PASS; whitespace PASS. Native/browser final new source still pending exact CI. Initial native and browser RED receipts stay separate. Final CI receipt will be appended to PR106 without another context-only commit loop. No deferred source bugs identified in personal final review; real HTTPS/browser/provider/runtime acceptance remains operational, not claimed.

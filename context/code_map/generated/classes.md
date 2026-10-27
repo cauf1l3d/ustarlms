@@ -1,6 +1,6 @@
 # Classes, interfaces and traits
 
-Source: `8ebca5caf0acd2086f4ee0e7598518d2e2e62233`. Git source only; not a live database snapshot.
+Source: `6c56a5b6ab830b97b706a5d7028b49cfae31e7a4`. Git source only; not a live database snapshot.
 
 | Symbol | File |
 |---|---|
@@ -34,14 +34,27 @@ Source: `8ebca5caf0acd2086f4ee0e7598518d2e2e62233`. Git source only; not a live 
 | `local_ustar\competition` | `moodle/local/ustar/classes/competition.php` |
 | `local_ustar\completion_cycle` | `moodle/local/ustar/classes/completion_cycle.php` |
 | `local_ustar\compliance` | `moodle/local/ustar/classes/compliance.php` |
+| `local_ustar\connect\actor_service` | `moodle/local/ustar/classes/connect/actor_service.php` |
+| `local_ustar\connect\bridge_auth` | `moodle/local/ustar/classes/connect/bridge_auth.php` |
+| `local_ustar\connect\bridge_http` | `moodle/local/ustar/classes/connect/bridge_http.php` |
+| `local_ustar\connect\bridge_service` | `moodle/local/ustar/classes/connect/bridge_service.php` |
+| `local_ustar\connect\entry_service` | `moodle/local/ustar/classes/connect/entry_service.php` |
+| `local_ustar\connect\identity` | `moodle/local/ustar/classes/connect/identity.php` |
+| `local_ustar\connect\identity_service` | `moodle/local/ustar/classes/connect/identity_service.php` |
+| `local_ustar\connect\link_management` | `moodle/local/ustar/classes/connect/link_management.php` |
+| `local_ustar\connect\notification_acknowledgement` | `moodle/local/ustar/classes/connect/notification_acknowledgement.php` |
+| `local_ustar\connect\notification_action` | `moodle/local/ustar/classes/connect/notification_action.php` |
+| `local_ustar\connect\notification_delivery` | `moodle/local/ustar/classes/connect/notification_delivery.php` |
+| `local_ustar\connect\notification_policy` | `moodle/local/ustar/classes/connect/notification_policy.php` |
+| `local_ustar\connect\notification_preferences` | `moodle/local/ustar/classes/connect/notification_preferences.php` |
+| `local_ustar\connect\opaque_token` | `moodle/local/ustar/classes/connect/opaque_token.php` |
+| `local_ustar\connect\receipt_actor` | `moodle/local/ustar/classes/connect/receipt_actor.php` |
+| `local_ustar\connect\signup_request` | `moodle/local/ustar/classes/connect/signup_request.php` |
+| `local_ustar\connect\signup_service` | `moodle/local/ustar/classes/connect/signup_service.php` |
 | `local_ustar\consultant_career` | `moodle/local/ustar/classes/consultant_career.php` |
 | `local_ustar\content` | `moodle/local/ustar/classes/content.php` |
 | `local_ustar\content_ack_report` | `moodle/local/ustar/classes/content_ack_report.php` |
 | `local_ustar\content_admin` | `moodle/local/ustar/classes/content_admin.php` |
-| `local_ustar\course_studio` | `moodle/local/ustar/classes/course_studio.php` |
-| `local_ustar\course_studio_conflict` | `moodle/local/ustar/classes/course_studio_conflict.php` |
-| `local_ustar\course_studio_package` | `moodle/local/ustar/classes/course_studio_package.php` |
-| `local_ustar\course_studio_project` | `moodle/local/ustar/classes/course_studio_project.php` |
 | `local_ustar\department_learning` | `moodle/local/ustar/classes/department_learning.php` |
 | `local_ustar\development_assessment` | `moodle/local/ustar/classes/development_assessment.php` |
 | `local_ustar\economy` | `moodle/local/ustar/classes/economy.php` |
@@ -130,6 +143,7 @@ Source: `8ebca5caf0acd2086f4ee0e7598518d2e2e62233`. Git source only; not a live 
 | `local_ustar\position_application` | `moodle/local/ustar/classes/position_application.php` |
 | `local_ustar\position_catalog` | `moodle/local/ustar/classes/position_catalog.php` |
 | `local_ustar\position_model` | `moodle/local/ustar/classes/position_model.php` |
+| `local_ustar\privacy\provider` | `moodle/local/ustar/classes/privacy/provider.php` |
 | `local_ustar\product_quiz` | `moodle/local/ustar/classes/product_quiz.php` |
 | `local_ustar\registration_service` | `moodle/local/ustar/classes/registration_service.php` |
 | `local_ustar\registration_validation_exception` | `moodle/local/ustar/classes/registration_validation_exception.php` |
@@ -158,6 +172,7 @@ Source: `8ebca5caf0acd2086f4ee0e7598518d2e2e62233`. Git source only; not a live 
 | `local_ustar\task\enrich_feed_sources` | `moodle/local/ustar/classes/task/enrich_feed_sources.php` |
 | `local_ustar\task\import_feed_sources` | `moodle/local/ustar/classes/task/import_feed_sources.php` |
 | `local_ustar\task\process_work_tasks` | `moodle/local/ustar/classes/task/process_work_tasks.php` |
+| `local_ustar\task\prune_connect_identity` | `moodle/local/ustar/classes/task/prune_connect_identity.php` |
 | `local_ustar\task\reconcile_competitions` | `moodle/local/ustar/classes/task/reconcile_competitions.php` |
 | `local_ustar\task\reconcile_reporting` | `moodle/local/ustar/classes/task/reconcile_reporting.php` |
 | `local_ustar\task\reconcile_rewards` | `moodle/local/ustar/classes/task/reconcile_rewards.php` |

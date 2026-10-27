@@ -1,4 +1,5 @@
 <?php
+$string['privacy:metadata:connect:preferences'] = 'Personal notification opt-in, categories, severity, quiet hours, timezone and interval.';
 defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'USTAR Workspace';
 $string['ustar:admin'] = 'Administer USTAR workspace';
@@ -32,3 +33,18 @@ $string['ustar:gradeassessments'] = 'Проверять аттестации';
 $string['ustar:requeststaff'] = 'Подавать заявки на персонал по компании';
 
 $string['coursestudioconflict'] = 'The project or its settings changed. Keep both revisions or reload the project.';
+$string['privacy:metadata:connect'] = 'Messenger identity links and temporary confirmation metadata.';
+$string['privacy:metadata:connect:userid'] = 'The Academy account that owns the connection.';
+$string['privacy:metadata:connect:provider'] = 'Messenger provider and tenant identifier.';
+$string['privacy:metadata:connect:subject'] = 'The verified messenger account identifier.';
+$string['privacy:metadata:connect:hash'] = 'A one-way lookup or confirmation hash; raw secrets are not stored.';
+$string['privacy:metadata:connect:state'] = 'Connection state, revision or related confirmation identifier.';
+$string['privacy:metadata:connect:time'] = 'Creation, modification or expiry time.';
+$string['identity_busy'] = 'Identity settings are busy; retry shortly.';
+$string['taskpruneconnectidentity'] = 'Удаление истёкших подтверждений связи с мессенджерами';
+
+$string['notification_ack'] = 'Acknowledge';
+$string['notification_acknowledged'] = 'Acknowledged';
+$string['notification_read'] = 'Read';
+
+$string['privacy:metadata:connect:acktokens'] = 'Hashed actions for personal notification acknowledgement; no raw action credentials.';

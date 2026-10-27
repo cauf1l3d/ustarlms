@@ -19,6 +19,11 @@
                 <p>{{message}}</p>
                 <div class="u-notification-actions">
                     {{#hasurl}}<a class="u-btn u-btn--small" href="{{url}}">{{urlname}} →</a>{{/hasurl}}
+                    {{#canack}}
+                    <form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="ack"><input type="hidden" name="source" value="{{source}}"><input type="hidden" name="id" value="{{id}}"><button class="u-btn u-btn--small" type="submit">{{acklabel}}</button></form>
+                    {{/canack}}
+                    {{#acknowledged}}<span role="status">{{acknowledgedlabel}}{{#acktime}} · {{acktime}}{{/acktime}}</span>{{/acknowledged}}
+                    {{^acknowledged}}{{#read}}<span>{{readlabel}}</span>{{/read}}{{/acknowledged}}
                     {{#unread}}
                     <form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="read"><input type="hidden" name="source" value="{{source}}"><input type="hidden" name="id" value="{{id}}"><button class="u-btn u-btn--quiet u-btn--small" type="submit">Отметить прочитанным</button></form>
                     {{/unread}}

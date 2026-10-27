@@ -1,5 +1,254 @@
 # Реестр кода, проверок и deployment evidence
 
+26.10.2026 — PR108 merged atc0e22e556220cc50f522a3e6b65189fd8abffa73. PR105/103/106 history preserved; application equals accepted6c56a5b6/local2300. Full RC and independent infra/console/context passed. Repository reconciliation only; no server deploy. [Receipt](repository_reconciliation_20261026.json).
+
+## 23Oct — CON-02 application2200 и ACK runtime приняты на server1
+
+[Owner receipt](connect_con02_server1_owner_20261023.json), [границы](connect_con02_server1_20261023.md).
+Exact ordinary tool4394b994 SHA verified, historical index baseline accepted; owner upgrade
+app_ready/local2200 после fresh backup/cold pair/двух upgrade/cron/public release.
+Отдельный enable-ack runtime_active; receiver/notify active+enabled, DB available,
+theme0202. Fixed application/worker53476482,557files/100tables — payload inventory,
+не новый whole-host manifest. AutoReport9443 принят в HTTPS owner state отдельной
+узкой guarded reconciliation без редактирования Apache config или перезапуска.
+UID130 notices179 assigned/180 reminder оба acknowledged, по1delivery attempt;
+разные события, не повторная доставка. Last revoked21Oct исторический. Live повтор
+первого timestamp и task completion отдельно не проверены, early reminder причина
+не установлена. B1 routing/preferences design готов к review; новый код не написан.
+FullRC/native DR/live group не объявлены пройденными;0subagents/no agent SSH/provider sends/main merge.
+
+## 21Oct — native coordinated update and new scheduled cron accepted
+
+**21Oct — application2000 установлен; новый scheduled cron и browser smoke приняты.**
+[Owner receipt](connect_chat_link_update_owner_20261021.json):exact6aa/e0d364ab SHA OK,
+CHAT_LINK_UPDATE=PASS,upgrade_complete/public_released=true. Effective payload1e8a8819,
+local2026102000/theme2026100202/552files/99tables следуют из fixed guarded installer.
+Свежий scheduled cron20Oct22:08:01→22:08:03UTC:exit0,task log4775692→4775719,
+adhoc0,new failures[],USTAR errors0. Overdue19 и2historical failed сохранены;
+wrapper error17:33UTC — история. Owner:«завершилось академия открывается»;
+это general browser smoke,не полный role/learning/link QA. ПаузаD/jbd2 при cold copy
+завершилась успешно;disk failure не установлен. Не повторять update/backup prep/TLS/cron repair.
+Дальше private TLS bridge/link-only key и receiver update с сохранением token/journal/cursor,
+затем same-session link/revoke и отдельный opt-in notify. Bridge/bot activation pending.
+Owner terminal evidence,не independent SSH;0subagents.
+
+## 21Oct — owner backup HTTPS pair prepared; guarded application update next
+
+Owner terminal report confirms tool6aa/e0d364ab SHA OK and exact producer a604fbcd /
+scheduler a97039a8 installed:backup_HTTPS_compatibility_prepared. No backup/outage or
+unit/calendar change started by preparation. Follow-up --check reports ready_for_chat_link_update:
+current1905/theme0202,target2000/theme0202,activation=false;required11692290048B versus
+available56452567040B,201400 versus6078040 inodes. Restart policies remain unless-stopped.
+Current app1905 is unchanged; fresh backup,app upgrade,scheduled2000 and browser acceptance
+remain pending. Next same frozen tool --upgrade --acknowledge-outage,then --status;
+bridge/link-only key/receiver/link/revoke and separate opt-in notify follow.
+No preparation/probe/installer02 repetition. Owner report,not independent SSH;exact time absent.
+[Receipt](connect_backup_https_owner_20261021.json). Agent made no server/provider/main changes;0subagents.
+
+## 20Oct21:31MSK — confirmed0750 false refusal and cron-only reader correction
+
+Owner stat confirms exactc5eabdce root-owned0750 regular/single-link cron source;
+state/last-run0600 and safe parents. Correct preflight code policy,not host modes.
+TDD observed RED→GREEN;19module/1privileged local skip,full840/32skips PASS.
+Real exact cron-source bytes0750 fixture PASS,not production execution. New
+cron-only command performs no Academy/source/SQL/Docker/HTTPS/provider calls.
+Owner narrow recheck and new CI pending;baseline552/99/HTTPS already accepted.
+No main merge,production/permissions/worker/network changes,0subagents.
+
+## 20Oct21:25МСК — owner delivery baseline measured,cron input metadata pending
+
+Owner exact4d70de5c preflight hash PASS:552/552 source match,local1905/theme0202,
+core2025100608/99tables and reviewed mounts running. HTTPS active/owned hashes match;
+loopback8082,gateway172.18.0.1,free18443;cron/renew timer/receiver active,notify inactive.
+Only cron refused unsafe_control_input before usable contract output;actual path and
+mode unknown. Local same fixture0600 measured→script0755 refused,showing a stricter
+private-code assumption than the existing installer. This is not proof of server mode
+or a new worker failure. Next only six-path metadata stat plus exact script hash.
+No chmod/chown,worker/install,whole-source recollection or source/schema changes.
+Source snapshot accepted;native bridge/link/notify still pending.0subagents.
+
+## 2026-10-20 — private chat-link delivery preflight4d70de5c
+
+Source4d70de5c verified:Context39470413912/Review39470413976 SUCCESS.
+835r16/135CI skips on PHP8.2/8.3;local835/32skips. Actual root fixture14tests
+including UID33 config ownership PASS. Exact pyz SHA67d3d13a local/CI match,
+artifact12285519274. Chromium60mobile/20onboarding/28link/100actor PASS;
+fixed existing test race with actual-option condition wait plus250ms fixture delay,
+kept literal-XSS/no-img assertions and product JS unchanged. Initial fda8ff35
+8.3 failure retained in receipt,not declared successful. Self-review metadata
+compatibility fix compares captured HTTPS uid/gid/mode+hash,never asks chown.
+Native Connect124/629+6concurrency/paired rollback/SQL guards/HTTPS cookie PASS.
+[Exact owner command](connect_delivery_preflight_20261020.md),
+[CI receipt](connect_delivery_preflight_ci_20261020.json).
+Owner read-only delivery preflight pending. No addon/bridge/receiver activation,
+production writes,keys/token reads,live Telegram or subagents by agent.
+
+## 2026-10-20 20:38МСК — cron native acceptance
+
+Owner confirmed two genuine scheduled completions17:36:03Z/17:37:23Z,exit0,
+no new failures/USTAR errors;task log4767930→4768022→4768051,adhoc2→0,
+overdue107→18,2 prior scheduled failures retained. Historical wrapper error17:33Z
+predates success. No locks held between runs. Agent did not run a worker or SSH.
+Current exact producer is cron v3 SHA c5eabdce/local1905. Incident closed;
+continue private bridge/chat-link with HTTPS ownership and next cron contract
+coordinated,not old installer or repeated broad facts.0subagents.
+
+## 20Oct20:08МСК — version guard root cause and guarded producer update
+
+**20Oct20:08МСК — причина cron найдена; исправление готово.**
+Cron active, schedule/binding match,10invocations/10min. Wrapper66fd51d3 отказывает:
+`Production application versions differ from the reviewed snapshot`.
+Он закреплён на local0204,при owner-installed payload830/local1905. Task log не
+рос с04:20МСК;107overdue/2adhoc,не проблема свежести одного UI.
+[Исправление и команды](../runtime/cron_release_update_20261020.md),
+[квитанция](../runtime/cron_release_update_20261020.json).
+Sourcecaebe51a меняет только reviewed VERSIONS+installation hash/version under
+existing locks;расписание/history/БД не правит,worker не запускает.10RED→GREEN,
+821local/31skips PASS;Context39465174623/Review39465174522 SUCCESS,
+PHP8.2/8.3 CI821/134skips,runtime и native Connect124/629+6concurrency PASS.
+Owner apply и новый scheduled success pending. Не повторять диагностику,
+HTTPS или Academy installer. Future installer должен согласовать producer hash/
+версии;старые immutable helpers не патчить. После cron — bridge/link/notify.
+HTTPS owner accepted desktop/phone/VPN;0subagents. Ниже датированная история.
+
+## 20Oct19:59МСК — owner HTTPS acceptance and cron incident
+
+**20Oct19:59МСК — HTTPS принят владельцем; сначала инцидент cron.**
+Owner check/cutover/status PASS: Academy `https://ustar.local`, новый leaf до
+19Nov16:56:28UTC, компьютер/телефон/VPN открывают Академию. [Квитанция](../runtime/connect_https_owner_20261020.json).
+Повторный HTTPS cutover/установка не нужны. Owner сообщает cron alarm:
+последний отчёт04:20МСК при свежей проверке19:59. Это не доказанное отключение
+cron.service. [Путь данных и read-only команды](../runtime/cron_incident_20261020.md).
+Сначала wrapper --status, schedule/service и сравнение current DB task time;
+причина и исправление ещё pending. Не запускать cron/install/rebind по догадке,
+не удалять locks и не скрывать тревогу. После свежего scheduled success — private
+bridge/scoped keys, отдельная поставка chat-link2000, двусторонний link/notify.
+Prod addon830/1905 сохранён; Mini App ждёт external HTTPS; 0 subagents.
+
+## 20Oct — canonical HTTPS source d1e61a3b verified; owner apply pending
+
+**20Oct — canonical HTTPS: CI завершён, команды владельцу готовы.**
+Source `d1e61a3b` проверен: Context39459332144 и Review39459332116 SUCCESS.
+PHP8.2/8.3: 811 r16 tests / 134 environment skips; local HTTPS tests 15/15 PASS.
+Настоящий Apache/OpenSSL/PHP проверил proxy/HTTP302/renewal/recovery; отдельный
+Moodle5.1.8/PostgreSQL16 gate подтвердил HTTPS config и Secure session cookie.
+[CI-квитанция](../runtime/connect_academy_https_ci_20261020.json),
+[закреплённые команды check/cutover/status/rollback](../runtime/connect_academy_https_20261020_commands.md),
+[progress](../proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PROGRESS_20261020.md).
+На server1 пока принят static TLS probe и phone LAN WiFi/VPN; canonical Academy
+cutover и browser login/material acceptance ожидают владельца. Не повторять
+probe/receiver/Academy installer или сбор старых фактов. После приёмки — private
+bridge/scoped keys, отдельная поставка chat-link candidate2000 и opt-in notify;
+Mini App ждёт внешнего HTTPS. Agent server1 не менял, main не объединён, 0 subagents.
+Ниже сохранены предыдущие датированные checkpoints.
+
+## 20Oct18:29МСК — TLS check precondition refusal
+
+**20Oct18:29МСК: owner --check отказал до применения.** Download hash PASS;
+`wildcard_TLS_binding_required` означает отсутствие группы `*:443` в parsed dump.
+Конкретные IP-vhosts и отсутствие443-vhosts пока не различены. Нельзя снимать guard
+или запускать prepare по прежней команде. Нужен только filtered443 binding-type/
+SSL-module report из текущего [runbook](connect_https_tls_probe_20261020_commands.md).
+Apache/config/HTTP/сеть не менялись;rollback не требуется.0subagents.
+
+
+## 20Oct — TLS probe source, deployment pending
+
+Apache владеет80/443,пульт8443.
+wwwroot — непрямое выражение;config hash закреплён,PHP/RHS не выполнялись.
+Далее additive static TLS probe для `ustar.local`:отдельный30day leaf от console CA,
+только health URL,config/HTTP не меняются,только Apache graceful reload с guards/recovery.
+[План](../proposals/USTAR_ACADEMY_TLS_PROBE_PLAN_20261020.md),[progress](../proposals/USTAR_ACADEMY_TLS_PROBE_PROGRESS_20261020.md).
+Source52a8a1ca:792CI/134skips на PHP8.2/8.3 PASS,21targeted local PASS.
+Context39447539405 и native runtime118713514071 SUCCESS;SNI/default/HTTP/CA/recovery actual Apache PASS.
+[Точные команды](connect_https_tls_probe_20261020_commands.md),[CI receipt](connect_academy_tls_probe_ci_20261020.json).
+Это stage1,не canonical HTTPS cutover/renewal/private bridge/бот activation.
+Повторных diagnostic loops,receiver/installer reinstall или сетевых изменений не требуется.
+Production effective830/1905 сохранён;new link source2000 не установлен;0subagents.
+
+
+## 20Oct17:32МСК — owner details received,no deployment
+
+Academy Apache80/proxy8082/noTLS/Include,origin_expression,default Caddyfile without
+Academy,and protected console CA/signer metadata. `other` process labels are a
+probe allowlist limitation,not identity. Narrow cgroup/wwwroot-feature operator
+block syntax checked;no new helper/application code,server/TLS/network operation.
+[Receipt and continuation](connect_https_owner_20261020.json).
+
+## 20Oct17:16МСК — read-only HTTPS owner report
+
+[Receipt](connect_https_owner_20261020.json):8082loopback/running,Apache/Caddy active,
+443/8443 occupied,origin parser unavailable without reason. Same probe gains
+explicit --details for filtered owners/static-vhost hints/fixed failure reason;
+12targeted tests PASS. No deployment,TLS reload,route/DNS/proxy or Academy change.
+Static hints are not active TLS/certificate acceptance. Next owner details report.
+
+## 20Oct — owner browser smoke принят; chat-link source и HTTPS preparation
+
+Owner04:39МСК:«Академию проверил все открывается»,не exhaustive role/learning QA.
+Подтверждён HTTP canonical origin. Новый source2026102000/552/99:private chat claim,
+independent linking_enabled defaultOFF,second native owner/session confirm;HTTPS
+guards сохранены. [Progress](../proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md),
+[следующий read-only шаг](connect_https_preparation_20261020.md). Native REDa40ea20f
+наблюдался:123tests/614assertions/ровно2новых failures. Source1e8a8819:
+Context39361024810/Review39361024698 SUCCESS;766r16/124native629/6concurrency/
+paired93→99→93/28link-browser/actual host PASS.[CI](connect_chat_link_ci_20261020.json).
+Не установлен,production830/1905 unchanged;bridge/notify/receiver/network не менялись.
+Installer02 повторно не использовать для новой candidate.0subagents.
+
+## 20Oct04:36МСК — owner CLI Academy installation PASS
+
+[Owner terminal receipt](connect_academy_owner_install_20261020.json):package/internal
+checksums and preflight PASS;copy grew1.1G→1.5G then fresh paired baseline PASS,
+upgrade/repeat PASS,upgrade_complete/public_released=true,systemd Finished. CPU
+168.588s is CPU time,not wall-clock duration;memory peak4.5G includes the unit's
+accounting,not an independent Python RSS measurement. Effective addon payload830/
+local2026101905/theme2026100202/552files/99tables follows pinned installer checks.
+Owner browser QA and later scheduled cron/backup observation remain pending;
+no independent probe or actual production paired restore/RTO accepted. Keep the
+private recovery pair. BOT_ACTIVATION=PENDING;private bridge/link/notify next.
+No main merge/network/receiver configuration changes or subagents.
+
+## 20Oct04:11МСК — operator installer verified; owner execution pending
+
+Installer02b0548c/tree3dcbac8d,Context39351249166/Review39351249243 SUCCESS.
+Archive17978054B/SHA53d9983b9e437bc9b4623bac83c72564c35a772ce3cc292b55efe8a986be1d13
+matches CI job118395678244;payload830 remains unchanged. Local743r16/31skips,
+CI743/134skips,actual UID33/root-group PASS;native121/611+6concurrency,93to99to93
+and installer SQL/task/column/index verification PASS. [Receipt](connect_academy_installer_ci_20261020.json),
+[exact operator commands](connect_academy_install_02b0548c_commands.md).
+Fresh HDD+cold pair and outage occur only when owner executes explicit upgrade.
+No production/network/receiver changes or main merge;0subagents. Bridge/account
+link/controlled delivery and Mini App external HTTPS remain separate gates.
+
+## 19Oct22:01МСК — Academy source RC verified
+
+Source830d3703/tree08a7bfdc,FullRC39305805820 all9jobs SUCCESS,Context39305805813 SUCCESS. [Exact receipt](connect_academy_rc_ci_20261019.json),[handoff](connect_academy_rc_20261019.md). Native Connect121/611+6concurrency,accepted baseline93→candidate99→restored93;downloaded26-file evidence checked,schema/metadata restored,no snapshot files. Moodle5.1.8/PHP8.3.33/PG16.15 and historical5.1.1/PHP8.2.30/PG16.10 both288/1266 PASS. CI artifact12214182488;source archive17744353B/SHAa67a08d8e5509c580043a6752e73964cb8aed72c5d1732647a9d3c2e2379113e matches local build. First upload permission issue fixed by private snapshot subshell;no checks weakened. Personal source review,0subagents. Production/main/network unchanged;source package has no installer. Current link needs Mini App,so account-link/notify activation and guarded addon update remain explicit gates. Full private server report excluded.
+
+## 19Oct21:35МСК — source RC and accepted-baseline paired recovery
+
+Owner authorizes code/tests publication without full private server report. Separate branch starts directly from remote35721073,excluding private local commits. Preflight already received privately;no repeat collection. [Plan](../proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md). Builder7tests/local715r16 PASS/30explicit skips;new native full-RC and pair pending. Public source references baselinee1d57f5b526/93 and candidate552/99 do not assert deployment. No installer/production operation;Mini App waits HTTPS.0subagents.
+
+##19Oct18:59МСК — first receiver accepted by owner
+
+Владелец подтвердил «окей работает» после direct systemctl enable-now и личного /start шага. Точные service PID/uptime/ответ не переписаны; приложенные скриншоты недоступны агенту. [Owner receipt](connect_receiver_server1_20261019.json). На server1 runtime b01bd942, configure helperde2e482; GC fix33e31b13 пока source-level. Boot recovery и Academy integration не приняты. Следом [read-only Academy preparation](../proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md); original production526/93 не объявлен552/99.
+
+## 19Oct12:55МСК — CON01C.2 candidate, не production
+
+CON01C.2: управление собственными messenger links в native Moodle и signed uc1_ claim в Mini App. Личный кабинет → Мессенджеры → персональная ссылка → Telegram → второй Academy confirm в той же сессии; owner-only revoke/list. RAM receipt не onboarding/employee grant; timeout uncertain без автоповтора. Candidate2026101903/546files/99tables, production e1d57f5b/526/93 unchanged. 8new WSGI tests,31web/full647r16 OK/30environment skips. Native RED d9114daa/39234234916: exactly6missing-class errors,78previous tests pass. Browser RED2c971f93/39235237752: missing confirmation screen; prior20onboarding/60mobile pass. Final new native/browser CI receipt — PR106; читать exact final receipt перед продолжением, не переоткрывать C2 по старой pre-CI записи. Новый business bot @ustarcorp_bot, секрет из чата не использован/не сохранён, требуется перевыпуск владельцем. CrazeDNS em2025.netcraze.pro предложен; rule/cert/availability ещё не приняты. Full canonical remote login/recovery/MFA/actor step-up, canonical notification leases/delivery/preferences/ACK и role screens — остаток.0subagents/no main merge/no prod/router/network changes.
+
+## 19Oct10:33МСК — CON01C.1 polling receiver candidate
+
+Base26219dac: Context39214124458/Review39214124509 SUCCESS,20Connect browser scenarios/78native399, DB artifact12168862316. Новая поставка worker-only: TelegramClient, local transport SQLite journal, private commands/personal launch, executable opt-in runtime. [План](../proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md)/[ledger](../proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md).41new tests/full639r16/30skips PASS; source structural/context и exact final CI — PR106. Prior PHP/Chromium local gaps не подменяются fake PASS. Candidate addon2026101902/542/99 unchanged, accepted production526/93 отдельно. Нет live token/API writes/deploy/relay/main merge,0agents. Прежний B4 pre-CI snapshot ниже superseded exact SUCCESS receipt, не повод переделывать форму.
+
+## 19Oct09:55МСК — CON01B.4 private browser BFF/form candidate
+
+Base d4f7c1bd exact B3 evidence: Context39192666105/Review39192666066 SUCCESS,78native/399assertions, fresh/upgrade/repeat +4concurrency PASS, DB artifact12160004274. Новый worker-only slice добавляет OnboardingApp, bounded RAM browser sessions, canonical safe errors и mobile6field UI. [План/границы](../proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md), [ledger](../proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md). Local23web tests RED→GREEN, full598r16/30skips PASS. Native PHP locally unavailable, Chromium CDN ZIP failure; exact new browser/native/source CI receipt публикуется в PR106, не подменяется старым B3. Candidate addon2026101902/542files/99tables и production526/93 unchanged. Нет deployment/relay/receiver/full login,0subagents; full-RC/deployment не заявлены.
+
+## Уточнение19Oct2026 — accounts/link приняты в сообщённом объёме
+
+[Owner receipt00:41МСК](connect_owner_priority_20261019.json): учётки пульта и personal Telegram link работают, service journal показывает прежнее сообщение. Journal/heartbeat отложены. Exact native SHA, полная role/alert/restore приёмка не сообщены. Проверенный release sourcee5b87818/contextde4544d9 находится в PR103; исходники/CI не подменяют native evidence. Owner00:49 выбрал [Connect architecture/PR106](../proposals/USTAR_CONNECT_RFC_20261018.md), design-only; deployment/merge/сеть/БД агентом не менялись.
+
 Сводка Git/CI от 02.10.2026; дополнено owner runtime evidence 05.10.2026. Application source в main консолидирован на PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. История main сохранена: прежний main `99248772a91526c87c1a31f425d1a07906727152` является предком этого SHA. Полный CI #456 проверен через GitHub API: **source, frontend, rollback, prepare-rc, moodle-db, gate — success**. [Run](https://github.com/cauf1l3d/ustarlms/actions/runs/37023122306). Счётчики из описания PR76: 210 Moodle tests / 891 assertions, 60 Chromium scenarios; это CI на synthetic данных.
 
 ## Последние версии
@@ -601,3 +850,54 @@ updated;older dated checkpoints retained as history.
 Owner00:20:51MSK confirms archive obtained/instruction passed to sysadmin; native clean-host result awaited. Moodle5.2/PostgreSQL17 explicitly deferred, previous5.3 rehearsal retained as history. Next INF-06 is same-host Linear-inspired panel with auth, metrics/alerts, labs/SFTP, manual operations and Telegram latest encrypted backup/control.
 
 Consolidation brings accepted PR98/99/100/102 sources and all dated receipts into canonical main without application526/schema93 changes. Legacy Next frontend removed from required workflow graph/manifest/archive; native PHP/JS/Mustache/browser checks and DB/rollback gate retained. CLI test umask isolated and optional package fixture made explicit; production helper guards unchanged. All former entrypoint snapshots and branch heads retained. Full audit residuals and current evidence are in AUDIT_RECONCILIATION_20261016_RU.md; Git/CI publication is not a native host operation or a restore acceptance.
+
+## 19Oct — CON01A development, не серверная поставка
+
+По owner01:28 review и первый код identity/HMAC/link-code в PR106. Application Moodle baseline e1d57f5b не менялся. Worker пока библиотека без службы/endpoint/installation; регистрацию в Telegram проверять на сервере ещё нельзя. [Review](../proposals/USTAR_CONNECT_REVIEW_20261019.md).
+
+## 19Oct — CON01B.1 candidate, не установка server1
+
+Внутренний PHP Connect link storage и schema candidate2026101900. Moodle core/PG production не менялись; accepted application baseline e1d57f5b/local2026100204/theme2026100202 сохранён.531source files/96tables — candidate manifest, не факт deployment. Native fresh/upgrade/repeat и concurrent requests CI pending. [План](../proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md).
+
+Native CI7aff1a99/run39185254555: schema parity и12tests/42assertions + concurrent confirm/replay PASS. Финальная erasure/replay/cron правка повторно проверяется отдельно. Все данные тестовые, не production acceptance.
+
+## 19Oct — CON01B.2 candidate, не установка server1
+
+5f9aa3fb завершил предыдущий native gate: Context39185823445/Review39185823458 SUCCESS,13tests/47assertions, schema parity/concurrency PASS. Новая поставка — signed private bridge и onboarding-only sessions candidate2026101901/539files/98tables. Endpoint disabled default, TLS/private peer/service-key scope, request nonce и business proof replay, one-use exchange/browser binding, privacy/cleanup. Локально569r16/19skips и PHP syntax PASS; native CI для этого candidate ожидается. Точный final SHA/run receipt публикуется в PR106 после CI; эта запись сохраняет pre-CI момент. Нет production installation/network changes или новых runtime secrets. Следом signup receipt/HRD/outbox/forms. [План](../proposals/USTAR_CONNECT_CON01B2_PLAN_20261019.md).
+
+## 19Oct — CON01B.3 canonical signup candidate, не server1 activation
+
+81a1be76 закрыл bridge/entry CI: Context39188208182/Review39188208139 SUCCESS,22tests/87assertions + schema/concurrency PASS. Owner05:30 разрешил следующий срез. Test-first57111574 native39190794829 дал exactly2expected failures canonical completion/rollback (24tests/90assertions). После этого реализован callback внутри canonical register transaction/email lock, first provider link + HMAC receipt + bound entry, private options/submit/status. Candidate2026101902/542files/99tables, новые HR writers/outbox/roles не создаются. Локально574r16/19skips/PHP syntax PASS; new native implementation CI pending, final exact receipt в PR106. [План](../proposals/USTAR_CONNECT_CON01B3_PLAN_20261019.md), [ledger](../proposals/USTAR_CONNECT_CON01B3_PROGRESS_20261019.md). No production/network/merge/provider sends; forms/BFF/remote HRD commands/receiver ACK ещё не готовы.
+
+Read-only preparation sourceef9911f3 delivered: [runbook](connect_academy_preflight_20261019.md), [receipt](connect_academy_preflight_release_20261019.json). Original Academy526/93 and candidate552/99 unchanged. Native owner collection pending; source/ZIP acceptance is not production/schema/bridge activation.
+
+
+## 21Oct — принят cron-only; следующий application/cron release
+
+Owner report:exacte138c77f PYZ hash verified,cron measured/c5eabdce/local1905,
+scheduled finish20Oct21:07:02.555151Z,18overdue/2historical failed. No source/SQL/
+HTTPS recollection or server changes. Receipt:context/runtime/connect_cron_contract_owner_20261021.json.
+New separate updater/build/runtime plan implements fixed830→1e8/local2000,paired
+backup/recovery,exact cron source+installation update,HTTPS lock/unchanged renewal,
+HTTPS Secure-cookie login and existing-task/schema preservation. Local19targeted
+tests/1UID33 namespace skip PASS;native1905→2000/paired restore CI added;new CI pending.
+Original installer02 and old helper manifests unchanged;bridge/link/notify still
+pending. Self-review,0subagents,no main merge or production activation.
+
+Dependency review found exact75ca974f HDD producer expects plainHTTP200,now302.
+Added strict TLS/leaf/Secure-cookie readiness and matching scheduler SHA,plus
+paired helper preparation with private before-images under existing locks;no
+unit/calendar/job changes.10new file/HTTPS-routing tests PASS;actualTLS CI pending.
+This compatibility must precede fresh backup;no old manifest hash was rewritten.
+
+### 21Oct exact6aa verification and next operator gate
+
+Source6aa83a95/treeb1219d51:Context39500936977/Review39500936916 attempt1 SUCCESS.
+BothPHP869r16/136CI skips;381PHP/24JS/57templates/99tables;Chromium60/20/28/100.
+Actual19file/UID33 tests and ApacheTLS/update+HDD readiness PASS. NativeConnect124/629,
+6concurrency,accepted baseline rollback and new1905→2000/custom-task1/1/repeat/paired
+restore PASS. FullRC skipped. Local/CI package SHAe0d364ab matches;bundle corruption
+refused offline. Local869 had one target-only MCP child import environment error;
+isolatedvenv realstdio1testPASS,whole local suite green not claimed.
+Next owner prepares HTTPS backup helper pair then--check. No production action,
+new app/bridge/link/notify acceptance or main merge. Artifact12300525979.

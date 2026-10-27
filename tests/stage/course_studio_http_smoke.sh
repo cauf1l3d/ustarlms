@@ -26,4 +26,5 @@ done
 php -r '$a=json_decode(file_get_contents("/artifacts/studio-ready-1.json"),true,512,JSON_THROW_ON_ERROR);$b=json_decode(file_get_contents("/artifacts/studio-ready-2.json"),true,512,JSON_THROW_ON_ERROR);if($a["cmid"]<=0||$a["cmid"]!==$b["cmid"]||$a["status"]!=="draft")exit(1);'
 code=$(curl -sS --max-time 30 -b "$COOKIE" -H 'X-RC-Owner: other-user' -o /artifacts/studio-wrong-user.json -w '%{http_code}' "$BASE/course_studio_api.php?route=courses")
 test "$code" = 409
+if grep -E 'USTAR_STUDIO_FAILURE|course_studio_api.php.*mutated the session' /artifacts/shell-http-server.log; then exit 1; fi
 echo 'COURSE_STUDIO_AUTHENTICATED_HTTP=PASS csrf shared-create retry prepare actor'

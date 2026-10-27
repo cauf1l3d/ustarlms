@@ -1,0 +1,11 @@
+{
+  "baseline_commit": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
+  "changed": [],
+  "evidence_complete": true,
+  "facts_snapshot": "context/runtime/server-facts/20261017T011227Z-6b7c0628",
+  "matching": 526,
+  "not_an_atomic_snapshot": true,
+  "only_in_git": [],
+  "only_in_snapshot": [],
+  "scope": "plugin_theme_only"
+}

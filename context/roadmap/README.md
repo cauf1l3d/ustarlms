@@ -1,7 +1,5 @@
-# План и состояние USTAR
+# Дорожная карта
 
-[STATE](STATE.yaml) — текущее положение, [BACKLOG](BACKLOG.yaml) — полный остаток по идентификаторам, [ACTIVE](../tasks/ACTIVE.md) — следующий INF-06. [Сверка06–16Oct](../audits/AUDIT_RECONCILIATION_20261016_RU.md) обновляет статусы исходного [плана](USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md), не меняя датированный аудит.
-
-Архив передан сисадмину, restore ожидается. Moodle5.2/PG17 отложены; прежние5.3 исследования сохраняются. Пульт/Telegram — следующий этап; Android/iOS, Privacy и B2B остаются отдельными проектами.
-
-История решений — [SESSION_LOG](SESSION_LOG.md), [старые указатели](../archive/reconciliation_20261016/README.md). Старое selected-order1→7→6 не отменяет позднюю команду16Oct.
+[STATE](STATE.yaml) — факты; [BACKLOG](BACKLOG.yaml) — задачи; [ACTIVE](../tasks/ACTIVE.md) — сейчас.
+[Риски](ACCEPTED_RISKS.yaml) имеют владельца, дату и триггер пересмотра.
+Done обозначает указанную область и дату, не вечную гарантию.

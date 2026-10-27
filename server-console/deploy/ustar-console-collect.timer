@@ -1,0 +1,11 @@
+[Unit]
+Description=Collect USTAR console state independently of the UI
+
+[Timer]
+OnBootSec=15s
+OnUnitActiveSec=15s
+AccuracySec=1s
+Unit=ustar-console-collect.service
+
+[Install]
+WantedBy=timers.target

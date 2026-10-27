@@ -1,0 +1,943 @@
+{
+  "schema_version": 1,
+  "kind": "allowlisted_derivative_of_owner_gaps_archive",
+  "observed_at_utc": "2026-10-17T10:59:16Z",
+  "timestamp_resolution_seconds": 1,
+  "owner_terminal_message_at_utc": "2026-10-17T11:03:05Z",
+  "provenance": "context/runtime/server_gaps_received_20261017.json",
+  "probes": {
+    "acl_code": {
+      "exit": 0,
+      "stderr_bytes": 0,
+      "stdout_bytes": 6415419,
+      "started": "2026-10-17T10:59:16Z",
+      "finished": "2026-10-17T10:59:16Z"
+    },
+    "acl_parents": {
+      "exit": 0,
+      "stderr_bytes": 0,
+      "stdout_bytes": 578,
+      "started": "2026-10-17T10:59:16Z",
+      "finished": "2026-10-17T10:59:16Z"
+    },
+    "listener_2019": {
+      "exit": 0,
+      "stderr_bytes": 0,
+      "stdout_bytes": 154,
+      "started": "2026-10-17T10:59:16Z",
+      "finished": "2026-10-17T10:59:16Z"
+    },
+    "storage_selected": {
+      "exit": 0,
+      "stderr_bytes": 0,
+      "stdout_bytes": 144,
+      "started": "2026-10-17T10:59:16Z",
+      "finished": "2026-10-17T10:59:16Z"
+    },
+    "ssh_effective": {
+      "exit": 0,
+      "stderr_bytes": 0,
+      "stdout_bytes": 298,
+      "started": "2026-10-17T10:59:16Z",
+      "finished": "2026-10-17T10:59:16Z"
+    },
+    "extra_files": {
+      "exit": 0,
+      "stderr_bytes": 0,
+      "stdout_bytes": 6661,
+      "started": "2026-10-17T10:59:16Z",
+      "finished": "2026-10-17T10:59:16Z"
+    }
+  },
+  "acl": {
+    "scope": "getfacl_R_P_e_n_p_outer_Moodle_tree_and_seven_selected_parents",
+    "exported_code_objects": 44175,
+    "unique_exported_paths": 44175,
+    "named_acl_objects": 0,
+    "default_acl_objects": 0,
+    "mask_acl_objects": 0,
+    "owner_groups": [
+      {
+        "uid": 0,
+        "gid": 0,
+        "objects": 39449
+      },
+      {
+        "uid": 33,
+        "gid": 33,
+        "objects": 4726
+      }
+    ],
+    "world_writable_base_acl_objects": 0,
+    "group_writable_base_acl_objects": 439,
+    "uid33_owner_writable_objects": 4726,
+    "selected_code_objects": [
+      {
+        "path": "/opt/ustar/data/moodle/public",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/bx_grade_tokens.txt",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/config.php.before_ip_change_20260830T203841Z",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/wwwroot",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/gradehelper.php",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/gradehelper_submit.php",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/config.php.backup-before-wwwroot-fix-2026-08-10",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/config.php.pre-cookie2726",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/config.php.backup_debug",
+        "uid": 0,
+        "gid": 0,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public",
+        "uid": 0,
+        "gid": 0,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/theme/ustar",
+        "uid": 0,
+        "gid": 0,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/local/ustar",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/config.php.before_ip_change_20260830T203238Z",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/course_dashboard.php",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/gradehelper.php",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/index.php.backup_ustar",
+        "uid": 0,
+        "gid": 0,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/gradehelper_submit.php",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/bitrix_bot_handler.php",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/reports/course_10_9e253332c84d.pdf",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/reports/course_10_005c7d20069c.pdf",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/reports/course_10_c959c810a6b9.pdf",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/reports/course_10_72536505b05e.pdf",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/reports/course_10_b661337a5988.pdf",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/reports/course_10_879d66073583.pdf",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/reports/course_10_d332481cd5be.pdf",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/public/index.php",
+        "uid": 0,
+        "gid": 0,
+        "entries": [
+          "user::rw-",
+          "group::r--",
+          "other::r--"
+        ],
+        "base_permissions": {
+          "user": "rw-",
+          "group": "r--",
+          "other": "r--"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/config.php.backup-2026-08-10",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/githash.php",
+        "uid": 0,
+        "gid": 0,
+        "entries": [
+          "user::rw-",
+          "group::r--",
+          "other::r--"
+        ],
+        "base_permissions": {
+          "user": "rw-",
+          "group": "r--",
+          "other": "r--"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/public/config.php",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      }
+    ],
+    "selected_parents": [
+      {
+        "path": "/",
+        "uid": 0,
+        "gid": 0,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt",
+        "uid": 0,
+        "gid": 0,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar",
+        "uid": 1000,
+        "gid": 1000,
+        "entries": [
+          "user::rwx",
+          "group::r-x",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "r-x",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data",
+        "uid": 1000,
+        "gid": 1000,
+        "entries": [
+          "user::rwx",
+          "group::rwx",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "rwx",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::rwx",
+          "other::r-x"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "rwx",
+          "other": "r-x"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/moodle/moodledata",
+        "uid": 33,
+        "gid": 33,
+        "entries": [
+          "user::rwx",
+          "group::rwx",
+          "other::---"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "rwx",
+          "other": "---"
+        }
+      },
+      {
+        "path": "/opt/ustar/data/postgres",
+        "uid": 999,
+        "gid": 1000,
+        "entries": [
+          "user::rwx",
+          "group::---",
+          "other::---"
+        ],
+        "base_permissions": {
+          "user": "rwx",
+          "group": "---",
+          "other": "---"
+        }
+      }
+    ],
+    "POSIX_parent_replacement_risk": "uid33_writable_outer_root_and_parent_allow_directory_entry_replacement_subject_to_other_controls",
+    "negative_write_rename_replace_tests_performed": false,
+    "immutable_mount_LSM_and_current_container_identity_not_rechecked": true,
+    "limits": [
+      "Counts include files and directories; do not equate with source file manifest",
+      "Physical walk skips symlinks; full raw ACL stays private with checksum provenance",
+      "No extended entries in exported scope; not a claim about every filesystem on host"
+    ]
+  },
+  "ssh": {
+    "owner_reported_user": "aduk",
+    "settings": {
+      "port": "22",
+      "maxauthtries": "6",
+      "permitrootlogin": "without-password",
+      "pubkeyauthentication": "yes",
+      "passwordauthentication": "yes",
+      "kbdinteractiveauthentication": "no",
+      "x11forwarding": "yes",
+      "strictmodes": "yes",
+      "permitemptypasswords": "no",
+      "usedns": "no",
+      "allowtcpforwarding": "yes",
+      "allowagentforwarding": "yes",
+      "authenticationmethods": "any",
+      "permittunnel": "no"
+    },
+    "configuration": "on_disk_sshd_T_C_for_owner_current_SSH_connection",
+    "source_and_local_connection_addresses_not_exported": true,
+    "host_parameter": "source_IP_used;UseDNS_no_observed",
+    "all_users_addresses_and_loaded_daemon_overrides_not_verified": true,
+    "functional_login_acceptance": false
+  },
+  "listener_2019": {
+    "items": [
+      {
+        "port": 2019,
+        "scope": "loopback",
+        "local_address_text": "127.0.0.1",
+        "process_comm": "caddy",
+        "pid": 862,
+        "fd": 3
+      },
+      {
+        "port": 2019,
+        "scope": "all",
+        "local_address_text": "*",
+        "process_comm": "caddy",
+        "pid": 862,
+        "fd": 7
+      }
+    ],
+    "owning_process_name_identified": true,
+    "executable_identity_admin_API_auth_and_external_reachability_not_verified": true,
+    "external_TCP_probe_received": false,
+    "management_HTTP_requests_performed": false
+  },
+  "storage": {
+    "method": "du_sx_block_size_1_ionice_idle_nice19",
+    "allocated_bytes_by_requested_path": {
+      "/opt/ustar/data/moodle/public": 500744192,
+      "/opt/ustar/data/moodle/moodledata": 758067200,
+      "/opt/ustar/data/postgres": 247816192,
+      "/var/lib/docker": 29286400
+    },
+    "selected_path_sum_bytes": 1535913984,
+    "not_atomic": true,
+    "full_root_occupancy_and_Docker_containerd_store_not_measured": true
+  },
+  "extra_files": {
+    "not_atomic": true,
+    "files": [
+      {
+        "path": "bx_grade_tokens.txt",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 96,
+        "mtime_ns": 1791850771554016895,
+        "status": "hashed",
+        "sha256": "53277652e3c5aae23f65530dc277893f21be6bf345540a70409e9af3e2452347"
+      },
+      {
+        "path": "config.php.backup-2026-08-10",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 881,
+        "mtime_ns": 1791850771639017265,
+        "status": "hashed",
+        "sha256": "d4cd3b3db2f6bbb44d59376ce03ff6801992a3a8ca4b30085202e4459915ab96"
+      },
+      {
+        "path": "config.php.backup-before-wwwroot-fix-2026-08-10",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 889,
+        "mtime_ns": 1791850771679017435,
+        "status": "hashed",
+        "sha256": "c078a032090a9564348417318082e6deffb0736e1d5873f98da7c780797dba6c"
+      },
+      {
+        "path": "config.php.backup_debug",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0o755",
+        "bytes": 1253,
+        "mtime_ns": 1791850771690017483,
+        "status": "hashed",
+        "sha256": "f490b6457e5f1212160b637d7fe3a13091b6ec130a6669865a7fee2a434d527a"
+      },
+      {
+        "path": "config.php.before_ip_change_20260830T203841Z",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 1741,
+        "mtime_ns": 1791850771702017536,
+        "status": "hashed",
+        "sha256": "feb4061eff6c3307ee4edbd44375dbe480d829a21327c6ba7df7d6d0cd861a6f"
+      },
+      {
+        "path": "config.php.pre-cookie2726",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 1754,
+        "mtime_ns": 1791850771713017584,
+        "status": "hashed",
+        "sha256": "717b5511b01d5c48296befd3abc94370b09f38875fbd779535a98f264da67034"
+      },
+      {
+        "path": "githash.php",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0o644",
+        "bytes": 953,
+        "mtime_ns": 1791850771753017759,
+        "status": "hashed",
+        "sha256": "77292049bd92cd7a183ff7e42629cd928c62e5a487b7318fc82954d1f3ba5f95"
+      },
+      {
+        "path": "gradehelper.php",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 4139,
+        "mtime_ns": 1791850771765017812,
+        "status": "hashed",
+        "sha256": "c38fb307fcc2826a33caf831de9bf9be44c1ee7b8e41ffd369ed425696bac1b8"
+      },
+      {
+        "path": "gradehelper_submit.php",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 1386,
+        "mtime_ns": 1791850771779017873,
+        "status": "hashed",
+        "sha256": "234c4cd77b3be39e3cafcb4b4ddd98e87f6c28387c22f149739c07432cfcb023"
+      },
+      {
+        "path": "public/bitrix_bot_handler.php",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 22630,
+        "mtime_ns": 1791850772140019442,
+        "status": "hashed",
+        "sha256": "12bbb1424c2e989907511c80b399800346010e0e6a2b57ef9e2997b36b5fa32c"
+      },
+      {
+        "path": "public/config.php.before_ip_change_20260830T203238Z",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 1027,
+        "mtime_ns": 1791850772202019714,
+        "status": "hashed",
+        "sha256": "7b6509492ac5bc749f94bfb155fc84e94787fa85ee1ef21f8daeaf972592b020"
+      },
+      {
+        "path": "public/course_dashboard.php",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 5752,
+        "mtime_ns": 1791850772214019766,
+        "status": "hashed",
+        "sha256": "63bfffcfc0f4d495cbdaf962498a0a2b6e7b3d78a0fdcc5acfdde11993ba83cc"
+      },
+      {
+        "path": "public/gradehelper.php",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 5017,
+        "mtime_ns": 1791850772288020088,
+        "status": "hashed",
+        "sha256": "911de95854faa072340b94722300637dedd75caaa0721b69580d694f856e08b1"
+      },
+      {
+        "path": "public/gradehelper_submit.php",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 1539,
+        "mtime_ns": 1791850772298020132,
+        "status": "hashed",
+        "sha256": "a5d175478af2df2b81edb1d7812fd86117f361b0d748a0e660b378a7e92d397f"
+      },
+      {
+        "path": "public/index.php.backup_ustar",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0o755",
+        "bytes": 5550,
+        "mtime_ns": 1791850772374020462,
+        "status": "hashed",
+        "sha256": "dcbeabb3d5d971ce93a98b3f8fff5ae865b553a7e8b8c13f035deae9f04ebc34"
+      },
+      {
+        "path": "public/reports/course_10_005c7d20069c.pdf",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 91404,
+        "mtime_ns": 1791850782434064237,
+        "status": "hashed",
+        "sha256": "faa10b543d48d02c645c0038643b80c359c160bd8fc439ad8fc46594639ed54e"
+      },
+      {
+        "path": "public/reports/course_10_72536505b05e.pdf",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 91563,
+        "mtime_ns": 1791850782444064280,
+        "status": "hashed",
+        "sha256": "f6c65ab999ecaffa87d18c4270e7211897b698242b68ad531d6df13fec396a0b"
+      },
+      {
+        "path": "public/reports/course_10_879d66073583.pdf",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 91563,
+        "mtime_ns": 1791850782472064402,
+        "status": "hashed",
+        "sha256": "2060315551f8479d5b10091273c0d21c1c332bb0174c1a46aad93ade58edb667"
+      },
+      {
+        "path": "public/reports/course_10_9e253332c84d.pdf",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 91504,
+        "mtime_ns": 1791850782483064450,
+        "status": "hashed",
+        "sha256": "6ba91e271d0a8c1fe60edaebc3f2874b4f909399a28b0ebd2c9ed71080852768"
+      },
+      {
+        "path": "public/reports/course_10_b661337a5988.pdf",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 91403,
+        "mtime_ns": 1791850782493064494,
+        "status": "hashed",
+        "sha256": "dbb08a1e2f1dffad220f2c1c201d7c056c0bb624f026b4eba86452ae745c5c45"
+      },
+      {
+        "path": "public/reports/course_10_c959c810a6b9.pdf",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 8622,
+        "mtime_ns": 1791850782521064615,
+        "status": "hashed",
+        "sha256": "2104acc1739c2f7b72ab23171f86cccca6722910adb738b0c6e7122f2f700b65"
+      },
+      {
+        "path": "public/reports/course_10_d332481cd5be.pdf",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 91563,
+        "mtime_ns": 1791850782530064655,
+        "status": "hashed",
+        "sha256": "3f371771defed77e3d50fe7967d51eb9c9617bdd0e7d1e55a59ab3dfa90b4afc"
+      },
+      {
+        "path": "wwwroot",
+        "uid": 33,
+        "gid": 33,
+        "mode": "0o755",
+        "bytes": 0,
+        "mtime_ns": 1791850771908018435,
+        "status": "hashed",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "no_extra_file_contents_exported": true,
+  "collection_read_only_except_private_report_files": true,
+  "owner_package_install": {
+    "source": "separate_owner_terminal_transcript_not_archive_checksums",
+    "package": "acl",
+    "version": "2.3.2-1build1.1",
+    "new_packages": 1,
+    "upgraded_packages": 0,
+    "removed_packages": 0,
+    "needrestart_deferred_services_reported": [
+      "dbus",
+      "docker",
+      "networkd-dispatcher",
+      "systemd-logind",
+      "unattended-upgrades"
+    ],
+    "service_restarts_not_independently_measured": true
+  },
+  "independently_authenticated_host": false,
+  "agent_ssh_access": false,
+  "native_functional_acceptance": false
+}

@@ -1,0 +1,24 @@
+schema_version: 1
+updated_at: '2026-10-26'
+risks:
+- id: RISK-DOCKER-LOGS
+  status: accepted_risk
+  owner: Аду
+  accepted_on: '2026-10-26'
+  scope: Rotation/health/recreate deferred; no claim current logs bounded
+  review_trigger: Next planned Moodle upgrade, or measured abnormal disk/log growth
+  evidence: context/runtime/docker_runtime_successor_20261026.md
+- id: RISK-LAN-ACCESS
+  status: accepted_risk
+  owner: Аду
+  accepted_on: '2026-10-26'
+  scope: Current LAN username/password; SSH key/firewall work deferred
+  review_trigger: Before opening external access
+  evidence: context/runtime/infra_closure_followup_owner_20261025.json
+- id: RISK-EXTERNAL-RESTORE
+  status: accepted_risk
+  owner: Аду
+  accepted_on: '2026-10-26'
+  scope: Copies handed over; external clean-host restore result explicitly unknown
+  review_trigger: External restore result supplied, or recovery requirement/site change
+  evidence: context/runtime/infra_closure_followup_owner_20261025.json

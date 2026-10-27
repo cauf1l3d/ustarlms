@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "kind": "owner_report_and_design_priority",
+  "recorded_date": "2026-10-19",
+  "timezone": "Europe/Moscow",
+  "source": "owner_messages_in_current_dialogue",
+  "independently_measured": false,
+  "console_result": {
+    "reported_at": "2026-10-19T00:41:02+03:00",
+    "accounts_checked_by_owner": true,
+    "personal_Telegram_link_checked_by_owner": true,
+    "service_journal": "owner_still_sees_previous_message;unresolved",
+    "journal_and_external_heartbeat": "explicitly_deferred_by_owner",
+    "full_console_acceptance": false,
+    "exact_native_SOURCE_COMMIT_reported": false,
+    "expected_release_from_previous_handoff": "e5b878185e6f9db15c595c3760292374c95eb54a",
+    "release_context_commit": "de4544d97f4f77036cfbb358ab79273361e6a6e5",
+    "source_PR": 103,
+    "not_confirmed": [
+      "all_role_denial_and_revocation_cases",
+      "personal_alert_delivery_and_schedule_acceptance",
+      "external_observer",
+      "restore_RTO",
+      "exact_native_source_hash"
+    ]
+  },
+  "current_request": {
+    "reported_at": "2026-10-19T00:49:26+03:00",
+    "task": "INTEGRATIONS-01",
+    "scope": "review_and_expand_PR106_unified_Academy_bot_architecture;update_GitHub_context",
+    "channels": [
+      "Telegram",
+      "Bitrix24",
+      "WhatsApp"
+    ],
+    "identity_authority": "Moodle_account_current_capabilities_and_organization_scope",
+    "journal_fix_or_heartbeat_activation_in_scope": false,
+    "subagents": "do_not_launch;future_launches_require_owner_agreement_and_clear_reason"
+  },
+  "legacy_owner_metadata": {
+    "path": "/opt/ustar/data/moodle/public/public/bitrix_bot_handler.php",
+    "bytes": 22630,
+    "origin": "owner_pasted_find_output",
+    "exact_probe_time": null,
+    "sha256": null,
+    "dated_PR105_observation": {
+      "date": "2026-10-17",
+      "commit": "02fd394fb90b44ad299374fd678b12543e7681ab",
+      "source": "context/runtime/server-gaps/20261017T105916Z-86133045/observations.json",
+      "bytes": 22630,
+      "sha256": "12bbb1424c2e989907511c80b399800346010e0e6a2b57ef9e2997b36b5fa32c",
+      "uid": 33,
+      "gid": 33,
+      "mode": "0o755",
+      "current_file_equality_not_proven": true
+    },
+    "source_content_received": false,
+    "executed_by_agent": false
+  },
+  "local_design_verification": {
+    "scope": "docs_and_existing_context_harness;not_Connect_feature_tests",
+    "r16_ran": 545,
+    "r16_skipped": 19,
+    "r16_result": "OK",
+    "checks": ["context_source_schema", "relative_links", "source_anchors", "strong_secret_patterns", "diff_whitespace", "docs_only_scope", "inline_spec_consistency_review"],
+    "application_files": 526,
+    "schema_tables": 93,
+    "roadmap_tasks": 34,
+    "subagents": 0
+  },
+  "repository_review": {
+    "main": "d9655074db9a06281fe16f378dbdbe1d279104a0",
+    "application_baseline": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
+    "PR103_head": "de4544d97f4f77036cfbb358ab79273361e6a6e5",
+    "PR105_head": "02fd394fb90b44ad299374fd678b12543e7681ab",
+    "PR106_start_head": "7e6fc66d7cbeac74a4c86a905eae11df7ada0ff3",
+    "merge_or_production_operation": false,
+    "subagents_launched": 0
+  }
+}

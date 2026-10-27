@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""Disposable existing Ubuntu runtime job only: actual UID isolation and mount sandbox."""
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import uuid
+ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'scripts/infra'))
+import infra_one_pass as m
+
+def run(argv,check=True):
+    result=subprocess.run(argv,capture_output=True,text=True,timeout=90)
+    if check and result.returncode:raise RuntimeError('synthetic fixture command failed: '+result.stderr[-6000:])
+    return result
+
+if os.geteuid()!=0 or not os.environ.get('GITHUB_ACTIONS') or not Path('/run/systemd/system').is_dir():
+    raise SystemExit('Requires disposable root systemd GitHub runner; no production or skip fallback')
+if Path('/var/lib/ustar-code-hardening').exists():raise SystemExit('Refusing a populated production host')
+
+with tempfile.TemporaryDirectory(prefix='ustar-infra-native-') as directory:
+    base=Path(directory);base.chmod(0o755)
+    home=base/'home/aduk';home.mkdir(parents=True);home.chmod(0o755)
+    dump=home/'ustar-backup.dump';dump.write_bytes(b'synthetic-private-dump');dump.chmod(0o664);os.chown(dump,1000,1000)
+    def outsider():
+        return run(['setpriv','--reuid=65534','--regid=65534','--clear-groups','/usr/bin/python3','-c',
+                    'import pathlib,sys;pathlib.Path(sys.argv[1]).read_bytes()',str(dump)],check=False).returncode
+    assert outsider()==0
+    tx=m.Exports(base/'private');state=tx.prepare(m.export_plan(base))
+    state['operator_sha256']='b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19'
+    state['predecessor_operator_sha256']='1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18'
+    tx.store.save(state);tx.apply()
+    assert outsider()!=0 and dump.stat().st_uid==1000 and dump.read_bytes()==b'synthetic-private-dump'
+    tx.undo();assert outsider()==0 and dump.stat().st_mode&0o777==0o664
+    print('INFRA_EXPORT_ACTUAL_UID=PASS; unrelated UID65534 denied; original UID1000 retained; undo verified')
+    operator_sha=m.digest((ROOT/'scripts/infra/infra_one_pass.py').read_bytes())
+    tx.resume(m.export_plan(base),operator_sha)
+    assert tx.store.load()['operator_sha256']==operator_sha
+    assert tx.store.load()['predecessor_operator_sha256']=='b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19'
+    assert tx.store.load()['operator_history']==[
+        '1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18',
+        'b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19']
+    tx.apply();assert outsider()!=0
+    tx.undo();assert outsider()==0 and dump.stat().st_mode&0o777==0o664
+    print('INFRA_KNOWN_PREDECESSOR_RETRY=PASS; exact undo; actual UID1000; before images retained')
+
+    mount=Path('/run/ustar-infra-hdd-fixture-'+uuid.uuid4().hex[:8]);mount.mkdir(mode=0o700)
+    image=base/'hdd.ext4'
+    with image.open('xb') as stream:stream.truncate(64*1024**2)
+    identity='030ad819-cf4e-44b8-996b-778f4b566102'
+    run(['/usr/sbin/mkfs.ext4','-q','-U',identity,str(image)])
+    mounted=False
+    try:
+        run(['/usr/bin/mount','-o','loop,nosuid,nodev,noexec',str(image),str(mount)]);mounted=True
+        target=mount/'host-state';target.mkdir(mode=0o700)
+        code=('import sys;from pathlib import Path;sys.path.insert(0,'+repr(str(ROOT/'scripts/infra'))+');'
+              'import infra_one_pass as m;m.MOUNT=Path('+repr(str(mount))+');m.TARGET=Path('+repr(str(target))+');'
+              'm.HDD_UUID='+repr(identity)+';m.HDD_RESERVE=2*1024**2;m.LIMIT=2*1024**2;'
+              'm.hdd_target(m.Host(m.Store(Path("/not-used"))));'
+              '(m.TARGET/"probe").write_bytes(b"verified");(m.TARGET/"probe").unlink();print("HDD_NAMESPACE_PASS")')
+        argv=['systemd-run','--quiet','--wait','--pipe','--collect',
+              '--property=ProtectSystem=strict','--property=ProtectHome=read-only',
+              '--property=ReadWritePaths='+str(target),'/usr/bin/python3','-I','-B','-c',code]
+        assert 'HDD_NAMESPACE_PASS' in run(argv).stdout
+        # Run the real companion producer under the same protected filesystem
+        # properties as its nightly service. Synthetic paths/keys/controllers;
+        # root phase guards and flock, age authentication, disk writes are real.
+        inputs=Path('/run/ustar-infra-input-'+uuid.uuid4().hex[:8]);inputs.mkdir(mode=0o700)
+        created=[]
+        try:
+            key=inputs/'recovery.key';recipients=inputs/'recipients.txt'
+            run(['age-keygen','-o',str(key)])
+            recipients.write_text(run(['age-keygen','-y',str(key)]).stdout);recipients.chmod(0o600)
+            source=inputs/'source.json';source.write_bytes(b'{"synthetic_private_control":true}');source.chmod(0o600)
+            lock=inputs/'lock';lock.touch(mode=0o600)
+            statebase=inputs/'state';statebase.mkdir(mode=0o700)
+            for dirname,phase in (('/var/lib/ustar-code-hardening','active'),('/var/lib/ustar-postgres-app-handoff','app_role_active')):
+                path=Path(dirname);assert not path.exists();path.mkdir(mode=0o700);created.append(path)
+                state=path/'state.json'
+                raw=json.dumps({'phase':phase}).encode()
+                if phase=='active':
+                    prefix=b'{"phase":"active","synthetic_padding":"'
+                    raw=prefix+b'x'*(21665285-len(prefix)-2)+b'"}'
+                state.write_bytes(raw);state.chmod(0o600)
+            legacy=Path('/var/lib/ustar-connect-telegram-update')
+            assert not legacy.exists();legacy.mkdir(mode=0o700);created.append(legacy)
+            (legacy/'state.json').write_bytes(b'{"synthetic_control":true}');(legacy/'state.json').chmod(0o600)
+            generation=legacy/('app-'+'a'*32);generation.mkdir(mode=0o700)
+            control=generation/'baseline-manifest.json';control.write_bytes(b'{"synthetic_pair_manifest":true}');control.chmod(0o600)
+            pair=generation/'baseline';pair.mkdir(mode=0o700)
+            moodledata=pair/'moodledata';moodledata.mkdir(mode=0o770);moodledata.chmod(0o770);os.chown(moodledata,33,33)
+            postgres=pair/'postgres';postgres.mkdir(mode=0o700);os.chown(postgres,999,1000)
+            cache=moodledata/'cache';cache.mkdir();cache.chmod(0o777)
+            media=moodledata/'must-not-copy'
+            with media.open('wb') as stream:stream.truncate(91677698)
+            os.chown(media,33,33);os.mkfifo(postgres/'must-not-open')
+            log=generation/'commands-private.log'
+            with log.open('wb') as stream:stream.truncate(64*1024**2+1)
+            log.chmod(0o600)
+            import hashlib
+            producer=('import sys,json;from pathlib import Path;sys.path.insert(0,'+repr(str(ROOT/'scripts/infra'))+');'
+                'import infra_one_pass as m;m.MOUNT=Path('+repr(str(mount))+');m.TARGET=Path('+repr(str(target))+');'
+                'm.HDD_UUID='+repr(identity)+';m.HDD_RESERVE=2*1024**2;m.LIMIT=32*1024**2;'
+                'm.KEY=Path('+repr(str(key))+');m.RECIPIENTS=Path('+repr(str(recipients))+');'
+                'm.LOCKS=('+repr(str(lock).lstrip('/'))+',);m.SCOPE=('+repr(str(source).lstrip('/'))+',"var/lib/ustar-code-hardening/state.json","var/lib/ustar-connect-telegram-update");'
+                'm.CONTROLLERS={'+repr(str(source).lstrip('/'))+':'+repr(hashlib.sha256(source.read_bytes()).hexdigest())+'};'
+                'store=m.Store(Path('+repr(str(statebase))+'));print(json.dumps(m.backup_controls(store,m.Host(store))))')
+            producer_argv=['systemd-run','--quiet','--wait','--pipe','--collect',
+                '--property=User=root','--property=Group=root','--property=UMask=0077',
+                '--property=ProtectSystem=strict','--property=ProtectHome=read-only','--property=PrivateTmp=yes',
+                '--property=NoNewPrivileges=yes','--property=MemoryMax=1G',
+                '--property=ReadWritePaths='+str(target)+' '+str(statebase),
+                '/usr/bin/python3','-I','-B','-c',producer]
+            receipt=json.loads(run(producer_argv).stdout)
+            assert receipt['readback_verified'] and receipt['phase']=='complete' and receipt['files']==4
+            assert receipt['physical_recovery_trees_included'] is False
+            assert Path(receipt['archive']).stat().st_mode&0o777==0o600
+            print('INFRA_COMPANION_SERVICE=PASS; real restricted systemd service; real flock/age/manifest/readback; synthetic 21665285-byte hardening state included')
+            assert (moodledata.stat().st_uid,moodledata.stat().st_mode&0o777)==(33,0o770)
+            assert (postgres.stat().st_uid,postgres.stat().st_gid,postgres.stat().st_mode&0o777)==(999,1000,0o700)
+            assert cache.stat().st_mode&0o777==0o777 and media.stat().st_size==91677698
+            print('INFRA_PHYSICAL_PAIR_EXCLUSION=PASS; UID33/999,0777,FIFO,91677698B retained; control files included')
+        finally:
+            import shutil
+            for path in reversed(created):shutil.rmtree(path)
+            shutil.rmtree(inputs)
+        run(['/usr/bin/mount','-o','remount,ro',str(mount)])
+        assert run(argv,check=False).returncode!=0
+        print('INFRA_HDD_NAMESPACE=PASS; actual UUID; host rw/local parent ro/target rw; host ro rejected')
+    finally:
+        if mounted:run(['/usr/bin/umount',str(mount)])
+        mount.rmdir()
+print('INFRA_ONE_PASS_NATIVE=PASS')

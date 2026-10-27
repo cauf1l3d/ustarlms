@@ -10,12 +10,22 @@ Object.defineProperty(w.crypto,'subtle',{value:crypto.subtle});w.URL.createObjec
 w.HTMLElement.prototype.scrollIntoView=()=>{};w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};
 w.fetch=async(url,init={})=>{const route=new URL(url,w.location).searchParams.get('route');calls.push([route,init]);if(route==='session')return Response.json({authenticated:true,userId:'2'});if(route==='courses')return Response.json({courses:[]});if(route.startsWith('courses/')&&init.method){const p=JSON.parse(init.body);return Response.json({revision:1,contentmodified:101,fingerprint:Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(p.course)))).toString('hex')});}if(route==='prepare')return Response.json({contentid:42,contentmodified:102,revision:1});throw Error('Unexpected '+route)};
 for(const script of w.document.querySelectorAll('script:not([src])'))w.eval(script.textContent);
-for(const name of ['vendor/jszip.min.js','runtime.js','model.js','rich.js','cloud.js','app.js'])w.eval(fs.readFileSync(dir+'/'+name,'utf8'));
+for(const name of ['vendor/jszip.min.js','runtime.js','model.js','rich.js','cloud.js','pdf.js','app.js'])w.eval(fs.readFileSync(dir+'/'+name,'utf8'));
 async function until(predicate){for(let i=0;i<150;i++){if(predicate())return;await new Promise(r=>setTimeout(r,10));}throw Error('DOM condition timed out: '+w.document.querySelector('#toast')?.textContent)}
 (async()=>{
  await until(()=>w.document.querySelector('.workspace').inert===false);
  assert.equal(w.document.querySelector('#course-select').options.length,1);
+ assert(w.document.querySelector('#pdf-import-button'),'PDF import action');
+ w.document.querySelector('#review-button').click();
+ assert(w.document.querySelector('#review-dialog').open,'readiness dialog');
+ assert(w.document.querySelector('#review-list').textContent.includes('пуст'),'empty page reported');
+ w.document.querySelector('#review-list button').click();
+ assert(!w.document.querySelector('#review-dialog').open,'jump back to affected screen');
+ w.document.querySelector('#focus-button').click();
+ assert(w.document.body.classList.contains('focus-mode'),'focus mode');
+ w.document.querySelector('#focus-button').click();
  const input=w.document.querySelector('#editor-content');input.innerHTML='<p>Содержимое нового курса</p>';input.dispatchEvent(new w.Event('input',{bubbles:true}));
+ assert(w.document.querySelector('#word-count').textContent.includes('слов'));
  w.document.querySelector('#prepare-material').click();await until(()=>w.document.querySelector('#material-result-dialog').open);
  assert.equal(w.document.querySelector('#material-result-link').getAttribute('href'),'/material.php?id=42');
  assert(calls.some(([route,init])=>route==='prepare'&&init.headers['X-Moodle-Sesskey']==='csrf-token'));

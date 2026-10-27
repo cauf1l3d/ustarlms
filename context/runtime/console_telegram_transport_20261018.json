@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "kind": "redacted_owner_terminal_followup",
+  "source": "owner_pasted_Telegram_ID_helper_traceback_in_current_dialogue",
+  "received_at_utc": "2026-10-17T21:27:48Z",
+  "probe_observed_at_utc": null,
+  "included_in_archive_checksums": false,
+  "independently_reexecuted_by_agent": false,
+  "helper": "local_console_Telegram_getUpdates_numeric_ID_lookup",
+  "local_token_format_parser_completed": true,
+  "bot_token_authenticated_by_API": false,
+  "nonce_generated_and_owner_reports_message_sent": true,
+  "nonce_value_exported": false,
+  "failure": {"method": "getUpdates", "exception": "DeliveryError", "code": "transport_unavailable"},
+  "underlying_cause": "not_determined; client also maps malformed_or_oversize_response_to_this_code",
+  "DNS_TCP_TLS_IPv4_IPv6_proxy_or_API_response_not_yet_isolated": true,
+  "numeric_ID_obtained": false,
+  "persistent_Telegram_configuration_or_receiver_ACK_confirmed": false,
+  "next_step": "owner_no_token_DNS_and_curl_direct_IPv4_IPv6_connectivity_probes",
+  "credentials_exported": false,
+  "agent_production_changes": false,
+  "scope_note": "Token was entered through local getpass and is absent from this receipt. Local format acceptance is not API authentication. Transport failure is not attributed to blocking, a wrong token or a particular IP family without diagnostics."
+}

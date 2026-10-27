@@ -1,4 +1,5 @@
 <?php
+$string['privacy:metadata:connect:preferences'] = 'Личное согласие на уведомления, категории, важность, тихие часы, часовой пояс и интервал.';
 defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'USTAR Workspace';
 $string['ustar:admin'] = 'Администрирование USTAR workspace';
@@ -32,3 +33,8 @@ $string['ustar:gradeassessments'] = 'Проверять аттестации';
 $string['ustar:requeststaff'] = 'Подавать заявки на персонал по компании';
 
 $string['coursestudioconflict'] = 'Проект или его настройки уже изменены. Сохраните обе редакции или обновите проект.';
+$string['notification_ack'] = 'Принял';
+$string['notification_acknowledged'] = 'Подтверждено';
+$string['notification_read'] = 'Прочитано';
+
+$string['privacy:metadata:connect:acktokens'] = 'Хеши персональных кнопок подтверждения уведомлений; без исходных токенов действий.';

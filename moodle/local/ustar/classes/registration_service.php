@@ -18,8 +18,8 @@ final class registration_service {
         return $result;
     }
 
-    /** Create one Moodle identity and one pending HRD request in the same transaction. */
-    public static function register(array $input): int {
+    /** Internal completion participates in the same transaction and email lock; never a client callable. */
+    public static function register(#[\SensitiveParameter] array $input, ?callable $complete = null): int {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/user/lib.php');
         require_once($CFG->libdir . '/moodlelib.php');
@@ -75,13 +75,16 @@ final class registration_service {
             $transaction = $DB->start_delegated_transaction();
             try {
                 $userid = (int)user_create_user((object)[
-                'auth' => 'manual', 'confirmed' => 1, 'mnethostid' => $CFG->mnet_localhost_id,
-                'username' => $username, 'password' => $password, 'email' => $email,
-                'firstname' => $firstname, 'lastname' => $lastname, 'suspended' => 0,
-            ], true, false);
-            accounts::set_type($userid, accounts::TYPE_EMPLOYEE);
-            employment::register_pending($userid);
-            self::submit_department($userid, $departmentid);
+                    'auth' => 'manual', 'confirmed' => 1, 'mnethostid' => $CFG->mnet_localhost_id,
+                    'username' => $username, 'password' => $password, 'email' => $email,
+                    'firstname' => $firstname, 'lastname' => $lastname, 'suspended' => 0,
+                ], true, false);
+                accounts::set_type($userid, accounts::TYPE_EMPLOYEE);
+                employment::register_pending($userid);
+                $requestid = self::submit_department($userid, $departmentid);
+                if ($complete !== null) {
+                    $complete($userid, $requestid);
+                }
                 $transaction->allow_commit();
                 return $userid;
             } catch (\Throwable $e) {

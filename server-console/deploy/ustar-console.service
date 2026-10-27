@@ -1,0 +1,38 @@
+[Unit]
+Description=USTAR console read-only API and UI
+After=network.target
+
+[Service]
+Type=simple
+User=ustar-console
+Group=ustar-console
+UMask=0077
+Environment=USTAR_CONSOLE_CONFIG=/etc/ustar-console/config.json
+ExecStart=/opt/ustar-console/venv/bin/ustar-console
+Restart=on-failure
+RestartSec=5
+StateDirectory=ustar-console
+StateDirectoryMode=0700
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+ReadWritePaths=/var/lib/ustar-console
+InaccessiblePaths=-/run/docker.sock -/srv/ustar-storage -/opt/ustar/data -/var/lib/ustar-backup
+MemoryMax=256M
+CPUQuota=50%
+TasksMax=64
+LimitNOFILE=256
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

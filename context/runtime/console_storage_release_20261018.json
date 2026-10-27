@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "kind": "CI_release_verification_not_production_installation",
+  "source_commit": "3305ecc925716a4864de8898f9a5fbdeb49e8321",
+  "PR": 103,
+  "checks": {
+    "console_run": 39071433982,
+    "console_job": 117509701880,
+    "context_run": 39071433983,
+    "review_run": 39071434081,
+    "all_three_workflows": "success",
+    "backend_passed": 125,
+    "backend_seconds": 3.58,
+    "Chromium_passed": 45,
+    "Chromium_minutes": 1.5,
+    "dependency_audit_vulnerabilities": 0,
+    "native_CI_markers": ["CONSOLE_POSTGRES=PASS", "CONSOLE_HOST_MOUNT_NAMESPACE=PASS", "CONSOLE_UPDATE=PASS", "CONSOLE_LAN_TLS_BROKER=PASS", "CONSOLE_SYSTEMD=PASS"],
+    "native_fixture_scope": "Disposable Ubuntu24.04 CI: host rw/local ro and actual write denial, host ro refusal; updater queued/running refusal, failed update rollback retaining local patch, auth/CA/config and inactive notifier preserved. Not server1."
+  },
+  "artifact": {
+    "id": 12114394512,
+    "ZIP_sha256": "1ff935e2c59f4dbb2dd8defeaa7fdb1a4e7dfca8f386c5c6a5af5fb56fd1a497",
+    "tar_bytes": 176987,
+    "tar_sha256": "46b88e0e272b071357dfc62a34094f2ca51b79e63f0d4c4ece52d178612b4dc5",
+    "downloaded_and_verified": true,
+    "CRC_paths_no_links_SOURCE_COMMIT_verified": true,
+    "wheel_modules_and_updater_match_source": true,
+    "unit_files_match_installed_567e90d5_source": true,
+    "Telegram_startup_fix_included": true
+  },
+  "owner_application_confirmed": false,
+  "latest_confirmed_installed_source": "567e90d54d4e50acf43088a8127f80ae5c89740f",
+  "fresh_server1_acceptance_received": false,
+  "scope_note": "Records successful CI and verified artifact delivered in the conversation. Subsequent context-only repository heads do not replace this exact executable release. No agent SSH, production installation or Telegram delivery was performed."
+}

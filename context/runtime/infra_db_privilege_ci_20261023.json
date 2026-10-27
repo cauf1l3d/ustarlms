@@ -1,0 +1,413 @@
+{
+  "schema_version": 1,
+  "scope": "INF02_missing_privilege_delta_in_existing_pinned_fixture",
+  "status": "native_GREEN_verified_no_production_apply",
+  "author_review_only": true,
+  "subagents": 0,
+  "native_RED": {
+    "commit": "df3ee0ef8498c0ff3b0163cdcf10fce15454d20f",
+    "review_run": 40012838091,
+    "job": 120619281630,
+    "conclusion": "expected_failure",
+    "reason": "APP_ROLE_HAS_CLUSTER_PRIVILEGES",
+    "previous_phpunit": {
+      "tests": 158,
+      "assertions": 830,
+      "passed": true
+    },
+    "previous_presentation_recovery": "PASS",
+    "artifact": {
+      "id": 12527033759,
+      "name": "connect-identity-db-evidence",
+      "sha256": "09106d4c705df30aaafce6a6cac71435c0d0f0c646a0ab138103137baff10252",
+      "downloaded_and_hash_verified": true
+    },
+    "actual_role": {
+      "login_role": "ustar_fixture",
+      "effective_role": "ustar_fixture",
+      "superuser": 1,
+      "createrole": 1,
+      "createdb": 1,
+      "replication": 1,
+      "bypassrls": 1,
+      "database_owner": 1,
+      "dangerous_memberships": 3
+    }
+  },
+  "backup_engine_source": {
+    "name": "USTAR_BACKUP_SFTP_20261004.py",
+    "bytes": 13689,
+    "sha256": "0d31e694db8bee2309072bd00dee2423022f35e18ad2c11ea1cf788fc63ef47f",
+    "exact_original_private_source_reviewed": true,
+    "source_committed": false,
+    "blocker": "in_place_demotion_would_break_globals; revised_new_app_route_preserves_administrative_POSTGRES_USER_and_existing_helpers",
+    "related_profile_pins": {
+      "producer": "a604fbcd6a0733d29142bb3130dc4bea2e7da1797c6995699d9d5516f21b05c3",
+      "scheduler": "a97039a8111dfa4d68fa0a851e17dec9a82d8f1096b7b61b8a71609859134e8c",
+      "evidence_kind": "reviewed_static_current2300_profile_not_new_host_probe"
+    }
+  },
+  "production": {
+    "owner_admin_created": "ustar_pg_admin",
+    "owner_required_SCRAM_sessions": [
+      9976,
+      9995
+    ],
+    "moodle_flags_changed": false,
+    "HBA_changed": false,
+    "files_changed": false,
+    "services_restarted": false,
+    "backup_entrypoints_changed": false,
+    "new_owner_stand_requested": false,
+    "provider_called": false,
+    "agent_SSH": false,
+    "owner_role_OIDs": {
+      "moodle": 10,
+      "ustar_pg_admin": 109344,
+      "ustar_app": 110395
+    },
+    "owner_bootstrap_query_received_date_moscow": "2026-10-24",
+    "new_app_role_created": true,
+    "new_app_login_preparation": "owner_created_ordinary_role_and_required_SCRAM_login_accepted_20261024",
+    "owner_app_login_metadata": {
+      "oid": 110395,
+      "login_role": "ustar_app",
+      "effective_role": "ustar_app",
+      "can_login": true,
+      "superuser": false,
+      "create_role": false,
+      "create_db": false,
+      "replication": false,
+      "bypass_rls": false,
+      "database_owner": false,
+      "has_memberships": false
+    },
+    "app_config_or_ownership_handoff_performed": false
+  },
+  "limits": [
+    "No production app credential/config/ownership handoff or complete INF02 closure",
+    "Exact current cron v3 source not inferred from older Library v2 copy",
+    "Selected native scheduled task does not prove every installed helper",
+    "Schema equality covers100USTAR tables; retained data checks selected synthetic core/domain/FileAPI records",
+    "Existing owner stand/UI/paired restore acceptance reused; no new full production DR claim",
+    "Previous158PHPUnit tests run before role handoff; new reduced-role proof consists of selected real app operations and denials",
+    "Server1 moodle OID10 owner-confirmed24Oct; ordinary app login OID110395 now accepted; production config/public ownership and HTTPS handoff not implemented"
+  ],
+  "membership_review": {
+    "ordinary_role_attributes_can_be_gained_via_SET_ROLE": true,
+    "source": "https://www.postgresql.org/docs/16/role-membership.html",
+    "change": "guard all five cluster attributes and retain a real CREATEDB-membership negative control",
+    "focused_tests": 7,
+    "focused_negative_control_test_RED_then_GREEN": true,
+    "native_result": "PASS_current_qualification"
+  },
+  "initial_candidate": {
+    "commit": "ad6ea0eebc4b1e89a12f83be8be8a4a55038cb31",
+    "review_run": 40015359368,
+    "context_run": 40015359367,
+    "context": "success",
+    "first_source83": {
+      "job": 120625924421,
+      "python_tests": 1083,
+      "environment_skips": 153,
+      "python_result": "success",
+      "job_result": "failure",
+      "reason": "unchanged_visual.cjs:100 Page.captureScreenshot Unable to capture screenshot"
+    },
+    "runtime": {
+      "job": 120625923967,
+      "result": "success"
+    },
+    "first_source82": {
+      "job": 120625924348,
+      "result": "success"
+    },
+    "native_job": {
+      "job": 120631577453,
+      "result": "skipped_due_source83_browser_failure_not_DB_pass"
+    }
+  },
+  "qualification": {
+    "commit": "80b3ccfbe58612ff401c789c20c9301844a3b5d5",
+    "review_run": 40017305504,
+    "context_run": 40017305503,
+    "status": "failed_bootstrap_demotion_before_app_qualification",
+    "first_source83": {
+      "job": 120632578200,
+      "result": "cancelled_at_overall15min_limit_after_slow_Chromium_install",
+      "python_tests": 1084,
+      "environment_skips": 153,
+      "python_result": "success",
+      "actor_UI": "PASS100scenarios_before_cancellation",
+      "native_job": 120639321953,
+      "native_result": "skipped_not_passed",
+      "retry": "only_source83_same_commit_requested"
+    },
+    "source82": {
+      "job": 120632578161,
+      "result": "success",
+      "python_tests": 1084,
+      "environment_skips": 153,
+      "UI": "success"
+    },
+    "source83": {
+      "job": 120639673901,
+      "result": "success",
+      "python_tests": 1084,
+      "environment_skips": 153,
+      "UI": "success",
+      "selected_same_commit_retry": true
+    },
+    "runtime": {
+      "job": 120632577942,
+      "result": "success"
+    },
+    "context": {
+      "job": 120632577350,
+      "result": "success"
+    },
+    "native": {
+      "job": 120640978099,
+      "result": "failure",
+      "at": "2026-10-23T20:36:06Z",
+      "reason": "The bootstrap user must have the SUPERUSER attribute",
+      "previous_phpunit_tests": 158,
+      "previous_phpunit_assertions": 830,
+      "previous_presentation_recovery": "PASS",
+      "artifact_id": 12529698170,
+      "artifact_metadata_sha256": "019834af7bd4a25f1699f4810ce92aec09cfcbbb6919b1ee94a016934f7c7fb8",
+      "artifact_downloaded": false
+    }
+  },
+  "bootstrap_correction": {
+    "cause": "OID10 cannot lose SUPERUSER in PostgreSQL16",
+    "server1_bootstrap_OID": "owner_confirmed_moodle_OID10_superuser_20261024",
+    "strategy": "retain bootstrap admin and POSTGRES_USER; move app to ordinary ustar_app with public ownership and CFG handoff",
+    "system_catalogs": "remain_bootstrap_owned_no_broad_REASSIGN_OWNED",
+    "backup_helpers_changed": false,
+    "focused_tests": 8,
+    "new_bootstrap_acceptance_test_observed_RED_then_GREEN": true,
+    "native": "PASS_933497e0_current_qualification",
+    "app_credential_isolation": "distinct_synthetic_app_password_and_failed_bootstrap_auth_control_required"
+  },
+  "revised_qualification": {
+    "commit": "e59d9af2e76af558dbeab12f02f5302b542af8c0",
+    "review_run": 40041621643,
+    "context_run": 40041621634,
+    "status": "partial_native_handoff_passed_enrol_probe_API_failure",
+    "focused_tests": 8,
+    "production_changed": false,
+    "source83": {
+      "job": 120713783872,
+      "result": "success",
+      "python_tests": 1085,
+      "environment_skips": 153
+    },
+    "source82": {
+      "job": 120713783893,
+      "result": "success",
+      "python_tests": 1085,
+      "environment_skips": 153
+    },
+    "runtime": {
+      "job": 120713783548,
+      "result": "success"
+    },
+    "native": {
+      "job": 120714895766,
+      "result": "failure",
+      "reason": "new probe passed null instead of stdClass enrol instance",
+      "artifact_id": 12539967179,
+      "artifact_sha256": "150a6177b59f630e9283e6ba7d9fc2727e06e2c82ef5f7cf42c17e0bcf104b7e",
+      "artifact_downloaded_and_verified": true,
+      "partial_metadata": {
+        "db-privileges-role.json": {
+          "login_role": "ustar_app",
+          "effective_role": "ustar_app",
+          "role_oid": 126161,
+          "superuser": 0,
+          "createrole": 0,
+          "createdb": 0,
+          "replication": 0,
+          "bypassrls": 0,
+          "database_owner": 1,
+          "postgres_major": "16",
+          "dangerous_memberships": 0
+        },
+        "db-privileges-handoff.json": {
+          "bootstrap_role": "ustar_fixture",
+          "bootstrap_oid": 10,
+          "bootstrap_superuser": 1,
+          "public_before": 3159,
+          "public_app_after": 3159,
+          "public_bootstrap_after": 0,
+          "app_system_catalogs": 0
+        },
+        "db-privileges-member-refused.json": {
+          "login_role": "ustar_app",
+          "effective_role": "ustar_app",
+          "role_oid": 126161,
+          "superuser": 0,
+          "createrole": 0,
+          "createdb": 0,
+          "replication": 0,
+          "bypassrls": 0,
+          "database_owner": 1,
+          "postgres_major": "16",
+          "dangerous_memberships": 1
+        },
+        "db-privileges-admin.json": {
+          "role": "ustar_privilege_admin",
+          "superuser": 1
+        }
+      },
+      "previous_native_tests": 158,
+      "previous_native_assertions": 830,
+      "bootstrap_auth_refusal_and_membership_control_passed": true,
+      "upgrade_and_repeat_passed_before_exercise": true,
+      "full_privilege_GATE": "not_passed"
+    }
+  },
+  "current_qualification": {
+    "commit": "933497e033448feb8a7aac9e29ece351f06600ac",
+    "review_run": 40043036549,
+    "context_run": 40043036469,
+    "status": "success",
+    "change": "probe retrieves existing manual-enrol stdClass record; production code unchanged",
+    "source82": {
+      "job": 120718278924,
+      "result": "success",
+      "python_tests": 1085,
+      "environment_skips": 153,
+      "UI": "success"
+    },
+    "source83": {
+      "job": 120718279176,
+      "result": "success",
+      "python_tests": 1085,
+      "environment_skips": 153,
+      "UI": "success"
+    },
+    "runtime": {
+      "job": 120718279158,
+      "result": "success"
+    },
+    "context": {
+      "run": 40043036469,
+      "result": "success"
+    },
+    "native": {
+      "job": 120719333841,
+      "result": "success",
+      "proof_completed_at_utc": "2026-10-24T00:15:50Z",
+      "previous_phpunit_tests": 158,
+      "previous_phpunit_assertions": 830,
+      "previous_presentation_recovery": "PASS",
+      "artifact": {
+        "id": 12540597495,
+        "name": "connect-identity-db-evidence",
+        "sha256": "342249e89d786f742f2ad87364fc09c012c07fd356a517ff572615d2d641a20a",
+        "bytes": 771349,
+        "downloaded_and_hash_verified": true,
+        "private_sql_dumps_and_env_absent": true,
+        "json_entries_cross_checked": true
+      },
+      "proof": {
+        "admin": {
+          "role": "ustar_privilege_admin",
+          "superuser": 1
+        },
+        "app": {
+          "bypassrls": 0,
+          "createdb": 0,
+          "createrole": 0,
+          "dangerous_memberships": 0,
+          "database_owner": 1,
+          "effective_role": "ustar_app",
+          "login_role": "ustar_app",
+          "postgres_major": "16",
+          "replication": 0,
+          "role_oid": 126144,
+          "superuser": 0
+        },
+        "application_versions": [
+          2026102200,
+          2026102300,
+          2026102300
+        ],
+        "checks": {
+          "app_credential_cannot_auth_bootstrap": true,
+          "data_equal_after_restore": true,
+          "domain_writes": true,
+          "file_api": true,
+          "globals_admin_private": true,
+          "globals_app_denied": true,
+          "globals_legacy_POSTGRES_USER_private": true,
+          "globals_not_uploaded": true,
+          "pg_dump_app": true,
+          "pg_restore_admin_set_app_role": true,
+          "privileged_membership_denied": true,
+          "scheduled_task": true,
+          "schema_equal_after_restore": true,
+          "xmldb_ddl": true
+        },
+        "denied_sqlstates": {
+          "create_database": "42501",
+          "create_role": "42501",
+          "role_password_catalog": "42501",
+          "server_file": "42501",
+          "server_program": "42501"
+        },
+        "external_provider_called": false,
+        "membership_refusal": {
+          "bypassrls": 0,
+          "createdb": 0,
+          "createrole": 0,
+          "dangerous_memberships": 1,
+          "database_owner": 1,
+          "effective_role": "ustar_app",
+          "login_role": "ustar_app",
+          "postgres_major": "16",
+          "replication": 0,
+          "role_oid": 126144,
+          "superuser": 0
+        },
+        "postgres_major": 16,
+        "result": "DB_PRIVILEGES_NATIVE=PASS",
+        "role_handoff": {
+          "app_system_catalogs": 0,
+          "bootstrap_oid": 10,
+          "bootstrap_role": "ustar_fixture",
+          "bootstrap_superuser": 1,
+          "public_app_after": 3159,
+          "public_before": 3159,
+          "public_bootstrap_after": 0
+        }
+      }
+    },
+    "review_result": "success",
+    "context_result": "success",
+    "focused_tests": 8,
+    "qualification_code_sha256": {
+      ".github/workflows/ustar-review-gate.yml": "06caa08626ff8448529c5af421b61f160618f49a9e5cb3e7318a47b05a413840",
+      "tests/stage/run-connect.sh": "34f21c27549d778c97d8ba186331e7c3986f05862e9e9a88b3e90566f22d11d7",
+      "tests/stage/run-db-privileges.sh": "aba6433e57e0013eceaae018732ddb5f1a85d9b94f10baba2d200ac639db7109",
+      "tests/stage/db_privileges_handoff.sql": "5a30807fa4b9a7d97b8b040f4e5b4102a60b61b03d7712df2103f1136bc0d6f3",
+      "tests/stage/db_privileges_probe.php": "82a1f06f99f4bce014bbd0f0369163f4fe4b82dd19c655c4fba496d7f41dcaa5",
+      "tests/stage/db_privileges_verify.py": "29e5d7e0cf8e505480ec509be6c12e968f62a5cabffff025a871a71bcafbb944",
+      "tests/r16/test_db_privilege_evidence.py": "05a68a399ac516145e18b46331964d092f22d4a442dfcf677dbebd069931322f"
+    },
+    "production_changes": false,
+    "full_RC_jobs": "skipped_not_passed"
+  },
+  "verified_at_utc": "2026-10-24T00:18:13Z",
+  "verified_date_msk": "2026-10-24",
+  "documentation_checkpoint": {
+    "commit": "cb0efc885e5d6c63f7df0796c0e72e0eddfb9232",
+    "context_run": 40044404543,
+    "review_run": 40044404573,
+    "context_result": "success",
+    "review_result": "success",
+    "code_qualification_remains": "933497e033448feb8a7aac9e29ece351f06600ac"
+  }
+}

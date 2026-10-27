@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "kind": "redacted_owner_terminal_followup",
+  "source": "owner_pasted_server1_setup_and_acceptance_output_in_current_dialogue",
+  "received_at_utc": "2026-10-17T20:36:16Z",
+  "probe_observed_at_utc": null,
+  "included_in_archive_checksums": false,
+  "independently_reexecuted_by_agent": false,
+  "independently_authenticated_host": false,
+  "network_coordinates_exported": false,
+  "installed_artifact": {
+    "source_commit": "567e90d54d4e50acf43088a8127f80ae5c89740f",
+    "tar_sha256": "c5a1c5de0e1709a1216b781517390ab08ac65d9b0d34c9475d437dbe1ce98631",
+    "CI_run": 39044542089,
+    "CI_artifact": 12105805230,
+    "owner_terminal_checksum_check": "OK_in_earlier_install_output",
+    "installed_files_independently_rehashed_by_agent": false
+  },
+  "setup": {
+    "scope": "explicit_private_corporate_LAN_IPv4_HTTPS_port_8443",
+    "existing_database_role_schema_and_certificate_reused": true,
+    "owner_user_updated_sessions_revoked": true,
+    "totp": "owner_skipped_with_ASCII_no",
+    "telegram": "owner_skipped_token_prompt",
+    "wizard_reached_success_message": true,
+    "secrets_exported": false
+  },
+  "acceptance_command": "sudo /opt/ustar-console/venv/bin/ustar-console-accept",
+  "acceptance": {
+    "console_tls": "verified_with_local_ca",
+    "units": {
+      "ustar-console": "active",
+      "ustar-console-ops": "active",
+      "ustar-console-collect.timer": "active",
+      "ustar-console-notify": "inactive"
+    },
+    "source_stale": false,
+    "checks": [
+      {"id": "host", "status": "ok", "reason": "measured"},
+      {"id": "ssd_space", "status": "ok", "reason": "disk_capacity"},
+      {"id": "ssd_inodes", "status": "ok", "reason": "disk_capacity"},
+      {"id": "containers", "status": "ok", "reason": "measured"},
+      {"id": "hdd", "status": "critical", "reason": "probe_failed"},
+      {"id": "backup", "status": "ok", "reason": "backup_receipt"},
+      {"id": "cron", "status": "ok", "reason": "cron_receipt"},
+      {"id": "lab", "status": "no_data", "reason": "controller_receipt_only"},
+      {"id": "units", "status": "ok", "reason": "measured"},
+      {"id": "recovery", "status": "ok", "reason": "measured"},
+      {"id": "clock", "status": "ok", "reason": "clock_measurement"},
+      {"id": "smart", "status": "no_data", "reason": "probe_failed"},
+      {"id": "http_local", "status": "ok", "reason": "head_local_only"},
+      {"id": "database", "status": "ok", "reason": "database_aggregates"},
+      {"id": "collector", "status": "ok", "reason": "measured"},
+      {"id": "http_external", "status": "no_data", "reason": "not_configured"},
+      {"id": "rules", "status": "no_data", "reason": "not_configured"},
+      {"id": "observer", "status": "no_data", "reason": "not_configured"},
+      {"id": "restore", "status": "no_data", "reason": "not_configured"},
+      {"id": "resource_rules", "status": "no_data", "reason": "not_configured"}
+    ],
+    "web_groups": "console_only",
+    "native_accepted": true,
+    "remaining": [
+      "browser_login_role_denial",
+      "download_hash",
+      "telegram_receiver_ack",
+      "independent_observer",
+      "restore_RTO"
+    ]
+  },
+  "interpretation": {
+    "gate_scope": "local_CA_TLS_fresh_snapshot_required_units_and_web_private_source_isolation_only",
+    "all_sources_healthy": false,
+    "HDD": "required_probe_failed_cause_not_yet_measured_not_proof_of_physical_disk_failure",
+    "HDD_source_hypothesis": "ProtectSystem_strict_read_only_service_mount_namespace_may_fail_same_namespace_rw_requirement; host_findmnt_and_service_namespace_comparison_pending",
+    "SMART": "receipt_read_failed; timer_execution_receipt_and_device_permissions_not_yet_diagnosed",
+    "notifier_inactive": "consistent_with_owner_skipped_Telegram_setup",
+    "rules_and_resource_rules_not_configured": "notification_rule_worker_not_started",
+    "browser_CA_trust_login_roles_accepted": false,
+    "archive_download_hash_accepted": false,
+    "native_job_concurrency_overhead_accepted": false,
+    "independent_observer_accepted": false,
+    "restore_RTO_accepted": false
+  },
+  "agent_production_changes": false,
+  "scope_note": "Message receipt time is not a probe timestamp. Pasted output is not an independently authenticated host measurement or an archived checksum receipt. Earlier dated evidence and production application baseline remain unchanged. No password, TOTP key, Telegram token, CA key or network address is included."
+}

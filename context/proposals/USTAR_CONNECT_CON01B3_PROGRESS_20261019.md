@@ -1,0 +1,21 @@
+# Execution ledger — plan: USTAR_CONNECT_CON01B3_PLAN_20261019.md
+
+19Oct2026, owner05:30MSK; executor лично,0subagents. Base81a1be76 verified in GitHub PR106,22native tests/87assertions SUCCESS. Existing dedicated non-main checkout reused; no new worktree or dependency installation. Baseline r16 repeated before edits.
+
+Pre-flight interfaces:
+- Task1 canonical completion produces userid/requestid inside owned transaction; Task2 consumes these refs for metadata before commit. Ruling: do not wrap register in outer transaction — email lock would release before outer commit, allowing LAN duplicate-email race. Keep lock-only Connect wrapper and canonical owned transaction. Cost if wrong: account/notification partial commit; covered by rollback/race tests.
+- Task2 entry snapshot consumed by Task3 retry/concurrency: explicit signup may bind only its own entry, other pre-existing unlinked entries still restart_required. Ruling: no general unlinked session upgrade; no new employee scope. Cost if wrong: stale browser identity promotion; test required.
+- Canonical notify_reviewers already writes target_core outbox; Task2 reuses it, Task3 validates single notice/approval. Ruling: no new Telegram-specific outbox/approval permissions in this slice. Cost if wrong: no actual Telegram delivery until consumer slice, explicitly not claimed.
+- User prohibits agents and repeated permission loops in already-authorized development. Inline self-review replaces delegated review; shared draft PR106 continues, no merge/deploy. Cloud skill scripts/references not executable via available provider; durable plan/ledger maintained here with project tooling.
+
+Task1: RED native57111574/run39190794829/job117863375703:24tests/90assertions/2failures, exactly completion not called and rollback not participating. Five additional local values/transport/error-envelope tests observed RED then GREEN. Canonical completion implemented after native RED; input and keys annotated sensitive. Baseline574r16/19skips PASS after implementation.
+
+Task2: implementation added. Connect locked wrapper delegates transaction ownership to canonical register; link/receipt/entry write in completion. Scoped private options/submit/status, hash-only receipt30days, existing HRD review/notification policy unchanged. No remote HRD actor/public endpoint activation. New native tests written before service; their first runtime execution is the forthcoming CI, not locally claimed RED/GREEN.
+
+Task3: independent signup retry and LAN shared-email race fixtures written, native filter includes43existing organization tests because shared writer changed. Candidate manifest542files/99tables/version2026101902 generated separately from production526/93. Native implementation gates pending. Final personal review (user prohibits subagents): check no external callback dispatch, password only in HTTPS body/memory, HMAC key not DB, duplicate and late failure guard paths; no independent review claimed.
+
+Ruling: receipt uses scoped service-key HMAC rather than a second password hash or new secret service. This binds retry to the original key; key rotation may require own-status lookup instead of retry, but existing link/email guards prohibit duplicate creation. Cost if wrong: retry unavailable after rotation, never automatic account merging. Covered by input/key fingerprint tests; runtime key/throughput policy remains an activation gate.
+
+Pending: exact implementation native CI/approval/outbox/concurrency receipt and publication. Cloud helper scripts unavailable via read-only skill provider; project plan/ledger and direct commands preserve execution record.
+
+Implementation c4ef398d: Context39191922959 and PHP8.2/8.3 source SUCCESS. Native39191922977/job117866838717 reached successful schema upgrade/repeat/fresh but failed before PHPUnit execution: new test helper status() overrides final PHPUnit11 TestCase::status(). Root is test fixture naming, not registration writer. Local real-PHP fixture-load regression reproduces fatal RED with minimal parent contract; renamed helper signup_status, same test GREEN. Business code unchanged by this correction. Final: fixed fixture status collision — test_native_fixture_loads_with_phpunit_final_status_contract RED→GREEN, full575r16/19skips PASS. Native suite/concurrency repeat required, no native application success claimed yet.

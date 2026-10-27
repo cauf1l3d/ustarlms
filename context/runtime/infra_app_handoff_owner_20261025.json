@@ -1,0 +1,30 @@
+{
+  "reported_date": "2026-10-25",
+  "timezone": "Europe/Moscow",
+  "exact_execution_time_not_supplied": true,
+  "source": "owner terminal output and explicit browser acceptance",
+  "operator_commit": "6590bde64c283546db0bad91fee9b0cf660c6461",
+  "operator_sha256": "976afa0d2dffd58bf260dde4cb90cb5297f73d3f78fb9df10c2f9dc4b60ecf5e",
+  "result": {
+    "phase": "app_role_active",
+    "app_role": "ustar_app",
+    "bootstrap_admin_retained": true,
+    "business_rows_restored": false,
+    "objects": {
+      "relations": 3479,
+      "tables": 657,
+      "sequences": 656,
+      "indexes": 2166
+    }
+  },
+  "browser": {
+    "login": true,
+    "course_opening": true
+  },
+  "prior_authentication_refusals": {
+    "subsequent_direct_psql_login": "success",
+    "subsequent_coordinator_apply": "success",
+    "root_cause": "not established"
+  },
+  "next": "INF-03 read-only metadata inventory; no permission mutation yet"
+}

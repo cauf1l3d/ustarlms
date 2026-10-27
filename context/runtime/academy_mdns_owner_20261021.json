@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "reported_date_msk": "2026-10-21",
+  "evidence": "owner_terminal_and_screenshot_in_current_chat;not_independent_SSH",
+  "priority": "restore_whole_office_LAN_name_resolution_before_notification_pilot",
+  "origin": "https://ustar.local",
+  "address": "192.168.1.60",
+  "client_dns": {
+    "windows_interface": "Ethernet",
+    "manual_dns_empty": true,
+    "dhcp_dns": [
+      "8.8.4.4",
+      "8.8.8.8"
+    ],
+    "dhcp_server_previously_reported": "192.168.1.1",
+    "vpn_dns_previously_reported": "172.19.0.2",
+    "direct_query_to_192_168_1_60": "ustar.local returns 192.168.1.60",
+    "NRPT_attempt": "PermissionDenied_WIN32_5;not_applied;individual_client_changes_rejected_by_owner"
+  },
+  "before": {
+    "avahi_service": "active_enabled",
+    "host_fqdn": "server1.local",
+    "server_state": 1,
+    "server_state_name": "REGISTERING",
+    "persistent_avahi_hosts": "comments_only",
+    "restart_at_utc": "2026-10-21T06:43:00Z",
+    "restart_at_msk": "2026-10-21T09:43:00+03:00",
+    "publisher_started_at_utc": "2026-10-21T10:17:05Z",
+    "publisher": "active_running_NRestarts0_without_Established_message",
+    "resolve": "timeout"
+  },
+  "operator_changes": {
+    "avahi_utils": "already_installed;0_packages_changed",
+    "new_unit": "/etc/systemd/system/ustar-academy-mdns.service",
+    "new_unit_enabled": true,
+    "exec_start": "/usr/bin/avahi-publish-address --no-reverse --no-fail ustar.local 192.168.1.60",
+    "user_group": "avahi:avahi",
+    "restart_policy": "on-failure;3s",
+    "recovery": "owner restarted avahi-daemon;publisher reconnected",
+    "router_DHCP_changed": false,
+    "BIND_Moodle_TLS_or_bot_changed_by_this_procedure": false
+  },
+  "after": {
+    "server_state": 2,
+    "server_state_name": "RUNNING",
+    "host_fqdn": "server1.local",
+    "daemon_start_at_utc": "2026-10-21T10:23:27Z",
+    "startup_complete_at_utc": "2026-10-21T10:23:28Z",
+    "publication_established_at_utc": "2026-10-21T10:23:29Z",
+    "publication_established_at_msk": "2026-10-21T13:23:29+03:00",
+    "publisher_pid_unchanged": true,
+    "resolve": "ustar.local 192.168.1.60",
+    "server_publication": "owner_accepted"
+  },
+  "not_proven": [
+    "Why Avahi was restarted at09:43MSK or remained REGISTERING",
+    "Which mechanism resolved ustar.local yesterday",
+    "Physical LAN multicast reachability and browser access from devices without hosts",
+    "Cross-VLAN/VPN coverage;not implied by mDNS",
+    "Boot and prolonged stability of the new publisher"
+  ],
+  "next": "owner_browser_test_office_WiFi_phone_and_PC_without_hosts;then_resume_frozen_a86_notification_pilot",
+  "notification_pilot_applied": false,
+  "agent_server_access": false,
+  "subagents": 0
+}

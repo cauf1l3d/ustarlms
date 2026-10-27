@@ -1,0 +1,223 @@
+{
+  "kind": "connect_academy_RC_CI_evidence",
+  "status": "verified_source_RC_not_deployment",
+  "source_commit": "830d3703e2ffa2f9864900c0d0c58f60049cb0c2",
+  "source_tree": "08a7bfdcdfd7b762b7f7d60a21007c9fdc0ba737",
+  "source_versions": {
+    "local_ustar": 2026101905,
+    "theme_ustar": 2026100202
+  },
+  "source_files": 552,
+  "candidate_tables": 99,
+  "accepted_git_reference": {
+    "commit": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
+    "files": 526,
+    "tables": 93,
+    "local_ustar": 2026100204,
+    "theme_ustar": 2026100202
+  },
+  "archive": {
+    "name": "ustar-connect-academy-830d3703.tar.gz",
+    "bytes": 17744353,
+    "sha256": "a67a08d8e5509c580043a6752e73964cb8aed72c5d1732647a9d3c2e2379113e",
+    "regular_members": 556,
+    "checksummed_members": 555,
+    "installation_supported": false,
+    "local_rebuild_matches_CI_logged_sha256": true,
+    "private_server_report_included": false
+  },
+  "CI": {
+    "review_run": 39305805820,
+    "review_url": "https://github.com/cauf1l3d/ustarlms/actions/runs/39305805820",
+    "conclusion": "success",
+    "completed_at": "2026-10-19T19:01:15Z",
+    "context_run": 39305805813,
+    "context_conclusion": "success",
+    "jobs": [
+      {
+        "id": 118243085832,
+        "name": "source (8.2)",
+        "conclusion": "success"
+      },
+      {
+        "id": 118243085976,
+        "name": "rollback",
+        "conclusion": "success"
+      },
+      {
+        "id": 118243086375,
+        "name": "connect-runtime",
+        "conclusion": "success"
+      },
+      {
+        "id": 118243086513,
+        "name": "source (8.3)",
+        "conclusion": "success"
+      },
+      {
+        "id": 118244172174,
+        "name": "connect-db",
+        "conclusion": "success"
+      },
+      {
+        "id": 118244311561,
+        "name": "prepare-rc",
+        "conclusion": "success"
+      },
+      {
+        "id": 118244434516,
+        "name": "moodle-db (historical, tests/stage/compose.yaml, moodle-db-evidence)",
+        "conclusion": "success"
+      },
+      {
+        "id": 118244434772,
+        "name": "moodle-db (patch-518, tests/stage/patch-compose.yaml, moodle-patch-evidence)",
+        "conclusion": "success"
+      },
+      {
+        "id": 118247989551,
+        "name": "gate",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "verification": {
+    "local_r16": {
+      "tests": 715,
+      "result": "pass",
+      "explicit_skips": 30
+    },
+    "CI_r16": {
+      "tests": 715,
+      "result": "pass",
+      "explicit_skips": 133,
+      "PHP": [
+        "8.2",
+        "8.3"
+      ]
+    },
+    "browser": {
+      "mobile": 60,
+      "onboarding": 20,
+      "link": 24,
+      "actor": 100,
+      "provider": "synthetic_not_live_Telegram"
+    },
+    "native_Connect": {
+      "tests": 121,
+      "assertions": 611,
+      "concurrency_scenarios": 6,
+      "fresh_upgrade_repeat": "pass",
+      "paired_baseline_restore": "pass",
+      "tables_transition": [
+        93,
+        99,
+        93
+      ],
+      "source_data_config_restore": "pass",
+      "baseline_schema_restore_repeat_equal": true
+    },
+    "native_Moodle": [
+      {
+        "version": "5.1.8",
+        "PHP": "8.3.33",
+        "PostgreSQL": "16.15",
+        "tests": 288,
+        "assertions": 1266,
+        "result": "pass"
+      },
+      {
+        "version": "5.1.1",
+        "PHP": "8.2.30",
+        "PostgreSQL": "16.10",
+        "tests": 288,
+        "assertions": 1266,
+        "result": "pass"
+      }
+    ],
+    "native_receiver_host": "install_update_rollback_CLI_probe_start_stop_LoadCredential_UID_SQLite_cursor_pass",
+    "review": "author_self_review_no_subagents"
+  },
+  "downloaded_recovery_artifact": {
+    "id": 12213114109,
+    "members": 26,
+    "baseline_candidate_restored_tables": [
+      93,
+      99,
+      93
+    ],
+    "baseline_metadata_equal": true,
+    "baseline_schema_restore_repeat_equal": true,
+    "private_snapshot_files_included": false
+  },
+  "artifacts": [
+    {
+      "id": 12214207393,
+      "name": "moodle-db-evidence",
+      "digest": "sha256:cf7ee3a36ceee8e2398036fc5b867880d42f7f38121bb85efb4a060188deaad7"
+    },
+    {
+      "id": 12214182488,
+      "name": "frozen-release-candidate",
+      "digest": "sha256:a9ad92fe9a0e80a7bd435a210b1699d87c56b61dcd117d38c57b95ca52d7c587"
+    },
+    {
+      "id": 12214177067,
+      "name": "connect-receiver-runtime",
+      "digest": "sha256:e7a532d383e6446cf36b24064d8212049e85d2929cab18a56842346a6a98da9d"
+    },
+    {
+      "id": 12213179129,
+      "name": "moodle-patch-evidence",
+      "digest": "sha256:53efcf2da3e40f1b7a120ae7204766a8a78c022afc11820489c70c51a9af334e"
+    },
+    {
+      "id": 12213114109,
+      "name": "connect-identity-db-evidence",
+      "digest": "sha256:e367d8dccc05e3fbd6ce35962fd46ccbbf2fd6f5c969e374912ea8d8c0b6567b"
+    },
+    {
+      "id": 12213092990,
+      "name": "connect-academy-readiness",
+      "digest": "sha256:88721b676eb9fab37de87a5f3492bd2f21ab785159e0b32c5abbe66763517055"
+    },
+    {
+      "id": 12213043603,
+      "name": "source-manifest",
+      "digest": "sha256:02ab258674835c31808639107e5d6889bd9df963ed78183cfc726a526ed2afa3"
+    },
+    {
+      "id": 12212754721,
+      "name": "rollback-drill-evidence",
+      "digest": "sha256:53e3ce551480404f4bb3163f57fd69db89353676af4b4ce579f24b0cfd1d317e"
+    },
+    {
+      "id": 12212574873,
+      "name": "source-manifest-php83",
+      "digest": "sha256:420484776d17554fb0e34b49e9553b35aded80d0b97e2626953423e6b0af7ebe"
+    }
+  ],
+  "first_attempt": {
+    "source": "6a147c82db06c28e3c6634717443138fac3d91e2",
+    "run": 39304639877,
+    "conclusion": "cancelled_after_failed_connect_artifact_upload",
+    "functional_pair": "pass",
+    "failure": "global_umask077_made_sanitized_reports_unreadable_to_host_uploader",
+    "fix": "umask077_scoped_to_private_snapshot_subshell",
+    "fixed_upload_result": "pass"
+  },
+  "privacy": {
+    "full_private_server_report_published": false,
+    "private_local_commits_in_published_ancestry": false
+  },
+  "production_change": false,
+  "main_merged": false,
+  "deployment_approved": false,
+  "remaining": [
+    "Guarded addon upgrade/recovery procedure with maintenance/cron fencing and fresh paired backup",
+    "Private HTTPS bridge and scoped keys",
+    "Verified account linking and controlled opt-in notification acceptance",
+    "Current link flow uses Mini App;direct-chat link before public HTTPS needs implementation",
+    "External HTTPS before Mini App;native auth handoff/MFA/step-up/role actions and other provider adapters remain later RFC gates"
+  ]
+}

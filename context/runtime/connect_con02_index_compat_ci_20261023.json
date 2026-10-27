@@ -1,0 +1,301 @@
+{
+  "schema": 1,
+  "date": "2026-10-23",
+  "timezone": "Europe/Moscow",
+  "status": "source_CI_verified_owner_recheck_ready_not_deployed",
+  "tool_commit": "4394b99475f469b061010a1ea4aa77b9d984c40f",
+  "application_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+  "worker_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+  "prior_CI_receipt": "context/runtime/connect_con02_deployment_ci_20261023.json",
+  "owner_receipt": "context/runtime/connect_con02_index_owner_20261023.json",
+  "artifact": {
+    "plain_file": "ustar-con02-update-4394b994.py",
+    "tool_commit": "4394b99475f469b061010a1ea4aa77b9d984c40f",
+    "app_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+    "worker_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+    "bytes": 30512272,
+    "sha256": "331c5c54eb605e142c401d6b84cbda02a1ba468be40b2ffc1da768b9429d322b",
+    "CI_and_local_plain_bytes_identical": true,
+    "all_payload_worker_legacy_modules_match_exact_Git": true,
+    "payload_files": 557,
+    "embedded_modules": 16,
+    "worker_files": {
+      "SOURCE_COMMIT": "39ae3f6f1f7a221074e01306793253f66c1d3a422dee1672682ad2181b8bf47b",
+      "admin.pyz": "443a477f716ddba0e3d1278bb8f21dbac321524e8678ad6eb26314575a77db40",
+      "notifications.pyz": "6b342da46135aa1e07e18318c2a07d666909442d2f6e82abc806c3691715f356",
+      "receiver.pyz": "4b05638fbb6857b47125dc04cd29b46ad20bd21d9913792e39cf738f332c2d3e",
+      "units/ustar-connect-notify.service": "4f6119b0c0e22e79d3c81ac03966e5aa143b2645247ec58693feada5a9ccf718",
+      "units/ustar-connect-probe.service": "7ae0578d7a102fe3b5fffa6d439eb0441c442ae3423c2d0bc56b1d1f7b8be9d3",
+      "units/ustar-connect-receiver.service": "34f966220f63860506c7da2cdd3c2c617720c12464d3dedbb7da36fb6a4cfe8b"
+    },
+    "legacy_files": {
+      "connect-worker/deploy/install.py": "e12038549f29355a8730692205c4b911fc4362a4b24ff813dadc9685d1cf1cb7",
+      "scripts/infra/academy_https.py": "e7f92fb976f0d30637b96c47af1c94ec78ee49af1a9f7e28d1f3bdc079f2d199",
+      "scripts/infra/connect_notification_pilot.py": "1b786c67ff752826fc9ffebc4715533bda4dc0a939766aed2d3c56edfd3af181",
+      "scripts/infra/connect_private_bridge.py": "e6ba6d97de147162f9a7aeadf09c24558668007d29f755f15fbafcbeec27d488",
+      "scripts/infra/connect_bridge_activation.py": "b66558169b4200eb8203529fe24e95ff69538135da78a22354589f13e6a8238f"
+    }
+  },
+  "CI": {
+    "runs": [
+      {
+        "id": 39947880072,
+        "name": "USTAR context integrity",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 335,
+        "jobs_url": "https://api.github.com/repos/cauf1l3d/ustarlms/actions/runs/39947880072/jobs",
+        "logs_url": "https://api.github.com/repos/cauf1l3d/ustarlms/actions/runs/39947880072/logs",
+        "workflow_id": 373408608
+      },
+      {
+        "id": 39947880106,
+        "name": "USTAR review gate",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 774,
+        "jobs_url": "https://api.github.com/repos/cauf1l3d/ustarlms/actions/runs/39947880106/jobs",
+        "logs_url": "https://api.github.com/repos/cauf1l3d/ustarlms/actions/runs/39947880106/logs",
+        "workflow_id": 340504053
+      }
+    ],
+    "jobs": [
+      {
+        "id": 120394896695,
+        "name": "connect-runtime",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 120394896737,
+        "name": "source (8.3)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 120394897070,
+        "name": "source (8.2)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 120394898962,
+        "name": "rollback",
+        "status": "completed",
+        "conclusion": "skipped"
+      },
+      {
+        "id": 120399836924,
+        "name": "connect-db",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 120399839443,
+        "name": "prepare-rc",
+        "status": "completed",
+        "conclusion": "skipped"
+      },
+      {
+        "id": 120399839447,
+        "name": "moodle-db",
+        "status": "completed",
+        "conclusion": "skipped"
+      },
+      {
+        "id": 120401923364,
+        "name": "gate",
+        "status": "completed",
+        "conclusion": "skipped"
+      }
+    ],
+    "source_each": {
+      "tests": 1048,
+      "environment_skips": 153,
+      "result": "pass"
+    },
+    "strict_root": {
+      "tests": 11,
+      "skips": 0,
+      "result": "pass"
+    },
+    "native_Moodle": {
+      "tests": 154,
+      "assertions": 800,
+      "result": "pass"
+    },
+    "artifacts": [
+      {
+        "id": 12498982730,
+        "name": "con02-update-controller",
+        "bytes": 18711995,
+        "digest": "sha256:8418183e04ae0160e031bfa77bf67813e16458ffbeae980fcdf49d52defc065e",
+        "zip_digest_verified": true
+      },
+      {
+        "id": 12499418509,
+        "name": "connect-identity-db-evidence",
+        "bytes": 694721,
+        "digest": "sha256:6bd15e32da1226f42eb5c7b9d368a4e5b67afa26bca2a1e06e39e8926f667ba2",
+        "zip_digest_verified": true
+      }
+    ]
+  },
+  "native": {
+    "result": "CON02_UPDATE_NATIVE=PASS",
+    "application_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+    "direct_versions": [
+      2026102000,
+      2026102200,
+      2026102200,
+      2026102000
+    ],
+    "tables": [
+      99,
+      100,
+      100,
+      99
+    ],
+    "official_CLI_upgrade_and_repeat": true,
+    "fresh_new_table_parity": true,
+    "old99_schema_and_indexes_preserved": true,
+    "custom_task": [
+      1,
+      1
+    ],
+    "native_SQL_mutations_denied": [
+      "column",
+      "index",
+      "task",
+      "extra"
+    ],
+    "history_ACK_provider_receipt_preferences_revoked_link_preserved": true,
+    "index_profiles": [
+      {
+        "profile": "xml_install_indexes",
+        "direct_versions": [
+          2026102000,
+          2026102200,
+          2026102200,
+          2026102000
+        ],
+        "old99_indexes_preserved": true,
+        "fresh_ACK_table_parity": true,
+        "actual_SQL_mutations_denied": [
+          "column",
+          "index",
+          "task",
+          "extra"
+        ],
+        "paired_restore": true,
+        "custom_task": [
+          1,
+          1
+        ]
+      },
+      {
+        "profile": "server1_legacy_indexes_20261023",
+        "direct_versions": [
+          2026102000,
+          2026102200,
+          2026102200,
+          2026102000
+        ],
+        "old99_indexes_preserved": true,
+        "fresh_ACK_table_parity": true,
+        "actual_SQL_mutations_denied": [
+          "column",
+          "index",
+          "task",
+          "extra"
+        ],
+        "paired_restore": true,
+        "custom_task": [
+          1,
+          1
+        ]
+      }
+    ],
+    "historical_duplicate_legacy_keys_preserved": true,
+    "restore": "logical PG dump plus actual source/config/moodledata in disposable runner",
+    "physical_copy": "separate real-filesystem CON02 transaction tests; not full remote PG restore",
+    "production_or_provider_access": false
+  },
+  "runtime": {
+    "result": "CON02_UPDATE_RUNTIME=PASS",
+    "controller": "new Runtime enable/disable/re-enable/fallback",
+    "receiver_uid": 33,
+    "systemd_LoadCredential": true,
+    "cursor": [
+      43,
+      44,
+      45
+    ],
+    "schema": 1,
+    "uncertain_preserved": true,
+    "disabled_sender_preserved": true,
+    "actual_service_exit77_recovered": true,
+    "private_TLS_and_scopes": true,
+    "wrong_CA_denied": true,
+    "root_and_foreign_credentials_denied": true,
+    "single_consumer_lock": true,
+    "wrong_peer_and_HMAC_denied": true,
+    "active_sender_credentials_and_v2_scope": true,
+    "legacy_refusals": [
+      "notification_policy_drift",
+      "activation_receiver_drift"
+    ],
+    "application_source": "534764821c4f65437ab50b3c7f25578d538e9504",
+    "application_SQL": "modeled here; actual native lifecycle in separate Task7 gate",
+    "provider_and_bridge_store": "synthetic only; no external API request"
+  },
+  "HTTPS_owner": {
+    "result": "CON02_UPDATE_HTTPS_OWNER=PASS",
+    "actual_Apache_OpenSSL_PHP": true,
+    "new_controller_enable_disable_generations": true,
+    "all_HTTPS_owned_bytes_unchanged_within_operations": true,
+    "authorized_leaf_renewal_between_operations_accepted": true,
+    "concurrent_owner_serialized": true,
+    "failed_owner_reload_restores_previous_leaf": true,
+    "systemd_and_application_SQL": "modeled here; separate actual runtime/native DB gates",
+    "provider_requests": false,
+    "production_access": false
+  },
+  "local": {
+    "focused_tests": 74,
+    "environment_skips": 1,
+    "result": "pass",
+    "strict_root_CI_tests": 11,
+    "strict_root_CI_skips": 0,
+    "RED": "3 positive historical cases refused schema_indexes before code change",
+    "negative_checks": [
+      "partial pair",
+      "other missing/extra/unique indexes",
+      "columns/defaults",
+      "wrong baseline version",
+      "old-index change during upgrade",
+      "missing new ACK table index"
+    ]
+  },
+  "root_cause": "fresh-install index assumptions for retained legacy history in an accepted upgraded database",
+  "unknown": "original cause of the two missing UNIQUE indexes is not proven",
+  "allowed_profiles": [
+    "strict complete XMLDB",
+    "exact observed pair of absent UNIQUE indexes on frozen2000"
+  ],
+  "production_index_repair": false,
+  "production_changed": false,
+  "production_effective_version": 2026102000,
+  "legacy_worker": "a86e208029b6104150e85d0e90384f84da214c22",
+  "schema_debt_retained": [
+    "local_ustar_coin_accounts UNIQUE(userid) absent",
+    "local_ustar_test_results UNIQUE(attemptid) absent"
+  ],
+  "review": "author_self_review_0subagents",
+  "FullRC": "skipped_not_passed",
+  "limits": [
+    "Native logical PG plus real source/config/moodledata paired restore in disposable CI; physical file-copy/crash tests separate.",
+    "Actual systemd/UID33/private TLS and actual Apache/OpenSSL/PHP; provider/bridge store synthetic.",
+    "No production/provider sends/main merge/live group acceptance."
+  ]
+}

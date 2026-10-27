@@ -1,0 +1,5 @@
+# Override only the isolated compatibility runner, never a production project.
+name: ustar-connect-identity
+services:
+  runner:
+    entrypoint: ["bash", "/source/tests/stage/run-connect.sh"]

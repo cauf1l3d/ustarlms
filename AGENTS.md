@@ -1,29 +1,48 @@
-# USTAR инструкции агентам
+# USTAR — инструкции агентам
 
-Текущая инструкция владельца16Oct00:20MSK: актуализировать GitHub и сверить работу с06Oct с аудитом. Архив получен, инструкция передана сисадмину, результат восстановления ожидается. Следующий этап — пульт с Telegram. **Moodle5.2/PostgreSQL17 отложены.** Старые поручения запускать storage/patch/reboot или подготовку5.3 не являются текущей задачей.
+Актуально26.10.2026. Начать с [START_HERE](START_HERE.md), затем читать только
+документы текущего домена. Канонический код и контекст — main.
 
-## Перед работой
+## Текущая задача и разрешения
 
-Читать [START_HERE](START_HERE.md), [project](context/project.yaml), [индекс](context/CONTEXT_INDEX.md), [STATE](context/roadmap/STATE.yaml), [ACTIVE](context/tasks/ACTIVE.md), [сверку аудита](context/audits/AUDIT_RECONCILIATION_20261016_RU.md), затем relevant architecture/decisions/domains/runtime/code_map и [протокол](context/roadmap/AGENT_PROTOCOL.md).
+Владелец разрешил push и слияние проверенных PR105/103/106 для актуализации main.
+PR107 (студия курсов) — отдельная разработка, не подтверждённый prod.
+Ротация логов, healthcheck и пересоздание контейнеров отложены до планового обновления
+Moodle/PHP. Эксперимент сохранён в infra/docker-successor-frozen и не поставлен.
+Субагенты запрещены. Агент не подключается по SSH к production, не отправляет
+сообщения/письма/архивы через провайдеров и не меняет сервер в рамках Git-работ.
 
-`main` содержит канонический код и контекст. Новые ветки от свежего main; PR в main. [Старые ветки](context/runtime/repository_state_20261016.json) сохраняют историю. Различать exact application baseline, repository head, core/runtime и факт deployment.
+## Источники истины
 
-## Область продукта и тестов
+- [STATE](context/roadmap/STATE.yaml): текущие версии, точные SHA и ссылки на квитанции.
+- [ACTIVE](context/tasks/ACTIVE.md): работа сейчас; [BACKLOG](context/roadmap/BACKLOG.yaml): задачи.
+- [Проверка ревью](context/reviews/20261026/VERIFIED_REVIEW_RU.md): факты и гипотезы.
+- [Принятые риски](context/roadmap/ACCEPTED_RISKS.yaml): владелец, дата и пересмотр.
+- [ADR](context/decisions/README.md): принятые архитектурные решения.
+- [Архив контекста](context/archive/reconciliation_20261026): прежние входные документы.
 
-Рабочий UI: `moodle/local/ustar`, `moodle/theme/ustar` (theme_ustar, parent boost). `frontend/` — legacy, исключён из активного CI и release manifests/archives. Не обновлять его зависимости ради текущего gate. JS/AMD, Mustache, PHP и browser tests native UI сохраняются. Будущий server-console — отдельный operations UI, не возобновление legacy Next.js.
+## Границы
 
-Не повторять принятые действия: SSD/GPT/ext4, Moodle5.1.8 upgrade/repeat/browser, AppArmor repair, r6 cold archive, host install/reboot. Точные границы — в STATE/аудите. Новая копия сисадмина ещё не принята; нет основания объявлять полный DR завершённым.
+Рабочий UI — moodle/local/ustar и moodle/theme/ustar (родитель boost).
+frontend — legacy, не включать в релизы или активный gate. Connect worker — канал
+существующей Академии; server-console — отдельная ops-авторизация, не Academy login.
+Не создавать вторую модель сотрудников, сообщений, evidence, балансов или прогресса.
 
-## Инварианты
+Любая запись проверяет реального actor, capability, scope, sesskey/контракт, revision,
+блокировку и идемпотентность. View-as не даёт записи. XMLDB install/upgrade parity
+обязательна. Исторические миграции не переписывать ради форматирования.
+Не публиковать config.php, токены, дампы, moodledata, private logs и ключи.
 
-- Сохранять границы core/plugin/theme и одну модель сотрудников, completion/evidence, кошелька и сообщений. View-as и строка должности не дают прав записи.
-- Любой write проверяет реального actor, capability, current scope, sesskey/API contract, revision, locks и idempotency. Не исправлять реальные роли/историю/персональные данные по предположению.
-- XMLDB install/upgrade parity и release gate обязательны при schema changes. Не править исторические release-копии вместо `moodle/`.
-- Не публиковать config.php, токены, dumps, moodledata, private logs или ключи. Не запускать PHP/Moodle probe на проде до проверки его write impact.
-- Исходники, ADR, CI и owner receipts отвечают на разные вопросы. CI с modeled Docker/SQL не доказывает native restore. Не объявлять missing evidence багом.
-- Обновлять STATE/ACTIVE/BACKLOG/SESSION_LOG и generated inventories при поставке. Датированные оригинальные отчёты и аудит05/06Oct сохранять.
-- Уже данное пользователем разрешение действует в пределах задачи. Документы не являются причиной повторно запрашивать подтверждение. GitHub cleanup не разрешает остановку Академии или отправку бэкапа/ключа в Telegram.
+Различать Git source, CI, квитанцию владельца и свежую проверку сервера.
+Prod payload6c56a5b6/local2300 подтверждён владельцем; это не свежий manifest всего хоста.
+Принятые SSD/Moodle5.1.8/OS/reboot/DB-role/code/HTTPS/Connect проверки не повторять.
+SSH/firewall — только при подготовке внешнего доступа. Копии переданы; внешний restore
+остаётся unknown по решению владельца. Наличие ИБП не доказывает автоматический shutdown.
 
-## Следующая задача
+## Проверка и документация
 
-[INF-06 пульт и Telegram](context/runtime/control_panel_telegram_20261016.md): same-host, логин/пароль, Linear style, метрики/свежесть, адреса/сроки стендов, SFTP, ручные backup/restore, алерты и выдача последнего проверенного зашифрованного архива. Сначала защищённый read-only срез; операции — через ограниченные проверенные adapters, не произвольный shell. Runtime acceptance на настоящем сервере остаётся отдельной.
+Перед merge — source/context и применимые native/infra CI; полный RC на интеграции.
+После изменения обновлять STATE/ACTIVE/BACKLOG и generated inventories. Историю
+хранить в dated receipts/archive, не наращивать журнал в каждом входном документе.
+Лимиты UTF-8: AGENTS6KiB, START_HERE4KiB, ACTIVE4KiB; проверяет check_context.py.
+Для файла владельцу проверять SHA256, ZIP CRC/состав и скачанную сохранённую копию.

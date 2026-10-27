@@ -14,6 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = required_param('action', PARAM_ALPHA);
     if ($action === 'all') {
         \local_ustar\communication::mark_all_notifications((int)$USER->id);
+    } else if ($action === 'ack') {
+        \local_ustar\connect\notification_acknowledgement::handle($_SERVER['REQUEST_METHOD'], [
+            'id' => required_param('id', PARAM_RAW),
+            'source' => required_param('source', PARAM_RAW),
+            'sesskey' => required_param('sesskey', PARAM_RAW),
+        ]);
     } else if ($action === 'read') {
         $id = required_param('id', PARAM_INT);
         \local_ustar\communication::mark_notification((int)$USER->id, $id,
@@ -31,6 +37,9 @@ $data = [
     'unread' => $unread,
     'hasunread' => $unread > 0,
     'sesskey' => sesskey(),
+    'acklabel' => get_string('notification_ack', 'local_ustar'),
+    'acknowledgedlabel' => get_string('notification_acknowledged', 'local_ustar'),
+    'readlabel' => get_string('notification_read', 'local_ustar'),
     'bellicon' => \local_ustar\ui::icon('bell', 'u-feature-icon'),
 ];
 

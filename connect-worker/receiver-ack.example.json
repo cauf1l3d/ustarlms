@@ -1,0 +1,15 @@
+{
+  "bot_token_file": "/run/credentials/ustar-connect-receiver.service/telegram.token",
+  "bot_username": "ustarcorp_bot",
+  "state_directory": "/var/lib/ustar-connect-receiver",
+  "telegram_proxy": "http://127.0.0.1:18081",
+  "onboarding_enabled": false,
+  "linking_enabled": true,
+  "bridge_endpoint": "https://127.0.0.1:18443/local/ustar/connect_bridge.php",
+  "bridge_key_id": "tg_link_v1",
+  "bridge_key_file": "/run/credentials/ustar-connect-receiver.service/bridge.key",
+  "bridge_ca_file": "/run/credentials/ustar-connect-receiver.service/bridge-ca.crt",
+  "acknowledgements_enabled": true,
+  "ack_bridge_key_id": "tg_ack_v1",
+  "ack_bridge_key_file": "/run/credentials/ustar-connect-receiver.service/ack-bridge.key"
+}

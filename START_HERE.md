@@ -1,27 +1,34 @@
-# USTAR вход в проект
+# USTAR Academy — начало работы
 
-## Текущий этап 16 октября 2026
+Актуально26.10.2026. Это вход в текущий проект; история находится в архиве.
 
-Рабочий продукт — Moodle + `local_ustar` + `theme_ustar`, parent boost. `frontend/` — legacy Next.js, исключённый из активного CI/выпуска. Проверки native UI темы и плагина сохранены.
+1. [STATE](context/roadmap/STATE.yaml) — версии, SHA, уверенность и квитанции.
+2. [ACTIVE](context/tasks/ACTIVE.md) — текущая работа и её границы.
+3. [Проверенные ревью](context/reviews/20261026/VERIFIED_REVIEW_RU.md) — подтверждённые
+   проблемы, опровергнутые выводы и приоритеты.
+4. [Архитектура](context/architecture/overview.md), [границы](context/architecture/boundaries.md),
+   [ADR](context/decisions/README.md) и [карта кода](context/code_map/README.md) — по задаче.
 
-- **Сделано на сервере:** SSD расширен11Oct; Moodle5.1.8 upgrade/repeat и краткая браузерная/SCORM приёмка13Oct; AppArmor,63 пакета, reboot/kernel147/Docker29.9.0 приняты14Oct. Не повторять.
-- **Ожидание:** владелец16Oct подтвердил получение архива и передачу инструкции сисадмину. Отдельная копия, её вход/SCORM/reboot и полный host DR ещё не приняты.
-- **Следующая задача:** INF-06 — пульт с Telegram, метриками, алертами, бэкапами и контролем Академии. [Границы](context/runtime/control_panel_telegram_20261016.md).
-- **Отложено:** Moodle5.2 и PostgreSQL17. Прежняя подготовка5.3/PR101 сохранена как история, не следующий запуск.
+## Подтверждённый production
 
-## Порядок чтения
+Moodle5.1.8 / PHP8.3.33 / PostgreSQL16.15. local_ustar2026102300,
+theme_ustar2026100202; payload/worker6c56a5b6ab830b97b706a5d7028b49cfae31e7a4.
+[Основание](context/runtime/evidence_20261026.yaml): квитанции владельца23–26Oct;
+557файлов/100таблиц относятся к фиксированному payload. Это не новая инвентаризация хоста.
+Приложение использует обычную роль ustar_app; права кода/config и Compose0600 применены.
+Connect ACK/presentation и вход/открытие Академии подтверждены владельцем.
 
-1. [project](context/project.yaml), [STATE](context/roadmap/STATE.yaml), [ACTIVE](context/tasks/ACTIVE.md).
-2. [Сверка выполненного и остатка с аудитом](context/audits/AUDIT_RECONCILIATION_20261016_RU.md), [BACKLOG](context/roadmap/BACKLOG.yaml).
-3. [Архитектура](context/architecture/overview.md), [границы](context/architecture/boundaries.md), [ADR](context/decisions/README.md), [domain maps](context/CONTEXT_INDEX.md).
-4. [Runtime](context/runtime/README.md), [карта кода](context/code_map/README.md), [протокол](context/roadmap/AGENT_PROTOCOL.md).
+## Решения владельца
 
-## Источники истины
+Логи/healthcheck/recreate — в окно планового обновления Moodle; старый Docker
+successor заморожен и на сервер не поставлен. SSH/firewall — перед внешним доступом.
+Копии переданы, внешний restore unknown; ИБП есть, shutdown не проверен.
+[Риски и триггеры пересмотра](context/roadmap/ACCEPTED_RISKS.yaml).
 
-`main` — код и текущий контекст. Точный plugin/theme baseline PR76/e1d57f5b,526 файлов, local2026100204/theme2026100202 сохранён; это не номер нового core и не текущий repository head. [Датированные runtime evidence](context/runtime/evidence_20261016.yaml) отделяют версии/установку от статического source и CI.
+## Репозиторий и поставка
 
-[Ветки](context/runtime/repository_state_20261016.json): PR98/99/100/102 — источники консолидации, PR101 — отложенная историческая подготовка, PR103 — прототип следующего пульта. Старые release/integration/prod-sync branches не использовать как актуальную базу.
-
-[Инструкция сисадмину](context/runtime/production_copy_20261015.md) использует существующий HDD-архив и не останавливает прод. Не путать `--pack`, `--pack-production`, постоянную parallel copy и временный lab. Бэкап с ключом нельзя помещать в Git/чат/Telegram.
-
-Нет прямого подключения агента к server1. После сверки репозитория не запускать native update/capture/reboot/restore без самостоятельного основания. [CI scope](context/runtime/CI_SCOPE_20261016.md) описывает реально выполняемые и отдельные опциональные проверки.
+PR105 — факты server1; PR103 — пульт; PR106 — принятый Connect и инфраструктура.
+Их интеграция не является новым deploy. PR107 — отдельная неподтверждённая студия.
+Исходники Академии: moodle/local/ustar и moodle/theme/ustar; frontend — legacy.
+[Индекс](context/CONTEXT_INDEX.md) помогает выбрать нужный домен.
+[История прежних входов](context/archive/reconciliation_20261026) сохранена целиком.

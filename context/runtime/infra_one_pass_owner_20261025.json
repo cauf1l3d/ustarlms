@@ -1,0 +1,292 @@
+{
+  "schema": 1,
+  "kind": "infra_one_pass_owner_history",
+  "status": "owner_local_batch_applied",
+  "recorded_at_utc": "2026-10-25T15:02:17.891565+00:00",
+  "original_refusal": {
+    "schema": 1,
+    "kind": "infra_one_pass_owner_refusal",
+    "recorded_at_utc": "2026-10-25T13:20:48.961822+00:00",
+    "operator_sha256": "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+    "apply_result": {
+      "phase": "refused",
+      "reason": "unsafe_root_json",
+      "business_rows_restored": false,
+      "provider_called": false
+    },
+    "metadata": [
+      {
+        "path": "/var/lib/ustar-code-hardening/state.json",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0600",
+        "bytes": 21665285,
+        "kind": "regular"
+      },
+      {
+        "path": "/var/lib/ustar-postgres-app-handoff/state.json",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0600",
+        "bytes": 809387,
+        "kind": "regular"
+      },
+      {
+        "path": "/var/lib/ustar-infra-one-pass/state.json",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0600",
+        "bytes": 15657,
+        "kind": "regular"
+      }
+    ],
+    "root_cause": "consumer root_json default16MiB rejects existing hardening journal21665285B; original producer permits48MiB preparation and64MiB capture",
+    "rollback_phase_independently_observed": false,
+    "rollback_evidence": "Normal refusal rather than recovery_required implies auto-undo returned; successor must verify metadata_restored and all original before images itself",
+    "production_batch_complete": false,
+    "all_eight_complete": false,
+    "private_state_contents_collected": false
+  },
+  "scope_refusal": {
+    "operator_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+    "apply_result": {
+      "phase": "refused",
+      "reason": "unsafe_payload_directory",
+      "business_rows_restored": false,
+      "provider_called": false
+    },
+    "batch_phase_observed": "metadata_restored",
+    "operator_sha256_observed": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+    "scan": [
+      {
+        "root": "/var/lib/ustar-code-hardening",
+        "directories": 4,
+        "files": 24,
+        "regular_bytes": 22276749,
+        "complete": true,
+        "unsafe_entries_observed": false
+      },
+      {
+        "root": "/var/lib/ustar-postgres-app-handoff",
+        "directories": 1,
+        "files": 2,
+        "regular_bytes": 809611,
+        "complete": true,
+        "unsafe_entries_observed": false
+      },
+      {
+        "root": "/var/lib/ustar-connect-telegram-update",
+        "directories": 17207,
+        "files": 47424,
+        "regular_bytes": 1473137045,
+        "complete": true
+      },
+      {
+        "root": "/var/lib/ustar-connect-con02-update",
+        "directories": 17586,
+        "files": 48229,
+        "regular_bytes": 1477044758,
+        "complete": true
+      },
+      {
+        "root": "/var/lib/ustar-connect-academy-update",
+        "directories": 17315,
+        "files": 47729,
+        "regular_bytes": 1402368506,
+        "complete": true
+      },
+      {
+        "root": "/var/lib/ustar-connect-chat-link-update",
+        "directories": 2136,
+        "files": 2343,
+        "regular_bytes": 213493572,
+        "complete": false,
+        "reason": "diagnostic_deadline"
+      }
+    ],
+    "observed_physical_subtrees": {
+      "moodledata": {
+        "uid": 33,
+        "gid": 33,
+        "mode": "0770"
+      },
+      "postgres": {
+        "uid": 999,
+        "gid": 1000,
+        "mode": "0700"
+      },
+      "cache_mode": "0777",
+      "single_media_bytes": 91677698
+    },
+    "tail_not_inspected_due_shared_diagnostic_deadline": [
+      "/var/lib/ustar-academy-https",
+      "/etc/ustar-backup",
+      "/etc/ustar-connect",
+      "/etc/ustar-console",
+      "/etc/ustar-console-egress"
+    ],
+    "cause": "recursive companion selection entered intentional legacy physical baseline trees; those original UID/modes and business bytes must remain unchanged",
+    "contents_collected": false,
+    "new_owner_apply_success": false
+  },
+  "accepted_apply": {
+    "business_rows_restored": false,
+    "companion_timer_active": true,
+    "containers_unchanged": true,
+    "control_backup": {
+      "archive": "/srv/ustar-storage/backups/host-state/ustar-control-20261025T144931Z-cc7c5321.tar.gz.age",
+      "archive_deletion": false,
+      "bytes": 35039995,
+      "files": 261,
+      "finished_utc": "2026-10-25T14:49:36.417826+00:00",
+      "kind": "ustar_config_control_companion",
+      "phase": "complete",
+      "physical_recovery_trees_included": false,
+      "readback_verified": true,
+      "recovery_key_included": false,
+      "schema": 1,
+      "sha256": "da7016184c1133299f07e998a15731c76725764a50a7ec421aba8b596a03d35f",
+      "started_utc": "2026-10-25T14:49:31.597671+00:00",
+      "success": true,
+      "whole_host_backup": false
+    },
+    "exports_restricted": 69,
+    "infrastructure_complete": false,
+    "journal": {
+      "action": "none",
+      "after": {
+        "categories": 0,
+        "events_reason_code": "measured",
+        "events_status": "ok",
+        "fresh": true,
+        "observed_at": "2026-10-25T14:49:26.131960+00:00"
+      },
+      "before": {
+        "categories": 0,
+        "events_reason_code": "measured",
+        "events_status": "ok",
+        "fresh": true,
+        "observed_at": "2026-10-25T14:49:26.131960+00:00"
+      },
+      "status": "measured"
+    },
+    "maintenance": {
+      "active_certificate": {
+        "not_after": "Nov 20 07:07:37 2026 GMT",
+        "sha256": "69ed77c88bc84b0df1120cf7383406a0ae206035b768394918ee23d1b4447c5d",
+        "verified": true
+      },
+      "cron_receipt": {
+        "finished_utc": "2026-10-25T14:49:02.774303+00:00",
+        "nested": {
+          "adhoc_failed": 0,
+          "adhoc_queued": 0,
+          "scheduled_failed": 2,
+          "scheduled_overdue_10m": 19
+        },
+        "started_utc": "2026-10-25T14:49:01.650007+00:00"
+      },
+      "listeners": {
+        "endpoints": [
+          "tcp *:2019",
+          "tcp *:443",
+          "tcp *:80",
+          "tcp 0.0.0.0:110",
+          "tcp 0.0.0.0:143",
+          "tcp 0.0.0.0:22",
+          "tcp 0.0.0.0:25",
+          "tcp 0.0.0.0:587",
+          "tcp 0.0.0.0:993",
+          "tcp 0.0.0.0:995",
+          "tcp 127.0.0.1:10023",
+          "tcp 127.0.0.1:10024",
+          "tcp 127.0.0.1:10025",
+          "tcp 127.0.0.1:10027",
+          "tcp 127.0.0.1:11211",
+          "tcp 127.0.0.1:18081",
+          "tcp 127.0.0.1:18443",
+          "tcp 127.0.0.1:2019",
+          "tcp 127.0.0.1:3306",
+          "tcp 127.0.0.1:53",
+          "tcp 127.0.0.1:783",
+          "tcp 127.0.0.1:8082",
+          "tcp 127.0.0.1:8765",
+          "tcp 127.0.0.1:953",
+          "tcp 127.0.0.53%lo:53",
+          "tcp 127.0.0.54:53",
+          "tcp 192.168.1.60:53",
+          "tcp 192.168.1.60:8443",
+          "tcp 192.168.1.60:9443",
+          "tcp [::1]:10024",
+          "tcp [::1]:53",
+          "tcp [::1]:783",
+          "tcp [::1]:953",
+          "tcp [::]:110",
+          "tcp [::]:143",
+          "tcp [::]:22",
+          "tcp [::]:25",
+          "tcp [::]:587",
+          "tcp [::]:993",
+          "tcp [::]:995",
+          "tcp [fe80::4894:7cff:fe4c:5d00]%br-0f011decde7a:53",
+          "tcp [fe80::4cb:73ff:fe65:296]%vethe46e65d:53",
+          "tcp [fe80::90bb:3ff:feaa:3ad3]%veth2f2f476:53",
+          "tcp [fe80::b62e:99ff:fe84:3e08]%enp4s0:53",
+          "udp 0.0.0.0:123",
+          "udp 0.0.0.0:50647",
+          "udp 0.0.0.0:5353",
+          "udp 127.0.0.1:123",
+          "udp 127.0.0.1:53",
+          "udp 127.0.0.53%lo:53",
+          "udp 127.0.0.54:53",
+          "udp 172.18.0.1:123",
+          "udp 192.168.1.60%enp4s0:68",
+          "udp 192.168.1.60:123",
+          "udp 192.168.1.60:53",
+          "udp [::1]:123",
+          "udp [::1]:53",
+          "udp [::]:123",
+          "udp [::]:43333",
+          "udp [::]:5353",
+          "udp [fe80::4894:7cff:fe4c:5d00]%br-0f011decde7a:123",
+          "udp [fe80::4894:7cff:fe4c:5d00]%br-0f011decde7a:53",
+          "udp [fe80::4cb:73ff:fe65:296]%vethe46e65d:123",
+          "udp [fe80::4cb:73ff:fe65:296]%vethe46e65d:53",
+          "udp [fe80::90bb:3ff:feaa:3ad3]%veth2f2f476:123",
+          "udp [fe80::90bb:3ff:feaa:3ad3]%veth2f2f476:53",
+          "udp [fe80::b62e:99ff:fe84:3e08]%enp4s0:123",
+          "udp [fe80::b62e:99ff:fe84:3e08]%enp4s0:53",
+          "udp [fe80::b62e:99ff:fe84:3e08]%enp4s0:546"
+        ],
+        "truncated": false
+      }
+    },
+    "phase": "local_batch_applied",
+    "provider_called": false,
+    "remaining": [
+      "Docker log rotation/health lifecycle with frozen IDs",
+      "verified alternative SSH key access and shared-host network policy",
+      "external clean-host restore result, offsite copy and separate key custody",
+      "physical UPS/shutdown confirmation",
+      "independent host-loss observer and delivery receipt",
+      "approved SMTP delivery test or existing receipt",
+      "representative performance/SLO decision"
+    ]
+  },
+  "accepted_operator_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
+  "accepted_source_commit": "1c5152bdbeb67c6d06ab3f4bc00bd642a8b22be5",
+  "source_evidence": "owner pasted terminal output following the pinned scopefix command; no agent SSH or independent file download",
+  "server_report_file": "/home/aduk/ustar-infra-closure-result.jRIxrX.json",
+  "server_report_file_hash_collected": false,
+  "production_batch_complete": true,
+  "all_eight_complete": false,
+  "interpretation": {
+    "finished_msk": "2026-10-25T17:49:36.417826+03:00",
+    "first_scheduled_companion_tick_observed": false,
+    "journal": "fresh measured before/after same snapshot; action none; no policy change, no cause established for prior no_data",
+    "cron": "fresh receipt with adhoc0;2failed and19overdue counts consistent with prior accepted residual counts; no new failure identity/exit0 asserted",
+    "active_leaf_expires_msk": "2026-11-20T10:07:37+03:00",
+    "listeners": "69deduplicated endpoints,not truncated; wildcard2019 owner/purpose not established; no off-LAN reachability claim",
+    "stand_scope": "accepted older DB/code/SSD/Moodle/OS/HTTPS/backup/Connect stands reused; no new functional/browser/load/clean-host restore stand"
+  }
+}

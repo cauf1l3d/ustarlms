@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "kind": "owner_request_and_console_observation",
+  "received_at": "2026-10-18T18:55:23.725+03:00",
+  "source": "shared_chat_6ad4f002-f9fc-83ed-b3f4-5f540508ce29",
+  "source_url": "https://chatgpt.com/share/6ad4f002-f9fc-83ed-b3f4-5f540508ce29",
+  "previous_installed_source": "1c881495ae78dd74cf37ca5a045944d1336d85ce",
+  "observation": {
+    "command": "ustar_console.web_observability.collect",
+    "observed_at": "2026-10-18T15:44:22.759854+00:00",
+    "status": "no_data",
+    "reason_code": "source_empty",
+    "window_seconds": 300,
+    "requests": null,
+    "rps": null,
+    "p95_ms": null,
+    "errors_5xx": null,
+    "errors_4xx": null,
+    "coverage_seconds": 0,
+    "events": [],
+    "events_status": "ok",
+    "events_reason_code": "measured"
+  },
+  "owner_report": "Browser service journal displays source-unavailable/Apache setup instruction despite direct events_status=ok",
+  "requested": [
+    "owner_UI_local_user_administration",
+    "one_time_proven_personal_Telegram_links",
+    "per_recipient_notifications_conditions_repeat_schedule",
+    "no_own_second_server_host_loss_design"
+  ],
+  "scope": "redacted_owner_terminal_and_request_not_independent_live_host_measurement",
+  "native_changes_by_agent": false,
+  "full_acceptance": false,
+  "spec": "server-console/ADMIN_ALERTS_20261018.md",
+  "heartbeat_design": "server-console/HOST_LOSS_20261018.md"
+}

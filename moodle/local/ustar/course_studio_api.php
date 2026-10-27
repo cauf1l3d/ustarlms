@@ -9,6 +9,8 @@ try {
     if (!isloggedin() || isguestuser()) { http_response_code(401); echo json_encode(['error'=>'Войдите в Академию.']); exit; }
     $actor=(int)$USER->id;
     \local_ustar\course_studio::require_author($actor);
+    // add_moduleinfo reads PAGE context even in AJAX (AI placement defaults).
+    $PAGE->set_context(\context_system::instance());
     $route=optional_param('route','session',PARAM_RAW_TRIMMED);
     $method=$_SERVER['REQUEST_METHOD'];$write=$method!=='GET';
     $requestkey=$_SERVER['HTTP_X_MOODLE_SESSKEY'] ?? '';
@@ -21,7 +23,10 @@ try {
     if ($owner!=='' && !hash_equals((string)$actor,$owner)) {
         http_response_code(409); echo json_encode(['code'=>'account_changed','error'=>'Аккаунт Академии изменился. Перезагрузите страницу.']); exit;
     }
-    \core\session\manager::write_close();
+    // Native course/module creation updates session-backed Moodle caches.
+    if (!($method === 'POST' && $route === 'prepare')) {
+        \core\session\manager::write_close();
+    }
     if ($method==='GET' && $route==='session') {
         $result=['authenticated'=>true,'userId'=>(string)$actor];
     } else if ($method==='GET' && $route==='courses') {

@@ -57,3 +57,13 @@ Cron удерживает EX lock `/run/ustar-cron/lock` и SH lock `/run/ustar-
 - Original audit/application trees/historical fixtures сохраняются; context integrity и точный delivery SHA/CI фиксируются в Git/PR.
 
 INF-01 остаётся **in_progress**: fresh production backup с встроенным preflight выполнен владельцем; retained lab resume и candidate isolated upgrade/rollback ещё впереди. Index review завершён в [core review](core_review_20261005.md); consumers/provenance дополнительных файлов ещё проверяются. Сохранён порядок **1 → 7 → 6**.
+
+## 20Oct — следующий принятый application release и cron guard
+
+Owner2008MSK подтвердил,что исходный v3 SHA66fd51d3 продолжает требовать local0204
+после установки принятого payload830/local1905. [Адресное обновление](cron_release_update_20261020.md)
+сохраняет весь worker,проверки и расписание;меняет только точный литерал VERSIONS
+и installation hash/version under existing locks. Новый wrapper SHAc5eabdce...
+пока candidate:owner apply/scheduled success ещё pending. Исторический исходник
+и таблица выше не переписаны. Future bundle/installer должен закрепить новый
+reviewed hash и target contract,а не обходить hash guard старых immutable helpers.

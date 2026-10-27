@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "source_commit": "172610616d91539a6725d27c1ac62fa83f4e963b",
+  "context_run": 39595204430,
+  "context_conclusion": "success",
+  "review_run": 39595203810,
+  "review_conclusion": "success",
+  "source_jobs": {
+    "8.3": 119205678497,
+    "8.2": 119205679233
+  },
+  "source_conclusions": "both_success",
+  "runtime_job": 119205678865,
+  "runtime_conclusion": "success",
+  "actual_UID33_pilot": {
+    "tests": 7,
+    "skips": 0,
+    "result": "pass",
+    "regression": "test_service_can_read_staged_release_with_private_umask",
+    "observed_log_utc": "2026-10-21T11:52:54Z"
+  },
+  "connect_db": "success",
+  "full_RC_moodle_db_rollback": "skipped",
+  "owner_package_remains": "a86e208029b6104150e85d0e90384f84da214c22",
+  "subagents": 0
+}

@@ -2,16 +2,22 @@
 
 ## PERF-01 / PR109
 
-Владелец принял работу студии после пакета2801 и поручил перейти к PR109.
+Владелец принял пакет Studio2801 и поручил PR109.
 [Owner-подтверждение](../runtime/studio_viewport_owner_acceptance_20261028.json).
-Исходный PR109 ca31380d; интегрированное приложение 8d456031: batch RSS statistics и имён operator season; схема/версия не менялись.
-Исходный source/context/infra CI зелёный. Изменения перенесены поверх79ce47b9/Studio2801;
-на этой базе воспроизведены7RED, затем9GREEN реальных PHP/SQLite сценариев.
-Нужно проверить изменения поверх принятой Studio2801, сохранить её файлы и guards,
-запустить применимый native/full RC и затем определить отдельную поставку.
-Конфликты контекста разрешены в пользу актуальных Studio-квитанций; negative guard test сохранён.
-[Текущий review](../runtime/perf_query_batching_review_20261028.json).
-PR109 остаётся Draft, native выявил3cursor reads; исправлено на buffered aggregate, повторный full RC; server1 этим PR не обновлялся. Не заявлять ускорение страниц по общему p95.
+Приложение8d456031 интегрировано поверх принятой студии: RSS statistics одним SELECT,
+повторные имена open season устранены, closed snapshot получает имена одним batch.
+Сохранены права, account/employment filtering, все статусы, порядок/ties, limit100 и типы строк.
+
+На Studio2801 воспроизведены7RED, затем9GREEN PHP/SQLite сценариев. Первое native CI
+обнаружило3cursor-команды; buffered aggregate с MIN(id) исправляет причину, assertion1 сохранён.
+После исправления localR16:1334/48environment skips PASS; source PHP8.2/8.3:1337/231 PASS.
+Все четыре CI на ffc43884 SUCCESS; native/full RC40736531122:354теста/1695проверок
+на каждом из двух Moodle/PostgreSQL стендов. Fresh/upgrade/repeat, HTTP и legacy schema PASS.
+[Текущий review и точные результаты](../runtime/perf_query_batching_review_20261028.json).
+
+PR109 остаётся Draft; требуются исходная интеграция и отдельная
+versioned frozen delivery. Схема/версии, Studio, frozen operators и worker сохранены.
+Server1 этим PR не обновлялся. Общий Apache p95 не подтверждает ускорение страниц/SLO.
 
 ## Завершённая студия / PR107
 

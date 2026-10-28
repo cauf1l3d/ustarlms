@@ -83,11 +83,12 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: Owner28Oct reports the81118e39 Studio2801 handoff works and requests PR109.
-    Acceptance is recorded separately from the last exact terminal inventory. PR107
-    delivery and metadata passed all four CI. Review existing PR109 RSS/operator-name
-    query batching against accepted Studio; prepare integrated source and native qualification.
-    No SSH or auto merge.
+  activity: PR109 app8d456031 is integrated over owner-accepted Studio2801. Qualification
+    ffc43884 passed all four CI workflows; both PHP1337/231 and native Moodle354/1695.
+    RSS uses one PostgreSQL read; operator-name batching retains guards and result
+    shape. PR107 owner acceptance remains separate from exact terminal inventory.
+    Source integration, a versioned frozen delivery and broader workday/SLO evidence
+    remain open. No SSH or auto merge.
   next_task: PERF-01
   ready_tasks: []
   task_statuses:

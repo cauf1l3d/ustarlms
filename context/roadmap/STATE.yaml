@@ -1,12 +1,13 @@
 schema_version: 2
 updated_at: '2026-10-28'
 project: USTAR Academy
-stage: perf_pr109_review
-stage_label: Owner accepted Studio2801; proceed with PR109 query batching
-current_activity: Owner28Oct reports the81118e39 Studio2801 handoff works and requests PR109.
-  Acceptance is recorded separately from the last exact terminal inventory. PR107 delivery
-  and metadata passed all four CI. Review existing PR109 RSS/operator-name query batching
-  against accepted Studio; prepare integrated source and native qualification. No SSH or auto merge.
+stage: perf_pr109_qualified_source
+stage_label: PR109 query batching passed full RC; source integration and release remain separate
+current_activity: PR109 app8d456031 is integrated over owner-accepted Studio2801. Qualification
+  ffc43884 passed all four CI workflows; both PHP1337/231 and native Moodle354/1695.
+  RSS uses one PostgreSQL read; operator-name batching retains guards and result shape.
+  PR107 owner acceptance remains separate from exact terminal inventory. Source integration,
+  a versioned frozen delivery and broader workday/SLO evidence remain open. No SSH or auto merge.
 entrypoint: START_HERE.md
 next_task: PERF-01
 ready_tasks: []
@@ -179,11 +180,12 @@ development_candidate:
   local_ustar_version: 2026102801
   theme_ustar_version: 2026102700
   PR: 109
-  status: integrated_Studio_source_under_qualification_not_deployed
+  status: full_RC_passed_source_only_not_deployed
   deployed: false
   production_predecessor_receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json
   source_manifest_scope: PR109 query batching over accepted Studio2801; development only, no new release version or server apply
   readiness_receipt: context/runtime/perf_query_batching_review_20261028.json
+  qualification_commit: ffc43884d36f35801aebb3de26a7a41c60abcc43
 studio_production_intent: context/runtime/course_studio_production_intent_20261027.json
 studio_latest_owner_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 studio_materials_deployment:
@@ -243,7 +245,12 @@ studio_viewport_owner_acceptance: context/runtime/studio_viewport_owner_acceptan
 active_PR109:
   branch: perf/query-batching-20261027
   initial_head: ca31380d5916c51fadf2ac8772744acd0a050ecf
-  status: integrated_source_preparing_native_qualification
+  base_branch: codex/shared-course-studio-20261026
+  base_commit: 06ba6b305d19394e316deac45ea3f3eb2d35a62d
+  application_commit: 8d4560316a6c6cb27467f3d1d2a3e19e0a6f52d5
+  qualification_commit: ffc43884d36f35801aebb3de26a7a41c60abcc43
+  status: full_RC_passed_Draft_source_only
+  receipt: context/runtime/perf_query_batching_review_20261028.json
   application_delivery: not_prepared
 accepted_Studio_source:
   application_commit: a3df57831a5ed49b901e5116ee800f2217fb61e9

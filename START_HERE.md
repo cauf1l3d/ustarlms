@@ -37,8 +37,10 @@ successor заморожен и на сервер не поставлен. SSH/f
 Новой точной terminal-квитанции нет; прежняя2600 остаётся последним точным status/source.
 App a3df5783/metadata9332829c прошли все четыре CI; архив выдан. STUDIO-01 завершён.
 
-Текущая задача PERF-01/PR109: batch RSS statistics и operator season names. Draft ca31380d
-имеет source/context/infra CI PASS; требуется интеграция с принятой студией и native/full RC.
+Текущая задача PERF-01/PR109: batch RSS statistics и operator season names. Приложение8d456031
+интегрировано поверх принятой Studio2801; source PHP8.2/8.3, context/infra/console PASS.
+Полный native RC ffc43884 PASS:354/1695 на обоих стендах.
+[Квитанция](context/runtime/perf_query_batching_review_20261028.json).
 Main содержит6c56/local2300, PR107 открыт; автоматическое слияние не разрешено.
 Принятую студию и её замороженные операторы сохранять. SSH/субагенты запрещены.
 Исходники: moodle/local/ustar и moodle/theme/ustar; frontend — legacy.

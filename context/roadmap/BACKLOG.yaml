@@ -304,9 +304,10 @@ tasks:
   - G07
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   PR: 109
-  current_summary: Owner accepted Studio2801 and requests the next PR109 block. Review/integrate
-    existing RSS and operator-name query batching over the accepted Studio source; native/full RC
-    required before a separate delivery. Passive workday/SLO evidence remains separate.
+  current_summary: PR109 app8d456031 is integrated over accepted Studio2801; qualification ffc43884
+    passed all four CI, both PHP1337/231 and native Moodle354/1695. RSS one-read and operator-name
+    batching verified; guards and frozen Studio/worker retained. Draft source integration and a separate
+    versioned delivery remain open; passive workday/SLO acceptance is still incomplete.
 - id: INF-13
   title: Security сопровождение, ADR и закрытие базовой приёмки
   status: planned

@@ -9,8 +9,9 @@
 Владелец28Oct принял пакет Studio2801/81118e39: «отлично всё работает» и поручил PR109.
 [Owner-квитанция](context/runtime/studio_viewport_owner_acceptance_20261028.json); новая точная
 terminal-версия не приложена. App a3df5783 и финальный metadata9332829c прошли все четыре CI.
-STUDIO-01 завершён; текущая задача PERF-01/PR109: проверить RSS/operator-name batching
-поверх принятой студии, сохранить guards и выполнить native/full RC перед отдельной поставкой.
+STUDIO-01 завершён. PR109 app8d456031 поверх принятой студии прошёл полный RC ffc43884:
+обе PHP1337/231, native354/1695; [квитанция](context/runtime/perf_query_batching_review_20261028.json).
+PERF-01 остаётся активным: исходная интеграция, отдельная поставка и workday/SLO acceptance.
 PR107 пока не слит; автоматическое слияние не разрешено.
 Ротация логов, healthcheck и пересоздание контейнеров отложены до планового обновления
 Moodle/PHP. Эксперимент сохранён в infra/docker-successor-frozen и не поставлен.

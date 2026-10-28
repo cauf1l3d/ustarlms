@@ -73,3 +73,7 @@ Main не менялся; PR109 остаётся Draft до квалификац
 Use one buffered aggregate SELECT with MIN(id) as the unique key of each disjoint
 source/status group. The strict native one-read assertion and result checks stay;
 only the obsolete SQLite recordset-close assertion is removed. No production rollout.
+
+Квалификация28Oct на ffc43884: все четыре CI SUCCESS; PHP8.2/8.3 по1337/231skips,
+оба native Moodle/PG по354теста/1695assertions. RSS один SELECT; assertions не ослаблены.
+Source integration, отдельная versioned delivery и workday/SLO остаются открытыми.

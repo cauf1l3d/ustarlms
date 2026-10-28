@@ -25,13 +25,13 @@ Existing user/site UI key; no model/schema/API changes; unchanged exported cours
 Files: editor.html, app.js, style.css; existing course_studio_dom.cjs and
 course_studio_browser.cjs fixtures under tests/release_20260912.
 
-- [ ] Add behavior assertions first; observe missing control failure.
-- [ ] Implement zoom, persistent independent panel controls and responsive integration.
-- [ ] Run Node DOM suite and real Chromium including delayed resize; inspect screenshots.
+- [x] Add behavior assertions first; observe missing control failure.
+- [x] Implement zoom, persistent independent panel controls and responsive integration.
+- [x] Run Node DOM suite and real Chromium including delayed resize; inspect screenshots.
 
 ### Task2: Release and delivery
 
-- [ ] Bump only local_ustar patch version; keep schema, theme and worker unchanged.
+- [x] Bump only local_ustar patch version; keep schema, theme and worker unchanged.
 - [ ] Prepare a separate exact-baseline2800 successor using the qualified transaction
       primitives; preserve both accepted DB index profiles and task policy.
 - [ ] Verify the operator/package guards and source/context inventories; push authorized

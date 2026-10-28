@@ -571,6 +571,7 @@ tasks:
   - context/runtime/studio_colors_deployment_20261028.json
   - context/runtime/studio_colors_deploy_progress_20261028.md
   - context/runtime/studio_colors_index_compat_20261028.json
+  - context/runtime/studio_viewport_delivery_20261028.json
   deployment_evidence: context/runtime/course_studio_owner_deploy_20261027.json
   acceptance:
   - Native Moodle author access, shared revisions and conflicts without lost drafts
@@ -585,19 +586,19 @@ tasks:
     without migrating legacy fingerprints
   - Collapsible title/sync chrome increases canvas height; preference, selection/scroll, errors and recovery
     controls preserved
-  deployment_status: 352d_precheck_refused;corrected5f_archive_issued_owner_check_apply_pending
+  deployment_status: owner_basic_Studio_works;viewport2801_package_qualification_in_progress
   previous_2600_qualification:
     commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
     full_RC_run: 40441818519
-  current_summary: 'Corrected5f57115d operator qualified: all four CI SUCCESS, both PHP1309/230 and native
-    Moodle352/1678; realPG100table fresh/legacy profile and7SQL mutations PASS. Exact archive saved/download-verified
-    and issued. Old352d superseded after owner precheck refusal; app4c48dce7/frozen tools unchanged, no
-    SQL repair/SSH/merge. Corrected owner check and apply pending.'
+  current_summary: 'Owner reports Studio works; source a3df5783 adds material-only50-150percent zoom,
+    independent persistent panels and focus-mode restoration. Separate exact2800-to2801 successor
+    package is under qualification; preserves both accepted index profiles and task policy.
+    Production2801 not applied, exact new owner terminal inventory absent; no SSH/merge.'
   previous_2700_qualification:
     commit: 3795299732609e1c2b17fe8e5beca71ae703e921
     full_RC_run: 40602646743
     receipt: context/runtime/studio_materials_qualification_20261028.json
-  current_qualification:
+  previous_2800_qualification:
     application_commit: 4c48dce7dadd4da8f054f2acf0d6974bdaeecebc
     qualification_commit: 053b8c17726fb3cd060fe0564c691a3775a960ba
     full_RC_run: 40664008041

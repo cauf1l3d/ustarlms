@@ -2,19 +2,15 @@
 
 ## STUDIO-01 / PR107
 
-Приложение4c48dce7/local2800/theme2700: Academy Studio, editable material bridge,
-Word/PDF, три вида каталога, палитра конечного курса и сворачиваемая шапка.
-[Инструкция студии](../../docs/COURSE_STUDIO_RU.md).
-
-Owner --check352d отказал schema_indexes при верных суммах; upgrade не запускался.
-Причина воспроизведена на ранее принятом legacy-профиле после theme2700.
-Исправленный оператор5f57115d квалифицирован: все четыре CI SUCCESS, обе PHP
-матрицы1309R16/230skips, обе Moodle352/1678; mandatory realPG100table fresh/legacy
-и7SQL отказов PASS. Старый352d заменён, архив сохранён/скачан/сверен и выдан.
-Owner --check и установка исправленного пакета ожидаются.
-[Команды](../../docs/STUDIO_2800_INSTALL_RU.md),
-[квитанция и причина](../runtime/studio_colors_index_compat_20261028.json).
-Проверки не создают/удаляют production indexes. App4c48dce7 и старые операторы неизменны.
+Владелец сообщает «Все работает» после поставки исправленного2800; новая точная
+terminal-версия не представлена. Source a3df5783/local2801/theme2700 добавляет масштаб
+материала50–150% и независимые боковые панели. Node/browser/delayed-resize проверки
+пройдены. Готовится отдельный2800→2801 архив: тот же paired snapshot/recovery, строгие
+fresh/legacy индексы, прежняя task policy; старые операторы и worker неизменны.
+[План](../../docs/superpowers/plans/2026-10-28-studio-viewport.md),
+[квитанция поставки](../runtime/studio_viewport_delivery_20261028.json).
+Первый context CI отказал из-за устаревшей generated описи; описи обновляются.
+Установка2801 и её owner status ещё не выполнены; PR107 остаётся открыт.
 
 ## Основания production
 

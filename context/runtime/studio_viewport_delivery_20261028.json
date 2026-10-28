@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-28",
+  "status": "qualification_in_progress",
+  "application_commit": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
+  "baseline_application": "4c48dce7dadd4da8f054f2acf0d6974bdaeecebc",
+  "predecessor_tool": "5f57115d85fbe808069b9c72d6c0ea9fa6e13f02",
+  "versions": {
+    "before": {
+      "local_ustar": 2026102800,
+      "theme_ustar": 2026102700
+    },
+    "after": {
+      "local_ustar": 2026102801,
+      "theme_ustar": 2026102700
+    }
+  },
+  "payload_files": 589,
+  "tables": 100,
+  "changed_payload": [
+    "local/ustar/course_studio/app.js",
+    "local/ustar/course_studio/editor.html",
+    "local/ustar/course_studio/style.css",
+    "local/ustar/version.php"
+  ],
+  "schema_delta": false,
+  "new_journal": "/var/lib/ustar-studio-viewport-update",
+  "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+  "worker_rollout": false,
+  "owner_observation": {
+    "statement_ru": "Все работает",
+    "scope": "general browser acceptance after corrected2800 handoff; screenshot shows collapsed header",
+    "exact_terminal_version_supplied": false,
+    "independent_host_probe": false
+  },
+  "initial_CI": {
+    "source_commit": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
+    "context_run": 40698490000,
+    "conclusion": "failure",
+    "cause": "generated application manifest and dependent context index not refreshed; corrected during delivery preparation"
+  },
+  "verification": {
+    "node_suite": "pass",
+    "local_chromium": "153.0.8010.0",
+    "browser": "pass",
+    "delayed_resize_browser": "pass",
+    "source_checks": "399PHP/33JS/100tables/57templates pass",
+    "focused_transactions": "14tests pass",
+    "focused_operator": "26tests pass; one actualUID33 local namespace skip (mandatory in infrastructure CI)"
+  },
+  "production_changed_by_agent": false,
+  "production2801_confirmed": false,
+  "PR107_merged": false,
+  "review": {
+    "mode": "self_review_per_AGENTS_no_subagents",
+    "base": "47554c153e548dd9a8cef770ba978ae484e7800f",
+    "application": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
+    "critical": [],
+    "important": [],
+    "scope": [
+      "paper-only scaling and scroll reachability",
+      "selection/DOM/persistence/focus and drawers",
+      "exact589-file four-path update guard",
+      "fixed2800 journal and derived cron admission",
+      "fresh and exact legacy indexes, raw preservation, task policy",
+      "paired pre-public rollback and post-public recovery preserve writes",
+      "offline package isolation, hashes and frozen predecessors"
+    ],
+    "limits": [
+      "production2801 apply pending",
+      "native PostgreSQL and actualUID33 qualification pending CI"
+    ]
+  }
+}

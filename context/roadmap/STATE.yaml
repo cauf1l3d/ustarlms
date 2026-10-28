@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-10-28'
 project: USTAR Academy
-stage: studio_index_compat_ready_for_owner
-stage_label: Corrected5f57115d package qualified and issued; owner check/apply pending
-current_activity: Owner352d --check refused schema_indexes before upgrade. Corrected5f57115d accepts only
-  the exact previously accepted legacy pair at theme2700; all four CI SUCCESS, both PHP1309/230 and native
-  Moodle352/1678. Mandatory realPG100table fresh/legacy probe and7SQL denials PASS. Archive verified/saved/download-checked
-  and issued; app4c48dce7 unchanged. Corrected owner --check/apply remains pending; no SSH/merge/SQL repair.
+stage: studio_viewport_qualification
+stage_label: Canvas zoom and independent panels2801; installation package qualification
+current_activity: Owner reports Studio works after corrected2800 handoff. Source a3df5783 adds
+  material-only50-150percent zoom and independent panel visibility. Separate2800-to2801 updater
+  preserves the accepted index pair, paired recovery and task policy. Qualification and archive
+  preparation in progress; no exact new owner terminal inventory, no SSH or merge.
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []
@@ -169,26 +169,28 @@ infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261026.md
 development_candidate:
   task: STUDIO-01
   branch: codex/shared-course-studio-20261026
-  application_commit: 4c48dce7dadd4da8f054f2acf0d6974bdaeecebc
+  application_commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
   base_main_commit: ad939373d89604119d3fd741c555deaf1ebd4ed7
   manifest: context/code_map/generated/course_studio_candidate.json
-  local_ustar_version: 2026102800
+  local_ustar_version: 2026102801
   theme_ustar_version: 2026102700
   PR: 107
-  status: qualified_unmerged_application_not_deployed
+  status: viewport_source_under_qualification_not_deployed
   deployed: false
   production_predecessor_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
-  source_manifest_scope: Unmerged2800 palette/compact source; last exact owner version receipt2600;2700
-    delivered, new owner version not supplied
-  readiness_receipt: context/runtime/studio_colors_canvas_qualification_20261028.json
+  source_manifest_scope: Unmerged2801 canvas/panels source; owner basic browser acceptance is
+    separate from the last exact terminal2600 receipt and does not attest a fresh host inventory
+  readiness_receipt: context/runtime/studio_viewport_delivery_20261028.json
   previous_2700_qualification:
     application_commit: 20ed966e146378a21016c085d31ce4defaa809a8
     qualification_commit: 3795299732609e1c2b17fe8e5beca71ae703e921
     full_RC_run: 40602646743
     receipt: context/runtime/studio_materials_qualification_20261028.json
-  qualification_commit: 053b8c17726fb3cd060fe0564c691a3775a960ba
-  full_RC_run: 40664008041
-  all_CI: success
+  previous_2800_qualification:
+    application_commit: 4c48dce7dadd4da8f054f2acf0d6974bdaeecebc
+    qualification_commit: 053b8c17726fb3cd060fe0564c691a3775a960ba
+    full_RC_run: 40664008041
+    all_CI: success
 studio_production_intent: context/runtime/course_studio_production_intent_20261027.json
 studio_latest_owner_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 studio_materials_deployment:
@@ -228,3 +230,13 @@ studio_colors_index_compat:
   receipt: context/runtime/studio_colors_index_compat_20261028.json
   plan: docs/superpowers/plans/2026-10-28-studio-index-compat.md
   status: qualified_archive_issued_owner_check_pending
+studio_viewport_deployment:
+  status: qualification_in_progress
+  application_commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
+  baseline_application: 4c48dce7dadd4da8f054f2acf0d6974bdaeecebc
+  predecessor_tool: 5f57115d85fbe808069b9c72d6c0ea9fa6e13f02
+  receipt: context/runtime/studio_viewport_delivery_20261028.json
+  plan: docs/superpowers/plans/2026-10-28-studio-viewport.md
+  new_journal: /var/lib/ustar-studio-viewport-update
+  worker_rollout: false
+  owner_2801_installation_confirmed: false

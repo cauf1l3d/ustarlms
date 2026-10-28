@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "recorded_date_msk": "2026-10-28",
+  "kind": "qualified2700_package_delivered_not_new_host_receipt",
+  "tool_commit": "01e1cef2393c78cb9bb2f3221e739ffeda236180",
+  "application_commit": "20ed966e146378a21016c085d31ce4defaa809a8",
+  "baseline_commit": "2d95137ac85a09ad4c513edae8a792152153c840",
+  "versions": {"local_ustar": 2026102700, "theme_ustar": 2026102700},
+  "CI": {"review": 40609924167, "infrastructure": 40609924117, "context": 40609924102, "console": 40609924098, "all": "success"},
+  "artifact": {
+    "id": 12781744887,
+    "archive": "ustar-studio-materials-install-01e1cef2.tar.gz",
+    "sha256": "56a41fee4a87c0536bf498f8c04ddb04c636005401b83e12d8086b6e6f328257",
+    "bytes": 20140461,
+    "controller_sha256": "bede3c453a4078418462a2c6ef025478494d44cf96962bb00c1f080f3740411a",
+    "downloaded_CI_ZIP_sha256": "47e8dbc27231122e8b5cf3fc0cd6c9e7cfc82182c1adab1ff840841a84f662f9",
+    "downloaded_CI_ZIP_CRC_and_member_digests": "PASS",
+    "durable_download_link_delivered": true,
+    "saved_copy_readback_not_claimed": true
+  },
+  "source_files": 589,
+  "tables": 100,
+  "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+  "worker_rollout": false,
+  "new_owner_terminal_status": "not_provided_after2700_delivery",
+  "owner_screenshots28Oct": "Academy Studio UI visible; no exact application version or source census",
+  "agent_SSH": false,
+  "PR107_merged": false,
+  "new2800_features_in_this_archive": false
+}

@@ -82,11 +82,11 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: 'Academy Studio shell, editable material bridge, Word and catalogue views
-    implemented and pushed to PR107. Full RC40602646743: both native Moodle347tests/1671assertions,
-    HTTP, source8.2/8.3 and rollback PASS; context/infra/console SUCCESS.2700 not
-    deployed or merged; owner production2600 receipt preserved. Separate2600-to2700
-    updater/package is being qualified; frozen62b0 unchanged.'
+  activity: 'Owner28Oct requested final course menu colors and collapsible title/sync
+    chrome. Implemented2800 locally: Node/PHP palette and legacy identity checks,
+    full npm and Chromium PASS; R16/native CI pending. Exact last owner terminal receipt
+    remains2600;2700 package delivered, screenshots show Academy Studio without a
+    version census.'
   next_task: STUDIO-01
   ready_tasks: []
   task_statuses:

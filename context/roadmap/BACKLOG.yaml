@@ -556,7 +556,7 @@ tasks:
   status: in_progress
   depends_on: []
   PR: 107
-  spec: docs/superpowers/specs/2026-10-27-materials-studio-polish-design.md
+  spec: docs/superpowers/specs/2026-10-28-studio-colors-canvas-design.md
   runbook: docs/COURSE_STUDIO_RU.md
   validation_evidence:
   - context/runtime/course_studio_readiness_20261027.json
@@ -565,6 +565,9 @@ tasks:
   - context/runtime/studio_materials_polish_progress_20261027.md
   - context/runtime/studio_materials_qualification_20261028.json
   - context/runtime/studio_materials_deploy_progress_20261028.md
+  - context/runtime/studio_materials_delivery_20261028.json
+  - context/runtime/studio_colors_canvas_qualification_20261028.json
+  - context/runtime/studio_colors_canvas_progress_20261028.md
   deployment_evidence: context/runtime/course_studio_owner_deploy_20261027.json
   acceptance:
   - Native Moodle author access, shared revisions and conflicts without lost drafts
@@ -575,15 +578,21 @@ tasks:
   - Material opens as reusable editable draft with original publication/scope/history preserved
   - Local Word .docx import/export retains basic text formatting, lists, tables and embedded images
   - Catalogue list/blocks/cards persist for reader and author; bounded SQL and batch file metadata
-  deployment_status: 2600_owner_status_basic_import_confirmed;2700_not_deployed
+  - Final course navigation colors persist in source, shared revisions, preview and both SCORM builders
+    without migrating legacy fingerprints
+  - Collapsible title/sync chrome increases canvas height; preference, selection/scroll, errors and recovery
+    controls preserved
+  deployment_status: last_exact_owner_receipt2600;2700_package_delivered;2800_source_not_deployed
   previous_2600_qualification:
     commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
     full_RC_run: 40441818519
-  qualification_commit: 3795299732609e1c2b17fe8e5beca71ae703e921
-  full_RC_run: 40602646743
-  current_summary: Academy UI/material bridge/Word/catalogue2700 implemented and qualified; both Moodle347/1671
-    and HTTP PASS. Separate2600-to2700 package qualification in progress; production2600 unchanged,
-    owner deployment and PR integration separate.
+  current_summary: Palette and compact editor2800 implemented; local full npm/PHP/Chromium PASS, R16/native
+    CI pending. Frozen2700 delivery qualified and issued; exact new owner terminal version not provided.
+    No SSH or PR merge.
+  previous_2700_qualification:
+    commit: 3795299732609e1c2b17fe8e5beca71ae703e921
+    full_RC_run: 40602646743
+    receipt: context/runtime/studio_materials_qualification_20261028.json
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

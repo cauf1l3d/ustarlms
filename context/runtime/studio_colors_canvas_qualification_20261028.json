@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "recorded_date_msk": "2026-10-28",
+  "kind": "unmerged2800_source_local_pass_CI_pending_not_deployment",
+  "application_commit": "4c48dce7dadd4da8f054f2acf0d6974bdaeecebc",
+  "base_commit": "01e1cef2393c78cb9bb2f3221e739ffeda236180",
+  "versions": {"local_ustar": 2026102800, "theme_ustar": 2026102700},
+  "source_files": 589,
+  "tables": 100,
+  "new_schema": false,
+  "local": {
+    "npm": "PASS full suite including palette, sync, DOM, Word/PDF/materials",
+    "PHP_theme_and_codec": "PASS actual server ZIP and strict optional HEX validation",
+    "Chromium": "PASS1440/768/390 and short390x644; palette in player; collapse/reload; selected text and scroll preserved",
+    "canvas_gain_px": {"desktop1440x1000": 135, "phone390x644": 173, "phone_canvas_height": 253.5},
+    "geometry_scope": "synthetic Academy shell fixture; real production dimensions not claimed",
+    "R16": "pending"
+  },
+  "CI": {"status": "pending"},
+  "deployed": false,
+  "agent_SSH": false,
+  "worker_rollout": false,
+  "previous2700_delivery_receipt": "context/runtime/studio_materials_delivery_20261028.json",
+  "review": "author self-review; subagents forbidden by AGENTS; startup compact failure regression fixed",
+  "boundaries": ["No fresh owner terminal version/status after2700 delivery", "Frozen2600 and2700 operators unchanged", "No new production installer claimed for2800"]
+}

@@ -571,7 +571,7 @@
       "path": "context/code_map/generated/course_studio_candidate.json",
       "domain": "code_map",
       "size": 94295,
-      "sha256": "ec033d1de7fc7a0d72369c5311ebec758d542bf420a3148eb997e26b9b203416"
+      "sha256": "37d6fc4a24d26e851edb562767b150763d18f7c9168a2f9dc1dd43a6828cb920"
     },
     {
       "path": "context/code_map/generated/database_tables.md",
@@ -630,8 +630,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 8569,
-      "sha256": "e7b2069c1a2a9ec73fb2dc23f73a53fb6a1625981eadb849dd3e4efb5f865428"
+      "size": 8514,
+      "sha256": "0e0ba642ad44b94b61811e0f537c7a9589f5d123bb668f6919722a9380c4b2c8"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -852,8 +852,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2328,
-      "sha256": "58016cdd523cca1adb9c84f0e29055bd5b205d854edd7178a1f0da1d71588ee1"
+      "size": 2344,
+      "sha256": "a3cc882327877405c7c489a31d6d62eabb40b5155bfa37bc8a4b3248b29fb216"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1404,8 +1404,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 32989,
-      "sha256": "9f904943dd074d7454be517b71a06bb214d4ebacba6e6bf18087b22a564aee5a"
+      "size": 33543,
+      "sha256": "0f1b24eef6514824b87cdaee01f619544ff931023f0b88b837dbf6135ab18d78"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1458,8 +1458,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 9989,
-      "sha256": "8ca0439d65dc2e3fadd14673b0bd29bc7d888d996f62e77e1022cb7ec66be1b7"
+      "size": 10476,
+      "sha256": "6779aaf19e3db636c4fbbef6287661abed45f74c0d3ffd2c2e7c4a66ea452543"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3352,6 +3352,24 @@
       "sha256": "857408bc6b31a4e4b527fb04527719a34fb0b89d13ee91b736d4f249441563ab"
     },
     {
+      "path": "context/runtime/studio_colors_canvas_progress_20261028.md",
+      "domain": "runtime",
+      "size": 2400,
+      "sha256": "f3cc065291e6b251669e6d02afede4507314d4f893eae3bf405784460058dc9d"
+    },
+    {
+      "path": "context/runtime/studio_colors_canvas_qualification_20261028.json",
+      "domain": "runtime",
+      "size": 1385,
+      "sha256": "f5d40ebf7d32c4f9f2d543648ed40cf417545cbf721aa6a42527a7598d107cec"
+    },
+    {
+      "path": "context/runtime/studio_materials_delivery_20261028.json",
+      "domain": "runtime",
+      "size": 1459,
+      "sha256": "6e0eaea0f4f9fff115198007cab265b3b0a0d813e8bd5b9aee8b93a9c4880e35"
+    },
+    {
       "path": "context/runtime/studio_materials_deploy_progress_20261028.md",
       "domain": "runtime",
       "size": 3038,
@@ -3444,8 +3462,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3742,
-      "sha256": "dbe0fe53296fa72885d5d365ec7d53ba597d20d8c8afb3d1c582661d41122f71"
+      "size": 3145,
+      "sha256": "42f2bd61279866d4efb4f1b63f58813c3daf8c4749074996e0400cee957817ab"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

@@ -2,42 +2,38 @@
 
 ## STUDIO-01 / PR107
 
-Поручение: штатный дизайн Академии для студии, «Открыть в студии» из материалов,
-редактируемый импорт, Word .docx, каталог список/блоки/карточки и исправления UX.
-Реализовано в отдельном worktree без субагентов. Локальные codec/DOM/SQL/Chromium
-проверки и full RC2700 пройдены: обе Moodle347тестов/1671проверка, HTTP PASS. [Квалификация](../runtime/studio_materials_qualification_20261028.json). Кандидат не установлен, PR107
-не сливать автоматически. [План](../../docs/superpowers/plans/2026-10-27-materials-studio-polish.md),
-[прогресс](../runtime/studio_materials_polish_progress_20261027.md),
-[инструкция автора](../../docs/COURSE_STUDIO_RU.md).
+Новое поручение: цвета конечного курса/левого меню и сворачиваемые верхние блоки
+названия/синхронизации для увеличения полотна. Кандидат local2800/theme2700:
+необязательная палитра без миграции fingerprint, оба SCORM builders, компактный
+статус/восстановление при ошибке. PHP/Node/full npm/Chromium PASS; R16 и native CI
+ожидаются. [План](../../docs/superpowers/plans/2026-10-28-studio-colors-canvas.md),
+[прогресс](../runtime/studio_colors_canvas_progress_20261028.md),
+[квалификация](../runtime/studio_colors_canvas_qualification_20261028.json).
 
-Production остаётся2d95137a/local2600/theme0202, установленным владельцем через
-operator62b0da20. [Квитанция установки](../runtime/course_studio_owner_deploy_20261027.json).
-Владелец подтвердил app_ready/DB/services и scheduled cron27Oct20:22UTC exit0 без
-новых ошибок; студия открывается/работает и импортирует другую студию.
-[Post-deploy](../runtime/course_studio_post_deploy_owner_20261028.json).
-Отдельные PDF/conflict/employee кейсы не заявлены. Старую ошибку cron20Oct и
-установку2600 не повторять. Агент не подключается к серверу.
+Предыдущий2700: Academy shell, editable material bridge, Word, три вида каталога;
+347тестов/1671проверка в обеих Moodle матрицах, HTTP/rollback PASS.
+[Квалификация](../runtime/studio_materials_qualification_20261028.json).
+Оператор01e1cef2/архив2600→2700 выдан после четырёх зелёных CI.
+[Поставка](../runtime/studio_materials_delivery_20261028.json). Архив неизменен и
+новых2800 правок не содержит. PR107 не сливать автоматически; агент не использует SSH.
 
-## Принятая основа и очередь
+## Основания production
 
-По поручению28Oct готовится отдельный архив2600→2700, новый journal и команды
-для владельца. Frozen62b0 не меняется; применяется прежний paired transaction,
-Connect worker остаётся6c56. [План поставки](../../docs/superpowers/plans/2026-10-28-studio-materials-deploy.md),
-[прогресс](../runtime/studio_materials_deploy_progress_20261028.md). CI пакета ещё ожидается.
+Последняя точная версия из owner-terminal:2d95137a/local2600/theme0202 через62b0;
+worker6c56 не обновлялся. [Установка](../runtime/course_studio_owner_deploy_20261027.json),
+[post-deploy](../runtime/course_studio_post_deploy_owner_20261028.json): app_ready/DB/services,
+scheduled27Oct20:22UTC exit0 без новых ошибок, базовый browser/import подтверждены.
+28Oct владелец прислал скриншоты студии в Академии; новая точная версия/status не
+показаны. Не подменять их замером хоста или установкой2800.
+Установку2600 и историческую ошибку cron20Oct не повторять.
 
-Main содержит принятую основу6c56/local2300: PR105/103/106 интегрированы через
-PR108. [Сверка и CI](../runtime/repository_reconciliation_20261026.json).
-Production2600 и неустановленный кандидат2700 учитываются отдельно в
-[STATE](../roadmap/STATE.yaml).
+## Очередь и границы
 
-После студии: PERF-01 — пассивный baseline и подтверждённые N+1; INF-12 —
-отрицательные actor/scope/upload/CSRF проверки и реестр входов; UX-путь сотрудника
-от «Мой день» до результата на телефоне. Не создавать второй каталог сотрудников,
-прогресса или evidence. Извлекать readers/presenters по изменяемому домену,
-сохраняя канонические сервисы и API.
+Main содержит основу6c56/local2300, PR105/103/106 интегрированы через PR108.
+[Сверка](../runtime/repository_reconciliation_20261026.json), [STATE](../roadmap/STATE.yaml).
+После студии PERF-01: подтверждённые N+1 и пассивный baseline; INF-12: actor/scope/
+upload/CSRF; путь сотрудника на телефоне. Не создавать второй каталог/прогресс/evidence.
 
-Docker rotation/health/recreate отложены до обновления Moodle/PHP. SSH/firewall —
-перед внешним доступом по поручению владельца. Копии переданы; внешний restore
-остаётся unknown, повторного запроса не нужно. Прочие риски — в ACCEPTED_RISKS.
-
-Код, CI, квитанция владельца и свежая проверка сервера — разные основания.
+Docker rotation/health/recreate отложены до обновления Moodle/PHP.
+SSH/firewall — перед внешним доступом по поручению владельца. Копии переданы,
+внешний restore unknown по решению владельца. Субагенты запрещены.

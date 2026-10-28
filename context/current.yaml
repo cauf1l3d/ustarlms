@@ -86,11 +86,11 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/perf2802_owner_deploy_20261029.json
 current_work:
-  activity: Owner29Oct confirms Materials/feed settings/Competitions/Studio work on2802.
-    Pre-existing repeated RSS photographs are reported with screenshot. Native self
-    implementation fixes exact provider/content duplicates and compact cards and prepares
-    bounded passive PERF-01 observation in one2803 handoff. Production remains2802;
-    no new deployment or performance acceptance claimed.
+  activity: PR110 app ef903b7d and operator36be3f10 passed all four CI; PHP1403/234
+    and both native357/1706, actualPG and UID33 PASS. RSS compact/dedup and passive
+    observer archive f09b21a9 is byte-identical to CI and retained download. Production
+    remains accepted2802. Owner apply/status2803 and an ordinary workday report remain
+    pending; no automatic merge, SSH or provider sends.
   next_task: PERF-01
   ready_tasks: []
   task_statuses:

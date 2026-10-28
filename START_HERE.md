@@ -26,7 +26,10 @@ Moodle5.1.8/PHP8.3.33/PostgreSQL16.15 — прежние датированны�
 RSS-01 + PERF-01: исправить изображения и подготовить passive workday capture
 одним комплектом2803. [План](docs/superpowers/plans/2026-10-29-feed-media-workday.md),
 [ledger](context/runtime/feed_media_workday_progress_20261029.md).
-Кандидат2803 явно отделён от main/source и production2802; не слит и не установлен.
+Кандидат2803 app ef903b7d/operator36be3f10 прошёл4CI/native357/1706.
+[Архив/квалификация](context/runtime/feed2803_qualification_20261029.json),
+[owner установка/рабочий день](docs/FEED_2803_INSTALL_RU.md).
+Он отделён от main/production2802, не слит и не установлен.
 Реальный рабочий день, SQL/page, Web-SAPI OPcache и concurrency/SLO ещё открыты.
 Нового автоматического merge нет. Агент работает сам, без SSH и provider sends.
 

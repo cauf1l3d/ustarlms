@@ -36,19 +36,19 @@ tests/release_20260912/feed_media.php, tests/r16/test_feed_media.py and native f
 **Interfaces:** feed_rss::unique_media_urls(array):array; feed_files::for_display(array,bool):array;
 feed_files::card_media(array,bool):array with summary/additional lists.
 
-- [ ] Write fixtures for original/resize/unknown/signed URLs and exact image duplicates; run RED.
-- [ ] Implement identity/content dedup and one-cover/additional-images presentation, including reposts.
-- [ ] Run local actual PHP fixtures and native file/ACL checks; verify employee files and saves unchanged.
-- [ ] Record owner2802 acceptance, freeze2803 application commit and explicit undeployed manifest.
+- [x] Write fixtures for original/resize/unknown/signed URLs and exact image duplicates; run RED.
+- [x] Implement identity/content dedup and one-cover/additional-images presentation, including reposts.
+- [x] Run local actual PHP fixtures and native file/ACL checks; verify employee files and saves unchanged.
+- [x] Record owner2802 acceptance, freeze2803 application commit and explicit undeployed manifest.
 
 ### Task2: Bounded passive workday observer
 
 **Files:** scripts/infra/workday_observer.py, tests/r16/test_workday_observer.py.
 **Interfaces:** numeric sanitized snapshot; fixed read-only SQL; JSONL plus honest summary.
 
-- [ ] Write RED cases for rates across resets/gaps, stale sources, denied paths and command failure redaction.
-- [ ] Implement fixed aggregate observation, safe private outputs, duration/output bounds and offline default.
-- [ ] Exercise real temporary files/subprocess boundaries; validate fixed SQL against native PG fixture.
+- [x] Write RED cases for rates across resets/gaps, stale sources, denied paths and command failure redaction.
+- [x] Implement fixed aggregate observation, safe private outputs, duration/output bounds and offline default.
+- [x] Exercise real temporary files/subprocess boundaries; validate fixed SQL against native PG fixture.
 
 ### Task3: Guarded successor and one archive
 
@@ -56,13 +56,15 @@ feed_files::card_media(array,bool):array with summary/additional lists.
 tests/r16/test_feed_media_update.py, test_feed_media_indexes.py; native probe and CI references.
 **Interfaces:** fixed2802→2803, --check/upgrade/status/recover/restore, observer separate explicit command.
 
-- [ ] Add RED contract/envelope/recovery/old-source refusal tests and actual UID33 check.
-- [ ] Implement successor retaining paired snapshot/publication-aware recovery and exact task/cron/source guards.
-- [ ] Freeze operator; run applicable full CI including native PG legacy profiles and observer SQL.
-- [ ] Build deterministic archive locally; compare every file with CI, save and verify downloaded copy.
+- [x] Add RED contract/envelope/recovery/old-source refusal tests and actual UID33 check.
+- [x] Implement successor retaining paired snapshot/publication-aware recovery and exact task/cron/source guards.
+- [x] Freeze operator; run applicable full CI including native PG legacy profiles and observer SQL.
+- [x] Build deterministic archive locally; compare every file with CI, save and verify downloaded copy.
 
 ### Task4: Handoff
 
-- [ ] Author review, focused and full required checks; current state/backlog/generated views accurate.
-- [ ] Push branch and open PR with final scope/validation; no automatic merge.
-- [ ] Deliver archive/hash and concrete install/capture/report commands; actual workday remains pending.
+- [x] Author review, focused and full required checks; current state/backlog/generated views accurate.
+- [x] Push branch and open PR with final scope/validation; no automatic merge.
+- [x] Deliver archive/hash and concrete install/capture/report commands; actual workday remains pending.
+
+Owner server apply and real workday/concurrency/SLO remain pending; these implementation checkboxes do not certify production acceptance.

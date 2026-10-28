@@ -303,14 +303,14 @@ tasks:
   - G07
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   PR: 109
-  current_summary: Bounded RSS/operator query batching integrated through PR109/01904eda and owner installed2802
-    using3c1ddd09.29Oct terminal confirms exact2801 preflight, app_ready/local2802/theme2700/DB available and Connect
-    services active+enabled. Scheduled cron exit0/34.311s, adhoc1 to0, overdue63 to19, failed2, no new failures.
-    Post2802 browser smoke and broader passive workday/concurrency/SLO acceptance stay open; no latency improvement
-    claimed.
+  current_summary: Owner accepted2802 installation/status/cron and basic Materials/feed settings/Competitions/Studio
+    browser use. PR110 combines pre-existing RSS image fix with bounded passive workday capture. App ef903b7d/operator36be3f10
+    passed four CI and native357/1706; verified archive delivered for owner2803 apply. Actual workday/concurrency/SLO
+    and route SQL timings remain open.
   deployment_evidence: context/runtime/perf2802_owner_deploy_20261029.json
   validation_evidence:
   - context/runtime/perf2802_owner_deploy_20261029.json
+  - context/runtime/feed2803_qualification_20261029.json
 - id: INF-13
   title: Security сопровождение, ADR и закрытие базовой приёмки
   status: planned
@@ -621,11 +621,16 @@ tasks:
   spec: docs/superpowers/specs/2026-10-29-feed-media-workday-design.md
   validation_evidence:
   - context/runtime/perf2802_owner_browser_acceptance_20261029.json
+  - context/runtime/feed2803_qualification_20261029.json
   acceptance:
   - Exact known-provider asset and identical-content images appear once per external post
   - One RSS cover; additional illustrations remain accessible without JavaScript
   - Existing files, saved library copies, private ACL and employee attachments survive
   - Qualified2802-to2803 successor and passive workday observer delivered together
+  current_summary: Qualified2803 app ef903b7d/operator36be3f10, archive f09b21a9 verified against CI and downloaded
+    retained copy. Owner apply/browser result pending; old unidentified resized variants retained behind accessible
+    additional-images disclosure.
+  deployment_status: qualified2803_handoff_owner_apply_pending
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

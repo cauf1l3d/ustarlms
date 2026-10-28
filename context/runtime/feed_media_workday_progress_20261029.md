@@ -44,3 +44,21 @@ Final review mode: author self-review mandated by AGENTS; no subagents used.
 Review bounds: no source/schema/worker delta beyond seven qualified PHP/UI files;
 unknown legacy resized variants are retained behind details; no destructive cleanup.
 SQL/page, Web-SAPI OPcache, real workday/SLO and outside-host restore remain open.
+
+Final local full R16:1400 tests/50 environment skips,321.153s PASS. Earlier interrupted
+invocation is superseded by this completed run; no failure was hidden.
+Tool36be3f108f2eac6a3db728f93b4456a729b97a3e, unchanged app ef903b7d.
+CI source8.2:1403/234 in318.198s PASS;8.3:1403/234 in322.416s PASS.
+Infra40783956785, context40783956724, console40783956847 SUCCESS.
+Actual UID33 read/write-denial and actual root observer output boundary PASS.
+CI artifact12857099112: ZIP CRC and all5 files byte-identical to local build.
+Archive f09b21a969c91b9ce5e884065573586779b50ce699aa789edc394f20bad9589a,
+20688439bytes; native Moodle jobs still awaited before final handoff.
+
+Task1: complete — app ef903b7d; native RSS/provider/storage cases357/1706 on both core profiles PASS.
+Task2: complete —13 tests plus native READ ONLY query/write denial PASS. No actual workday captured.
+Task3: complete — tool36be3f10 four CI SUCCESS; nested envelopes, paired recovery,
+actual UID33 and exact fresh/legacy PG profiles PASS. Archive and retained download byte-verified.
+Task4: implementation handoff complete — frozen archive, SHA and8 parsed owner command blocks;
+PR110 remains unmerged, production2802 unchanged. Final metadata checks follow.
+Final review: author self-review per AGENTS;0subagents. No Critical/Important open, no deferred minors.

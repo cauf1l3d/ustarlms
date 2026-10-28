@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-10-29'
 project: USTAR Academy
-stage: feed_media2803_and_passive_workday_preparation
-stage_label: Owner accepted2802 browser; fix pre-existing RSS media and prepare passive workday capture
-current_activity: Owner29Oct confirms Materials/feed settings/Competitions/Studio work on2802. Pre-existing repeated
-  RSS photographs are reported with screenshot. Native self implementation fixes exact provider/content duplicates
-  and compact cards and prepares bounded passive PERF-01 observation in one2803 handoff. Production remains2802;
-  no new deployment or performance acceptance claimed.
+stage: feed2803_qualified_archive_delivered_owner_apply_pending
+stage_label: PR110 qualified; verified2803 archive with passive observer ready for owner apply
+current_activity: PR110 app ef903b7d and operator36be3f10 passed all four CI; PHP1403/234 and both native357/1706,
+  actualPG and UID33 PASS. RSS compact/dedup and passive observer archive f09b21a9 is byte-identical to CI and retained
+  download. Production remains accepted2802. Owner apply/status2803 and an ordinary workday report remain pending;
+  no automatic merge, SSH or provider sends.
 entrypoint: START_HERE.md
 next_task: PERF-01
 ready_tasks: []
@@ -272,12 +272,13 @@ perf_query_deployment:
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
 development_candidate:
   manifest: context/code_map/feed_media_development_source.json
-  status: unmerged2803_source_not_deployed
+  status: qualified2803_source_archive_not_deployed
   scope: RSS media and passive workday capture; schema/theme/worker unchanged
   PR: 110
   application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
+  qualification_commit: 36be3f108f2eac6a3db728f93b4456a729b97a3e
 feed_media_workday_delivery:
-  status: fixed_source_local_tests_passed_final_CI_pending
+  status: qualified_archive_saved_owner_apply_pending
   application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
   baseline_application: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   predecessor_tool: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
@@ -287,3 +288,10 @@ feed_media_workday_delivery:
   agent_SSH: false
   worker_rollout: false
   progress: context/runtime/feed_media_workday_progress_20261029.md
+  tool_commit: 36be3f108f2eac6a3db728f93b4456a729b97a3e
+  qualification_receipt: context/runtime/feed2803_qualification_20261029.json
+  owner_instruction: docs/FEED_2803_INSTALL_RU.md
+  archive_sha256: f09b21a969c91b9ce5e884065573586779b50ce699aa789edc394f20bad9589a
+  archive_bytes: 20688439
+  retained_copy_verified: true
+  actual_workday_captured: false

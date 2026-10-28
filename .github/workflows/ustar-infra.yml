@@ -183,7 +183,8 @@ jobs:
         run: sudo -n env USTAR_REQUIRE_PERF_UID33=1 python3 -m unittest tests.r16.test_perf_query_update.ActualCodePermissions -v
       - name: Build fixed2802-to2803 RSS media updater and workday observer
         run: |
-          python3 scripts/infra/build_feed_media_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/feed-media-production-deploy
+          git worktree add --detach .stage-input/feed-2803-fixed 36be3f108f2eac6a3db728f93b4456a729b97a3e
+          python3 .stage-input/feed-2803-fixed/scripts/infra/build_feed_media_update.py --commit 36be3f108f2eac6a3db728f93b4456a729b97a3e --output-dir "$GITHUB_WORKSPACE/artifacts/feed-media-production-deploy"
           python3 -I -B artifacts/feed-media-production-deploy/ustar-feed-media-update-*.py
           python3 -I -B scripts/infra/workday_observer.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

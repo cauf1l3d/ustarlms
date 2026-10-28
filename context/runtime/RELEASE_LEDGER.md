@@ -927,3 +927,15 @@ fresh/upgrade/repeat и rollback PASS. PHP/Chromium подтверждают п�
 [Точная квитанция](studio_colors_canvas_qualification_20261028.json).
 Пакет2700 ранее выдан; новых2800 правок он не содержит. Последняя точная версия
 из owner-terminal2600, скриншоты28Oct без версии. PR107 открыт, без SSH/merge/rollout.
+
+
+## 28Oct — выдан фиксированный установщик2700→2800
+
+Tool352d009c/app4c48dce7 квалифицирован на98833ab4; review40671198755,
+infra40671198756, context40671198775, console40671198823 SUCCESS. PHP1302R16/230skips,
+обе Moodle матрицы352/1678, HTTP/upgrade/repeat/rollback/UID33 PASS. Архив20244858bytes,
+SHA b24e97cd9c62694cef78d56f4fa20b61ba5d69946db6ae14d68bf0dcad2efc0d;
+CI/независимые сборки и скачанная сохранённая копия совпадают. Старые операторы
+не изменены, worker не обновляется. [Квитанция](studio_colors_deployment_20261028.json),
+[команды](../../docs/STUDIO_2800_INSTALL_RU.md). Owner apply/приёмка2800 ожидается;
+последняя точная terminal-квитанция2600. Без SSH или слияния PR107.

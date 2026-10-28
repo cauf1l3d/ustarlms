@@ -584,13 +584,14 @@ tasks:
     without migrating legacy fingerprints
   - Collapsible title/sync chrome increases canvas height; preference, selection/scroll, errors and recovery
     controls preserved
-  deployment_status: last_exact_owner_receipt2600;2700_package_delivered;2800_installer_local_pass_CI_pending
+  deployment_status: last_exact_owner_receipt2600;2700_and2800_packages_delivered;2800_owner_apply_pending
   previous_2600_qualification:
     commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
     full_RC_run: 40441818519
-  current_summary: Palette and compact editor2800 implemented and source-qualified; all four CI SUCCESS.
-    Native Moodle352tests/1678assertions in both matrices; HTTP, fresh/upgrade/repeat, rollback, Node/PHP/Chromium
-    PASS. Frozen2700 delivery issued; exact new owner terminal version not provided. No SSH or PR merge.
+  current_summary: Palette/compact app4c48dce7 and fixed2700→2800 operator352d009c qualified; all four
+    CI at98833ab4 SUCCESS. PHP1302R16/230skips and both native Moodle352/1678, HTTP/upgrade/repeat/rollback/UID33
+    PASS. Exact archive saved/download-verified and issued with commands. Owner2800 installation/acceptance
+    pending; no SSH or PR merge.
   previous_2700_qualification:
     commit: 3795299732609e1c2b17fe8e5beca71ae703e921
     full_RC_run: 40602646743

@@ -48,6 +48,6 @@
 
 **Files:** infra CI artifact/UID33 step, server-console source-only inventory, dated deployment receipt/progress, STATE/ACTIVE/BACKLOG/docs and generated views.
 
-- [ ] Run full R16/source/context/secrets and fixed-component comparisons; push with expected-SHA lease, PR107 stays open.
-- [ ] Wait for CI; download2800 artifact, verify ZIP/hash/members and independently rebuilt bytes; save owner archive.
-- [ ] Give SHA/extraction/check/systemd-run/status/recover commands and separate source qualification from owner production result.
+- [x] Run full R16/source/context/secrets and fixed-component comparisons; push with expected-SHA lease, PR107 stays open.
+- [x] Wait for CI; download2800 artifact, verify ZIP/hash/members and independently rebuilt bytes; save owner archive.
+- [x] Give SHA/extraction/check/systemd-run/status/recover commands and separate source qualification from owner production result.

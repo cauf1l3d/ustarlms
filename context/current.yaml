@@ -82,10 +82,11 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: 'Fixed2700→2800 operator352d009c: local24operator tests and R161299/47
-    PASS; exact4c48dce7 application unchanged. First infra CI rejected symbolic HEAD
-    in the workflow; pinned352d009c worktree/full-SHA build is byte-identical locally.
-    CI retry pending; no delivery/deployment/SSH/merge.'
+  activity: 'Fixed2700→2800 tool352d009c qualified on98833ab4: all four CI SUCCESS,
+    both PHP1302R16/230skips, both native Moodle352/1678, HTTP/upgrade/repeat/rollback
+    and actual UID33 PASS. Archive SHA/CRC/members and independent rebuilds match;
+    saved copy downloaded and checked. Owner archive and commands issued; exact application4c48dce7
+    unchanged. No owner installation result, SSH or merge.'
   next_task: STUDIO-01
   ready_tasks: []
   task_statuses:

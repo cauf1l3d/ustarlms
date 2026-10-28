@@ -10,3 +10,4 @@ grep -q 'PostgreSQL) 16\.' /artifacts/pg-client.txt
 bash /source/tests/stage/run.sh
 python3 /source/tests/stage/studio_colors_legacy_native.py --verify
 python3 /source/tests/stage/studio_viewport_legacy_native.py --verify
+python3 /source/tests/stage/perf_query_legacy_native.py --verify

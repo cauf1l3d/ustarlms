@@ -12,18 +12,19 @@ repository_head:
   note: Resolve at read time; never store a self-referencing or placeholder commit
 application_baseline:
   branch: main
-  commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
-  kind: integrated_main_source_before_Studio_owner_deployment
-  local_ustar_version: 2026102300
-  theme_ustar_version: 2026100202
-  source_pr: 106
-  ci_receipt: context/runtime/connect_telegram_finish_ci_20261023.json
+  commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
+  kind: accepted_Studio_integrated_main_exact_component_tree
+  local_ustar_version: 2026102801
+  theme_ustar_version: 2026102700
+  source_pr: 107
+  ci_receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json
   integration_qualification:
-    commit: 40fb81d75c42ac6b4ff1f6f54f9e25f54b3fa149
-    full_RC_run: 40337002920
-    receipt: context/runtime/repository_reconciliation_20261026.json
-  scope_note: Main source baseline remains6c56 until PR107 integration; current production
-    is separately recorded below.
+    commit: 06ba6b305d19394e316deac45ea3f3eb2d35a62d
+    full_RC_run: 40737228325
+    merge: 84a078ef83f3812d252129d3a79f717cb3bf0591
+    receipt: context/runtime/perf2802_integration_20261028.json
+  scope_note: Exact plugin/theme tree in merged main84a078ef; production acceptance
+    and terminal inventory remain separate.
 production:
   latest_owner_browser_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
@@ -83,12 +84,10 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: PR109 app8d456031 is integrated over owner-accepted Studio2801. Qualification
-    ffc43884 passed all four CI workflows; both PHP1337/231 and native Moodle354/1695.
-    RSS uses one PostgreSQL read; operator-name batching retains guards and result
-    shape. PR107 owner acceptance remains separate from exact terminal inventory.
-    Source integration, a versioned frozen delivery and broader workday/SLO evidence
-    remain open. No SSH or auto merge.
+  activity: Owner agreed to source integration and a separate server handoff. PR107
+    merged84a078ef with an identical tested tree. PR109 query code on2801 passed all
+    four CI at aa2b09be; versioned2802 payload22607c69 and its new operator are being
+    qualified. No agent SSH or server apply; workday/SLO remains separate.
   next_task: PERF-01
   ready_tasks: []
   task_statuses:

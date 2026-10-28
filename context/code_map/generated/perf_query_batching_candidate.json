@@ -1,13 +1,13 @@
 {
   "kind": "unmerged_development_source",
   "deployed": false,
-  "baseline_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+  "baseline_commit": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
   "component_tree_ids": {
-    "moodle/local/ustar": "094666969e6a3f8d7a001d118b41dc96b6b9d4b8",
+    "moodle/local/ustar": "2731518cb3aa4cc1dd8c3283d938f1dddac611b4",
     "moodle/theme/ustar": "c60e0657cb957288c914fa46444d2d692012cb7e"
   },
   "versions": {
-    "local_ustar": 2026102801,
+    "local_ustar": 2026102802,
     "theme_ustar": 2026102700
   },
   "counts": {
@@ -2129,7 +2129,7 @@
     },
     {
       "path": "moodle/local/ustar/version.php",
-      "sha256": "6aa208f7d19f25f0126b5a795edb1f86c92f76c9f7722ff18d24cb4f7e799135"
+      "sha256": "6594cae9106051984b185c76d14c4381442a7070a2417a28b18176f584d34298"
     },
     {
       "path": "moodle/local/ustar/view.php",

@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-28",
+  "status": "local_verified_CI_pending_not_deployed",
+  "application_commit": "22607c69a27c9be65d78fd407ce240f9dc2b8c8b",
+  "baseline_application": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
+  "predecessor_tool": "81118e39f54c9ac34475f640bf2b9d4d8a047f24",
+  "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+  "versions": {
+    "baseline_local": 2026102801,
+    "local_ustar": 2026102802,
+    "theme_ustar": 2026102700
+  },
+  "files": {
+    "baseline": 589,
+    "target": 590,
+    "changed_existing": [
+      "local/ustar/classes/competition.php",
+      "local/ustar/classes/feed_article_resolver.php",
+      "local/ustar/feed_admin.php",
+      "local/ustar/version.php"
+    ],
+    "added": [
+      "local/ustar/tests/query_batching_test.php"
+    ]
+  },
+  "tables": 100,
+  "schema_delta": false,
+  "new_journal": "/var/lib/ustar-perf-query-update",
+  "worker_rollout": false,
+  "agent_SSH": false,
+  "server_updated": false,
+  "local": {
+    "contract_RED": {
+      "tests": 6,
+      "expected_missing_operator_assertions": 11
+    },
+    "operator_GREEN": {
+      "tests": 26,
+      "skipped": 1,
+      "seconds": 55.5,
+      "skip_reason": "local namespace cannot map GID33; CI mandatory actual UID33 remains required"
+    },
+    "R16": {
+      "tests": 1360,
+      "skipped": 69,
+      "seconds": 318.844,
+      "result": "PASS"
+    },
+    "source_structure": {
+      "JS": 33,
+      "tables": 100,
+      "templates": 57,
+      "PHP": "not available locally; full PHP lint/native validation required in CI"
+    },
+    "context": "PASS",
+    "secret_guard": "PASS"
+  },
+  "review": {
+    "mode": "author_self_review_no_subagents_per_AGENTS",
+    "blocking_findings": [],
+    "focus": [
+      "namespace2801 preserves nested2800 baseline and external artifact identity",
+      "strict589→590 inventory and unchanged100-table schema",
+      "read-only admission of accepted2801 source/journal/cron and task policy",
+      "added-file rollback and process-loss publication recovery",
+      "frozen old dependencies and worker checked against81118e39",
+      "mandatory actual PG16 and UID33 checks are not replaced by local fakes"
+    ]
+  },
+  "CI": {
+    "status": "pending"
+  },
+  "previous_query_source_qualification": "context/runtime/perf_query_batching_review_20261028.json",
+  "limits": [
+    "new2802 native/full RC required before delivery",
+    "owner executes server apply",
+    "workday/SLO baseline remains open"
+  ]
+}

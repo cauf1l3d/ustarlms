@@ -1,31 +1,30 @@
 schema_version: 2
 updated_at: '2026-10-28'
 project: USTAR Academy
-stage: perf_pr109_qualified_source
-stage_label: PR109 query batching passed full RC; source integration and release remain separate
-current_activity: PR109 app8d456031 is integrated over owner-accepted Studio2801. Qualification
-  ffc43884 passed all four CI workflows; both PHP1337/231 and native Moodle354/1695.
-  RSS uses one PostgreSQL read; operator-name batching retains guards and result shape.
-  PR107 owner acceptance remains separate from exact terminal inventory. Source integration,
-  a versioned frozen delivery and broader workday/SLO evidence remain open. No SSH or auto merge.
+stage: perf2802_delivery_preparation
+stage_label: PR107 integrated; prepare frozen PR1092802 delivery
+current_activity: Owner agreed to source integration and a separate server handoff. PR107 merged84a078ef with
+  an identical tested tree. PR109 query code on2801 passed all four CI at aa2b09be; versioned2802 payload22607c69
+  and its new operator are being qualified. No agent SSH or server apply; workday/SLO remains separate.
 entrypoint: START_HERE.md
 next_task: PERF-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
   branch: main
-  commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
-  kind: integrated_main_source_before_Studio_owner_deployment
-  local_ustar_version: 2026102300
-  theme_ustar_version: 2026100202
-  source_pr: 106
-  ci_receipt: context/runtime/connect_telegram_finish_ci_20261023.json
+  commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
+  kind: accepted_Studio_integrated_main_exact_component_tree
+  local_ustar_version: 2026102801
+  theme_ustar_version: 2026102700
+  source_pr: 107
+  ci_receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json
   integration_qualification:
-    commit: 40fb81d75c42ac6b4ff1f6f54f9e25f54b3fa149
-    full_RC_run: 40337002920
-    receipt: context/runtime/repository_reconciliation_20261026.json
-  scope_note: Main source baseline remains6c56 until PR107 integration; current production is separately
-    recorded below.
+    commit: 06ba6b305d19394e316deac45ea3f3eb2d35a62d
+    full_RC_run: 40737228325
+    merge: 84a078ef83f3812d252129d3a79f717cb3bf0591
+    receipt: context/runtime/perf2802_integration_20261028.json
+  scope_note: Exact plugin/theme tree in merged main84a078ef; production acceptance and terminal inventory
+    remain separate.
 production:
   latest_owner_browser_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
@@ -140,14 +139,12 @@ server_facts:
   followup: context/runtime/server_facts_followup_20261017.json
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
-  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still
-    separate
+  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still separate
   - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test failed. Other
     external sources/IPv6/NAT/API identity and full SSH admission/live overrides remain unverified
-  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle
-    acceptance not checked
-  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not
-    confirmed
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle acceptance
+    not checked
+  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not confirmed
   - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance
     remain separate; native restore/RTO awaited
   additional_observations:
@@ -171,21 +168,21 @@ infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261026.md
 development_candidate:
   task: PERF-01
   branch: perf/query-batching-20261027
-  base_main_commit: ad939373d89604119d3fd741c555deaf1ebd4ed7
+  base_main_commit: 84a078ef83f3812d252129d3a79f717cb3bf0591
   accepted_Studio_application: a3df57831a5ed49b901e5116ee800f2217fb61e9
   accepted_Studio_metadata: 79ce47b9e01c887fc2ecf500426be847b82867eb
-  application_commit: 8d4560316a6c6cb27467f3d1d2a3e19e0a6f52d5
+  application_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   source_resolution: Component tree IDs in the manifest; qualification metadata follows this application commit
   manifest: context/code_map/generated/perf_query_batching_candidate.json
-  local_ustar_version: 2026102801
+  local_ustar_version: 2026102802
   theme_ustar_version: 2026102700
   PR: 109
-  status: full_RC_passed_source_only_not_deployed
+  status: versioned_release_under_qualification_not_deployed
   deployed: false
   production_predecessor_receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json
-  source_manifest_scope: PR109 query batching over accepted Studio2801; development only, no new release version or server apply
+  source_manifest_scope: Bounded PR109 query batching release2802 over accepted Studio2801; server apply not
+    performed
   readiness_receipt: context/runtime/perf_query_batching_review_20261028.json
-  qualification_commit: ffc43884d36f35801aebb3de26a7a41c60abcc43
 studio_production_intent: context/runtime/course_studio_production_intent_20261027.json
 studio_latest_owner_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 studio_materials_deployment:
@@ -245,15 +242,26 @@ studio_viewport_owner_acceptance: context/runtime/studio_viewport_owner_acceptan
 active_PR109:
   branch: perf/query-batching-20261027
   initial_head: ca31380d5916c51fadf2ac8772744acd0a050ecf
-  base_branch: codex/shared-course-studio-20261026
-  base_commit: 06ba6b305d19394e316deac45ea3f3eb2d35a62d
-  application_commit: 8d4560316a6c6cb27467f3d1d2a3e19e0a6f52d5
-  qualification_commit: ffc43884d36f35801aebb3de26a7a41c60abcc43
-  status: full_RC_passed_Draft_source_only
+  base_branch: main
+  base_commit: 84a078ef83f3812d252129d3a79f717cb3bf0591
+  application_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+  status: versioned_delivery_preparation_before_merge
   receipt: context/runtime/perf_query_batching_review_20261028.json
-  application_delivery: not_prepared
+  application_delivery: preparing2802
+  previous_2801_qualification: aa2b09be0041ff4f74af0ca6c7b0e533d0b28658
 accepted_Studio_source:
   application_commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
   owner_metadata: 79ce47b9e01c887fc2ecf500426be847b82867eb
   qualification_metadata: 9332829c46ec32976987ba8f2ba57fae0ea02b3d
   receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json
+perf_query_deployment:
+  status: preparing_not_deployed
+  application_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+  baseline_application: a3df57831a5ed49b901e5116ee800f2217fb61e9
+  predecessor_tool: 81118e39f54c9ac34475f640bf2b9d4d8a047f24
+  transition: local2801/theme2700 → local2802/theme2700
+  new_journal: /var/lib/ustar-perf-query-update
+  worker_rollout: false
+  agent_SSH: false
+  plan: docs/superpowers/plans/2026-10-28-perf2802-delivery.md
+  integration_receipt: context/runtime/perf2802_integration_20261028.json

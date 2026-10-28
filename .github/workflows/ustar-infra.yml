@@ -170,6 +170,16 @@ jobs:
           path: artifacts/studio-viewport-production-deploy/
       - name: Canvas2801 source denies actual UID33 writes
         run: sudo -n env USTAR_REQUIRE_VIEWPORT_UID33=1 python3 -m unittest tests.r16.test_studio_viewport_update.ActualCodePermissions -v
+      - name: Build fixed2801-to2802 query batching updater without host access
+        run: |
+          python3 scripts/infra/build_perf_query_update.py --commit "${{ github.event.pull_request.head.sha || github.sha }}" --output-dir artifacts/perf-query-production-deploy
+          python3 -I -B artifacts/perf-query-production-deploy/ustar-perf-query-update-*.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: perf-query-production-deploy
+          path: artifacts/perf-query-production-deploy/
+      - name: Query2802 source denies actual UID33 writes
+        run: sudo -n env USTAR_REQUIRE_PERF_UID33=1 python3 -m unittest tests.r16.test_perf_query_update.ActualCodePermissions -v
       - name: PostgreSQL handoff config is readable but cannot be overwritten by actual UID33
         run: sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_postgres_app_handoff.ActualUnixPermissions -v
       - name: Code hardening archive and actual UID33 isolation

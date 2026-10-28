@@ -1,7 +1,7 @@
 schema_version: 2
 updated_at: '2026-10-28'
 canonical_branch: main
-source_baseline: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+source_baseline: a3df57831a5ed49b901e5116ee800f2217fb61e9
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 tasks:
 - id: DOC-01
@@ -51,12 +51,12 @@ tasks:
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: done
-  current_summary: Owner accepted ordinary ustar_app live handoff and browser use;3479 scoped relations,
-    independent admin SCRAM sessions, runtime five flags0 and no memberships. Existing native positive/negative/upgrade/dump/restore
-    delta accepted. Bootstrap OID10 remains administrative for backup. Broader host authentication/access
-    remains INF10.
-  validation_scope: Засчитать прежние стенды; существующий CI для недостающей проверки снятых cluster
-    flags и зависимости установленных helpers. Новый owner-стенд и полный restore/regression круг не планируются
+  current_summary: Owner accepted ordinary ustar_app live handoff and browser use;3479 scoped relations, independent
+    admin SCRAM sessions, runtime five flags0 and no memberships. Existing native positive/negative/upgrade/dump/restore
+    delta accepted. Bootstrap OID10 remains administrative for backup. Broader host authentication/access remains
+    INF10.
+  validation_scope: Засчитать прежние стенды; существующий CI для недостающей проверки снятых cluster flags
+    и зависимости установленных helpers. Новый owner-стенд и полный restore/regression круг не планируются
     по умолчанию.
   evidence: context/runtime/infra_app_handoff_owner_20261025.json
   depends_on:
@@ -79,8 +79,8 @@ tasks:
   - Data/cache/session remain writable; deploy and cron operate
   - Old dumps/config/keys inaccessible to unrelated local users; archives preserved
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Code/config hardening,22legacy archive and source0600 applied;69exports and encrypted
-    companion accepted. Broader shared www-data/caddy trust review remains open.
+  current_summary: Code/config hardening,22legacy archive and source0600 applied;69exports and encrypted companion
+    accepted. Broader shared www-data/caddy trust review remains open.
   evidence: context/runtime/infra_code_hardening_owner_20261025.json
 - id: INF-04
   title: Расход SSD, healthy HDD и аппаратный резерв
@@ -109,8 +109,8 @@ tasks:
   - Existing container logs actually rotate within measured budget
   - Readiness healthchecks and failure response verified
   - Exact images/mounts preserved; cron binding revalidated, one worker retained
-  current_summary: Owner26Oct explicitly defers logging/health/recreate to planned Moodle upgrade. No
-    runtime change; experimental engine frozen.
+  current_summary: Owner26Oct explicitly defers logging/health/recreate to planned Moodle upgrade. No runtime
+    change; experimental engine frozen.
   validation_evidence:
   - context/runtime/infra_docker_writable_layer_owner_20261025.json
   - context/runtime/infra_docker_layer_classification_20261025.md
@@ -125,10 +125,10 @@ tasks:
   - Linear-inspired same-host panel with password login, protected remote access and visible freshness/NoData
   - Server/Academy/cron/HDD/backup metrics, labs URL and lifetime, SFTP and manual backup/restore plans
   - Telegram allowlisted operator commands and failure/recovery alerts with verified delivery and audit
-  - Latest verified completed encrypted archive downloadable on request without starting a new backup
-    or sharing the recovery key
-  - Controlled Academy jobs preserve identity, maintenance locks and distinct test/production effects;
-    no arbitrary shell
+  - Latest verified completed encrypted archive downloadable on request without starting a new backup or sharing
+    the recovery key
+  - Controlled Academy jobs preserve identity, maintenance locks and distinct test/production effects; no arbitrary
+    shell
   - Independent observer verifies loss of host and delivery; retention/resources bounded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
@@ -152,8 +152,8 @@ tasks:
   - Restore/RTO remains OPS-02;console operation is not full disaster recovery
   spec: context/runtime/control_panel_telegram_20261016.md
   preserved_from_PR: 103
-  current_summary: Preserve the existing PR103 follow-up task;owner19Oct deferred journal/heartbeat. No
-    implicit restart of console work;current priority INTEGRATIONS01 design.
+  current_summary: Preserve the existing PR103 follow-up task;owner19Oct deferred journal/heartbeat. No implicit
+    restart of console work;current priority INTEGRATIONS01 design.
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
   status: in_progress
@@ -166,8 +166,8 @@ tasks:
   - Other vhosts and required services preserved; renewal alert verified
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   current_summary: Owner1959MSK canonical HTTPS check/cutover/status and desktop/phone/VPN opening accepted;renewal
-    timer initial probe verified by tool contract;future renewal/alert and exhaustive browser acceptance
-    remain distinct.
+    timer initial probe verified by tool contract;future renewal/alert and exhaustive browser acceptance remain
+    distinct.
   validation_evidence:
   - context/runtime/connect_academy_https_ci_20261020.json
   - context/runtime/connect_https_owner_20261020.json
@@ -199,8 +199,8 @@ tasks:
   - Compatible stage full gate and coordinated rollback pass
   - Production core/version/digest, scoped manifest, smoke and cron evidence recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Moodle5.1.8 upgrade/repeat13Oct, браузер/SCORM и последующий cron приняты владельцем.
-    Не повторять обновление.
+  current_summary: Moodle5.1.8 upgrade/repeat13Oct, браузер/SCORM и последующий cron приняты владельцем. Не
+    повторять обновление.
   validation_evidence:
   - context/runtime/production_patch_upgrade_result_20261013.json
   - context/runtime/production_patch_browser_result_20261013.json
@@ -212,11 +212,10 @@ tasks:
   - INF-01
   - INF-08
   acceptance:
-  - Fresh package/kernel/image baseline and manual recovery verified; no release upgrade inferred from
-    banner
+  - Fresh package/kernel/image baseline and manual recovery verified; no release upgrade inferred from banner
   - Targeted AppArmor repair preserves docker-default; Snap consumers checked before stale profile archive
-  - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one
-    cron v3
+  - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one cron
+    v3
   - Fresh post-reboot service/cron evidence recorded; failed service prevents acceptance
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   current_summary: AppArmor,63 пакета и boot kernel147/Docker29.9.0 приняты; shared units/mount/ID/restart
@@ -304,10 +303,9 @@ tasks:
   - G07
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   PR: 109
-  current_summary: PR109 app8d456031 is integrated over accepted Studio2801; qualification ffc43884
-    passed all four CI, both PHP1337/231 and native Moodle354/1695. RSS one-read and operator-name
-    batching verified; guards and frozen Studio/worker retained. Draft source integration and a separate
-    versioned delivery remain open; passive workday/SLO acceptance is still incomplete.
+  current_summary: PR107 integrated in main84a078ef. Owner agreed to integration/delivery. Prepare2801→2802
+    operator around frozen app22607c69; earlier query source aa2b09be passed all four CI. Broader passive workday/SLO
+    acceptance remains open.
 - id: INF-13
   title: Security сопровождение, ADR и закрытие базовой приёмки
   status: planned
@@ -337,8 +335,8 @@ tasks:
   - context/runtime/hdd_backup_schedule_status_20261012.json
   - context/runtime/production_patch_post_switch_status_result_20261013.json
   - context/runtime/host_reboot_result_20261014.json
-  current_summary: Ежедневный03:30Moscow backup и успешные scheduled runs12–14Oct подтверждены, после
-    reboot mount/timer сохранены. Политика retention/RPO/RTO, независимость и alerts остаются открыты.
+  current_summary: Ежедневный03:30Moscow backup и успешные scheduled runs12–14Oct подтверждены, после reboot
+    mount/timer сохранены. Политика retention/RPO/RTO, независимость и alerts остаются открыты.
 - id: OPS-02
   title: Fresh scheduled restore и аварийное восстановление общего хоста
   status: waiting_external
@@ -359,8 +357,8 @@ tasks:
   - context/runtime/sysadmin_handoff_result_20261016.json
   - context/runtime/production_copy_validation_20261015.json
   production_execution: archive_obtained_instruction_transferred_waiting_sysadmin_restore
-  current_summary: Владелец16Oct подтвердил получение архива и передачу инструкции сисадмину. Ожидается
-    реальный restore/вход/SCORM/reboot на чистом сервере; весь shared host не восстановлен.
+  current_summary: Владелец16Oct подтвердил получение архива и передачу инструкции сисадмину. Ожидается реальный
+    restore/вход/SCORM/reboot на чистом сервере; весь shared host не восстановлен.
 - id: PLAT-01
   title: Отложенный переход на Moodle 5.2 и PostgreSQL 17
   status: deferred
@@ -371,8 +369,7 @@ tasks:
     primary sources
   - Isolated PostgreSQL17 migration and paired code/database/data rollback pass before production
   - Fresh/upgrade/repeat/browser/SCORM/performance and independent archive restore accepted
-  - Separate owner instruction and approved runtime window; historical5.3 preparation does not authorize
-    activation
+  - Separate owner instruction and approved runtime window; historical5.3 preparation does not authorize activation
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   current_summary: Deferred planned Moodle/PHP platform update, target lab qualified first; includes reproducible
     Dockerfile, logging/health and consumer identity migration.
@@ -478,58 +475,55 @@ tasks:
   phase: owner_paused_23Oct_accepted2300_runtime_retained
   owner_priority: infrastructure_normalization_now_Connect_on_pause
   current_summary: 'Latest23Oct owner pauses further Telegram development and resumes infrastructure normalization.
-    Reminder24Oct15:00Europe/Moscow created for KeenDNS rules and mobile off-LAN check; not an automatic
-    resume. Accepted2300 services remain operational. The following source/deployment/Mini App checkpoints
-    are historical until return. Current23Oct: owner deployed exact tool3d/app-worker6c56/local2300/theme0202;
-    app_ready and runtime_active with ACK/presentation enabled, both services active/enabled and database
-    available. Receipt: context/runtime/connect_telegram_finish_owner_20261023.json. Owner confirmed new
-    task delivery, persistent ACK/time and correct own Academy history; visual acceptance closed. Event
-    heading not separately transcribed. This is a narrow notification slice; next CON03 is the existing
-    Mini App own task/checklist scenario with external HTTPS and Academy auth, not yet delivered. Reserve
-    and live group acceptance remain deferred; accepted pilot is not reopened. The deployment-design/source
-    checkpoints that follow are dated history. Owner22Oct approved written deployment design («потверждаю»).
-    Nine-task/45-step implementation plan ready for review: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md.
-    Self implementation/no subagents already fixed; controller not written. Next review this plan then
-    executing-plans; no repeated spec/method choice. Designf0c00d5e Context39789336484/Review39789336561
-    SUCCESS; FullRC skipped. Historical design preparation follows. Owner22Oct ordered next deployment
-    slice. Written design ready for review: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md.
+    Reminder24Oct15:00Europe/Moscow created for KeenDNS rules and mobile off-LAN check; not an automatic resume.
+    Accepted2300 services remain operational. The following source/deployment/Mini App checkpoints are historical
+    until return. Current23Oct: owner deployed exact tool3d/app-worker6c56/local2300/theme0202; app_ready and
+    runtime_active with ACK/presentation enabled, both services active/enabled and database available. Receipt:
+    context/runtime/connect_telegram_finish_owner_20261023.json. Owner confirmed new task delivery, persistent
+    ACK/time and correct own Academy history; visual acceptance closed. Event heading not separately transcribed.
+    This is a narrow notification slice; next CON03 is the existing Mini App own task/checklist scenario with
+    external HTTPS and Academy auth, not yet delivered. Reserve and live group acceptance remain deferred;
+    accepted pilot is not reopened. The deployment-design/source checkpoints that follow are dated history.
+    Owner22Oct approved written deployment design («потверждаю»). Nine-task/45-step implementation plan ready
+    for review: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md. Self implementation/no subagents
+    already fixed; controller not written. Next review this plan then executing-plans; no repeated spec/method
+    choice. Designf0c00d5e Context39789336484/Review39789336561 SUCCESS; FullRC skipped. Historical design
+    preparation follows. Owner22Oct ordered next deployment slice. Written design ready for review: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md.
     One controller with direct2000+overlay-to2200/fresh pair/cron2200 upgrade and separate ACK enable/disable;
     unchanged HTTPS owner, plain.py delivery, exact old recipients/revoke/cursor preserved. Implementation
     plan/controller not written; written-design review then self plan, no subagents. Final A2 docs34e185f0
-    Context39786095318/Review39786095327 SUCCESS, FullRC skipped. Owner-approved9-task A2 source slice
-    complete; author self-review/no subagents. Source53476482 Context39782650830/Review39782650814 SUCCESS;154native/800assertions,
+    Context39786095318/Review39786095327 SUCCESS, FullRC skipped. Owner-approved9-task A2 source slice complete;
+    author self-review/no subagents. Source53476482 Context39782650830/Review39782650814 SUCCESS;154native/800assertions,
     3callback PG races, v1/v2 wire, actual2100-to2200/repeat/paired restore and separate actual UID33/systemd/credentials/private
-    TLS handback PASS. PHP8.2/8.3 each974tests/152env skips; candidate2200/theme0202/557files/100tables
-    not deployed. Exact evidence context/runtime/connect_con02_callback_ci_20261022.json. Next separate
-    guarded installer/fresh DB-source-config-data pair/cron and HTTPS ownership handoff, then B routing/preferences
+    TLS handback PASS. PHP8.2/8.3 each974tests/152env skips; candidate2200/theme0202/557files/100tables not
+    deployed. Exact evidence context/runtime/connect_con02_callback_ci_20261022.json. Next separate guarded
+    installer/fresh DB-source-config-data pair/cron and HTTPS ownership handoff, then B routing/preferences
     and C Bitrix after portal discovery. Server1 application2000+accepted policy overlay/worker a86 unchanged;
-    UID130 last revoked; pilot not repeated; group live tests deferred, not passed. Historical A1 and
-    accepted pilot evidence follows. Owner approved CON02A1 plan21Oct. Native own acknowledgement implemented
-    and CI verified; first ackat survives repeats/read/ACK races; real active owner, capability, POST/sesskey
-    and source-local. Canonical task/delivery preserved. Candidate2100/theme0202/554files/99tables without
-    schema delta; not deployed. Source4fb4cd17 Context39679569635/Review39679569515 SUCCESS;138native/685assertions.
+    UID130 last revoked; pilot not repeated; group live tests deferred, not passed. Historical A1 and accepted
+    pilot evidence follows. Owner approved CON02A1 plan21Oct. Native own acknowledgement implemented and CI
+    verified; first ackat survives repeats/read/ACK races; real active owner, capability, POST/sesskey and
+    source-local. Canonical task/delivery preserved. Candidate2100/theme0202/554files/99tables without schema
+    delta; not deployed. Source4fb4cd17 Context39679569635/Review39679569515 SUCCESS;138native/685assertions.
     Exact evidence: context/runtime/connect_con02_ack_ci_20261021.json. A2 is now source-CI verified above;
     after guarded deployment follow B/C. Actual portal/API/legacy consumer unknown. Group controller remains
-    design-only; live group tests deferred to full launch, not passed. Historical accepted pilot below;
-    do not repeat it. Academy2000/theme0202/552files/99tables,managed cron and HTTPS,private link bridge
-    and ordinary employee link accepted. Owner repaired exact cached a86 directory access0755/content_changed=false;
-    same frozen a86 package now active for UID130, sender_active=true/linking_preserved=true/historical_replay=false/schema_upgraded=false.
+    design-only; live group tests deferred to full launch, not passed. Historical accepted pilot below; do
+    not repeat it. Academy2000/theme0202/552files/99tables,managed cron and HTTPS,private link bridge and ordinary
+    employee link accepted. Owner repaired exact cached a86 directory access0755/content_changed=false; same
+    frozen a86 package now active for UID130, sender_active=true/linking_preserved=true/historical_replay=false/schema_upgraded=false.
     Event cutoff21Oct14:56:57MSK;personal Tasks opt-in already saved. Receipt: context/runtime/connect_notification_pilot_owner_20261021.json.
     Source fix17261061 uses safe mkdir before publication under umask077; Context39595204430/Review39595203810
-    SUCCESS,actual UID33 pilot7/0skips PASS. New source fix is not deployed; active worker/tool remain
-    a86 plus repaired directory. Owner screenshot confirms real Telegram Tasks notification; new task
-    after reported revoke produces no message. Readonly SQL confirms revoked1/linked0 while preferences
-    enabled and Tasks selected. Native button/tasks and normal login without a session now owner accepted.
-    One-employee Tasks pilot accepted. Recipient last revoked;own same-TG relink can resume use. Written
-    group design context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md prepared for owner
-    review: explicit group of 1-10 participants and separate guarded a86 handoff. Implementation plan/code/server/group
-    changes not started. Browser CA trust is separate and open;MiniApp/native handoff/external HTTPS later.
-    No agent SSH/provider sends;0subagents/main unmerged.'
+    SUCCESS,actual UID33 pilot7/0skips PASS. New source fix is not deployed; active worker/tool remain a86
+    plus repaired directory. Owner screenshot confirms real Telegram Tasks notification; new task after reported
+    revoke produces no message. Readonly SQL confirms revoked1/linked0 while preferences enabled and Tasks
+    selected. Native button/tasks and normal login without a session now owner accepted. One-employee Tasks
+    pilot accepted. Recipient last revoked;own same-TG relink can resume use. Written group design context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md
+    prepared for owner review: explicit group of 1-10 participants and separate guarded a86 handoff. Implementation
+    plan/code/server/group changes not started. Browser CA trust is separate and open;MiniApp/native handoff/external
+    HTTPS later. No agent SSH/provider sends;0subagents/main unmerged.'
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate
   - Role API/event/delivery/escalation and external edge contracts documented with source anchors
-  - Legacy file metadata distinguished from unread source;safe migration and old pending/consumer gates
-    explicit
+  - Legacy file metadata distinguished from unread source;safe migration and old pending/consumer gates explicit
   - Public Mini App and full Moodle origin gate distinguished;office and home routing stability preserved
   - Owner authorizes review then development;CRM=Academy tasks;provider/edge/CEO decisions explicit
   spec: context/proposals/USTAR_CONNECT_RFC_20261018.md
@@ -586,8 +580,8 @@ tasks:
   - Material opens as reusable editable draft with original publication/scope/history preserved
   - Local Word .docx import/export retains basic text formatting, lists, tables and embedded images
   - Catalogue list/blocks/cards persist for reader and author; bounded SQL and batch file metadata
-  - Final course navigation colors persist in source, shared revisions, preview and both SCORM builders
-    without migrating legacy fingerprints
+  - Final course navigation colors persist in source, shared revisions, preview and both SCORM builders without
+    migrating legacy fingerprints
   - Collapsible title/sync chrome increases canvas height; preference, selection/scroll, errors and recovery
     controls preserved
   - Material-only50-150percent zoom preserves authored content, selection and reachable scroll edges
@@ -596,10 +590,10 @@ tasks:
   previous_2600_qualification:
     commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
     full_RC_run: 40441818519
-  current_summary: 'Canvas/panels2801 qualified: app a3df5783, updater81118e39, qualification c7602edf.
-    All four CI SUCCESS; both PHP1335/231 and native Moodle352/1678. Mandatory actualPG100table
-    fresh/legacy7SQL denials and UID33 write-denial PASS. Archive is byte-identical to CI;
-    saved copy downloaded and SHA256 verified. Owner28Oct accepted the811 handoff as working; exact new terminal status not supplied. No SSH/merge.'
+  current_summary: 'Canvas/panels2801 qualified: app a3df5783, updater81118e39, qualification c7602edf. All
+    four CI SUCCESS; both PHP1335/231 and native Moodle352/1678. Mandatory actualPG100table fresh/legacy7SQL
+    denials and UID33 write-denial PASS. Archive is byte-identical to CI; saved copy downloaded and SHA256
+    verified. Owner28Oct accepted the811 handoff as working; exact new terminal status not supplied. No SSH/merge.'
   previous_2700_qualification:
     commit: 3795299732609e1c2b17fe8e5beca71ae703e921
     full_RC_run: 40602646743

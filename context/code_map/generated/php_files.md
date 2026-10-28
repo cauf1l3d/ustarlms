@@ -1,6 +1,6 @@
 # PHP files
 
-Source: `a3df57831a5ed49b901e5116ee800f2217fb61e9`. Git source only; not a live database snapshot.
+Source: `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`. Git source only; not a live database snapshot.
 
 - `moodle/local/ustar/achievements.php`
 - `moodle/local/ustar/activity_launch.php`
@@ -377,6 +377,7 @@ Source: `a3df57831a5ed49b901e5116ee800f2217fb61e9`. Git source only; not a live 
 - `moodle/local/ustar/tests/notebook_test.php`
 - `moodle/local/ustar/tests/notification_delivery_test.php`
 - `moodle/local/ustar/tests/organization_identity_test.php`
+- `moodle/local/ustar/tests/query_batching_test.php`
 - `moodle/local/ustar/tests/recruiter_access_test.php`
 - `moodle/local/ustar/tests/release_review_test.php`
 - `moodle/local/ustar/tests/reward_conditions_test.php`

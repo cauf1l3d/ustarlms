@@ -12,19 +12,19 @@ repository_head:
   note: Resolve at read time; never store a self-referencing or placeholder commit
 application_baseline:
   branch: main
-  commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
-  kind: accepted_Studio_integrated_main_exact_component_tree
-  local_ustar_version: 2026102801
+  commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+  kind: query_batching_integrated_main_exact_component_trees
+  local_ustar_version: 2026102802
   theme_ustar_version: 2026102700
-  source_pr: 107
-  ci_receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json
+  source_pr: 109
+  ci_receipt: context/runtime/perf2802_qualification_20261028.json
   integration_qualification:
-    commit: 06ba6b305d19394e316deac45ea3f3eb2d35a62d
-    full_RC_run: 40737228325
-    merge: 84a078ef83f3812d252129d3a79f717cb3bf0591
-    receipt: context/runtime/perf2802_integration_20261028.json
-  scope_note: Exact plugin/theme tree in merged main84a078ef; production acceptance
-    and terminal inventory remain separate.
+    commit: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
+    full_RC_run: 40761497871
+    merge: 01904edaf01dc6e340018eae8bf351dcc692b0c2
+    receipt: context/runtime/perf2802_qualification_20261028.json
+  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source
+    integration is separate from owner server acceptance.
 production:
   latest_owner_browser_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
@@ -84,10 +84,11 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: Owner agreed to source integration and a separate server handoff. PR107
-    merged84a078ef with an identical tested tree. PR109 query code on2801 passed all
-    four CI at aa2b09be; versioned2802 payload22607c69 and its new operator are being
-    qualified. No agent SSH or server apply; workday/SLO remains separate.
+  activity: PR107 merged84a078ef and PR109 merged01904eda after exact-head full RC
+    on3c1ddd09. Main application22607c69/local2802/theme2700; worker6c56 remains separate.
+    Archive1319be48 is byte-identical to CI and its retained downloaded copy. Owner
+    install/status receipt for2802 is pending; broader workday/SLO remains open. Agent
+    did not access server1.
   next_task: PERF-01
   ready_tasks: []
   task_statuses:

@@ -32,15 +32,17 @@ successor заморожен и на сервер не поставлен. SSH/f
 
 ## Репозиторий и текущая работа
 
-Owner принял Studio2801/81118e39 и согласился на интеграцию/отдельную поставку PR109.
+Owner принял Studio2801 и согласился на интеграцию/поставку PR109.
 [Приёмка](context/runtime/studio_viewport_owner_acceptance_20261028.json),
-[новый этап](context/runtime/perf2802_integration_20261028.json). Новой terminal-квитанции нет.
-PR107 слит как84a078ef: main содержит app a3df5783/local2801/theme2700; STUDIO-01 завершён.
+[интеграция](context/runtime/perf2802_integration_20261028.json). Новой terminal-квитанции нет.
+PR107/109 слиты:84a078ef/01904eda. Main содержит app22607c69/local2802/theme2700;
+worker6c56 отдельно и без rollout. STUDIO-01 завершён.
 
-PERF-01/PR109: source aa2b09be прошёл все четыре CI, оба native354/1695. Теперь готовится
-версионированная поставка2801→2802/app22607c69 с новым frozen оператором и журналом.
-[План](docs/superpowers/plans/2026-10-28-perf2802-delivery.md). Новый релиз ещё квалифицируется.
-Рабочий день/SLO остаются отдельной приёмкой. Серверную установку выполняет владелец.
-SSH/субагенты запрещены; Studio/старые операторы и worker6c56 сохраняются.
+PERF-01: оператор3c1ddd09 и приложение2802 прошли все четыре CI, обе PHP1363/232,
+оба native354/1695, actual PG/UID33 PASS. Архив идентичен CI и скачанной сохранённой копии.
+[Квитанция](context/runtime/perf2802_qualification_20261028.json),
+[установка/проверка](docs/PERF_2802_INSTALL_RU.md).2802 на server1 пока не подтверждён.
+Владелец выполняет установку и присылает status. Workday/SLO остаются отдельной приёмкой.
+SSH/субагенты запрещены; принятые инфраструктурные проверки не повторять.
 Исходники: moodle/local/ustar и moodle/theme/ustar; frontend — legacy.
 [Индекс](context/CONTEXT_INDEX.md), [история](context/archive/reconciliation_20261026).

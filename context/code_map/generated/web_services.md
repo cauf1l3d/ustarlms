@@ -1,6 +1,6 @@
 # Registered USTAR external functions
 
-Source: `a3df57831a5ed49b901e5116ee800f2217fb61e9`. Git source only; not a live database snapshot.
+Source: `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`. Git source only; not a live database snapshot.
 
 
 Source: `moodle/local/ustar/db/services.php`. Service: `ustar_workspace`. Registration does not prove coverage of current native pages or production enablement.

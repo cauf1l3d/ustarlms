@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "date_msk": "2026-10-28",
-  "status": "local_verified_CI_pending_not_deployed",
+  "status": "qualified_archive_saved_source_merged_owner_apply_pending",
   "application_commit": "22607c69a27c9be65d78fd407ce240f9dc2b8c8b",
   "baseline_application": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
   "predecessor_tool": "81118e39f54c9ac34475f640bf2b9d4d8a047f24",
@@ -69,12 +69,125 @@
     ]
   },
   "CI": {
-    "status": "pending"
+    "qualification_commit": "3c1ddd099a1d7abdfa44ec3a9ebc54296a553618",
+    "status": "all_four_workflows_success",
+    "review_run": 40761497871,
+    "infrastructure_run": 40761498049,
+    "context_run": 40761497984,
+    "console_run": 40761498101,
+    "infrastructure_result": "success",
+    "context_result": "success",
+    "console_result": "success",
+    "source": [
+      {
+        "PHP": "8.2",
+        "job": 123074327909,
+        "tests": 1363,
+        "skipped": 232,
+        "seconds": 212.444,
+        "result": "PASS"
+      },
+      {
+        "PHP": "8.3",
+        "job": 123074327916,
+        "tests": 1363,
+        "skipped": 232,
+        "seconds": 271.065,
+        "result": "PASS"
+      }
+    ],
+    "rollback": "success",
+    "prepare_RC": "success",
+    "native_jobs": [
+      123078261923,
+      123078261932
+    ],
+    "actual_UID33": {
+      "required": true,
+      "result": "PASS",
+      "job": 123074327523,
+      "scope": "new query source readable, write denied after real root/group33 activation"
+    },
+    "review_result": "success",
+    "native": [
+      {
+        "runtime": "historical",
+        "job": 123078261923,
+        "result": "PASS",
+        "tests": 354,
+        "assertions": 1695
+      },
+      {
+        "runtime": "patch-518",
+        "job": 123078261932,
+        "result": "PASS",
+        "tests": 354,
+        "assertions": 1695
+      }
+    ],
+    "actual_PG16_probe": {
+      "SQL_mutations_denied": [
+        "partial_local_ustar_coin_accounts",
+        "partial_local_ustar_test_results",
+        "extra_index",
+        "column_default",
+        "task",
+        "extra_table",
+        "missing_ACK_index"
+      ],
+      "actual_postgres_metadata": true,
+      "all_fixture_SQL_rolled_back": true,
+      "profiles": [
+        "xml_install_indexes",
+        "server1_legacy_indexes_20261023"
+      ],
+      "result": "PASS",
+      "scope": "DB metadata validation across version transitions; physical transaction recovery is tested separately",
+      "tables": 100,
+      "versions": [
+        2026102801,
+        2026102802,
+        2026102802,
+        2026102801
+      ]
+    },
+    "PHP_lint": {
+      "result": "PASS",
+      "files": 400
+    }
   },
   "previous_query_source_qualification": "context/runtime/perf_query_batching_review_20261028.json",
   "limits": [
-    "new2802 native/full RC required before delivery",
-    "owner executes server apply",
+    "owner executes server apply;2802 installation not yet confirmed",
     "workday/SLO baseline remains open"
-  ]
+  ],
+  "tool_commit": "3c1ddd099a1d7abdfa44ec3a9ebc54296a553618",
+  "artifact": {
+    "archive": "ustar-perf-query-install-3c1ddd09.tar.gz",
+    "archive_SHA256": "1319be4822e366e705ce41bf3bf3121ed0e6fc374cc3208e0fc42047d7ccb9f0",
+    "archive_bytes": 20529822,
+    "monolith_SHA256": "6d265c83139cb43d22625b13c8236b3f6816177033ad99ea15228c45ce6533de",
+    "monolith_bytes": 37021267,
+    "members_verified": true,
+    "status": "qualified_saved_copy_verified",
+    "CI_artifact_id": 12848865532,
+    "CI_run": 40761498049,
+    "ZIP_SHA256": "709ace7a6ff24219e7f92a0d619288eee51c90223e3eed854840b825dee6d119",
+    "ZIP_bytes": 40987495,
+    "ZIP_CRC": "PASS",
+    "ZIP_members": "PASS",
+    "all_five_files_byte_identical": "PASS",
+    "retained_copy_download_verified": true,
+    "retained_copy_SHA256": "1319be4822e366e705ce41bf3bf3121ed0e6fc374cc3208e0fc42047d7ccb9f0",
+    "retained_copy_bytes": 20529822
+  },
+  "owner_instruction": "docs/PERF_2802_INSTALL_RU.md",
+  "qualified_at_msk": "2026-10-28T23:39:44.766870+03:00",
+  "source_integration": {
+    "PR107_merge": "84a078ef83f3812d252129d3a79f717cb3bf0591",
+    "PR109_head": "3c1ddd099a1d7abdfa44ec3a9ebc54296a553618",
+    "PR109_merge": "01904edaf01dc6e340018eae8bf351dcc692b0c2",
+    "merge_tree_matches_qualified_head": true,
+    "main_context_followup": "Metadata/inventories and fixed CI builder reference only; application/operator/worker trees remain identical to qualified3c1ddd09"
+  }
 }

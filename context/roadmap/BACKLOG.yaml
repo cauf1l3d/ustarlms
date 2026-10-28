@@ -1,7 +1,7 @@
 schema_version: 2
 updated_at: '2026-10-28'
 canonical_branch: main
-source_baseline: a3df57831a5ed49b901e5116ee800f2217fb61e9
+source_baseline: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 tasks:
 - id: DOC-01
@@ -303,9 +303,9 @@ tasks:
   - G07
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   PR: 109
-  current_summary: PR107 integrated in main84a078ef. Owner agreed to integration/delivery. Prepare2801→2802
-    operator around frozen app22607c69; earlier query source aa2b09be passed all four CI. Broader passive workday/SLO
-    acceptance remains open.
+  current_summary: Bounded RSS/operator query batching integrated through PR109/01904eda. App22607c69/local2802
+    and operator3c1ddd09 passed four CI; PHP1363/232 and native354/1695 each. Archive verified against CI and
+    retained download; owner apply pending. Broader passive workday/concurrency/SLO acceptance stays open.
 - id: INF-13
   title: Security сопровождение, ADR и закрытие базовой приёмки
   status: planned

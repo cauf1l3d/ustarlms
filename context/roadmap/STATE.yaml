@@ -1,30 +1,30 @@
 schema_version: 2
 updated_at: '2026-10-28'
 project: USTAR Academy
-stage: perf2802_delivery_preparation
-stage_label: PR107 integrated; prepare frozen PR1092802 delivery
-current_activity: Owner agreed to source integration and a separate server handoff. PR107 merged84a078ef with
-  an identical tested tree. PR109 query code on2801 passed all four CI at aa2b09be; versioned2802 payload22607c69
-  and its new operator are being qualified. No agent SSH or server apply; workday/SLO remains separate.
+stage: perf2802_delivered_owner_apply_pending
+stage_label: PR107/109 integrated; verified2802 archive ready for owner install
+current_activity: PR107 merged84a078ef and PR109 merged01904eda after exact-head full RC on3c1ddd09. Main application22607c69/local2802/theme2700;
+  worker6c56 remains separate. Archive1319be48 is byte-identical to CI and its retained downloaded copy. Owner
+  install/status receipt for2802 is pending; broader workday/SLO remains open. Agent did not access server1.
 entrypoint: START_HERE.md
 next_task: PERF-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
   branch: main
-  commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
-  kind: accepted_Studio_integrated_main_exact_component_tree
-  local_ustar_version: 2026102801
+  commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+  kind: query_batching_integrated_main_exact_component_trees
+  local_ustar_version: 2026102802
   theme_ustar_version: 2026102700
-  source_pr: 107
-  ci_receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json
+  source_pr: 109
+  ci_receipt: context/runtime/perf2802_qualification_20261028.json
   integration_qualification:
-    commit: 06ba6b305d19394e316deac45ea3f3eb2d35a62d
-    full_RC_run: 40737228325
-    merge: 84a078ef83f3812d252129d3a79f717cb3bf0591
-    receipt: context/runtime/perf2802_integration_20261028.json
-  scope_note: Exact plugin/theme tree in merged main84a078ef; production acceptance and terminal inventory
-    remain separate.
+    commit: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
+    full_RC_run: 40761497871
+    merge: 01904edaf01dc6e340018eae8bf351dcc692b0c2
+    receipt: context/runtime/perf2802_qualification_20261028.json
+  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source integration is separate
+    from owner server acceptance.
 production:
   latest_owner_browser_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
@@ -165,24 +165,6 @@ current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md
 accepted_risks: context/roadmap/ACCEPTED_RISKS.yaml
 repository_reconciliation: context/runtime/repository_reconciliation_20261026.json
 infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261026.md
-development_candidate:
-  task: PERF-01
-  branch: perf/query-batching-20261027
-  base_main_commit: 84a078ef83f3812d252129d3a79f717cb3bf0591
-  accepted_Studio_application: a3df57831a5ed49b901e5116ee800f2217fb61e9
-  accepted_Studio_metadata: 79ce47b9e01c887fc2ecf500426be847b82867eb
-  application_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
-  source_resolution: Component tree IDs in the manifest; qualification metadata follows this application commit
-  manifest: context/code_map/generated/perf_query_batching_candidate.json
-  local_ustar_version: 2026102802
-  theme_ustar_version: 2026102700
-  PR: 109
-  status: versioned_release_under_qualification_not_deployed
-  deployed: false
-  production_predecessor_receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json
-  source_manifest_scope: Bounded PR109 query batching release2802 over accepted Studio2801; server apply not
-    performed
-  readiness_receipt: context/runtime/perf_query_batching_review_20261028.json
 studio_production_intent: context/runtime/course_studio_production_intent_20261027.json
 studio_latest_owner_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 studio_materials_deployment:
@@ -245,17 +227,21 @@ active_PR109:
   base_branch: main
   base_commit: 84a078ef83f3812d252129d3a79f717cb3bf0591
   application_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
-  status: versioned_delivery_preparation_before_merge
+  status: merged_archive_delivered_owner_apply_pending
   receipt: context/runtime/perf_query_batching_review_20261028.json
-  application_delivery: preparing2802
+  application_delivery: qualified2802_archive_saved
   previous_2801_qualification: aa2b09be0041ff4f74af0ca6c7b0e533d0b28658
+  merged: true
+  merge_commit: 01904edaf01dc6e340018eae8bf351dcc692b0c2
+  qualification_commit: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
+  owner_installation_confirmed: false
 accepted_Studio_source:
   application_commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
   owner_metadata: 79ce47b9e01c887fc2ecf500426be847b82867eb
   qualification_metadata: 9332829c46ec32976987ba8f2ba57fae0ea02b3d
   receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json
 perf_query_deployment:
-  status: preparing_not_deployed
+  status: qualified_archive_saved_owner_apply_pending
   application_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   baseline_application: a3df57831a5ed49b901e5116ee800f2217fb61e9
   predecessor_tool: 81118e39f54c9ac34475f640bf2b9d4d8a047f24
@@ -265,3 +251,13 @@ perf_query_deployment:
   agent_SSH: false
   plan: docs/superpowers/plans/2026-10-28-perf2802-delivery.md
   integration_receipt: context/runtime/perf2802_integration_20261028.json
+  tool_commit: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
+  qualification: context/runtime/perf2802_qualification_20261028.json
+  owner_instruction: docs/PERF_2802_INSTALL_RU.md
+  archive_sha256: 1319be4822e366e705ce41bf3bf3121ed0e6fc374cc3208e0fc42047d7ccb9f0
+  source_merge: 01904edaf01dc6e340018eae8bf351dcc692b0c2
+  qualification_commit: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
+  full_RC_run: 40761497871
+  owner_installation_confirmed: false
+  retained_copy_verified: true
+  archive_bytes: 20529822

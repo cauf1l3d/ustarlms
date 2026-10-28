@@ -5,5 +5,5 @@ Canonical state: [STATE](../../context/roadmap/STATE.yaml).
 Machine view: [current.yaml](../../context/current.yaml).
 
 Updated: 2026-10-28. Next task: PERF-01.
-Application baseline: a3df57831a5ed49b901e5116ee800f2217fb61e9.
+Application baseline: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b.
 This is not a deployment receipt. Do not edit this generated file.

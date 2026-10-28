@@ -1,6 +1,6 @@
 domain: evidence
 reviewed_at: '2026-10-17'
-source_commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
+source_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
 purpose: Подтверждённые результаты, gates и completion cycles
 services:
 - moodle/local/ustar/classes/target_core.php

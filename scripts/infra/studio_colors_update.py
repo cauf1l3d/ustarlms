@@ -106,7 +106,25 @@ def load_embedded(manifest, sources, assets):
 
 
 def verify_database(current, baseline, reference, *, target):
-    return c.verify_database(current, baseline, reference, target=target, historical_version=2026102700)
+    c.require(reference['baseline']['versions'] == {
+        'local_ustar': 2026102700, 'theme_ustar': 2026102700}, 'colors_baseline_versions')
+    try:
+        return c.verify_database(current, baseline, reference, target=target, historical_version=2026102700)
+    except c.Refusal as error:
+        if str(error) != 'schema_indexes': raise
+    # The accepted23Oct pair persisted through2700, which changed the theme.
+    # The frozen verifier's alternate profile is tied to theme0202. Retry the
+    # exact pair using the same strict verifier, without changing data/versions.
+    import copy
+    alternate = copy.deepcopy(reference)
+    for table, field in (('local_ustar_coin_accounts', 'userid'),
+                         ('local_ustar_test_results', 'attemptid')):
+        indexes = alternate['baseline']['schema_indexes'].get(table, [])
+        omitted = [item for item in indexes if item['fields'] == [field] and item['unique'] is True]
+        c.require(len(omitted) == 1, 'schema_indexes')
+        indexes.remove(omitted[0])
+    c.verify_database(current, baseline, alternate, target=target, historical_version=2026102700)
+    return 'server1_legacy_indexes_20261023'
 
 
 def verify_predecessor_database(current, baseline, reference):
@@ -186,10 +204,11 @@ def make_context(bundle, *, root=Path('/'), uid=0, host=None):
 def check(ctx):
     from connect_con02_application import Application
     with Locks(ctx).check():
-        journal = Journal(ctx); saved = journal.load()
+        journal = Journal(ctx); saved = journal.load(); index_profile = None
         if saved is None:
             ctx.host.controls(None); ctx.host.preflight(); target = False
-            database = ctx.host.database(ctx.host.prefix()); verify_database(database, database, ctx.bundle.reference, target=False)
+            database = ctx.host.database(ctx.host.prefix())
+            index_profile = verify_database(database, database, ctx.bundle.reference, target=False)
             ctx.host.source(target=False)
         else:
             c.require(saved.get('runtime') is None and (saved.get('app') or {}).get('phase') in ('app_ready', 'baseline_restored'),
@@ -198,7 +217,8 @@ def check(ctx):
             Application(ctx, journal, Locks(ctx)).verify(saved['app'], target=target)
         c.https_snapshot(ctx)
         return {'phase': 'application_ready' if target else 'ready_for_colors_update',
-            'local_ustar': '2026102800' if target else '2026102700', 'host_changes': False, 'provider_called': False}
+            'local_ustar': '2026102800' if target else '2026102700', 'host_changes': False, 'provider_called': False,
+            **({'baseline_index_profile': index_profile} if index_profile else {})}
 
 
 def main(argv=None, *, bundle=None):

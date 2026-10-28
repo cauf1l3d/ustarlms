@@ -18,9 +18,11 @@ Source4c48dce7 квалифицирован на053b8c17: все четыре CI
 [Поставка](../runtime/studio_materials_delivery_20261028.json). Архив неизменен и
 новых2800 правок не содержит. PR107 не сливать автоматически; агент не использует SSH.
 
-Пакет352d009c(2700→2800) выдан: все четыре CI на98833ab4 SUCCESS, обе native матрицы
-352/1678, UID33 и независимая сверка архива PASS. Owner apply/acceptance ожидается.
-[Команды](../../docs/STUDIO_2800_INSTALL_RU.md), [квитанция](../runtime/studio_colors_deployment_20261028.json).
+Owner --check352d отказал schema_indexes при верных суммах; upgrade не запускался.
+Воспроизведён legacy-профиль после theme2700. Исправление только2800 адаптера,
+39focused/1skip PASS; full R16 и realPG100table CI ожидаются. Старый пакет заменяется.
+[Инцидент](../runtime/studio_colors_index_compat_20261028.json).
+
 
 ## Основания production
 

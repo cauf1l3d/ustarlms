@@ -137,5 +137,13 @@
   "owner_instruction": "docs/STUDIO_2800_INSTALL_RU.md",
   "owner_installation_confirmed": false,
   "delivered": true,
-  "review": "Author self-review; AGENTS forbids subagents; pinned cron admission, missing predecessor, paired restore/public boundary and actual UID33 checked; no unresolved findings"
+  "review": "Author self-review; AGENTS forbids subagents; pinned cron admission, missing predecessor, paired restore/public boundary and actual UID33 checked; no unresolved findings",
+  "owner_precheck": {
+    "phase": "refused",
+    "reason": "schema_indexes",
+    "archive_and_inner_sums": "OK",
+    "upgrade_invoked": false
+  },
+  "current_recommendation": "superseded_pending_corrected_operator; do not bypass precheck",
+  "incident": "context/runtime/studio_colors_index_compat_20261028.json"
 }

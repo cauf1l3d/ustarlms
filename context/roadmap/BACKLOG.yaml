@@ -570,6 +570,7 @@ tasks:
   - context/runtime/studio_colors_canvas_progress_20261028.md
   - context/runtime/studio_colors_deployment_20261028.json
   - context/runtime/studio_colors_deploy_progress_20261028.md
+  - context/runtime/studio_colors_index_compat_20261028.json
   deployment_evidence: context/runtime/course_studio_owner_deploy_20261027.json
   acceptance:
   - Native Moodle author access, shared revisions and conflicts without lost drafts
@@ -584,14 +585,14 @@ tasks:
     without migrating legacy fingerprints
   - Collapsible title/sync chrome increases canvas height; preference, selection/scroll, errors and recovery
     controls preserved
-  deployment_status: last_exact_owner_receipt2600;2700_and2800_packages_delivered;2800_owner_apply_pending
+  deployment_status: 352d_owner_precheck_schema_indexes;corrected2800_package_pending
   previous_2600_qualification:
     commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
     full_RC_run: 40441818519
-  current_summary: Palette/compact app4c48dce7 and fixed2700→2800 operator352d009c qualified; all four
-    CI at98833ab4 SUCCESS. PHP1302R16/230skips and both native Moodle352/1678, HTTP/upgrade/repeat/rollback/UID33
-    PASS. Exact archive saved/download-verified and issued with commands. Owner2800 installation/acceptance
-    pending; no SSH or PR merge.
+  current_summary: Owner --check352d refused schema_indexes before upgrade with valid archive sums. Local
+    reproduction pins accepted legacy pair plus theme2700; narrow adapter fix/focused39tests PASS, full
+    R16/native100table regression CI pending. App4c48dce7/frozen operators unchanged; no SQL repair or
+    SSH.
   previous_2700_qualification:
     commit: 3795299732609e1c2b17fe8e5beca71ae703e921
     full_RC_run: 40602646743

@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "recorded_date_msk": "2026-10-28",
+  "kind": "owner_precheck_refusal_and_operator_fix_pending_CI",
+  "owner_evidence": {
+    "source": "terminal pasted in current chat",
+    "tool_commit": "352d009ceece3bb6024e3849d1b46cfe6f6c1d44",
+    "archive_SHA_and_inner_sums": "OK",
+    "phase": "refused",
+    "reason": "schema_indexes",
+    "upgrade_invoked": false,
+    "new_production_version_confirmed": false
+  },
+  "application_commit": "4c48dce7dadd4da8f054f2acf0d6974bdaeecebc",
+  "fixed_predecessor_tool": "01e1cef2393c78cb9bb2f3221e739ffeda236180",
+  "root_cause": {
+    "local_reproduction": "accepted23Oct legacy pair at local2700/theme2700 raises schema_indexes; strict fresh2700 passes",
+    "frozen_verifier": "alternate legacy indexes require theme0202; new adapter baseline uses theme2700",
+    "current_host_index_census": "not collected; exact historical pair inferred from existing accepted receipt, not a fresh SQL observation",
+    "historical_receipt": "context/runtime/connect_con02_index_owner_20261023.json"
+  },
+  "fix_scope": "Only2800 adapter retries strict copied reference omitting exactly the accepted pair at baseline2700/theme2700; no SQL repair, app or frozen-module change",
+  "local": {
+    "focused_tests": 39,
+    "skips": 1,
+    "seconds": 33.297,
+    "result": "PASS",
+    "native_probe": "real PG100table profiles and SQL mutations queued for CI; no local Docker/PG runtime"
+  },
+  "CI": {
+    "status": "pending"
+  },
+  "deployed": false,
+  "agent_SSH": false,
+  "worker_rollout": false,
+  "plan": "docs/superpowers/plans/2026-10-28-studio-index-compat.md"
+}

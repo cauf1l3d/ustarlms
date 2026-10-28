@@ -38,9 +38,9 @@ current_work:
   task: STUDIO-01
   spec: docs/superpowers/specs/2026-10-28-studio-colors-canvas-design.md
   PR: 107
-  status: palette_compact2800_qualified_unmerged_not_deployed
+  status: 2800_operator_index_compat_fix_verifying
   frontend_scope: native local_ustar; author rights and shared revisions preserved
   next_after_studio: PERF-01 and verified backlog
   deployment_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
   qualification_receipt: context/runtime/studio_colors_canvas_qualification_20261028.json
-  installation_handoff: context/runtime/studio_colors_deployment_20261028.json
+  installation_handoff: context/runtime/studio_colors_index_compat_20261028.json

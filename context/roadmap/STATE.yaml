@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-10-28'
 project: USTAR Academy
-stage: studio_colors_update_ready_for_owner
-stage_label: Fixed2700-to2800 package qualified and issued; owner apply pending
-current_activity: 'Fixed2700→2800 tool352d009c qualified on98833ab4: all four CI SUCCESS, both PHP1302R16/230skips,
-  both native Moodle352/1678, HTTP/upgrade/repeat/rollback and actual UID33 PASS. Archive SHA/CRC/members
-  and independent rebuilds match; saved copy downloaded and checked. Owner archive and commands issued;
-  exact application4c48dce7 unchanged. No owner installation result, SSH or merge.'
+stage: studio_colors_index_compat_verifying
+stage_label: Owner2800 precheck blocked; narrow legacy-index compatibility fix verifying
+current_activity: 'Owner352d archive/inner sums OK, --check refused schema_indexes before upgrade. Reproduced
+  accepted historical pair at theme2700: frozen verifier still expects theme0202. Narrow2800 adapter fix
+  and39focused tests PASS/1skip; realPG100table regression and full R16/CI pending. App4c48dce7/frozen
+  tools unchanged; no SQL repair, SSH or host update.'
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []
@@ -208,7 +208,7 @@ studio_colors_canvas:
   qualification: context/runtime/studio_colors_canvas_qualification_20261028.json
   agent_SSH: false
 studio_colors_deployment:
-  status: qualified_archive_delivered_owner_apply_pending
+  status: owner_precheck_refused_superseded_fix_pending
   application_commit: 4c48dce7dadd4da8f054f2acf0d6974bdaeecebc
   predecessor_tool: 01e1cef2393c78cb9bb2f3221e739ffeda236180
   predecessor_application: 20ed966e146378a21016c085d31ce4defaa809a8
@@ -223,3 +223,7 @@ studio_colors_deployment:
   full_RC_run: 40671198755
   owner_instruction: docs/STUDIO_2800_INSTALL_RU.md
   owner_installation_confirmed: false
+studio_colors_index_compat:
+  receipt: context/runtime/studio_colors_index_compat_20261028.json
+  plan: docs/superpowers/plans/2026-10-28-studio-index-compat.md
+  status: local_focused_pass_full_CI_pending

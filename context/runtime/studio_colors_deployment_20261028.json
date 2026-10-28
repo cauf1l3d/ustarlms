@@ -144,6 +144,7 @@
     "archive_and_inner_sums": "OK",
     "upgrade_invoked": false
   },
-  "current_recommendation": "superseded_pending_corrected_operator; do not bypass precheck",
-  "incident": "context/runtime/studio_colors_index_compat_20261028.json"
+  "current_recommendation": "superseded_by_corrected_operator_5f57115d",
+  "incident": "context/runtime/studio_colors_index_compat_20261028.json",
+  "superseded_by_tool": "5f57115d85fbe808069b9c72d6c0ea9fa6e13f02"
 }

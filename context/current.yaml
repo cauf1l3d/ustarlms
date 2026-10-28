@@ -82,11 +82,12 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: 'Owner352d archive/inner sums OK, --check refused schema_indexes before
-    upgrade. Reproduced accepted historical pair at theme2700: frozen verifier still
-    expects theme0202. Narrow2800 adapter fix and39focused tests PASS/1skip; realPG100table
-    regression and full R16/CI pending. App4c48dce7/frozen tools unchanged; no SQL
-    repair, SSH or host update.'
+  activity: Owner352d --check refused schema_indexes before upgrade. Corrected5f57115d
+    accepts only the exact previously accepted legacy pair at theme2700; all four
+    CI SUCCESS, both PHP1309/230 and native Moodle352/1678. Mandatory realPG100table
+    fresh/legacy probe and7SQL denials PASS. Archive verified/saved/download-checked
+    and issued; app4c48dce7 unchanged. Corrected owner --check/apply remains pending;
+    no SSH/merge/SQL repair.
   next_task: STUDIO-01
   ready_tasks: []
   task_statuses:

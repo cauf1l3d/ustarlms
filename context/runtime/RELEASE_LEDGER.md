@@ -939,3 +939,16 @@ CI/независимые сборки и скачанная сохранённ�
 не изменены, worker не обновляется. [Квитанция](studio_colors_deployment_20261028.json),
 [команды](../../docs/STUDIO_2800_INSTALL_RU.md). Owner apply/приёмка2800 ожидается;
 последняя точная terminal-квитанция2600. Без SSH или слияния PR107.
+
+
+## 28Oct — исправлен отказ2800 preflight на принятом legacy-профиле
+
+Owner352d: SHA/inner sums OK, --check/schema_indexes, upgrade не запускался.
+Воспроизведена неверная привязка исторического index profile к theme0202 после2700.
+Исправленный tool5f57115d/app4c48dce7: все четыре CI SUCCESS (review40676762846,
+infra40676762784, context40676762806, console40676762843). Local1306/47; обе PHP
+1309/230, обе Moodle352/1678; realPG100table fresh/legacy и7SQL отказов PASS.
+Архив20245177bytes SHA4711766fac8d7374f5fce5d9c111b75b1bc360c87c17aa876560b578425b194e
+сверен с независимой сборкой и скачанной сохранённой копией. Старый352d заменён.
+[Квитанция](studio_colors_index_compat_20261028.json), [команды](../../docs/STUDIO_2800_INSTALL_RU.md).
+Owner corrected --check/apply ожидается. Нет SQL repair, SSH, worker rollout или merge.

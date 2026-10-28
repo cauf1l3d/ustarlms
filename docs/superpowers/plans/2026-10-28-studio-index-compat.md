@@ -38,6 +38,6 @@
 
 **Files:** tests/stage/studio_colors_legacy_native.py, tests/stage/run-patch.sh, review/infra workflows, dated incident/delivery receipt and current context.
 
-- [ ] Add disposable real-PG full100table fresh/legacy2700→2800/repeat/restore verification with actual SQL mutations rolled back.
-- [ ] Run local R16/source/context/secrets; publish with expected-SHA lease, leave app/frozen tools unchanged.
-- [ ] Qualify all CI and mandatory native legacy probe, compare CI/independent archives and saved downloaded copy, then issue new archive/commands. Production remains blocked until owner --check succeeds.
+- [x] Add disposable real-PG full100table fresh/legacy2700→2800/repeat/restore verification with actual SQL mutations rolled back.
+- [x] Run local R16/source/context/secrets; publish with expected-SHA lease, leave app/frozen tools unchanged.
+- [x] Qualify all CI and mandatory native legacy probe, compare CI/independent archives and saved downloaded copy, then issue new archive/commands. Production remains blocked until owner --check succeeds.

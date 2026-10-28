@@ -38,7 +38,7 @@ current_work:
   task: STUDIO-01
   spec: docs/superpowers/specs/2026-10-28-studio-colors-canvas-design.md
   PR: 107
-  status: 2800_operator_index_compat_fix_verifying
+  status: corrected2800_operator_qualified_owner_check_pending
   frontend_scope: native local_ustar; author rights and shared revisions preserved
   next_after_studio: PERF-01 and verified backlog
   deployment_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json

@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "recorded_date_msk": "2026-10-28",
-  "kind": "owner_precheck_refusal_and_operator_fix_pending_CI",
+  "kind": "qualified_corrected_installer_owner_handoff_not_deployment",
   "owner_evidence": {
     "source": "terminal pasted in current chat",
     "tool_commit": "352d009ceece3bb6024e3849d1b46cfe6f6c1d44",
@@ -25,13 +25,147 @@
     "skips": 1,
     "seconds": 33.297,
     "result": "PASS",
-    "native_probe": "real PG100table profiles and SQL mutations queued for CI; no local Docker/PG runtime"
+    "native_probe": "PASS mandatory real PG16/100table CI on Moodle5.1.8",
+    "R16": {
+      "tests": 1306,
+      "environment_skips": 47,
+      "seconds": 187.138,
+      "result": "PASS"
+    },
+    "source_context_secrets": "PASS before qualification; source399PHP/33JS/100tables/57templates"
   },
   "CI": {
-    "status": "pending"
+    "all": "success",
+    "review_full_RC": 40676762846,
+    "infrastructure": 40676762784,
+    "context": 40676762806,
+    "console": 40676762843,
+    "source_matrices": {
+      "PHP8.2": {
+        "job": 122777037259,
+        "tests": 1309,
+        "environment_skips": 230,
+        "result": "success"
+      },
+      "PHP8.3": {
+        "job": 122777037526,
+        "tests": 1309,
+        "environment_skips": 230,
+        "result": "success"
+      }
+    },
+    "native_Moodle": [
+      {
+        "runtime": "historical",
+        "job": 122779676392,
+        "tests": 352,
+        "assertions": 1678,
+        "result": "success"
+      },
+      {
+        "runtime": "patch-518",
+        "job": 122779676310,
+        "tests": 352,
+        "assertions": 1678,
+        "result": "success"
+      }
+    ],
+    "gate_job": 122782872170,
+    "actual_UID33": {
+      "job": 122777037072,
+      "result": "PASS"
+    },
+    "rollback_job": 122777037470,
+    "rollback": "PASS",
+    "HTTP_fresh_upgrade_repeat": "PASS"
   },
   "deployed": false,
   "agent_SSH": false,
   "worker_rollout": false,
-  "plan": "docs/superpowers/plans/2026-10-28-studio-index-compat.md"
+  "plan": "docs/superpowers/plans/2026-10-28-studio-index-compat.md",
+  "corrected_tool_commit": "5f57115d85fbe808069b9c72d6c0ea9fa6e13f02",
+  "qualification_commit": "5f57115d85fbe808069b9c72d6c0ea9fa6e13f02",
+  "versions": {
+    "before": {
+      "local_ustar": 2026102700,
+      "theme_ustar": 2026102700
+    },
+    "after": {
+      "local_ustar": 2026102800,
+      "theme_ustar": 2026102700
+    }
+  },
+  "native_schema_probe": {
+    "result": "PASS",
+    "job": 122779676310,
+    "tables": 100,
+    "profiles": [
+      "xml_install_indexes",
+      "server1_legacy_indexes_20261023"
+    ],
+    "actual_postgres_metadata": true,
+    "all_fixture_SQL_rolled_back": true,
+    "versions": [
+      2026102700,
+      2026102800,
+      2026102800,
+      2026102700
+    ],
+    "SQL_mutations_denied": [
+      "partial_local_ustar_coin_accounts",
+      "partial_local_ustar_test_results",
+      "extra_index",
+      "column_default",
+      "task",
+      "extra_table",
+      "missing_ACK_index"
+    ],
+    "scope": "DB metadata validator; physical transaction recovery covered separately"
+  },
+  "package": {
+    "file_name": "ustar-studio-colors-install-5f57115d.tar.gz",
+    "archive_sha256": "4711766fac8d7374f5fce5d9c111b75b1bc360c87c17aa876560b578425b194e",
+    "archive_bytes": 20245177,
+    "monolith_sha256": "d50302a782fa831821d133b461c8111020eac781ba043ab12edf8bac9ceaac48",
+    "CI_ZIP_SHA_CRC": "PASS",
+    "inner_members_hashes": "PASS",
+    "independent_local_monolith": "matches pre-maintenance exact-Git build",
+    "metadata": {
+      "app_commit": "4c48dce7dadd4da8f054f2acf0d6974bdaeecebc",
+      "baseline_commit": "20ed966e146378a21016c085d31ce4defaa809a8",
+      "bytes": 35675998,
+      "default_host_access": false,
+      "journal": "/var/lib/ustar-studio-colors-update",
+      "payload_files": 589,
+      "predecessor_tool": "01e1cef2393c78cb9bb2f3221e739ffeda236180",
+      "schema": 1,
+      "sha256": "d50302a782fa831821d133b461c8111020eac781ba043ab12edf8bac9ceaac48",
+      "tables": 100,
+      "tool_commit": "5f57115d85fbe808069b9c72d6c0ea9fa6e13f02",
+      "versions": {
+        "local_ustar": "2026102800",
+        "theme_ustar": "2026102700"
+      },
+      "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+      "worker_rollout": false
+    },
+    "CI_artifact": {
+      "run": 40676762784,
+      "id": 12809959966,
+      "ZIP_sha256": "d82fac8db85ee7233a84c51c77138918aec9a51b5ea9668fbf3d50e2ca1080e4",
+      "all_five_members": "match exact Git-builder reconstruction; archive byte-identical"
+    }
+  },
+  "saved_file": {
+    "library_file_id": "libfile_8dea3c8ba0d481919e2950ee312bcf58",
+    "file_id": "file_00000000695881f49431d37d9b361779",
+    "file_name": "ustar-studio-colors-install-5f57115d.tar.gz",
+    "bytes": 20245177,
+    "downloaded_copy_SHA_and_identity": "PASS"
+  },
+  "owner_instruction": "docs/STUDIO_2800_INSTALL_RU.md",
+  "delivered": true,
+  "owner_corrected_check_confirmed": false,
+  "owner_upgrade_confirmed": false,
+  "review": "Author self-review; no subagents per AGENTS; exact legacy pair only, partial/other drift denied, frozen modules/app unchanged"
 }

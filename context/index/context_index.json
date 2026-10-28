@@ -630,8 +630,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 8531,
-      "sha256": "d3f2250ceba7620c6722a32cf5230caafc510867a7e5cf034269729db73cd420"
+      "size": 8608,
+      "sha256": "3e69d0d294c90496a04ae873908377c174f861157a730f31595b0f1e62f36ab6"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -852,8 +852,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2424,
-      "sha256": "c285a04f12c2120d7fd712b66ea157eb04ba8f920ff660e36c575b4546b2dc58"
+      "size": 2436,
+      "sha256": "18db97f50dfdf28d45f9a885397e87bf3d873840f8b424ce2cdaabb49518d12f"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1404,8 +1404,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 34004,
-      "sha256": "6b30652053680b042ae5068c9bc2bb227edd0927399c6e1eab13f82f5d02d965"
+      "size": 34089,
+      "sha256": "61a0bf38633613a0db2e5ba6a3fc16ee5137e70c329b8af9bde3ee08a6254dc4"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1458,8 +1458,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 11629,
-      "sha256": "7d3dda98463372c1944b13757746e306fddaadde9c2bc44767d03d89af3e8515"
+      "size": 11773,
+      "sha256": "53f8b7dc0c02381aa866913b3c7ef6c679dd85011ba020f59bc8c904783733cd"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1554,8 +1554,8 @@
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 89935,
-      "sha256": "e65ca9a55694294e2914d87991cc252fa551b6ca437b3ae1f1229f3b47a65db2"
+      "size": 90997,
+      "sha256": "c1ca0083a90fd5e30837a74fd14de22cdc7b445d8a401f13d33d56a126c56b0e"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -3372,14 +3372,14 @@
     {
       "path": "context/runtime/studio_colors_deployment_20261028.json",
       "domain": "runtime",
-      "size": 5505,
-      "sha256": "cf3a5c4b5c637493ac5494723d220197bd348872987bf03dcb5170d1dc271c14"
+      "size": 5553,
+      "sha256": "a5ea43373b9e8247dcdf41b78ad4bd58dc0136d5895d771c9e534f8b82a2492b"
     },
     {
       "path": "context/runtime/studio_colors_index_compat_20261028.json",
       "domain": "runtime",
-      "size": 1612,
-      "sha256": "93e888494f9f8c1eb41887b75c1a5be58a839ce0debe11bc759d5aa33a7bb94d"
+      "size": 5848,
+      "sha256": "a32e862c0eaaddb2c9ccb8df2ba6540b6f25a64fea3731af06a89a0d3f7e31de"
     },
     {
       "path": "context/runtime/studio_materials_delivery_20261028.json",
@@ -3480,8 +3480,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3776,
-      "sha256": "dfbcc362d6254b260b64c7b9fd59bb7da5c2e61147587f557f93282246cc385f"
+      "size": 2812,
+      "sha256": "66da49f7edac06812a0a4db4aff138201e39ff66c92bd2f3fabe2173ac1294c5"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

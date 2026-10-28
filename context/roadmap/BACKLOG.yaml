@@ -585,14 +585,14 @@ tasks:
     without migrating legacy fingerprints
   - Collapsible title/sync chrome increases canvas height; preference, selection/scroll, errors and recovery
     controls preserved
-  deployment_status: 352d_owner_precheck_schema_indexes;corrected2800_package_pending
+  deployment_status: 352d_precheck_refused;corrected5f_archive_issued_owner_check_apply_pending
   previous_2600_qualification:
     commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
     full_RC_run: 40441818519
-  current_summary: Owner --check352d refused schema_indexes before upgrade with valid archive sums. Local
-    reproduction pins accepted legacy pair plus theme2700; narrow adapter fix/focused39tests PASS, full
-    R16/native100table regression CI pending. App4c48dce7/frozen operators unchanged; no SQL repair or
-    SSH.
+  current_summary: 'Corrected5f57115d operator qualified: all four CI SUCCESS, both PHP1309/230 and native
+    Moodle352/1678; realPG100table fresh/legacy profile and7SQL mutations PASS. Exact archive saved/download-verified
+    and issued. Old352d superseded after owner precheck refusal; app4c48dce7/frozen tools unchanged, no
+    SQL repair/SSH/merge. Corrected owner check and apply pending.'
   previous_2700_qualification:
     commit: 3795299732609e1c2b17fe8e5beca71ae703e921
     full_RC_run: 40602646743

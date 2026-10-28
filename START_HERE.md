@@ -36,10 +36,10 @@ PR105 — факты server1; PR103 — пульт; PR106 — принятый C
 Main содержит основу6c56/local2300; PR107 пока не слит. Пакет2700 выдан владельцу,
 [поставка](context/runtime/studio_materials_delivery_20261028.json). Скриншоты28Oct
 показывают рабочую Академию/студию, но не точную версию. Последняя terminal-квитанция2600.
-2800: цвета меню/шапка квалифицированы, исправленный5f57115d выдан. Владелец
-сообщает «Все работает», точного нового status нет. Source a3df5783/local2801 добавляет
-масштаб материала и независимые панели; отдельный2800→2801 пакет готовится и проверяется.
-[Текущая поставка](context/runtime/studio_viewport_delivery_20261028.json).
+2800: исправленный5f57115d выдан, владелец сообщает «Все работает», точного нового status нет.
+2801 app a3df5783/оператор81118e39 квалифицирован на c7602edf: все CI SUCCESS, обе Moodle352/1678,
+realPG100table/7SQL и actualUID33 PASS. Архив скачан/сверен; owner check/apply ожидается.
+[Установка2801](docs/STUDIO_2801_INSTALL_RU.md), [квитанция](context/runtime/studio_viewport_delivery_20261028.json).
 Не повторять2600/cron20Oct; агент не подключается к серверу.
 Исходники Академии: moodle/local/ustar и moodle/theme/ustar; frontend — legacy.
 [Индекс](context/CONTEXT_INDEX.md) помогает выбрать нужный домен.

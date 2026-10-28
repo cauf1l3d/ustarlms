@@ -952,3 +952,13 @@ infra40676762784, context40676762806, console40676762843). Local1306/47; обе 
 сверен с независимой сборкой и скачанной сохранённой копией. Старый352d заменён.
 [Квитанция](studio_colors_index_compat_20261028.json), [команды](../../docs/STUDIO_2800_INSTALL_RU.md).
 Owner corrected --check/apply ожидается. Нет SQL repair, SSH, worker rollout или merge.
+
+### 28Oct2026 — Studio2801 viewport installation package
+
+App a3df5783/local2801/theme2700; operator81118e39 qualified on c7602edf, all four CI SUCCESS.
+Both PHP1335/231skips; both Moodle352/1678, actualPG100table fresh/legacy and7SQL denials PASS.
+Archive `ustar-studio-viewport-install-81118e39.tar.gz`,20393281bytes,
+SHA256 `0bf7e718dd64115dad4e635d7e62fc48843bbd6e5a24ffd6860377f792ba1ea5`.
+Independent local/CI bytes equal; saved copy downloaded and verified. Owner check/apply pending.
+[Receipt](studio_viewport_delivery_20261028.json), [commands](../../docs/STUDIO_2801_INSTALL_RU.md).
+No SSH, worker rollout or PR107 merge.

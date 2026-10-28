@@ -2,15 +2,17 @@
 
 ## STUDIO-01 / PR107
 
-Владелец сообщает «Все работает» после поставки исправленного2800; новая точная
-terminal-версия не представлена. Source a3df5783/local2801/theme2700 добавляет масштаб
-материала50–150% и независимые боковые панели. Node/browser/delayed-resize проверки
-пройдены. Готовится отдельный2800→2801 архив: тот же paired snapshot/recovery, строгие
-fresh/legacy индексы, прежняя task policy; старые операторы и worker неизменны.
-[План](../../docs/superpowers/plans/2026-10-28-studio-viewport.md),
-[квитанция поставки](../runtime/studio_viewport_delivery_20261028.json).
-Первый context CI отказал из-за устаревшей generated описи; описи обновляются.
-Установка2801 и её owner status ещё не выполнены; PR107 остаётся открыт.
+2801: app a3df5783/оператор81118e39 квалифицирован на c7602edf. Масштаб материала50–150%,
+независимые панели и восстановление их настроек после focus/reload. Все четыре CI SUCCESS;
+обе PHP1335/231skips, обе Moodle352/1678, actualPG100table fresh/legacy и7SQL отказов PASS.
+R16 локально1332/48skips; mandatory actualUID33 read/write-denial PASS.
+Архив byte-identical CI; сохранённая копия скачана и SHA256 сверена.
+[Команды установки2801](../../docs/STUDIO_2801_INSTALL_RU.md),
+[квитанция](../runtime/studio_viewport_delivery_20261028.json).
+Owner2801 --check/apply ожидаются. По2800 владелец сообщает «Все работает», точного нового
+terminal status нет. Рабочий код, прежние операторы и worker6c56 не менялись после квалификации.
+Новый пакет сохраняет строгие fresh/legacy индексы и task policy, парную копию/recovery.
+PR107 открыт, не слит. Самопроверка выполнена без субагентов по AGENTS.
 
 ## Основания production
 

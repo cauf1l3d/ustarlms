@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-10-28'
 project: USTAR Academy
-stage: studio_viewport_qualification
-stage_label: Canvas zoom and independent panels2801; installation package qualification
-current_activity: Owner reports Studio works after corrected2800 handoff. Source a3df5783 adds
-  material-only50-150percent zoom and independent panel visibility. Separate2800-to2801 updater
-  preserves the accepted index pair, paired recovery and task policy. Qualification and archive
-  preparation in progress; no exact new owner terminal inventory, no SSH or merge.
+stage: studio_viewport_ready_for_owner
+stage_label: Canvas zoom and independent panels2801 qualified; archive ready for owner installation
+current_activity: Viewport2801 app a3df5783 and fixed81118e39 updater qualified on c7602edf.
+  All four CI SUCCESS; both PHP1335/231skips, both native Moodle352/1678 and realPG100table
+  fresh/legacy profile tests PASS. Local R161332/48skips. Archive matches CI byte-for-byte,
+  saved copy downloaded and SHA256 verified. Owner check/apply pending; no SSH or PR107 merge.
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []
@@ -175,7 +175,7 @@ development_candidate:
   local_ustar_version: 2026102801
   theme_ustar_version: 2026102700
   PR: 107
-  status: viewport_source_under_qualification_not_deployed
+  status: qualified_unmerged_application_not_deployed
   deployed: false
   production_predecessor_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
   source_manifest_scope: Unmerged2801 canvas/panels source; owner basic browser acceptance is
@@ -191,6 +191,9 @@ development_candidate:
     qualification_commit: 053b8c17726fb3cd060fe0564c691a3775a960ba
     full_RC_run: 40664008041
     all_CI: success
+  qualification_commit: c7602edfded4ec87821e1d705cfc1952156bf987
+  full_RC_run: 40700783764
+  all_CI: success
 studio_production_intent: context/runtime/course_studio_production_intent_20261027.json
 studio_latest_owner_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 studio_materials_deployment:
@@ -231,7 +234,7 @@ studio_colors_index_compat:
   plan: docs/superpowers/plans/2026-10-28-studio-index-compat.md
   status: qualified_archive_issued_owner_check_pending
 studio_viewport_deployment:
-  status: qualification_in_progress
+  status: qualified_archive_ready_for_owner_installation
   application_commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
   baseline_application: 4c48dce7dadd4da8f054f2acf0d6974bdaeecebc
   predecessor_tool: 5f57115d85fbe808069b9c72d6c0ea9fa6e13f02
@@ -240,3 +243,8 @@ studio_viewport_deployment:
   new_journal: /var/lib/ustar-studio-viewport-update
   worker_rollout: false
   owner_2801_installation_confirmed: false
+  tool_commit: 81118e39f54c9ac34475f640bf2b9d4d8a047f24
+  qualification_commit: c7602edfded4ec87821e1d705cfc1952156bf987
+  full_RC_run: 40700783764
+  owner_instruction: docs/STUDIO_2801_INSTALL_RU.md
+  archive_sha256: 0bf7e718dd64115dad4e635d7e62fc48843bbd6e5a24ffd6860377f792ba1ea5

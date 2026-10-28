@@ -586,18 +586,26 @@ tasks:
     without migrating legacy fingerprints
   - Collapsible title/sync chrome increases canvas height; preference, selection/scroll, errors and recovery
     controls preserved
-  deployment_status: owner_basic_Studio_works;viewport2801_package_qualification_in_progress
+  - Material-only50-150percent zoom preserves authored content, selection and reachable scroll edges
+  - Left/right panel preferences restore independently and survive focus mode and reload
+  deployment_status: viewport2801_qualified_archive_ready_owner_check_apply_pending
   previous_2600_qualification:
     commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
     full_RC_run: 40441818519
-  current_summary: 'Owner reports Studio works; source a3df5783 adds material-only50-150percent zoom,
-    independent persistent panels and focus-mode restoration. Separate exact2800-to2801 successor
-    package is under qualification; preserves both accepted index profiles and task policy.
-    Production2801 not applied, exact new owner terminal inventory absent; no SSH/merge.'
+  current_summary: 'Canvas/panels2801 qualified: app a3df5783, updater81118e39, qualification c7602edf.
+    All four CI SUCCESS; both PHP1335/231 and native Moodle352/1678. Mandatory actualPG100table
+    fresh/legacy7SQL denials and UID33 write-denial PASS. Archive is byte-identical to CI;
+    saved copy downloaded and SHA256 verified. Owner2801 check/apply pending; no SSH/merge.'
   previous_2700_qualification:
     commit: 3795299732609e1c2b17fe8e5beca71ae703e921
     full_RC_run: 40602646743
     receipt: context/runtime/studio_materials_qualification_20261028.json
+  current_qualification:
+    application_commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
+    tool_commit: 81118e39f54c9ac34475f640bf2b9d4d8a047f24
+    qualification_commit: c7602edfded4ec87821e1d705cfc1952156bf987
+    full_RC_run: 40700783764
+    all_CI: success
   previous_2800_qualification:
     application_commit: 4c48dce7dadd4da8f054f2acf0d6974bdaeecebc
     qualification_commit: 053b8c17726fb3cd060fe0564c691a3775a960ba

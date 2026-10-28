@@ -32,14 +32,14 @@ course_studio_browser.cjs fixtures under tests/release_20260912.
 ### Task2: Release and delivery
 
 - [x] Bump only local_ustar patch version; keep schema, theme and worker unchanged.
-- [ ] Prepare a separate exact-baseline2800 successor using the qualified transaction
+- [x] Prepare a separate exact-baseline2800 successor using the qualified transaction
       primitives; preserve both accepted DB index profiles and task policy.
-- [ ] Verify the operator/package guards and source/context inventories; push authorized
+- [x] Verify the operator/package guards and source/context inventories; push authorized
       changes to PR107 and obtain applicable CI results.
-- [ ] Build/check/save deployment archive and give the owner concrete install commands.
+- [x] Build/check/save deployment archive and give the owner concrete install commands.
 
 ### Task3: Review
 
-- [ ] Perform a separate whole-change self-review (AGENTS prohibits subagents).
-- [ ] Record actual tests, version boundaries and owner basic acceptance separately from
+- [x] Perform a separate whole-change self-review (AGENTS prohibits subagents).
+- [x] Record actual tests, version boundaries and owner basic acceptance separately from
       exact terminal inventory; leave PR107 open.

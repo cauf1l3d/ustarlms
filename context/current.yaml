@@ -82,11 +82,11 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: Owner reports Studio works after corrected2800 handoff. Source a3df5783
-    adds material-only50-150percent zoom and independent panel visibility. Separate2800-to2801
-    updater preserves the accepted index pair, paired recovery and task policy. Qualification
-    and archive preparation in progress; no exact new owner terminal inventory, no
-    SSH or merge.
+  activity: Viewport2801 app a3df5783 and fixed81118e39 updater qualified on c7602edf.
+    All four CI SUCCESS; both PHP1335/231skips, both native Moodle352/1678 and realPG100table
+    fresh/legacy profile tests PASS. Local R161332/48skips. Archive matches CI byte-for-byte,
+    saved copy downloaded and SHA256 verified. Owner check/apply pending; no SSH or
+    PR107 merge.
   next_task: STUDIO-01
   ready_tasks: []
   task_statuses:

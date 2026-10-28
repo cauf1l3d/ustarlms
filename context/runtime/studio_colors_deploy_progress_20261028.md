@@ -26,3 +26,10 @@ Full local R16:1299tests/47environment skips PASS168.467s, including all24 new o
 cases. Source399PHP/33JS/100tables/57templates and context/secrets PASS. UID33 local
 namespace skipped; CI mandatory real-UID33 fixture uses the updated palette payload.
 Self-review has no unresolved findings. Fixed source/control boundaries unchanged.
+
+
+Operator352d009c first infra40670517265/job122755800368 failed at packaging because
+workflow passed symbolic HEAD to the strict full40-character commit interface.
+No operator change: CI now uses exact352d009c in a frozen worktree. The exact CI
+command reproduced locally, archive byte-identical to independent local build.
+Owner command blocks pass bash -n. Corrected CI qualification pending.

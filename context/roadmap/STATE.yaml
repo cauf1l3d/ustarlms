@@ -3,9 +3,9 @@ updated_at: '2026-10-28'
 project: USTAR Academy
 stage: studio_colors_deployment_verifying
 stage_label: Fixed2700-to2800 owner handoff verifying; application already qualified
-current_activity: 'Owner asked installation of qualified2800. Separate fixed2700→2800 successor implemented:
-  local24operator tests, full R161299/47, source/context/secrets PASS. Exact4c48dce7 application and frozen
-  older tools unchanged. CI/package verification pending; no SSH, merge or production operation.'
+current_activity: 'Fixed2700→2800 operator352d009c: local24operator tests and R161299/47 PASS; exact4c48dce7
+  application unchanged. First infra CI rejected symbolic HEAD in the workflow; pinned352d009c worktree/full-SHA
+  build is byte-identical locally. CI retry pending; no delivery/deployment/SSH/merge.'
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []
@@ -217,3 +217,4 @@ studio_colors_deployment:
   progress: context/runtime/studio_colors_deploy_progress_20261028.md
   agent_SSH: false
   receipt: context/runtime/studio_colors_deployment_20261028.json
+  tool_commit: 352d009ceece3bb6024e3849d1b46cfe6f6c1d44

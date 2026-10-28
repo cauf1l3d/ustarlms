@@ -37,8 +37,17 @@
     "permissions": "UID33 local namespace skip; mandatory native CI test queued"
   },
   "CI": {
-    "status": "pending"
+    "status": "retry_pending",
+    "initial_attempt": {
+      "commit": "352d009ceece3bb6024e3849d1b46cfe6f6c1d44",
+      "infrastructure": 40670517265,
+      "failed_job": 122755800368,
+      "reason": "workflow passed HEAD to strict full40-character commit interface",
+      "fix": "CI builds frozen352d009c worktree with full SHA; operator/application bytes unchanged",
+      "local_exact_CI_command": "PASS byte-identical archive"
+    }
   },
   "plan": "docs/superpowers/plans/2026-10-28-studio-colors-deploy.md",
-  "production_evidence": "context/runtime/course_studio_post_deploy_owner_20261028.json"
+  "production_evidence": "context/runtime/course_studio_post_deploy_owner_20261028.json",
+  "tool_commit": "352d009ceece3bb6024e3849d1b46cfe6f6c1d44"
 }

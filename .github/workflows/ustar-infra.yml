@@ -150,7 +150,8 @@ jobs:
         run: sudo -n env USTAR_REQUIRE_MATERIALS_UID33=1 python3 -m unittest tests.r16.test_studio_materials_update.ActualCodePermissions -v
       - name: Build separate fixed2700-to2800 palette and compact Studio updater
         run: |
-          python3 scripts/infra/build_studio_colors_update.py --commit HEAD --output-dir artifacts/studio-colors-production-deploy
+          git worktree add --detach .stage-input/colors-2800-fixed 352d009ceece3bb6024e3849d1b46cfe6f6c1d44
+          python3 .stage-input/colors-2800-fixed/scripts/infra/build_studio_colors_update.py --commit 352d009ceece3bb6024e3849d1b46cfe6f6c1d44 --output-dir "$GITHUB_WORKSPACE/artifacts/studio-colors-production-deploy"
           python3 -I -B artifacts/studio-colors-production-deploy/ustar-studio-colors-update-*.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

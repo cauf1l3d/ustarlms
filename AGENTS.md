@@ -15,7 +15,10 @@ Main: app22607c69/local2802/theme2700; worker6c56 сохраняется отд�
 [Квитанция production2802](context/runtime/perf2802_owner_deploy_20261029.json):
 app_ready/DB available, local2802/theme2700, обе Connect-службы active/enabled.
 Cron exit0/34.311s, новые ошибки отсутствуют; overdue63→19, failed2, adhoc1→0.
-Текущая работа PERF-01: отдельная browser/workday/concurrency/SLO acceptance.
+Owner29Oct принял browser Материалы/Ленту/Соревнования/Студию.
+[Приёмка](context/runtime/perf2802_owner_browser_acceptance_20261029.json).
+Текущая работа RSS-01+PERF-01: прежние дубли фото и passive workday capture вместе.
+[План](docs/superpowers/plans/2026-10-29-feed-media-workday.md); кандидат2803 не установлен.
 Агент сервер не менял;590файлов/100таблиц — payload оператора, не новая инвентаризация хоста.
 Старые операторы не переписывать. Новые слияния вне этого этапа автоматически не делать.
 Ротация логов, healthcheck и пересоздание контейнеров отложены до планового обновления

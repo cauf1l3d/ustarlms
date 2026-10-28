@@ -556,6 +556,12 @@
       "sha256": "be0d34986b9499eb5f1e24823eb26b79a2b3c29647dd50bb87d2d51300e5e627"
     },
     {
+      "path": "context/code_map/feed_media_development_source.json",
+      "domain": "code_map",
+      "size": 94457,
+      "sha256": "66ca2bfe98674530b4a591f3dc73bfbdd20eccb0d819d4d0b6db9a1ca9c4208e"
+    },
+    {
       "path": "context/code_map/frontend.yaml",
       "domain": "code_map",
       "size": 675,
@@ -642,8 +648,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 8772,
-      "sha256": "600157f14770817aeece64c81d49750f125f5a8e5d95d9367a158885d932fa13"
+      "size": 8868,
+      "sha256": "c5b9d49fe9999ed16a18379b430db44d43cb9c5d5d18d328b7b3988ce7581a5f"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -864,8 +870,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2288,
-      "sha256": "0a429c45fa635939bbcd403cb8e3fed826bbe59a790bec22186983fe136b20d3"
+      "size": 2241,
+      "sha256": "f86769a835c1394db0d505ad61a244589455fbc5e7470cff225a356fd7e472b7"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1422,8 +1428,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 35180,
-      "sha256": "f8ac125fd79f2f0cbcb8ca60715ab3c0bf5ee904d49a65ed29629d2a06df7cef"
+      "size": 35853,
+      "sha256": "17c0d850bf27518ae59b9f06356b191a8012406fa2bc738d1863d55f61cb6c24"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1476,8 +1482,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 14211,
-      "sha256": "96b92aaf02cc68565cbce35ec979fded772f402ea0e99a1a5db68edd9a33b851"
+      "size": 14616,
+      "sha256": "5db3a21bc7b90a003ea331199b9874f6a0c922291cb854a9f9f48bdb43c5bddb"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -2316,14 +2322,20 @@
     {
       "path": "context/runtime/evidence_20261029.yaml",
       "domain": "runtime",
-      "size": 3850,
-      "sha256": "21fdfd2219040a42e24840c0433173c062539bf5dd14c599bbe5d08d0b491480"
+      "size": 4063,
+      "sha256": "876b30ed99b72efcd81e5aa1ff6a3dc6aa299efd9047b608061d628cf311b0ad"
     },
     {
       "path": "context/runtime/external_network_result_20261017.json",
       "domain": "runtime",
       "size": 2412,
       "sha256": "350ebaa3d72a6ef681c1b382e085ad2573991a6b13cad6e9877ada74ace7935b"
+    },
+    {
+      "path": "context/runtime/feed_media_workday_progress_20261029.md",
+      "domain": "runtime",
+      "size": 1632,
+      "sha256": "3dfe2bf248f27323d6cb2387bea949fd083d622382df9c023d169cf33c7a8c7d"
     },
     {
       "path": "context/runtime/git_state.yaml",
@@ -2962,6 +2974,12 @@
       "sha256": "a6da6b23599c3609846c09d95f3b031241d99f44bb50e50be8e78677d8e65643"
     },
     {
+      "path": "context/runtime/perf2802_owner_browser_acceptance_20261029.json",
+      "domain": "runtime",
+      "size": 1862,
+      "sha256": "596434e081be3da4b890f517efbeb1546e73d6403270b3ac0a550d24c1c8d5c1"
+    },
+    {
       "path": "context/runtime/perf2802_owner_deploy_20261029.json",
       "domain": "runtime",
       "size": 5898,
@@ -3564,8 +3582,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 2992,
-      "sha256": "65165af83dfd19c4a7d44ead1e09abebc7f1254bcd40a39a5f348cbc1522ea95"
+      "size": 2206,
+      "sha256": "e7677ff1392f40447145e30559d07d76405881397f6d447312175b585de61556"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

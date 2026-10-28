@@ -26,7 +26,7 @@ application_baseline:
   scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source
     integration is separate from owner server acceptance.
 production:
-  latest_owner_browser_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
+  latest_owner_browser_acceptance: context/runtime/perf2802_owner_browser_acceptance_20261029.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
   latest_cron_contract: context/runtime/perf2802_owner_deploy_20261029.json
@@ -37,7 +37,7 @@ production:
   effective_addon_deployment:
     receipt: context/runtime/perf2802_owner_deploy_20261029.json
     reported_date_msk: '2026-10-29'
-    status: owner_install_status_scheduled_cron_confirmed_browser_workday_pending
+    status: owner_install_status_cron_and_basic_browser_accepted_known_RSS_media_issue
     installer_commit: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
     payload_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
     versions:
@@ -52,6 +52,7 @@ production:
     previous_exact_terminal_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
     previous_2801_preflight_in_same_receipt: true
     post_deploy_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+    browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
   status: owner_perf2802_install_status_and_scheduled_cron_confirmed
   observed_at: '2026-10-29'
   source: context/runtime/evidence_20261029.yaml
@@ -85,11 +86,11 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/perf2802_owner_deploy_20261029.json
 current_work:
-  activity: Owner29Oct passed exact2801 preflight and installed2802 using3c1ddd09;
-    status app_ready/DB available/local2802/theme2700, both Connect services active+enabled.
-    Scheduled cron00:42MSK exit0/34.311s with no new failures; adhoc1 to0, overdue63
-    to19, failed2. Bounded source delivery is accepted; post2802 browser smoke and
-    broader workday/concurrency/SLO remain open. Agent did not access server1.
+  activity: Owner29Oct confirms Materials/feed settings/Competitions/Studio work on2802.
+    Pre-existing repeated RSS photographs are reported with screenshot. Native self
+    implementation fixes exact provider/content duplicates and compact cards and prepares
+    bounded passive PERF-01 observation in one2803 handoff. Production remains2802;
+    no new deployment or performance acceptance claimed.
   next_task: PERF-01
   ready_tasks: []
   task_statuses:
@@ -126,6 +127,7 @@ current_work:
     PERF-01: in_progress
     PLAT-01: deferred
     PRIVACY-01: deferred
+    RSS-01: in_progress
     STUDIO-01: done
     TECH-01: planned
 server_facts:

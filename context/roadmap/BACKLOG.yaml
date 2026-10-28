@@ -614,6 +614,18 @@ tasks:
     qualification_commit: 053b8c17726fb3cd060fe0564c691a3775a960ba
     full_RC_run: 40664008041
     all_CI: success
+- id: RSS-01
+  title: RSS без повторов фотографий и с компактной карточкой
+  status: in_progress
+  depends_on: []
+  spec: docs/superpowers/specs/2026-10-29-feed-media-workday-design.md
+  validation_evidence:
+  - context/runtime/perf2802_owner_browser_acceptance_20261029.json
+  acceptance:
+  - Exact known-provider asset and identical-content images appear once per external post
+  - One RSS cover; additional illustrations remain accessible without JavaScript
+  - Existing files, saved library copies, private ACL and employee attachments survive
+  - Qualified2802-to2803 successor and passive workday observer delivered together
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

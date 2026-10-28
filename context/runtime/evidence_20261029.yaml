@@ -22,10 +22,11 @@ application:
   tables: 100
   receipt: context/runtime/perf2802_owner_deploy_20261029.json
   independent_probe: false
-  functional_acceptance: guarded_install_status_and_scheduled_cron; post2802_browser_and_workday_separate
+  functional_acceptance: owner_basic_Materials_feed_settings_Competitions_Studio; known_preexisting_RSS_media_defect
   worker_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
   post_deploy_receipt: context/runtime/perf2802_owner_deploy_20261029.json
   generation: b000e3fb09a949629f3183cb781df2d9
+  browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
 platform:
   moodle: 5.1.8
   core_database_version: '2025100608.00'
@@ -57,6 +58,7 @@ accepted:
   Studio_post_deploy_status_and_scheduled_cron: context/runtime/course_studio_post_deploy_owner_20261028.json
   Studio2801_general_browser_report: context/runtime/studio_viewport_owner_acceptance_20261028.json
   Perf2802_controller_status_and_scheduled_cron: context/runtime/perf2802_owner_deploy_20261029.json
+  Perf2802_basic_browser: context/runtime/perf2802_owner_browser_acceptance_20261029.json
 open:
   clean_host_restore: owner_explicit_unknown_no_repeat_prompt
   whole_host_restore: not_verified
@@ -67,4 +69,4 @@ open:
   independent_host_loss_observer: not_verified
   UPS_auto_shutdown: presence_confirmed_shutdown_unverified
   Studio_functional_acceptance: detailed_PDF_shared_save_employee_cases_not_individually_reported
-  Perf2802_browser_smoke: not_reported
+  RSS_media: known_preexisting_repeated_photographs_fix_in_progress

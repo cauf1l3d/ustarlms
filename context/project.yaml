@@ -36,10 +36,10 @@ current_operator_handoff:
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
   task: PERF-01
-  spec: docs/superpowers/specs/2026-10-28-perf2802-delivery-design.md
-  PR: 109
-  status: owner_installed2802_browser_workday_SLO_pending
-  frontend_scope: native local_ustar; accepted Studio2801 retained
-  deployment_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  qualification_receipt: context/runtime/perf2802_qualification_20261028.json
-  installation_handoff: docs/PERF_2802_INSTALL_RU.md
+  related_task: RSS-01
+  status: feed_media2803_and_workday_capture_in_progress
+  spec: docs/superpowers/specs/2026-10-29-feed-media-workday-design.md
+  plan: docs/superpowers/plans/2026-10-29-feed-media-workday.md
+  browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
+  production_version: 2026102802
+  candidate_version: 2026102803

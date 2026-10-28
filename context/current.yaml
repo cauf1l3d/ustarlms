@@ -82,10 +82,10 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: 'Owner28Oct palette and compact2800 source-qualified: application4c48dce7,
-    qualification053b8c17; all four CI SUCCESS. Both native Moodle matrices352tests/1678assertions,
-    HTTP, fresh/upgrade/repeat and rollback PASS. Local full npm/PHP/Chromium and
-    R161275/46 PASS. Fixed2700 delivery and production evidence remain separate.'
+  activity: 'Owner asked installation of qualified2800. Separate fixed2700→2800 successor
+    implemented: local24operator tests, full R161299/47, source/context/secrets PASS.
+    Exact4c48dce7 application and frozen older tools unchanged. CI/package verification
+    pending; no SSH, merge or production operation.'
   next_task: STUDIO-01
   ready_tasks: []
   task_statuses:

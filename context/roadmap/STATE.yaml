@@ -1,12 +1,11 @@
 schema_version: 2
 updated_at: '2026-10-28'
 project: USTAR Academy
-stage: studio_colors_canvas_qualified
-stage_label: Studio palette and compact2800 qualified; unmerged, not deployed
-current_activity: 'Owner28Oct palette and compact2800 source-qualified: application4c48dce7, qualification053b8c17;
-  all four CI SUCCESS. Both native Moodle matrices352tests/1678assertions, HTTP, fresh/upgrade/repeat
-  and rollback PASS. Local full npm/PHP/Chromium and R161275/46 PASS. Fixed2700 delivery and production
-  evidence remain separate.'
+stage: studio_colors_deployment_verifying
+stage_label: Fixed2700-to2800 owner handoff verifying; application already qualified
+current_activity: 'Owner asked installation of qualified2800. Separate fixed2700→2800 successor implemented:
+  local24operator tests, full R161299/47, source/context/secrets PASS. Exact4c48dce7 application and frozen
+  older tools unchanged. CI/package verification pending; no SSH, merge or production operation.'
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []
@@ -207,3 +206,14 @@ studio_colors_canvas:
   progress: context/runtime/studio_colors_canvas_progress_20261028.md
   qualification: context/runtime/studio_colors_canvas_qualification_20261028.json
   agent_SSH: false
+studio_colors_deployment:
+  status: local_pass_CI_pending_not_delivered_not_deployed
+  application_commit: 4c48dce7dadd4da8f054f2acf0d6974bdaeecebc
+  predecessor_tool: 01e1cef2393c78cb9bb2f3221e739ffeda236180
+  predecessor_application: 20ed966e146378a21016c085d31ce4defaa809a8
+  transition: local2700/theme2700 → local2800/theme2700
+  new_journal: /var/lib/ustar-studio-colors-update
+  worker_rollout: false
+  progress: context/runtime/studio_colors_deploy_progress_20261028.md
+  agent_SSH: false
+  receipt: context/runtime/studio_colors_deployment_20261028.json

@@ -568,6 +568,8 @@ tasks:
   - context/runtime/studio_materials_delivery_20261028.json
   - context/runtime/studio_colors_canvas_qualification_20261028.json
   - context/runtime/studio_colors_canvas_progress_20261028.md
+  - context/runtime/studio_colors_deployment_20261028.json
+  - context/runtime/studio_colors_deploy_progress_20261028.md
   deployment_evidence: context/runtime/course_studio_owner_deploy_20261027.json
   acceptance:
   - Native Moodle author access, shared revisions and conflicts without lost drafts
@@ -582,7 +584,7 @@ tasks:
     without migrating legacy fingerprints
   - Collapsible title/sync chrome increases canvas height; preference, selection/scroll, errors and recovery
     controls preserved
-  deployment_status: last_exact_owner_receipt2600;2700_package_delivered;2800_source_not_deployed
+  deployment_status: last_exact_owner_receipt2600;2700_package_delivered;2800_installer_local_pass_CI_pending
   previous_2600_qualification:
     commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
     full_RC_run: 40441818519

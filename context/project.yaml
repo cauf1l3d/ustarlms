@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-28'
+updated_at: '2026-10-29'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -20,10 +20,10 @@ components:
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
   context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
-  connect_worker: connect-worker; accepted worker6c56/local2300 from23Oct remains unchanged during Studio2600
-    owner deployment; no worker rollout27Oct
+  connect_worker: connect-worker; accepted worker6c56 from23Oct remains unchanged during owner2802 deployment; no
+    worker rollout
 state: context/roadmap/STATE.yaml
-runtime_evidence: context/runtime/evidence_20261028.yaml
+runtime_evidence: context/runtime/evidence_20261029.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_no_server_mutation_Docker_deferred
 latest_connect_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
@@ -35,12 +35,11 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: STUDIO-01
-  spec: docs/superpowers/specs/2026-10-28-studio-colors-canvas-design.md
-  PR: 107
-  status: corrected2800_operator_qualified_owner_check_pending
-  frontend_scope: native local_ustar; author rights and shared revisions preserved
-  next_after_studio: PERF-01 and verified backlog
-  deployment_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
-  qualification_receipt: context/runtime/studio_colors_canvas_qualification_20261028.json
-  installation_handoff: context/runtime/studio_colors_index_compat_20261028.json
+  task: PERF-01
+  spec: docs/superpowers/specs/2026-10-28-perf2802-delivery-design.md
+  PR: 109
+  status: owner_installed2802_browser_workday_SLO_pending
+  frontend_scope: native local_ustar; accepted Studio2801 retained
+  deployment_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+  qualification_receipt: context/runtime/perf2802_qualification_20261028.json
+  installation_handoff: docs/PERF_2802_INSTALL_RU.md

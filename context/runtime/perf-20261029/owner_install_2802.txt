@@ -1,0 +1,100 @@
+aduk@server1:~$ sudo -v
+sudo bash <<'ROOT'
+set -euo pipefail
+umask 077
+install -d -o root -g root -m 700 /root/ustar-perf-query-install-3c1ddd09
+install -o root -g root -m 600 \
+  /home/aduk/ustar-perf-query-install-3c1ddd09.tar.gz \
+  /root/ustar-perf-query-install-3c1ddd09/package.tar.gz
+cd /root/ustar-perf-query-install-3c1ddd09
+printf '%s  %s\n' 1319be4822e366e705ce41bf3bf3121ed0e6fc374cc3208e0fc42047d7ccb9f0 package.tar.gz | sha256sum --check --strict -
+tar --extract --gzip --file package.tar.gz --no-same-owner --no-same-permissions
+sha256sum --check --strict SHA256SUMS
+/usr/bin/python3 -I -B update.py --check
+ROOT
+package.tar.gz: OK
+INSTALL.json: OK
+README.txt: OK
+update.py: OK
+{"baseline_index_profile": "server1_legacy_indexes_20261023", "host_changes": false, "local_ustar": "2026102801", "phase": "ready_for_perf_update", "provider_called": false}
+aduk@server1:~$ sudo systemd-run --unit=ustar-perf-query-update-3c1ddd09 \
+  --property=Type=oneshot --property=TimeoutStartSec=infinity \
+  /usr/bin/python3 -I -B -u /root/ustar-perf-query-install-3c1ddd09/update.py \
+  --upgrade --acknowledge-outage
+sudo journalctl -fu ustar-perf-query-update-3c1ddd09.service -o cat
+Running as unit: ustar-perf-query-update-3c1ddd09.service
+{"phase": "source_activated"}
+{"phase": "upgrade_1"}
+{"phase": "upgrade_2"}
+{"phase": "cron_written"}
+{"phase": "public_release_committed"}
+{"phase": "app_ready"}
+{"ack_enabled": true, "local_ustar": "2026102802", "phase": "app_ready"}
+ustar-perf-query-update-3c1ddd09.service: Deactivated successfully.
+Finished ustar-perf-query-update-3c1ddd09.service - /usr/bin/python3 -I -B -u /root/ustar-perf-query-install-3c1ddd09/update.py --upgrade --acknowledge-outage.
+ustar-perf-query-update-3c1ddd09.service: Consumed 3min 6.306s CPU time.
+^C
+aduk@server1:~$ sudo timeout --kill-after=2s 40s /usr/bin/python3 -I -B \
+  /root/ustar-perf-query-install-3c1ddd09/update.py --status
+sudo timeout --kill-after=2s 40s /usr/bin/python3 -I -B -u \
+  /usr/local/sbin/USTAR_CRON_SETUP_20261005.py --status
+{"app": {"generation": "b000e3fb09a949629f3183cb781df2d9", "phase": "app_ready"}, "database_available": true, "host_changes": false, "runtime": null, "services": {"ustar-connect-notify.service": {"active": true, "enabled": true}, "ustar-connect-receiver.service": {"active": true, "enabled": true}}, "versions": {"local_ustar": "2026102802", "theme_ustar": "2026102700"}}
+CRON_SETUP_VERSION=3
+{
+  "schedule_present": true,
+  "containers_match_installation": true,
+  "last_run": {
+    "started_utc": "2026-10-28T21:42:01.429636+00:00",
+    "trigger": "scheduled",
+    "email_disabled": false,
+    "before": {
+      "last_task_log_id": 5112638,
+      "adhoc_queued": 1,
+      "adhoc_failed": 0,
+      "scheduled_overdue_10m": 63,
+      "scheduled_failed": 2,
+      "ustar_failed": 0,
+      "latest_task_utc": "2026-10-28T21:27:03Z",
+      "failures_24h": []
+    },
+    "cron_exit_code": 0,
+    "log_truncated": false,
+    "finished_utc": "2026-10-28T21:42:35.741095+00:00",
+    "elapsed_seconds": 34.311,
+    "ustar": {
+      "error_lines": 0,
+      "warning_lines": 0,
+      "worker_errors": 0,
+      "grade_errors": 0,
+      "enrolment_errors": 0,
+      "enrolment_missing_manual": 0,
+      "cancelled_login_notifications": 0
+    },
+    "after": {
+      "last_task_log_id": 5112687,
+      "adhoc_queued": 0,
+      "adhoc_failed": 0,
+      "scheduled_overdue_10m": 19,
+      "scheduled_failed": 2,
+      "ustar_failed": 0,
+      "latest_task_utc": "2026-10-28T21:42:35Z",
+      "new_failures": []
+    }
+  },
+  "current": {
+    "last_task_log_id": 5112687,
+    "adhoc_queued": 0,
+    "adhoc_failed": 0,
+    "scheduled_overdue_10m": 19,
+    "scheduled_failed": 2,
+    "ustar_failed": 0,
+    "latest_task_utc": "2026-10-28T21:42:35Z",
+    "failures_24h": []
+  },
+  "last_wrapper_error": {
+    "utc": "2026-10-20T17:33:01.250048+00:00",
+    "error": "Production application versions differ from the reviewed snapshot"
+  }
+}
+aduk@server1:~$
+\

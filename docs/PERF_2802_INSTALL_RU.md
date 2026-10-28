@@ -1,5 +1,9 @@
 # Обновление Академии2801→2802
 
+Владелец29.10.2026 подтвердил успешную установку, status и scheduled cron;
+[квитанция](../context/runtime/perf2802_owner_deploy_20261029.json).
+Browser/workday/SLO acceptance остаются отдельным этапом.
+
 Комплект `ustar-perf-query-install-3c1ddd09.tar.gz`, оператор
 `3c1ddd099a1d7abdfa44ec3a9ebc54296a553618`, приложение
 `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`.

@@ -1,11 +1,12 @@
 schema_version: 2
-updated_at: '2026-10-28'
+updated_at: '2026-10-29'
 project: USTAR Academy
-stage: perf2802_delivered_owner_apply_pending
-stage_label: PR107/109 integrated; verified2802 archive ready for owner install
-current_activity: PR107 merged84a078ef and PR109 merged01904eda after exact-head full RC on3c1ddd09. Main application22607c69/local2802/theme2700;
-  worker6c56 remains separate. Archive1319be48 is byte-identical to CI and its retained downloaded copy. Owner
-  install/status receipt for2802 is pending; broader workday/SLO remains open. Agent did not access server1.
+stage: perf2802_owner_installed_workday_SLO_pending
+stage_label: Owner installed2802; guarded status and scheduled cron confirmed; browser/workday/SLO pending
+current_activity: Owner29Oct passed exact2801 preflight and installed2802 using3c1ddd09; status app_ready/DB available/local2802/theme2700,
+  both Connect services active+enabled. Scheduled cron00:42MSK exit0/34.311s with no new failures; adhoc1 to0, overdue63
+  to19, failed2. Bounded source delivery is accepted; post2802 browser smoke and broader workday/concurrency/SLO
+  remain open. Agent did not access server1.
 entrypoint: START_HERE.md
 next_task: PERF-01
 ready_tasks: []
@@ -23,51 +24,52 @@ code_baseline:
     full_RC_run: 40761497871
     merge: 01904edaf01dc6e340018eae8bf351dcc692b0c2
     receipt: context/runtime/perf2802_qualification_20261028.json
-  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source integration is separate
-    from owner server acceptance.
+  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source integration is separate from
+    owner server acceptance.
 production:
   latest_owner_browser_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
-  latest_cron_contract: context/runtime/course_studio_post_deploy_owner_20261028.json
-  previous_scheduled_cron_receipt: context/runtime/infra_readonly_owner_20261023.json
-  latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
+  latest_cron_contract: context/runtime/perf2802_owner_deploy_20261029.json
+  previous_scheduled_cron_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
+  latest_addon_preflight: context/runtime/perf2802_owner_deploy_20261029.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
   effective_addon_deployment:
-    receipt: context/runtime/course_studio_owner_deploy_20261027.json
-    reported_date_msk: '2026-10-27'
-    status: owner_installed_status_and_basic_browser_confirmed_detailed_acceptance_separate
-    installer_commit: 62b0da2020bc27569c0bd4f8ac96b676f29b7490
-    payload_commit: 2d95137ac85a09ad4c513edae8a792152153c840
+    receipt: context/runtime/perf2802_owner_deploy_20261029.json
+    reported_date_msk: '2026-10-29'
+    status: owner_install_status_scheduled_cron_confirmed_browser_workday_pending
+    installer_commit: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
+    payload_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
     versions:
-      local_ustar: 2026102600
-      theme_ustar: 2026100202
-    files: 582
+      local_ustar: 2026102802
+      theme_ustar: 2026102700
+    files: 590
     tables: 100
     counts_basis: fixed_controller_payload_not_new_whole_host_manifest
     independent_probe: false
     worker_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
     worker_rollout: false
-    previous_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
-    post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
-  status: owner_Studio2600_post_deploy_status_and_basic_browser_reported
-  observed_at: '2026-10-28'
-  source: context/runtime/evidence_20261028.yaml
+    previous_exact_terminal_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
+    previous_2801_preflight_in_same_receipt: true
+    post_deploy_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+  status: owner_perf2802_install_status_and_scheduled_cron_confirmed
+  observed_at: '2026-10-29'
+  source: context/runtime/evidence_20261029.yaml
   independently_measured: false
-  current_source_commit: 2d95137ac85a09ad4c513edae8a792152153c840
+  current_source_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh host filesystem census
   current_versions:
-    local_ustar: 2026102600
-    theme_ustar: 2026100202
+    local_ustar: 2026102802
+    theme_ustar: 2026102700
   last_exact_source_manifest:
-    commit: 2d95137ac85a09ad4c513edae8a792152153c840
-    date: '2026-10-27'
-    matching_files: 582
+    commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+    date: '2026-10-29'
+    matching_files: 590
     kind: owner_verified_controller_payload_not_fresh_manifest
-    evidence: context/runtime/course_studio_owner_deploy_20261027.json
-  cron: owner_scheduled27Oct20_22UTC_exit0_no_new_failures_ustar_errors0
-  cron_current_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
+    evidence: context/runtime/perf2802_owner_deploy_20261029.json
+  cron: owner_scheduled29Oct00_42MSK_exit0_no_new_failures_ustar_errors0_adhoc0_overdue19_failed2
+  cron_current_receipt: context/runtime/perf2802_owner_deploy_20261029.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
   regular_backup_current_receipt: context/runtime/infra_readonly_owner_20261023.json
   later_observations: context/runtime/RELEASE_LEDGER.md
@@ -81,7 +83,7 @@ production:
     Docker: 29.9.0
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
-  post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
+  post_deploy_receipt: context/runtime/perf2802_owner_deploy_20261029.json
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
@@ -89,9 +91,9 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original infrastructure audit immutable; current verification in context/reviews/20261026/VERIFIED_REVIEW_RU.md
 next_agent_read:
+- context/runtime/perf2802_owner_deploy_20261029.json
 - context/reviews/20261026/VERIFIED_REVIEW_RU.md
 - context/roadmap/ACCEPTED_RISKS.yaml
-- context/runtime/evidence_20261026.yaml
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'
@@ -140,13 +142,13 @@ server_facts:
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
   - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still separate
-  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test failed. Other
-    external sources/IPv6/NAT/API identity and full SSH admission/live overrides remain unverified
+  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test failed. Other external
+    sources/IPv6/NAT/API identity and full SSH admission/live overrides remain unverified
   - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle acceptance
     not checked
   - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not confirmed
-  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance
-    remain separate; native restore/RTO awaited
+  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance remain
+    separate; native restore/RTO awaited
   additional_observations:
     provenance: context/runtime/core_extra_received_20261017.json
     review: context/reviews/20261017/core_extra_reconciliation.md
@@ -214,12 +216,13 @@ studio_viewport_deployment:
   new_journal: /var/lib/ustar-studio-viewport-update
   worker_rollout: false
   owner_2801_installation_confirmed: true
-  confirmation_basis: owner_general_working_report_after811_handoff_no_new_terminal_status
+  confirmation_basis: owner_general_working_report28Oct_then_guarded_exact2801_preflight29Oct_before_perf_upgrade
   tool_commit: 81118e39f54c9ac34475f640bf2b9d4d8a047f24
   qualification_commit: c7602edfded4ec87821e1d705cfc1952156bf987
   full_RC_run: 40700783764
   owner_instruction: docs/STUDIO_2801_INSTALL_RU.md
   archive_sha256: 0bf7e718dd64115dad4e635d7e62fc48843bbd6e5a24ffd6860377f792ba1ea5
+  exact_predecessor_preflight_receipt: context/runtime/perf2802_owner_deploy_20261029.json
 studio_viewport_owner_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
 active_PR109:
   branch: perf/query-batching-20261027
@@ -227,21 +230,22 @@ active_PR109:
   base_branch: main
   base_commit: 84a078ef83f3812d252129d3a79f717cb3bf0591
   application_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
-  status: merged_archive_delivered_owner_apply_pending
+  status: merged_owner_installed2802_browser_workday_pending
   receipt: context/runtime/perf_query_batching_review_20261028.json
-  application_delivery: qualified2802_archive_saved
+  application_delivery: owner_verified2802_install_status_and_scheduled_cron
   previous_2801_qualification: aa2b09be0041ff4f74af0ca6c7b0e533d0b28658
   merged: true
   merge_commit: 01904edaf01dc6e340018eae8bf351dcc692b0c2
   qualification_commit: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
-  owner_installation_confirmed: false
+  owner_installation_confirmed: true
+  owner_receipt: context/runtime/perf2802_owner_deploy_20261029.json
 accepted_Studio_source:
   application_commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
   owner_metadata: 79ce47b9e01c887fc2ecf500426be847b82867eb
   qualification_metadata: 9332829c46ec32976987ba8f2ba57fae0ea02b3d
   receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json
 perf_query_deployment:
-  status: qualified_archive_saved_owner_apply_pending
+  status: owner_installed_status_and_scheduled_cron_confirmed_browser_workday_pending
   application_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   baseline_application: a3df57831a5ed49b901e5116ee800f2217fb61e9
   predecessor_tool: 81118e39f54c9ac34475f640bf2b9d4d8a047f24
@@ -258,6 +262,9 @@ perf_query_deployment:
   source_merge: 01904edaf01dc6e340018eae8bf351dcc692b0c2
   qualification_commit: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
   full_RC_run: 40761497871
-  owner_installation_confirmed: false
+  owner_installation_confirmed: true
   retained_copy_verified: true
   archive_bytes: 20529822
+  owner_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+  browser_smoke_after2802: not_reported
+  workday_SLO: pending

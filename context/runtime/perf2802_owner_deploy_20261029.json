@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "reported_date_msk": "2026-10-29",
+  "source": "owner_console_transcript_in_current_dialogue",
+  "evidence_kind": "owner_reported_fixed_controller_installation_and_post_deploy_status_not_independent_host_probe",
+  "agent_SSH": false,
+  "independently_measured_on_server": false,
+  "transcript": {
+    "path": "context/runtime/perf-20261029/owner_install_2802.txt",
+    "sha256": "160db831633eea626f0ade754f4af0e19b6eb392a971d12a05952b7fd1602a13",
+    "format": "owner copied terminal text saved with LF line endings"
+  },
+  "application": {
+    "installer_commit": "3c1ddd099a1d7abdfa44ec3a9ebc54296a553618",
+    "payload_commit": "22607c69a27c9be65d78fd407ce240f9dc2b8c8b",
+    "previous_payload_commit": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
+    "payload_files": 590,
+    "tables": 100,
+    "counts_basis": "fixed_controller_payload_not_a_new_whole_host_manifest",
+    "versions": {
+      "local_ustar": 2026102802,
+      "theme_ustar": 2026102700
+    },
+    "versions_basis": "both versions printed by owner status after guarded exact-baseline upgrade",
+    "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+    "worker_rollout": false
+  },
+  "package": {
+    "name": "ustar-perf-query-install-3c1ddd09.tar.gz",
+    "sha256": "1319be4822e366e705ce41bf3bf3121ed0e6fc374cc3208e0fc42047d7ccb9f0",
+    "archive_hash_ok": true,
+    "inner_hashes_ok": [
+      "INSTALL.json",
+      "README.txt",
+      "update.py"
+    ],
+    "qualification_receipt": "context/runtime/perf2802_qualification_20261028.json"
+  },
+  "preflight": {
+    "baseline_index_profile": "server1_legacy_indexes_20261023",
+    "host_changes": false,
+    "local_ustar": "2026102801",
+    "phase": "ready_for_perf_update",
+    "provider_called": false
+  },
+  "upgrade": {
+    "unit": "ustar-perf-query-update-3c1ddd09.service",
+    "phases": [
+      "source_activated",
+      "upgrade_1",
+      "upgrade_2",
+      "cron_written",
+      "public_release_committed",
+      "app_ready"
+    ],
+    "final": {
+      "ack_enabled": true,
+      "local_ustar": "2026102802",
+      "phase": "app_ready"
+    },
+    "systemd_result": "Deactivated successfully; Finished",
+    "cpu_time": "3min 6.306s",
+    "elapsed_wall_time_not_reported": true
+  },
+  "status": {
+    "app": {
+      "generation": "b000e3fb09a949629f3183cb781df2d9",
+      "phase": "app_ready"
+    },
+    "database_available": true,
+    "host_changes": false,
+    "runtime": null,
+    "services": {
+      "ustar-connect-notify.service": {
+        "active": true,
+        "enabled": true
+      },
+      "ustar-connect-receiver.service": {
+        "active": true,
+        "enabled": true
+      }
+    },
+    "versions": {
+      "local_ustar": "2026102802",
+      "theme_ustar": "2026102700"
+    }
+  },
+  "scheduled_cron": {
+    "CRON_SETUP_VERSION": 3,
+    "schedule_present": true,
+    "containers_match_installation": true,
+    "last_run": {
+      "started_utc": "2026-10-28T21:42:01.429636+00:00",
+      "trigger": "scheduled",
+      "email_disabled": false,
+      "before": {
+        "last_task_log_id": 5112638,
+        "adhoc_queued": 1,
+        "adhoc_failed": 0,
+        "scheduled_overdue_10m": 63,
+        "scheduled_failed": 2,
+        "ustar_failed": 0,
+        "latest_task_utc": "2026-10-28T21:27:03Z",
+        "failures_24h": []
+      },
+      "cron_exit_code": 0,
+      "log_truncated": false,
+      "finished_utc": "2026-10-28T21:42:35.741095+00:00",
+      "elapsed_seconds": 34.311,
+      "ustar": {
+        "error_lines": 0,
+        "warning_lines": 0,
+        "worker_errors": 0,
+        "grade_errors": 0,
+        "enrolment_errors": 0,
+        "enrolment_missing_manual": 0,
+        "cancelled_login_notifications": 0
+      },
+      "after": {
+        "last_task_log_id": 5112687,
+        "adhoc_queued": 0,
+        "adhoc_failed": 0,
+        "scheduled_overdue_10m": 19,
+        "scheduled_failed": 2,
+        "ustar_failed": 0,
+        "latest_task_utc": "2026-10-28T21:42:35Z",
+        "new_failures": []
+      }
+    },
+    "current": {
+      "last_task_log_id": 5112687,
+      "adhoc_queued": 0,
+      "adhoc_failed": 0,
+      "scheduled_overdue_10m": 19,
+      "scheduled_failed": 2,
+      "ustar_failed": 0,
+      "latest_task_utc": "2026-10-28T21:42:35Z",
+      "failures_24h": []
+    },
+    "last_wrapper_error": {
+      "utc": "2026-10-20T17:33:01.250048+00:00",
+      "error": "Production application versions differ from the reviewed snapshot"
+    }
+  },
+  "interpretation": {
+    "installation_and_post_deploy_status_confirmed": true,
+    "cron_finished_msk": "2026-10-29T00:42:35.741095+03:00",
+    "successful_scheduled_run_no_new_failures": true,
+    "adhoc_queue": "1 to 0",
+    "overdue_10m": "63 to 19",
+    "scheduled_failed": "2 before and after",
+    "prior_counter_comparison": {
+      "receipt": "context/runtime/course_studio_post_deploy_owner_20261028.json",
+      "overdue_10m": 19,
+      "scheduled_failed": 2,
+      "same_individual_tasks_not_verified": true
+    },
+    "historical_wrapper_error": "20Oct entry retained; latest scheduled run exit0, not a new2802 failure",
+    "runtime_null_is_not_a_new_worker_source_inventory": true,
+    "no_latency_or_throughput_improvement_inferred_from_single_cron": true
+  },
+  "acceptance_limits": {
+    "fresh_whole_host_manifest": false,
+    "fresh_platform_inventory": false,
+    "browser_smoke_after2802": "not_reported",
+    "workday_baseline": "not_measured",
+    "concurrency_SLO": "not_accepted",
+    "historical_task_failures": "retained_not_claimed_fixed",
+    "earlier_Studio_acceptance": "context/runtime/studio_viewport_owner_acceptance_20261028.json"
+  },
+  "next_work": {
+    "task": "PERF-01",
+    "scope": [
+      "browser smoke: Materials/Studio/RSS/operator season",
+      "passive real-workday baseline",
+      "agreed concurrency/SLO and isolated cold/warm p50/p95/p99 comparison"
+    ],
+    "no_server_mutation_by_agent": true
+  }
+}

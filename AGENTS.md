@@ -1,6 +1,6 @@
 # USTAR — инструкции агентам
 
-Актуально28.10.2026. Начать с [START_HERE](START_HERE.md), затем читать только
+Актуально29.10.2026. Начать с [START_HERE](START_HERE.md), затем читать только
 документы текущего домена. Канонический код и контекст — main.
 
 ## Текущая задача и разрешения
@@ -11,9 +11,12 @@ Main: app22607c69/local2802/theme2700; worker6c56 сохраняется отд�
 Оператор3c1ddd09 прошёл все четыре CI: PHP1363/232, native354/1695, actualPG/UID33 PASS.
 [Квалификация/архив](context/runtime/perf2802_qualification_20261028.json),
 [команды владельцу](docs/PERF_2802_INSTALL_RU.md). Архив и скачанная сохранённая копия сверены.
-Текущая работа PERF-01: owner install/status2802 и отдельная workday/SLO acceptance.
-2802 на сервер агент не устанавливал. Общая owner-приёмка Studio2801 сохраняется отдельно
-от последнего точного terminal status2600; не подменять её новой инвентаризацией.
+Владелец29Oct прислал успешные check2801, upgrade2802, status и scheduled cron.
+[Квитанция production2802](context/runtime/perf2802_owner_deploy_20261029.json):
+app_ready/DB available, local2802/theme2700, обе Connect-службы active/enabled.
+Cron exit0/34.311s, новые ошибки отсутствуют; overdue63→19, failed2, adhoc1→0.
+Текущая работа PERF-01: отдельная browser/workday/concurrency/SLO acceptance.
+Агент сервер не менял;590файлов/100таблиц — payload оператора, не новая инвентаризация хоста.
 Старые операторы не переписывать. Новые слияния вне этого этапа автоматически не делать.
 Ротация логов, healthcheck и пересоздание контейнеров отложены до планового обновления
 Moodle/PHP. Эксперимент сохранён в infra/docker-successor-frozen и не поставлен.
@@ -42,8 +45,8 @@ frontend — legacy, не включать в релизы или активны
 Не публиковать config.php, токены, дампы, moodledata, private logs и ключи.
 
 Различать Git source, CI, квитанцию владельца и свежую проверку сервера.
-Prod Studio payload2d95137a/local2600: owner27Oct app_ready;
-[квитанция](context/runtime/course_studio_owner_deploy_20261027.json). Worker6c56 не обновлялся.
+Prod payload22607c69/local2802/theme2700: owner29Oct app_ready;
+[квитанция](context/runtime/perf2802_owner_deploy_20261029.json). Worker6c56 не обновлялся.
 Post-deploy и базовый импорт: [квитанция](context/runtime/course_studio_post_deploy_owner_20261028.json).
 Отдельные PDF/conflict/employee сценарии не заявлены; это не свежий manifest всего хоста.
 Принятые SSD/Moodle5.1.8/OS/reboot/DB-role/code/HTTPS/Connect проверки не повторять.

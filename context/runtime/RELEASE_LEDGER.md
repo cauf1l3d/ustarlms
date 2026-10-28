@@ -2,6 +2,14 @@
 
 28.10.2026 — Academy Studio/материалы/Word2700 квалифицированы на37952997: full RC40602646743, обе Moodle347тестов/1671проверка, HTTP/rollback/source PASS; context/infra/console SUCCESS.589файлов/100таблиц, новая схема не вводится. [Квитанция](studio_materials_qualification_20261028.json). Код опубликован в PR107; production остаётся2600, merge и установка2700 не выполнялись.
 
+29.10.2026 — Владелец проверил точный2801 и установил2802 оператором3c1ddd09;
+archive/inner hashes OK, app_ready/DB available, local2802/theme2700, receiver/notify
+active+enabled. Scheduled cron29Oct00:42MSK exit0/34.311s, adhoc1→0, overdue63→19,
+failed2, new failures[], USTAR errors0. Остаточные19/2 совпадают с прежними счётчиками,
+идентичность заданий не установлена; wrapper20Oct исторический. Browser/workday/SLO
+после2802 ещё не приняты. Агент сервер не менял; payload590/100 не является новой
+инвентаризацией хоста. [Квитанция](perf2802_owner_deploy_20261029.json).
+
 28.10.2026 — Владелец подтвердил Studio2600 app_ready, DB available, receiver/notify active+enabled. Scheduled27Oct20:22UTC:exit0/1.452s, task5069143→5069170, new failures[], USTAR errors0; overdue19/failed2 неизменны, wrapper20Oct исторический. Студия открывается, базовая работа и импорт другой студии подтверждены словами владельца; отдельные PDF/conflict/employee сценарии не заявлены. [Квитанция](course_studio_post_deploy_owner_20261028.json). Новый Academy UI/Word/каталог2700 — отдельный неустановленный кандидат PR107.
 
 26.10.2026 — PR108 merged atc0e22e556220cc50f522a3e6b65189fd8abffa73. PR105/103/106 history preserved; application equals accepted6c56a5b6/local2300. Full RC and independent infra/console/context passed. Repository reconciliation only; no server deploy. [Receipt](repository_reconciliation_20261026.json).

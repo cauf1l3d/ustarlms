@@ -83,7 +83,8 @@
   "conflict_resolution": {
     "metadata": "latest accepted Studio79ce context retained; immutable dated perf observations preserved",
     "Telegram_fixture": "frozen application read-tree retained; PR109 negative changed-app case restored",
-    "code": "the three PHP files have no Studio overlap"
+    "code": "the three PHP files have no Studio overlap",
+    "immutable_owner_transcript_SHA256": "c5c3bb9278bfd3fb6931be44fff530230d8f296cc69eb8b85172b485c71ef3c1"
   },
   "schema_delta": false,
   "release_version_bumped": false,
@@ -94,5 +95,11 @@
     "native/full RC pending",
     "broader performance SLO/workday baseline remains separate",
     "source integration in main and a separately versioned frozen delivery precede server rollout"
-  ]
+  ],
+  "application_commit": "ab82b9d9de266ca358ac5e4e21ca1cd3fc6e6ef9",
+  "focused_operator_package_tests": {
+    "result": "PASS",
+    "tests": 6,
+    "seconds": 14.404
+  }
 }

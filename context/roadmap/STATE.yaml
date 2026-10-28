@@ -173,7 +173,8 @@ development_candidate:
   base_main_commit: ad939373d89604119d3fd741c555deaf1ebd4ed7
   accepted_Studio_application: a3df57831a5ed49b901e5116ee800f2217fb61e9
   accepted_Studio_metadata: 79ce47b9e01c887fc2ecf500426be847b82867eb
-  source_resolution: Resolve commit at read time; component tree IDs in the manifest
+  application_commit: ab82b9d9de266ca358ac5e4e21ca1cd3fc6e6ef9
+  source_resolution: Component tree IDs in the manifest; qualification metadata follows this application commit
   manifest: context/code_map/generated/perf_query_batching_candidate.json
   local_ustar_version: 2026102801
   theme_ustar_version: 2026102700

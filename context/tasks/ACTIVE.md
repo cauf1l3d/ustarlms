@@ -4,7 +4,7 @@
 
 Владелец принял работу студии после пакета2801 и поручил перейти к PR109.
 [Owner-подтверждение](../runtime/studio_viewport_owner_acceptance_20261028.json).
-PR109 ca31380d: batch RSS statistics и имён operator season; схема/версия не менялись.
+Исходный PR109 ca31380d; интегрированное приложение ab82b9d9: batch RSS statistics и имён operator season; схема/версия не менялись.
 Исходный source/context/infra CI зелёный. Изменения перенесены поверх79ce47b9/Studio2801;
 на этой базе воспроизведены7RED, затем9GREEN реальных PHP/SQLite сценариев.
 Нужно проверить изменения поверх принятой Studio2801, сохранить её файлы и guards,

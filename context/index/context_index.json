@@ -1476,8 +1476,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 13012,
-      "sha256": "e1a16fee528326ce21e46c3b971ed83bfbdb081baa06ce4d890ecd629a69efa0"
+      "size": 13102,
+      "sha256": "1d56718bc71b476b837761b9b51217b65038e6e8780e8644f8c47ee25a1898ea"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -2952,8 +2952,8 @@
     {
       "path": "context/runtime/perf_query_batching_review_20261028.json",
       "domain": "runtime",
-      "size": 2999,
-      "sha256": "0404b82c23746f7f2ae07ca77eb79a894dc3d1c54190cca3befc21551f61f53c"
+      "size": 3279,
+      "sha256": "42d0efdb508fe63c4c78d8677b09eea772ce954a7602913cc5a5dca3b46b8c4a"
     },
     {
       "path": "context/runtime/plugin_inventory_20261005.json",
@@ -3534,8 +3534,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 2702,
-      "sha256": "05c98b57b9ac751193ca76c919fce03cd0d1fddeb7dfbc6182a69885bdabcdb7"
+      "size": 2781,
+      "sha256": "82333e56008629d10cc10236814735c1f7dfcc007fb3aba1b0543806ac6bd53c"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

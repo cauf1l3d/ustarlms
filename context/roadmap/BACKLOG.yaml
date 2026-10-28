@@ -586,13 +586,18 @@ tasks:
   previous_2600_qualification:
     commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
     full_RC_run: 40441818519
-  current_summary: Palette and compact editor2800 implemented; local full npm/PHP/Chromium PASS, R16/native
-    CI pending. Frozen2700 delivery qualified and issued; exact new owner terminal version not provided.
-    No SSH or PR merge.
+  current_summary: Palette and compact editor2800 implemented and source-qualified; all four CI SUCCESS.
+    Native Moodle352tests/1678assertions in both matrices; HTTP, fresh/upgrade/repeat, rollback, Node/PHP/Chromium
+    PASS. Frozen2700 delivery issued; exact new owner terminal version not provided. No SSH or PR merge.
   previous_2700_qualification:
     commit: 3795299732609e1c2b17fe8e5beca71ae703e921
     full_RC_run: 40602646743
     receipt: context/runtime/studio_materials_qualification_20261028.json
+  current_qualification:
+    application_commit: 4c48dce7dadd4da8f054f2acf0d6974bdaeecebc
+    qualification_commit: 053b8c17726fb3cd060fe0564c691a3775a960ba
+    full_RC_run: 40664008041
+    all_CI: success
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

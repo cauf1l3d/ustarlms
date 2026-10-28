@@ -82,10 +82,10 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: Owner28Oct palette and compact2800 implemented. Full local npm/PHP/Chromium
-    and R161275/46 PASS. First CI source browser measurement raced resize; controlled
-    reproduction RED, settled-layout wait GREEN with same thresholds; retry pending.
-    Other three CI successful; production evidence remains separate.
+  activity: 'Owner28Oct palette and compact2800 source-qualified: application4c48dce7,
+    qualification053b8c17; all four CI SUCCESS. Both native Moodle matrices352tests/1678assertions,
+    HTTP, fresh/upgrade/repeat and rollback PASS. Local full npm/PHP/Chromium and
+    R161275/46 PASS. Fixed2700 delivery and production evidence remain separate.'
   next_task: STUDIO-01
   ready_tasks: []
   task_statuses:

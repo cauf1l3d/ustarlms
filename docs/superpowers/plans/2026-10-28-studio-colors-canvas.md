@@ -32,9 +32,9 @@
 
 **Interfaces:** optional theme nav fields; `RCModel.navigationTheme(course)` resolves display defaults without mutating source; both builders emit the same --nav-* and contrast variables.
 
-- [ ] RED tests: custom/default CSS, legacy fingerprint, unsafe optional colors, server-built ZIP and project/SCORM roundtrip.
-- [ ] Implement optional validated palette and player CSS variables; expose labeled controls and a live menu sample through existing theme/history/save flows.
-- [ ] Run Node codec/sync, PHP fixture and native theme validation; expected PASS. Commit with ledger evidence.
+- [x] RED tests: custom/default CSS, legacy fingerprint, unsafe optional colors, server-built ZIP and project/SCORM roundtrip.
+- [x] Implement optional validated palette and player CSS variables; expose labeled controls and a live menu sample through existing theme/history/save flows.
+- [x] Run Node codec/sync, PHP fixture and native theme validation; expected PASS. Commit with ledger evidence.
 
 ### Task2: collapsible chrome and canvas geometry
 
@@ -42,14 +42,14 @@
 
 **Interfaces:** `#chrome-toggle` aria-expanded/controls; per-user `ui.chromeCollapsed`; `#compact-status` opens sync details; existing focus/drawer APIs remain independent.
 
-- [ ] RED DOM/browser tests for toggle/persistence, error disclosure, editing preservation and increased canvas height.
-- [ ] Implement collapse and compact status; trim excess canvas header spacing without reducing touch targets; verify desktop/tablet/short phone and keyboard.
-- [ ] Run full npm + Chromium, preserve external Academy controls and original project state; expected PASS. Commit with evidence.
+- [x] RED DOM/browser tests for toggle/persistence, error disclosure, editing preservation and increased canvas height.
+- [x] Implement collapse and compact status; trim excess canvas header spacing without reducing touch targets; verify desktop/tablet/short phone and keyboard.
+- [x] Run full npm + Chromium, preserve external Academy controls and original project state; expected PASS. Commit with evidence.
 
 ### Task3: integration and qualified source handoff
 
 **Files:** local version.php; CI invokes new PHP fixture and freezes existing2700 builder on01e1cef2; dated evidence and STATE/ACTIVE/BACKLOG/docs/generated context.
 
-- [ ] Run source/context/secrets, full R16 and native/browser CI; frozen ops/app identities stay separate.
-- [ ] Self-review against spec and failure cases (subagents forbidden), fix material findings with regressions.
-- [ ] Push using expected-SHA lease to PR107; qualify exact source and record evidence, no merge/server operation. Deliver concise usage and remaining deployment boundary.
+- [x] Run source/context/secrets, full R16 and native/browser CI; frozen ops/app identities stay separate.
+- [x] Self-review against spec and failure cases (subagents forbidden), fix material findings with regressions.
+- [x] Push using expected-SHA lease to PR107; qualify exact source and record evidence, no merge/server operation. Deliver concise usage and remaining deployment boundary.

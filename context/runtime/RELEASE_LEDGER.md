@@ -915,3 +915,15 @@ systemd Finished successfully. Operator62b0da20, app2d95137a,582files/100tables
 по фиксированному payload; worker6c56 без rollout. CI e9ffe6b5 полностью SUCCESS.
 Это owner console transcript, не независимый опрос хоста. Post-deploy status,
 scheduled cron2600 и ручная приёмка UI/PDF/shared-save/SCORM ожидаются. PR107 открыт.
+
+
+## 28Oct — цвета курса и компактная студия2800: source-qualified
+
+Application4c48dce7/local2800/theme2700,589files/100tables без новой схемы.
+Qualification053b8c17: Review40664008041, infra40664007978, context40664007853,
+console40664007797 SUCCESS. Обе Moodle матрицы352tests/1678assertions; HTTP,
+fresh/upgrade/repeat и rollback PASS. PHP/Chromium подтверждают палитру обоих builders,
+сворачивание шапки, сохранность выделения/scroll и короткий телефон.
+[Точная квитанция](studio_colors_canvas_qualification_20261028.json).
+Пакет2700 ранее выдан; новых2800 правок он не содержит. Последняя точная версия
+из owner-terminal2600, скриншоты28Oct без версии. PR107 открыт, без SSH/merge/rollout.

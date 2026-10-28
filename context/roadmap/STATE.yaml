@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-10-28'
 project: USTAR Academy
-stage: studio_colors_canvas_verifying
-stage_label: Studio palette and compact2800 verifying; fixed2700 delivery preserved
-current_activity: Owner28Oct palette and compact2800 implemented. Full local npm/PHP/Chromium and R161275/46
-  PASS. First CI source browser measurement raced resize; controlled reproduction RED, settled-layout
-  wait GREEN with same thresholds; retry pending. Other three CI successful; production evidence remains
-  separate.
+stage: studio_colors_canvas_qualified
+stage_label: Studio palette and compact2800 qualified; unmerged, not deployed
+current_activity: 'Owner28Oct palette and compact2800 source-qualified: application4c48dce7, qualification053b8c17;
+  all four CI SUCCESS. Both native Moodle matrices352tests/1678assertions, HTTP, fresh/upgrade/repeat
+  and rollback PASS. Local full npm/PHP/Chromium and R161275/46 PASS. Fixed2700 delivery and production
+  evidence remain separate.'
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []
@@ -175,7 +175,7 @@ development_candidate:
   local_ustar_version: 2026102800
   theme_ustar_version: 2026102700
   PR: 107
-  status: local_pass_CI_pending_not_deployed
+  status: qualified_unmerged_application_not_deployed
   deployed: false
   production_predecessor_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
   source_manifest_scope: Unmerged2800 palette/compact source; last exact owner version receipt2600;2700
@@ -186,6 +186,9 @@ development_candidate:
     qualification_commit: 3795299732609e1c2b17fe8e5beca71ae703e921
     full_RC_run: 40602646743
     receipt: context/runtime/studio_materials_qualification_20261028.json
+  qualification_commit: 053b8c17726fb3cd060fe0564c691a3775a960ba
+  full_RC_run: 40664008041
+  all_CI: success
 studio_production_intent: context/runtime/course_studio_production_intent_20261027.json
 studio_latest_owner_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 studio_materials_deployment:

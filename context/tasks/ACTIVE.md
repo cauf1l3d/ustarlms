@@ -6,7 +6,8 @@
 названия/синхронизации для увеличения полотна. Кандидат local2800/theme2700:
 необязательная палитра без миграции fingerprint, оба SCORM builders, компактный
 статус/восстановление при ошибке. PHP/Node/full npm/Chromium и R161275/46 PASS.
-Native CI повторяется после исправления ожидания resize в браузерной проверке. [План](../../docs/superpowers/plans/2026-10-28-studio-colors-canvas.md),
+Source4c48dce7 квалифицирован на053b8c17: все четыре CI SUCCESS, обе native Moodle
+матрицы352/1678; HTTP, fresh/upgrade/repeat и rollback PASS. На prod не применено. [План](../../docs/superpowers/plans/2026-10-28-studio-colors-canvas.md),
 [прогресс](../runtime/studio_colors_canvas_progress_20261028.md),
 [квалификация](../runtime/studio_colors_canvas_qualification_20261028.json).
 

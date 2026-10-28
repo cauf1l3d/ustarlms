@@ -20,6 +20,11 @@ operator62b0da20. [Квитанция установки](../runtime/course_stud
 
 ## Принятая основа и очередь
 
+По поручению28Oct готовится отдельный архив2600→2700, новый journal и команды
+для владельца. Frozen62b0 не меняется; применяется прежний paired transaction,
+Connect worker остаётся6c56. [План поставки](../../docs/superpowers/plans/2026-10-28-studio-materials-deploy.md),
+[прогресс](../runtime/studio_materials_deploy_progress_20261028.md). CI пакета ещё ожидается.
+
 Main содержит принятую основу6c56/local2300: PR105/103/106 интегрированы через
 PR108. [Сверка и CI](../runtime/repository_reconciliation_20261026.json).
 Production2600 и неустановленный кандидат2700 учитываются отдельно в

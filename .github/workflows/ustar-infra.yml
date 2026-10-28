@@ -137,6 +137,16 @@ jobs:
           path: artifacts/studio-production-deploy/
       - name: Studio source keeps actual root ownership and denies UID33 writes
         run: sudo -n env USTAR_REQUIRE_STUDIO_UID33=1 python3 -m unittest tests.r16.test_course_studio_update.ActualCodePermissions -v
+      - name: Build separate fixed2600-to2700 materials updater without host access
+        run: |
+          python3 scripts/infra/build_studio_materials_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/studio-materials-production-deploy
+          python3 -I -B artifacts/studio-materials-production-deploy/ustar-studio-materials-update-*.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: studio-materials-production-deploy
+          path: artifacts/studio-materials-production-deploy/
+      - name: Materials2700 source denies actual UID33 writes
+        run: sudo -n env USTAR_REQUIRE_MATERIALS_UID33=1 python3 -m unittest tests.r16.test_studio_materials_update.ActualCodePermissions -v
       - name: PostgreSQL handoff config is readable but cannot be overwritten by actual UID33
         run: sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_postgres_app_handoff.ActualUnixPermissions -v
       - name: Code hardening archive and actual UID33 isolation

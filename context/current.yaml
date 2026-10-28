@@ -85,7 +85,8 @@ current_work:
   activity: 'Academy Studio shell, editable material bridge, Word and catalogue views
     implemented and pushed to PR107. Full RC40602646743: both native Moodle347tests/1671assertions,
     HTTP, source8.2/8.3 and rollback PASS; context/infra/console SUCCESS.2700 not
-    deployed or merged; owner production2600 receipt preserved.'
+    deployed or merged; owner production2600 receipt preserved. Separate2600-to2700
+    updater/package is being qualified; frozen62b0 unchanged.'
   next_task: STUDIO-01
   ready_tasks: []
   task_statuses:

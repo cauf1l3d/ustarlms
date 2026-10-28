@@ -564,6 +564,7 @@ tasks:
   - context/runtime/course_studio_post_deploy_owner_20261028.json
   - context/runtime/studio_materials_polish_progress_20261027.md
   - context/runtime/studio_materials_qualification_20261028.json
+  - context/runtime/studio_materials_deploy_progress_20261028.md
   deployment_evidence: context/runtime/course_studio_owner_deploy_20261027.json
   acceptance:
   - Native Moodle author access, shared revisions and conflicts without lost drafts
@@ -581,7 +582,8 @@ tasks:
   qualification_commit: 3795299732609e1c2b17fe8e5beca71ae703e921
   full_RC_run: 40602646743
   current_summary: Academy UI/material bridge/Word/catalogue2700 implemented and qualified; both Moodle347/1671
-    and HTTP PASS. Production2600 unchanged; owner review/deployment and PR integration separate.
+    and HTTP PASS. Separate2600-to2700 package qualification in progress; production2600 unchanged,
+    owner deployment and PR integration separate.
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

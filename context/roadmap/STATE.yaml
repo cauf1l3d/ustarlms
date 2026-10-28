@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-10-28'
 project: USTAR Academy
-stage: studio_materials_qualified_candidate
-stage_label: Academy materials/Word2700 qualified; production2600 unchanged
+stage: studio_materials_deploy_qualifying
+stage_label: Separate2600-to2700 delivery qualifying; production2600 unchanged
 current_activity: 'Academy Studio shell, editable material bridge, Word and catalogue views implemented
   and pushed to PR107. Full RC40602646743: both native Moodle347tests/1671assertions, HTTP, source8.2/8.3
   and rollback PASS; context/infra/console SUCCESS.2700 not deployed or merged; owner production2600 receipt
-  preserved.'
+  preserved. Separate2600-to2700 updater/package is being qualified; frozen62b0 unchanged.'
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []
@@ -187,3 +187,12 @@ development_candidate:
   readiness_receipt: context/runtime/studio_materials_qualification_20261028.json
 studio_production_intent: context/runtime/course_studio_production_intent_20261027.json
 studio_latest_owner_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
+studio_materials_deployment:
+  status: package_qualification_in_progress_not_deployed
+  progress: context/runtime/studio_materials_deploy_progress_20261028.md
+  plan: docs/superpowers/plans/2026-10-28-studio-materials-deploy.md
+  baseline_app_commit: 2d95137ac85a09ad4c513edae8a792152153c840
+  target_app_commit: 20ed966e146378a21016c085d31ce4defaa809a8
+  frozen_predecessor_tool: 62b0da2020bc27569c0bd4f8ac96b676f29b7490
+  new_journal: /var/lib/ustar-studio-materials-update
+  worker_rollout: false

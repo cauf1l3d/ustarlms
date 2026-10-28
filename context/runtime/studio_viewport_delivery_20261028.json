@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "date_msk": "2026-10-28",
-  "status": "qualified_archive_ready_for_owner_installation",
+  "status": "owner_reported_installed_and_working",
   "application_commit": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
   "baseline_application": "4c48dce7dadd4da8f054f2acf0d6974bdaeecebc",
   "predecessor_tool": "5f57115d85fbe808069b9c72d6c0ea9fa6e13f02",
@@ -118,7 +118,7 @@
     }
   },
   "production_changed_by_agent": false,
-  "production2801_confirmed": false,
+  "production2801_confirmed": "owner_reported_basic_working_after_handoff; exact_terminal_status_not_supplied",
   "PR107_merged": false,
   "review": {
     "mode": "self_review_per_AGENTS_no_subagents",
@@ -220,5 +220,6 @@
       "run": 40700414291,
       "reason": "explicit source-only classification for the two new operator files; no console operation added"
     }
-  ]
+  ],
+  "owner_acceptance_receipt": "context/runtime/studio_viewport_owner_acceptance_20261028.json"
 }

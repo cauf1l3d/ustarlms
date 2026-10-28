@@ -25,6 +25,7 @@ application_baseline:
   scope_note: Main source baseline remains6c56 until PR107 integration; current production
     is separately recorded below.
 production:
+  latest_owner_browser_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
   latest_cron_contract: context/runtime/course_studio_post_deploy_owner_20261028.json
@@ -82,12 +83,12 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
   post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: Viewport2801 app a3df5783 and fixed81118e39 updater qualified on c7602edf.
-    All four CI SUCCESS; both PHP1335/231skips, both native Moodle352/1678 and realPG100table
-    fresh/legacy profile tests PASS. Local R161332/48skips. Archive matches CI byte-for-byte,
-    saved copy downloaded and SHA256 verified. Owner check/apply pending; no SSH or
-    PR107 merge.
-  next_task: STUDIO-01
+  activity: Owner28Oct reports the81118e39 Studio2801 handoff works and requests PR109.
+    Acceptance is recorded separately from the last exact terminal inventory. PR107
+    delivery and metadata passed all four CI. Review existing PR109 RSS/operator-name
+    query batching against accepted Studio; prepare integrated source and native qualification.
+    No SSH or auto merge.
+  next_task: PERF-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -120,10 +121,10 @@ current_work:
     MOB-05: planned
     OPS-01: done
     OPS-02: waiting_external
-    PERF-01: planned
+    PERF-01: in_progress
     PLAT-01: deferred
     PRIVACY-01: deferred
-    STUDIO-01: in_progress
+    STUDIO-01: done
     TECH-01: planned
 server_facts:
   status: partial

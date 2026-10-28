@@ -1,14 +1,14 @@
 schema_version: 2
 updated_at: '2026-10-28'
 project: USTAR Academy
-stage: studio_viewport_ready_for_owner
-stage_label: Canvas zoom and independent panels2801 qualified; archive ready for owner installation
-current_activity: Viewport2801 app a3df5783 and fixed81118e39 updater qualified on c7602edf.
-  All four CI SUCCESS; both PHP1335/231skips, both native Moodle352/1678 and realPG100table
-  fresh/legacy profile tests PASS. Local R161332/48skips. Archive matches CI byte-for-byte,
-  saved copy downloaded and SHA256 verified. Owner check/apply pending; no SSH or PR107 merge.
+stage: perf_pr109_review
+stage_label: Owner accepted Studio2801; proceed with PR109 query batching
+current_activity: Owner28Oct reports the81118e39 Studio2801 handoff works and requests PR109.
+  Acceptance is recorded separately from the last exact terminal inventory. PR107 delivery
+  and metadata passed all four CI. Review existing PR109 RSS/operator-name query batching
+  against accepted Studio; prepare integrated source and native qualification. No SSH or auto merge.
 entrypoint: START_HERE.md
-next_task: STUDIO-01
+next_task: PERF-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -26,6 +26,7 @@ code_baseline:
   scope_note: Main source baseline remains6c56 until PR107 integration; current production is separately
     recorded below.
 production:
+  latest_owner_browser_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
   latest_cron_contract: context/runtime/course_studio_post_deploy_owner_20261028.json
@@ -234,7 +235,7 @@ studio_colors_index_compat:
   plan: docs/superpowers/plans/2026-10-28-studio-index-compat.md
   status: qualified_archive_issued_owner_check_pending
 studio_viewport_deployment:
-  status: qualified_archive_ready_for_owner_installation
+  status: owner_reported_installed_and_working
   application_commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
   baseline_application: 4c48dce7dadd4da8f054f2acf0d6974bdaeecebc
   predecessor_tool: 5f57115d85fbe808069b9c72d6c0ea9fa6e13f02
@@ -242,9 +243,16 @@ studio_viewport_deployment:
   plan: docs/superpowers/plans/2026-10-28-studio-viewport.md
   new_journal: /var/lib/ustar-studio-viewport-update
   worker_rollout: false
-  owner_2801_installation_confirmed: false
+  owner_2801_installation_confirmed: true
+  confirmation_basis: owner_general_working_report_after811_handoff_no_new_terminal_status
   tool_commit: 81118e39f54c9ac34475f640bf2b9d4d8a047f24
   qualification_commit: c7602edfded4ec87821e1d705cfc1952156bf987
   full_RC_run: 40700783764
   owner_instruction: docs/STUDIO_2801_INSTALL_RU.md
   archive_sha256: 0bf7e718dd64115dad4e635d7e62fc48843bbd6e5a24ffd6860377f792ba1ea5
+studio_viewport_owner_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
+active_PR109:
+  branch: perf/query-batching-20261027
+  initial_head: ca31380d5916c51fadf2ac8772744acd0a050ecf
+  status: integration_review_over_accepted_Studio_source
+  application_delivery: not_prepared

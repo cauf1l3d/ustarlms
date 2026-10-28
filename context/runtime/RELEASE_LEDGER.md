@@ -962,3 +962,9 @@ SHA256 `0bf7e718dd64115dad4e635d7e62fc48843bbd6e5a24ffd6860377f792ba1ea5`.
 Independent local/CI bytes equal; saved copy downloaded and verified. Owner check/apply pending.
 [Receipt](studio_viewport_delivery_20261028.json), [commands](../../docs/STUDIO_2801_INSTALL_RU.md).
 No SSH, worker rollout or PR107 merge.
+
+### 28Oct2026 — owner accepts Studio2801 and requests PR109
+
+Owner: «отлично всё работает» after81118e39 handoff. Basic working acceptance recorded;
+no new exact terminal inventory supplied. STUDIO-01 closed, PERF-01/PR109 active.
+[Receipt](studio_viewport_owner_acceptance_20261028.json). PR107 remains open; no automatic main merge.

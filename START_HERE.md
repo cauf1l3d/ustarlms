@@ -30,17 +30,16 @@ successor заморожен и на сервер не поставлен. SSH/f
 Копии переданы, внешний restore unknown; ИБП есть, shutdown не проверен.
 [Риски и триггеры пересмотра](context/roadmap/ACCEPTED_RISKS.yaml).
 
-## Репозиторий и поставка
+## Репозиторий и текущая работа
 
-PR105 — факты server1; PR103 — пульт; PR106 — принятый Connect и инфраструктура.
-Main содержит основу6c56/local2300; PR107 пока не слит. Пакет2700 выдан владельцу,
-[поставка](context/runtime/studio_materials_delivery_20261028.json). Скриншоты28Oct
-показывают рабочую Академию/студию, но не точную версию. Последняя terminal-квитанция2600.
-2800: исправленный5f57115d выдан, владелец сообщает «Все работает», точного нового status нет.
-2801 app a3df5783/оператор81118e39 квалифицирован на c7602edf: все CI SUCCESS, обе Moodle352/1678,
-realPG100table/7SQL и actualUID33 PASS. Архив скачан/сверен; owner check/apply ожидается.
-[Установка2801](docs/STUDIO_2801_INSTALL_RU.md), [квитанция](context/runtime/studio_viewport_delivery_20261028.json).
-Не повторять2600/cron20Oct; агент не подключается к серверу.
-Исходники Академии: moodle/local/ustar и moodle/theme/ustar; frontend — legacy.
-[Индекс](context/CONTEXT_INDEX.md) помогает выбрать нужный домен.
-[История прежних входов](context/archive/reconciliation_20261026) сохранена целиком.
+Владелец28Oct принял пакет Studio2801/81118e39: «отлично всё работает» и поручил PR109.
+[Owner-квитанция](context/runtime/studio_viewport_owner_acceptance_20261028.json).
+Новой точной terminal-квитанции нет; прежняя2600 остаётся последним точным status/source.
+App a3df5783/metadata9332829c прошли все четыре CI; архив выдан. STUDIO-01 завершён.
+
+Текущая задача PERF-01/PR109: batch RSS statistics и operator season names. Draft ca31380d
+имеет source/context/infra CI PASS; требуется интеграция с принятой студией и native/full RC.
+Main содержит6c56/local2300, PR107 открыт; автоматическое слияние не разрешено.
+Принятую студию и её замороженные операторы сохранять. SSH/субагенты запрещены.
+Исходники: moodle/local/ustar и moodle/theme/ustar; frontend — legacy.
+[Индекс](context/CONTEXT_INDEX.md), [история входов](context/archive/reconciliation_20261026).

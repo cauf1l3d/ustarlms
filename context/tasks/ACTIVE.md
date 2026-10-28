@@ -1,33 +1,27 @@
 # Активная работа —28.10.2026
 
-## STUDIO-01 / PR107
+## PERF-01 / PR109
 
-2801: app a3df5783/оператор81118e39 квалифицирован на c7602edf. Масштаб материала50–150%,
-независимые панели и восстановление их настроек после focus/reload. Все четыре CI SUCCESS;
-обе PHP1335/231skips, обе Moodle352/1678, actualPG100table fresh/legacy и7SQL отказов PASS.
-R16 локально1332/48skips; mandatory actualUID33 read/write-denial PASS.
-Архив byte-identical CI; сохранённая копия скачана и SHA256 сверена.
-[Команды установки2801](../../docs/STUDIO_2801_INSTALL_RU.md),
-[квитанция](../runtime/studio_viewport_delivery_20261028.json).
-Owner2801 --check/apply ожидаются. По2800 владелец сообщает «Все работает», точного нового
-terminal status нет. Рабочий код, прежние операторы и worker6c56 не менялись после квалификации.
-Новый пакет сохраняет строгие fresh/legacy индексы и task policy, парную копию/recovery.
-PR107 открыт, не слит. Самопроверка выполнена без субагентов по AGENTS.
+Владелец принял работу студии после пакета2801 и поручил перейти к PR109.
+[Owner-подтверждение](../runtime/studio_viewport_owner_acceptance_20261028.json).
+PR109 ca31380d: batch RSS statistics и имён operator season; схема/версия не менялись.
+Старый source/context/infra CI зелёный, native Moodle ещё не запускался.
+Нужно проверить изменения поверх принятой Studio2801, сохранить её файлы и guards,
+запустить применимый native/full RC и затем определить отдельную поставку.
+PR109 сейчас Draft, server1 этим PR не обновлялся. Не заявлять ускорение страниц по общему p95.
 
-## Основания production
+## Завершённая студия / PR107
 
-Последняя точная owner-terminal версия:2d95137a/local2600/theme0202 через62b0;
-worker6c56 не обновлялся. [Установка](../runtime/course_studio_owner_deploy_20261027.json),
-[post-deploy](../runtime/course_studio_post_deploy_owner_20261028.json): app_ready/DB/services,
-scheduled27Oct20:22UTC exit0 без новых ошибок, базовый browser/import подтверждены.
-Позднее2700 пакет выдан, скриншоты показывают студию в Академии без точной версии.
-Отказ2800 precheck не заменяет новый terminal status и не подтверждает upgrade.
-Не повторять установку2600 или диагностику исторической cron ошибки20Oct.
+App a3df5783/local2801/theme2700, оператор81118e39; квалификация c7602edf и финальный
+metadata9332829c: все четыре CI SUCCESS. Архив выдан, владелец сообщает «всё работает».
+[Квитанция](../runtime/studio_viewport_delivery_20261028.json),
+[команды](../../docs/STUDIO_2801_INSTALL_RU.md). STUDIO-01 завершён по owner acceptance.
+Новой terminal-квитанции нет: последнее точное status/source подтверждение2600 хранится
+отдельно, не переименовывать его в новую инвентаризацию. Worker6c56 не обновлялся.
 
-## Очередь и границы
+## Границы
 
-Main содержит основу6c56/local2300, PR105/103/106 интегрированы; PR107 открыт.
-После студии PERF-01, INF-12 и путь сотрудника на телефоне.
-Docker rotation/health/recreate отложены до обновления Moodle/PHP.
-SSH/firewall — перед внешним доступом по поручению владельца; внешний restore unknown.
-Субагенты/SSH/автоматический merge запрещены. Не создавать второй каталог/прогресс/evidence.
+PR107 пока открыт: автоматическое слияние не разрешено. Main всё ещё содержит6c56/local2300.
+Можно готовить и проверять PR109 поверх ветки принятой студии без слияния в main.
+SSH, субагенты и отправки через провайдеров запрещены. Логи/health/recreate — в Moodle window.
+Не повторять2600/cron20Oct или принятый инфраструктурный цикл; внешний restore unknown.

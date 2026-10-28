@@ -630,8 +630,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 8530,
-      "sha256": "7422ab996cbcd38e074c9cbac41f249f8eed5ee6c3f7bb1421e4a2b0d32e04f2"
+      "size": 8627,
+      "sha256": "1569648838fa9cac4ebc4afaabaf68fd59db1e47cd5e27ce14c2b4dc5aa77439"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -1404,8 +1404,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 34583,
-      "sha256": "036ca790ccbe32a7df2eb41e80be35851f5b0a9a723096aa1d30c02f6746ba15"
+      "size": 34856,
+      "sha256": "76aeb267dec96ef4b238fe8b07b893769602b301773ff07279b13ed6f9c40c79"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1458,8 +1458,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 12755,
-      "sha256": "430c360a104910b69b76d870541b86356507230b4aecbbf4a8cb2f85f1dff4a7"
+      "size": 13196,
+      "sha256": "35d7a46d832297a1c7aecf47de421679cec1736ec66b236e2888ad23f61ada85"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1554,8 +1554,8 @@
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 91632,
-      "sha256": "82ded3d6796393871f39b041df0a794fcf0c72e0d9db41fa9d2caa521fd787b5"
+      "size": 91990,
+      "sha256": "850e2190db869c4d2b1597aad590adaca5b6b36d96f17a40e36114dccfd1424c"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -3408,8 +3408,14 @@
     {
       "path": "context/runtime/studio_viewport_delivery_20261028.json",
       "domain": "runtime",
-      "size": 7456,
-      "sha256": "572ce4a328db8025883b0aeb4adbb565cbf372138f5ec55e0679444912eb2f40"
+      "size": 7617,
+      "sha256": "31ec03ed236f2a028e5e3510bffcbc5102d37722d64150f8ef00c35b1c03b152"
+    },
+    {
+      "path": "context/runtime/studio_viewport_owner_acceptance_20261028.json",
+      "domain": "runtime",
+      "size": 1569,
+      "sha256": "ce72e1c439d76329a47e5c0c7107c6c5d5c6d15be70e3b4852b669496a6151b6"
     },
     {
       "path": "context/runtime/sysadmin_handoff_result_20261016.json",
@@ -3486,8 +3492,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 2825,
-      "sha256": "080575f6546760f870b0763b4e64a8be3f87ccd231486835bd442476afa7a579"
+      "size": 2275,
+      "sha256": "c08b51e855407d1267e814f6a8e85e7cc17312541d9a8f0210067e34d2dd31a8"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

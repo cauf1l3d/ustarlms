@@ -292,7 +292,7 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: PERF-01
   title: Измерение latency, SQL, cron lag и нагрузки
-  status: planned
+  status: in_progress
   depends_on:
   - INF-08
   acceptance:
@@ -303,8 +303,10 @@ tasks:
   - R19
   - G07
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Passive workday baseline first; confirmed feed/competition query batching candidates;
-    no latency claim without measurements.
+  PR: 109
+  current_summary: Owner accepted Studio2801 and requests the next PR109 block. Review/integrate
+    existing RSS and operator-name query batching over the accepted Studio source; native/full RC
+    required before a separate delivery. Passive workday/SLO evidence remains separate.
 - id: INF-13
   title: Security сопровождение, ADR и закрытие базовой приёмки
   status: planned
@@ -553,7 +555,7 @@ tasks:
   deployment_evidence: repository_only_no_native_host_operation
 - id: STUDIO-01
   title: 'Общая студия и материалы: Academy UI, Word/PDF и редактируемые источники'
-  status: in_progress
+  status: done
   depends_on: []
   PR: 107
   spec: docs/superpowers/specs/2026-10-28-studio-colors-canvas-design.md
@@ -572,6 +574,7 @@ tasks:
   - context/runtime/studio_colors_deploy_progress_20261028.md
   - context/runtime/studio_colors_index_compat_20261028.json
   - context/runtime/studio_viewport_delivery_20261028.json
+  - context/runtime/studio_viewport_owner_acceptance_20261028.json
   deployment_evidence: context/runtime/course_studio_owner_deploy_20261027.json
   acceptance:
   - Native Moodle author access, shared revisions and conflicts without lost drafts
@@ -588,14 +591,14 @@ tasks:
     controls preserved
   - Material-only50-150percent zoom preserves authored content, selection and reachable scroll edges
   - Left/right panel preferences restore independently and survive focus mode and reload
-  deployment_status: viewport2801_qualified_archive_ready_owner_check_apply_pending
+  deployment_status: owner_reported_Studio2801_installed_and_working_no_new_terminal_status
   previous_2600_qualification:
     commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
     full_RC_run: 40441818519
   current_summary: 'Canvas/panels2801 qualified: app a3df5783, updater81118e39, qualification c7602edf.
     All four CI SUCCESS; both PHP1335/231 and native Moodle352/1678. Mandatory actualPG100table
     fresh/legacy7SQL denials and UID33 write-denial PASS. Archive is byte-identical to CI;
-    saved copy downloaded and SHA256 verified. Owner2801 check/apply pending; no SSH/merge.'
+    saved copy downloaded and SHA256 verified. Owner28Oct accepted the811 handoff as working; exact new terminal status not supplied. No SSH/merge.'
   previous_2700_qualification:
     commit: 3795299732609e1c2b17fe8e5beca71ae703e921
     full_RC_run: 40602646743

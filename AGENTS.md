@@ -6,11 +6,11 @@
 ## Текущая задача и разрешения
 
 Владелец разрешил push и слияние проверенных PR105/103/106 для актуализации main.
-PR107: владелец сообщает «Все работает» после2800; нового точного terminal status нет.
-2801: app a3df5783, оператор81118e39 квалифицирован на c7602edf: все четыре CI SUCCESS,
-обе PHP1335/231skips и native Moodle352/1678; realPG100table/7SQL и actualUID33 PASS.
-Архив byte-identical CI, сохранённая копия скачана/SHA256 проверена; owner check/apply ожидается.
-[Установка2801](docs/STUDIO_2801_INSTALL_RU.md), [квитанция](context/runtime/studio_viewport_delivery_20261028.json).
+Владелец28Oct принял пакет Studio2801/81118e39: «отлично всё работает» и поручил PR109.
+[Owner-квитанция](context/runtime/studio_viewport_owner_acceptance_20261028.json); новая точная
+terminal-версия не приложена. App a3df5783 и финальный metadata9332829c прошли все четыре CI.
+STUDIO-01 завершён; текущая задача PERF-01/PR109: проверить RSS/operator-name batching
+поверх принятой студии, сохранить guards и выполнить native/full RC перед отдельной поставкой.
 PR107 пока не слит; автоматическое слияние не разрешено.
 Ротация логов, healthcheck и пересоздание контейнеров отложены до планового обновления
 Moodle/PHP. Эксперимент сохранён в infra/docker-successor-frozen и не поставлен.

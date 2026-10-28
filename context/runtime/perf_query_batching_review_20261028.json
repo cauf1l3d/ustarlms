@@ -2,7 +2,7 @@
   "schema": 1,
   "date_msk": "2026-10-28",
   "PR": 109,
-  "status": "integrated_source_under_native_qualification",
+  "status": "PG_cursor_round_trip_fix_under_requalification",
   "previous_head": "ca31380d5916c51fadf2ac8772744acd0a050ecf",
   "base_branch": "codex/shared-course-studio-20261026",
   "base_commit": "79ce47b9e01c887fc2ecf500426be847b82867eb",
@@ -21,8 +21,9 @@
       "open employment/account filtering retained",
       "closed missing-user fallback, limit100, ties, row type and order",
       "bound parameters, positive source IDs, empty list without SQL",
-      "recordset preserves multiple statuses per source and closes in finally",
-      "old operator/package guards retained and explicit changed-app rejection restored"
+      "buffered aggregate uses unique disjoint-group MIN keys and preserves all statuses",
+      "old operator/package guards retained and explicit changed-app rejection restored",
+      "PG buffered aggregate avoids cursor auxiliary reads; disjoint-group MIN primary key retains Moodle first-column uniqueness"
     ]
   },
   "local_SQLite": {
@@ -96,10 +97,49 @@
     "broader performance SLO/workday baseline remains separate",
     "source integration in main and a separately versioned frozen delivery precede server rollout"
   ],
-  "application_commit": "ab82b9d9de266ca358ac5e4e21ca1cd3fc6e6ef9",
+  "application_commit": "8d4560316a6c6cb27467f3d1d2a3e19e0a6f52d5",
   "focused_operator_package_tests": {
     "result": "PASS",
     "tests": 6,
     "seconds": 14.404
-  }
+  },
+  "local_R16": {
+    "result": "PASS",
+    "tests": 1334,
+    "skipped": 48,
+    "seconds": 244.193
+  },
+  "CI": {
+    "review": 40711325215,
+    "infrastructure": 40711325082,
+    "context": 40711324978,
+    "status": "native_failed_cursor_overhead_fixed_source_pending",
+    "context_conclusion": "success",
+    "infrastructure_conclusion": "success",
+    "scope": "previous c77 attempt; fixed-source CI resolves from the next published head"
+  },
+  "preserved_components": [
+    "course_studio source and assets",
+    "theme_ustar",
+    "version.php",
+    "all frozen scripts/infra operators and builders",
+    "connect-worker"
+  ],
+  "preserved_components_basis": "git diff against79ce47b9 for each scope is empty",
+  "initial_native_failure": {
+    "qualification_commit": "c77d203a552498a21168865c9de64693fb0af487",
+    "review_run": 40711325215,
+    "jobs": [
+      122901241942,
+      122901242036
+    ],
+    "tests_each": 354,
+    "failures_each": 1,
+    "case": "RSS one-read assertion: actual3 expected1",
+    "root_cause": "Moodle PostgreSQL cursor recordset executes DECLARE, FETCH and CLOSE; perf_get_reads counts auxiliary commands too",
+    "primary_source": "https://github.com/moodle/moodle/blob/cc0bf17da8b5fbd290faf95b2b14a03d64331923/public/lib/dml/pgsql_native_moodle_database.php",
+    "fix": "get_records_sql with MIN(id) AS groupid; minima of disjoint groups are unique first-column keys; one aggregate SELECT, preserves all statuses",
+    "assertion_weakened": false
+  },
+  "previous_qualification_commit": "c77d203a552498a21168865c9de64693fb0af487"
 }

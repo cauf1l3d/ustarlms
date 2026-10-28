@@ -68,3 +68,8 @@ Owner принял Studio2801 и поручил PR109. PR109 подготовл�
 7RED до изменений на Studio2801,9GREEN после; отдельный авторский review без субагентов.
 [Текущая квитанция](../runtime/perf_query_batching_review_20261028.json).
 Main не менялся; PR109 остаётся Draft до квалификации/исходной интеграции и отдельной поставки.
+
+28Oct native correction: PostgreSQL recordset counts DECLARE/FETCH/CLOSE as3reads.
+Use one buffered aggregate SELECT with MIN(id) as the unique key of each disjoint
+source/status group. The strict native one-read assertion and result checks stay;
+only the obsolete SQLite recordset-close assertion is removed. No production rollout.

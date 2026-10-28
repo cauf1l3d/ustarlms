@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
   "component_tree_ids": {
-    "moodle/local/ustar": "473974598f7b648e937fb4b1c84e6768388bd06d",
+    "moodle/local/ustar": "094666969e6a3f8d7a001d118b41dc96b6b9d4b8",
     "moodle/theme/ustar": "c60e0657cb957288c914fa46444d2d692012cb7e"
   },
   "versions": {
@@ -533,7 +533,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/feed_article_resolver.php",
-      "sha256": "a7f3aa164d736dfc74691c0cb76c4aa0d6937e6ee066d8dcb3503e1147ee1455"
+      "sha256": "fc9714dce0cf79f23f9e6a5ba79a8e7fa3d972df3c5b643d2653af5ca6d26581"
     },
     {
       "path": "moodle/local/ustar/classes/feed_external_content.php",

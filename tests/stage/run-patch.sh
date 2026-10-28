@@ -7,4 +7,6 @@ php /source/tests/stage/verify_patch_runtime.php > /artifacts/runtime-preflight.
 test "$(git -C /opt/moodle rev-parse HEAD)" = "$(php -r 'echo json_decode(file_get_contents("/opt/ustar-runtime.json"), true)["moodle_commit"];')"
 pg_dump --version > /artifacts/pg-client.txt
 grep -q 'PostgreSQL) 16\.' /artifacts/pg-client.txt
-exec bash /source/tests/stage/run.sh
+bash /source/tests/stage/run.sh
+python3 /source/tests/stage/studio_colors_legacy_native.py --verify
+python3 /source/tests/stage/studio_viewport_legacy_native.py --verify

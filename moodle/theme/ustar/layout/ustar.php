@@ -76,6 +76,8 @@ $positionpages = [
 ];
 
 $materialpages = [
+    '/local/ustar/course_studio.php',
+    '/local/ustar/material.php',
     '/local/ustar/assessment_studio.php',
     '/local/ustar/materials.php',
     '/local/ustar/material_create.php',

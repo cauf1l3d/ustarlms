@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "recorded_date_msk": "2026-10-28",
+  "kind": "qualified_unmerged2800_application_not_production_deployment",
+  "application_commit": "4c48dce7dadd4da8f054f2acf0d6974bdaeecebc",
+  "base_commit": "01e1cef2393c78cb9bb2f3221e739ffeda236180",
+  "versions": {
+    "local_ustar": 2026102800,
+    "theme_ustar": 2026102700
+  },
+  "source_files": 589,
+  "tables": 100,
+  "new_schema": false,
+  "local": {
+    "npm": "PASS full suite including palette, sync, DOM, Word/PDF/materials",
+    "PHP_theme_and_codec": "PASS actual server ZIP and strict optional HEX validation",
+    "Chromium": "PASS1440/768/390 and short390x644; palette in player; collapse/reload; selected text and scroll preserved",
+    "canvas_gain_px": {
+      "desktop1440x1000": 135,
+      "phone390x644": 173,
+      "phone_canvas_height": 253.5
+    },
+    "geometry_scope": "synthetic Academy shell fixture; real production dimensions not claimed",
+    "R16": {
+      "tests": 1275,
+      "environment_skips": 46,
+      "seconds": 140.113,
+      "result": "PASS"
+    },
+    "Chromium_delayed_resize": "PASS same assertions with controlled200ms resize/visualViewport delivery; settled layouts above bottom navigation"
+  },
+  "CI": {
+    "status": "success",
+    "initial_attempt": {
+      "commit": "bab48ed2dbd2b07a56d5c474cb976e65129763e7",
+      "review_run": 40662315587,
+      "reason": "short-phone geometry measured before asynchronous resize settled",
+      "R16_per_source_matrix": 1278,
+      "environment_skips": 229,
+      "R16_result": "PASS",
+      "native_Moodle": "not_started_after_source_browser_failure",
+      "infrastructure": 40662315547,
+      "context": 40662315646,
+      "console": 40662315645,
+      "other_three": "success",
+      "controlled_local_reproduction": "same RED assertion with delayed resize; condition-based layout wait GREEN without changing product or thresholds"
+    },
+    "review_full_RC": 40664008041,
+    "context": 40664007853,
+    "infrastructure": 40664007978,
+    "console": 40664007797,
+    "context_infrastructure_console": "success",
+    "source_matrices": {
+      "PHP8.2": {
+        "job": 122733807064,
+        "R16_tests": 1278,
+        "environment_skips": 229,
+        "result": "success"
+      },
+      "PHP8.3": {
+        "job": 122733806796,
+        "R16_tests": 1278,
+        "environment_skips": 229,
+        "result": "success"
+      }
+    },
+    "browser_normal_and_delayed_resize": "PASS both PHP matrices;135px desktop/173px phone gain,253.5px phone canvas",
+    "rollback_restore_drill": "PASS",
+    "all": "success",
+    "gate_job": 122739772526,
+    "native_Moodle": [
+      {
+        "runtime": "historical",
+        "job": 122736180738,
+        "tests": 352,
+        "assertions": 1678,
+        "result": "success"
+      },
+      {
+        "runtime": "patch-518",
+        "job": 122736180715,
+        "tests": 352,
+        "assertions": 1678,
+        "result": "success"
+      }
+    ],
+    "authenticated_HTTP": [
+      "native Academy shell and single main landmark",
+      "CSRF shared-create retry prepare actor",
+      "material open exact draft retry actor session"
+    ],
+    "HTTP_result": "PASS",
+    "upgrade_fresh_repeat_and_DB": "PASS",
+    "connect_db_job": "not_required_by_change_scope"
+  },
+  "deployed": false,
+  "agent_SSH": false,
+  "worker_rollout": false,
+  "previous2700_delivery_receipt": "context/runtime/studio_materials_delivery_20261028.json",
+  "review": "author self-review; subagents forbidden by AGENTS; startup compact failure regression fixed",
+  "boundaries": [
+    "No fresh owner terminal version/status after2700 delivery",
+    "Frozen2600 and2700 operators unchanged",
+    "No new production installer claimed for2800"
+  ],
+  "qualification_commit": "053b8c17726fb3cd060fe0564c691a3775a960ba",
+  "PR": 107,
+  "branch": "codex/shared-course-studio-20261026",
+  "main_merged": false,
+  "source_artifact": {
+    "run": 40664008041,
+    "id": 12805870743,
+    "name": "frozen-release-candidate",
+    "ZIP_sha256": "ad53cf99f2a890773a796ddd11cf140074ee505868140657c6672950f8697046",
+    "ZIP_CRC": "PASS",
+    "source_tar_sha256": "2cee303b6f5242fa7d865b99c6d591dab5ea9fd397e7aadd816f08efa90a9ac7",
+    "source_tar_bytes": 18234947,
+    "all589_member_hashes": "match exact application4c48dce7 manifest",
+    "independent_local_Git_archive": "byte-identical to downloaded CI source archive",
+    "package_kind": "application source, not a production updater"
+  }
+}

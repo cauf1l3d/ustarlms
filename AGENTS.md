@@ -1,12 +1,17 @@
 # USTAR — инструкции агентам
 
-Актуально26.10.2026. Начать с [START_HERE](START_HERE.md), затем читать только
+Актуально28.10.2026. Начать с [START_HERE](START_HERE.md), затем читать только
 документы текущего домена. Канонический код и контекст — main.
 
 ## Текущая задача и разрешения
 
 Владелец разрешил push и слияние проверенных PR105/103/106 для актуализации main.
-PR107 (студия курсов) — отдельная разработка, не подтверждённый prod.
+Владелец28Oct принял пакет Studio2801/81118e39: «отлично всё работает» и поручил PR109.
+[Owner-квитанция](context/runtime/studio_viewport_owner_acceptance_20261028.json); новая точная
+terminal-версия не приложена. App a3df5783 и финальный metadata9332829c прошли все четыре CI.
+STUDIO-01 завершён; текущая задача PERF-01/PR109: проверить RSS/operator-name batching
+поверх принятой студии, сохранить guards и выполнить native/full RC перед отдельной поставкой.
+PR107 пока не слит; автоматическое слияние не разрешено.
 Ротация логов, healthcheck и пересоздание контейнеров отложены до планового обновления
 Moodle/PHP. Эксперимент сохранён в infra/docker-successor-frozen и не поставлен.
 Субагенты запрещены. Агент не подключается по SSH к production, не отправляет
@@ -34,7 +39,10 @@ frontend — legacy, не включать в релизы или активны
 Не публиковать config.php, токены, дампы, moodledata, private logs и ключи.
 
 Различать Git source, CI, квитанцию владельца и свежую проверку сервера.
-Prod payload6c56a5b6/local2300 подтверждён владельцем; это не свежий manifest всего хоста.
+Prod Studio payload2d95137a/local2600: owner27Oct app_ready;
+[квитанция](context/runtime/course_studio_owner_deploy_20261027.json). Worker6c56 не обновлялся.
+Post-deploy и базовый импорт: [квитанция](context/runtime/course_studio_post_deploy_owner_20261028.json).
+Отдельные PDF/conflict/employee сценарии не заявлены; это не свежий manifest всего хоста.
 Принятые SSD/Moodle5.1.8/OS/reboot/DB-role/code/HTTPS/Connect проверки не повторять.
 SSH/firewall — только при подготовке внешнего доступа. Копии переданы; внешний restore
 остаётся unknown по решению владельца. Наличие ИБП не доказывает автоматический shutdown.

@@ -1,0 +1,150 @@
+{
+  "schema": 1,
+  "recorded_date_msk": "2026-10-28",
+  "kind": "qualified_fixed_installer_owner_handoff_not_production_deployment",
+  "application_commit": "4c48dce7dadd4da8f054f2acf0d6974bdaeecebc",
+  "predecessor_tool": "01e1cef2393c78cb9bb2f3221e739ffeda236180",
+  "predecessor_application": "20ed966e146378a21016c085d31ce4defaa809a8",
+  "versions": {
+    "before": {
+      "local_ustar": 2026102700,
+      "theme_ustar": 2026102700
+    },
+    "after": {
+      "local_ustar": 2026102800,
+      "theme_ustar": 2026102700
+    }
+  },
+  "source_files": 589,
+  "tables": 100,
+  "new_schema": false,
+  "worker_rollout": false,
+  "deployed": false,
+  "agent_SSH": false,
+  "main_merged": false,
+  "local": {
+    "operator_tests": 24,
+    "R16": {
+      "tests": 1299,
+      "environment_skips": 47,
+      "seconds": 168.467,
+      "result": "PASS"
+    },
+    "source": "PASS399PHP/33JS/100tables/57templates",
+    "context_secrets": "PASS",
+    "fixed_components": "exact4c48dce7 app; frozen2600/2700 tools and6c56worker unchanged",
+    "process_loss": "actual fork/os._exit after public release; recovery preserves newer writes",
+    "permissions": "UID33 local namespace skip; mandatory native CI test queued"
+  },
+  "CI": {
+    "status": "success",
+    "initial_attempt": {
+      "commit": "352d009ceece3bb6024e3849d1b46cfe6f6c1d44",
+      "infrastructure": 40670517265,
+      "failed_job": 122755800368,
+      "reason": "workflow passed HEAD to strict full40-character commit interface",
+      "fix": "CI builds frozen352d009c worktree with full SHA; operator/application bytes unchanged",
+      "local_exact_CI_command": "PASS byte-identical archive"
+    },
+    "review_full_RC": 40671198755,
+    "infrastructure": 40671198756,
+    "context": 40671198775,
+    "console": 40671198823,
+    "other_three": "success",
+    "source_matrices": {
+      "PHP8.2": {
+        "job": 122758342898,
+        "R16_tests": 1302,
+        "environment_skips": 230,
+        "result": "success"
+      },
+      "PHP8.3": {
+        "job": 122758343271,
+        "R16_tests": 1302,
+        "environment_skips": 230,
+        "result": "success"
+      }
+    },
+    "operator_UID33": {
+      "job": 122758106797,
+      "result": "PASS actual UID33 reads target code and cannot write"
+    },
+    "rollback_restore_drill": {
+      "job": 122758343741,
+      "result": "PASS"
+    },
+    "browser": "PASS palette/chrome; normal and delayed resize; Word/PDF; materials list/blocks/cards",
+    "all": "success",
+    "gate_job": 122764441906,
+    "native_Moodle": [
+      {
+        "runtime": "historical",
+        "job": 122760920180,
+        "tests": 352,
+        "assertions": 1678,
+        "result": "success"
+      },
+      {
+        "runtime": "patch-518",
+        "job": 122760920291,
+        "tests": 352,
+        "assertions": 1678,
+        "result": "success"
+      }
+    ],
+    "authenticated_HTTP": "PASS native shell, material open exact draft retry actor session and shared-create/prepare/CSRF",
+    "fresh_upgrade_repeat_and_DB": "PASS",
+    "connect_db_job": "not_required_by_unchanged_Connect_scope"
+  },
+  "plan": "docs/superpowers/plans/2026-10-28-studio-colors-deploy.md",
+  "production_evidence": "context/runtime/course_studio_post_deploy_owner_20261028.json",
+  "tool_commit": "352d009ceece3bb6024e3849d1b46cfe6f6c1d44",
+  "qualification_commit": "98833ab40675da6feb4c0ec406d435871dc42e3e",
+  "artifact": {
+    "run": 40671198756,
+    "id": 12807799830,
+    "name": "studio-colors-production-deploy",
+    "ZIP_sha256": "d9c97266904045ba8a3c699e06c416d6af10e1bf512ad7792a754b0fa857f242",
+    "ZIP_CRC": "PASS",
+    "members": [
+      "ustar-studio-colors-install-352d009c.tar.gz",
+      "ustar-studio-colors-install-352d009c.tar.gz.sha256",
+      "ustar-studio-colors-update-352d009c.py",
+      "ustar-studio-colors-update-352d009c.py.metadata.json",
+      "ustar-studio-colors-update-352d009c.py.sha256"
+    ],
+    "all_members": "byte-identical to independent local and exact frozen-worktree builds"
+  },
+  "package": {
+    "archive_sha256": "b24e97cd9c62694cef78d56f4fa20b61ba5d69946db6ae14d68bf0dcad2efc0d",
+    "archive_bytes": 20244858,
+    "monolith_sha256": "53083a27f53eef1fcdb5f1d2c9fdd964ab62d768d98a988be85a8baa11e4c575",
+    "members_and_digests": "PASS",
+    "offline_PLAN_ONLY": "PASS",
+    "file_name": "ustar-studio-colors-install-352d009c.tar.gz",
+    "CI_and_independent_rebuilds": "byte-identical",
+    "owner_bash_blocks": "bash -n PASS4blocks"
+  },
+  "saved_file": {
+    "library_file_id": "libfile_c1b644bfc2b4819198cce703e47b9d87",
+    "file_id": "file_00000000a2d881f4a7ff9cf11091a511",
+    "file_name": "ustar-studio-colors-install-352d009c.tar.gz",
+    "bytes": 20244858,
+    "sha256": "b24e97cd9c62694cef78d56f4fa20b61ba5d69946db6ae14d68bf0dcad2efc0d",
+    "downloaded_saved_copy": "SHA256 and archive member inventory PASS",
+    "local_identity_xattrs": "PASS"
+  },
+  "owner_instruction": "docs/STUDIO_2800_INSTALL_RU.md",
+  "owner_installation_confirmed": false,
+  "delivered": true,
+  "review": "Author self-review; AGENTS forbids subagents; pinned cron admission, missing predecessor, paired restore/public boundary and actual UID33 checked; no unresolved findings",
+  "owner_precheck": {
+    "phase": "refused",
+    "reason": "schema_indexes",
+    "archive_and_inner_sums": "OK",
+    "upgrade_invoked": false
+  },
+  "current_recommendation": "superseded_by_corrected_operator_5f57115d",
+  "incident": "context/runtime/studio_colors_index_compat_20261028.json",
+  "superseded_by_tool": "5f57115d85fbe808069b9c72d6c0ea9fa6e13f02"
+}

@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-10-26'
+updated_at: '2026-10-28'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -13,7 +13,7 @@ repository_head:
 application_baseline:
   branch: main
   commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
-  kind: accepted_owner_payload_git_source
+  kind: integrated_main_source_before_Studio_owner_deployment
   local_ustar_version: 2026102300
   theme_ustar_version: 2026100202
   source_pr: 106
@@ -22,48 +22,52 @@ application_baseline:
     commit: 40fb81d75c42ac6b4ff1f6f54f9e25f54b3fa149
     full_RC_run: 40337002920
     receipt: context/runtime/repository_reconciliation_20261026.json
+  scope_note: Main source baseline remains6c56 until PR107 integration; current production
+    is separately recorded below.
 production:
+  latest_owner_browser_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
-  latest_cron_contract: context/runtime/connect_telegram_finish_owner_20261023.json
-  previous_scheduled_cron_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
+  latest_cron_contract: context/runtime/course_studio_post_deploy_owner_20261028.json
+  previous_scheduled_cron_receipt: context/runtime/infra_readonly_owner_20261023.json
   latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
   effective_addon_deployment:
-    receipt: context/runtime/connect_telegram_finish_owner_20261023.json
-    reported_date_msk: '2026-10-23'
-    status: owner_upgrade_ACK_presentation_runtime_and_visual_acceptance_verified
-    installer_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
-    payload_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+    receipt: context/runtime/course_studio_owner_deploy_20261027.json
+    reported_date_msk: '2026-10-27'
+    status: owner_installed_status_and_basic_browser_confirmed_detailed_acceptance_separate
+    installer_commit: 62b0da2020bc27569c0bd4f8ac96b676f29b7490
+    payload_commit: 2d95137ac85a09ad4c513edae8a792152153c840
     versions:
-      local_ustar: 2026102300
+      local_ustar: 2026102600
       theme_ustar: 2026100202
-    application_generation: 94d379904f7f4f7f8795b43e68421d89
-    runtime_generation: 54bb0b7e4ba746928a639279ea729415
-    files: 557
+    files: 582
     tables: 100
     counts_basis: fixed_controller_payload_not_new_whole_host_manifest
     independent_probe: false
-    previous_receipt: context/runtime/connect_con02_server1_owner_20261023.json
-  status: owner_Telegram_application2300_ACK_presentation_and_visual_accepted_export_restore_pending
-  observed_at: '2026-10-23'
-  source: context/runtime/evidence_20261026.yaml
+    worker_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+    worker_rollout: false
+    previous_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+    post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
+  status: owner_Studio2600_post_deploy_status_and_basic_browser_reported
+  observed_at: '2026-10-28'
+  source: context/runtime/evidence_20261028.yaml
   independently_measured: false
-  current_source_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  current_source_commit: 2d95137ac85a09ad4c513edae8a792152153c840
   current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh
     host filesystem census
   current_versions:
-    local_ustar: 2026102300
+    local_ustar: 2026102600
     theme_ustar: 2026100202
   last_exact_source_manifest:
-    commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
-    date: '2026-10-23'
-    matching_files: 557
+    commit: 2d95137ac85a09ad4c513edae8a792152153c840
+    date: '2026-10-27'
+    matching_files: 582
     kind: owner_verified_controller_payload_not_fresh_manifest
-    evidence: context/runtime/connect_telegram_finish_owner_20261023.json
-  cron: owner23Oct18_08UTC_scheduled_exit0_1_222seconds_no_new_failures_19overdue_2failed_need_task_review
-  cron_current_receipt: context/runtime/infra_readonly_owner_20261023.json
+    evidence: context/runtime/course_studio_owner_deploy_20261027.json
+  cron: owner_scheduled27Oct20_22UTC_exit0_no_new_failures_ustar_errors0
+  cron_current_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
   regular_backup_current_receipt: context/runtime/infra_readonly_owner_20261023.json
   later_observations: context/runtime/RELEASE_LEDGER.md
@@ -77,9 +81,13 @@ production:
     Docker: 29.9.0
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
+  post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: PR105/103/106 merged through PR108; audits verified; full RC, infra, console
-    and context passed. Next PERF-01 baseline and verified backlog; no server mutation.
+  activity: Owner28Oct reports the81118e39 Studio2801 handoff works and requests PR109.
+    Acceptance is recorded separately from the last exact terminal inventory. PR107
+    delivery and metadata passed all four CI. Review existing PR109 RSS/operator-name
+    query batching against accepted Studio; prepare integrated source and native qualification.
+    No SSH or auto merge.
   next_task: PERF-01
   ready_tasks: []
   task_statuses:
@@ -113,9 +121,10 @@ current_work:
     MOB-05: planned
     OPS-01: done
     OPS-02: waiting_external
-    PERF-01: planned
+    PERF-01: in_progress
     PLAT-01: deferred
     PRIVACY-01: deferred
+    STUDIO-01: done
     TECH-01: planned
 server_facts:
   status: partial

@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально26.10.2026. Это вход в текущий проект; история находится в архиве.
+Актуально28.10.2026. Это вход в текущий проект; история находится в архиве.
 
 1. [STATE](context/roadmap/STATE.yaml) — версии, SHA, уверенность и квитанции.
 2. [ACTIVE](context/tasks/ACTIVE.md) — текущая работа и её границы.
@@ -11,10 +11,15 @@
 
 ## Подтверждённый production
 
-Moodle5.1.8 / PHP8.3.33 / PostgreSQL16.15. local_ustar2026102300,
-theme_ustar2026100202; payload/worker6c56a5b6ab830b97b706a5d7028b49cfae31e7a4.
-[Основание](context/runtime/evidence_20261026.yaml): квитанции владельца23–26Oct;
-557файлов/100таблиц относятся к фиксированному payload. Это не новая инвентаризация хоста.
+Moodle5.1.8 / PHP8.3.33 / PostgreSQL16.15. Владелец27Oct установил
+Studio payload2d95137a/local_ustar2026102600, theme_ustar2026100202; app_ready.
+Worker6c56a5b6 не обновлялся. [Основание](context/runtime/evidence_20261027.yaml),
+[квитанция установки](context/runtime/course_studio_owner_deploy_20261027.json).
+582файла/100таблиц — фиксированный payload, не новая инвентаризация хоста.
+Post-deploy status: app_ready/DB available, receiver+notify active/enabled. Scheduled
+cron27Oct20:22UTC:exit0, без новых ошибок. Владелец подтвердил открытие студии,
+базовую работу и импорт из другой студии; отдельные PDF/conflict/employee кейсы не заявлены.
+[Квитанция](context/runtime/course_studio_post_deploy_owner_20261028.json).
 Приложение использует обычную роль ustar_app; права кода/config и Compose0600 применены.
 Connect ACK/presentation и вход/открытие Академии подтверждены владельцем.
 
@@ -25,10 +30,16 @@ successor заморожен и на сервер не поставлен. SSH/f
 Копии переданы, внешний restore unknown; ИБП есть, shutdown не проверен.
 [Риски и триггеры пересмотра](context/roadmap/ACCEPTED_RISKS.yaml).
 
-## Репозиторий и поставка
+## Репозиторий и текущая работа
 
-PR105 — факты server1; PR103 — пульт; PR106 — принятый Connect и инфраструктура.
-Их интеграция не является новым deploy. PR107 — отдельная неподтверждённая студия.
-Исходники Академии: moodle/local/ustar и moodle/theme/ustar; frontend — legacy.
-[Индекс](context/CONTEXT_INDEX.md) помогает выбрать нужный домен.
-[История прежних входов](context/archive/reconciliation_20261026) сохранена целиком.
+Владелец28Oct принял пакет Studio2801/81118e39: «отлично всё работает» и поручил PR109.
+[Owner-квитанция](context/runtime/studio_viewport_owner_acceptance_20261028.json).
+Новой точной terminal-квитанции нет; прежняя2600 остаётся последним точным status/source.
+App a3df5783/metadata9332829c прошли все четыре CI; архив выдан. STUDIO-01 завершён.
+
+Текущая задача PERF-01/PR109: batch RSS statistics и operator season names. Draft ca31380d
+имеет source/context/infra CI PASS; требуется интеграция с принятой студией и native/full RC.
+Main содержит6c56/local2300, PR107 открыт; автоматическое слияние не разрешено.
+Принятую студию и её замороженные операторы сохранять. SSH/субагенты запрещены.
+Исходники: moodle/local/ustar и moodle/theme/ustar; frontend — legacy.
+[Индекс](context/CONTEXT_INDEX.md), [история входов](context/archive/reconciliation_20261026).

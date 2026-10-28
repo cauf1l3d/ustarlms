@@ -109,6 +109,8 @@ $PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
 $PAGE->set_heading('USTAR Academy');
 echo $OUTPUT->header();
 echo $OUTPUT->heading('Студия материалов');
+echo html_writer::tag('p', html_writer::link(new moodle_url('/local/ustar/course_studio.php'),
+    'Открыть общую Студию курсов', ['class'=>'u-btn u-btn--primary']));
 echo html_writer::tag('p', html_writer::link(
     new moodle_url('/local/ustar/assessment_studio.php'), 'Создать аттестацию',
     ['class' => 'u-btn u-btn--primary']));

@@ -1,0 +1,99 @@
+{
+  "kind": "development_qualification_not_deployed",
+  "date_msk": "2026-10-27",
+  "PR": 107,
+  "branch": "codex/shared-course-studio-20261026",
+  "application_commit": "7eb1a3f61dd109d4cfbd1ff67a9ff99d36fc6ab2",
+  "integrated_main": "ad939373d89604119d3fd741c555deaf1ebd4ed7",
+  "accepted_production_payload": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+  "studio_version": 2026102600,
+  "schema_tables": 100,
+  "candidate_files": 582,
+  "server_mutation": false,
+  "changes": [
+    "Initialize Moodle PAGE context before AJAX module creation; retain session during preparation",
+    "Academic shell, readiness review, reading metrics and focus mode",
+    "Local PDF.js6.4.299 text import; separate course after preview",
+    "Print export with cover, contents, images and sources; browser Save as PDF",
+    "Keep immutable Connect package tests pinned to their accepted application release"
+  ],
+  "verification": {
+    "source": "PASS php394 js31 tables100 templates57",
+    "php_controller_regression": "PASS CSRF, PAGE context and preparation session retained",
+    "php_codec": "PASS",
+    "javascript_suite": "PASS after integration",
+    "browser": "PASS actual2page Cyrillic PDF import/edit/print, malformed PDF preserves course, desktop/mobile no overflow",
+    "pdf_visual": "PASS inspected A4 output;3pages including cover;Cyrillic present;no document JavaScript",
+    "python_suite": "PASS1240tests;63native/environment skips;89.200s",
+    "full_RC": "PASS40433022865 on c4250205c1a9c79e68bf1809b361abefc61ca522;both Moodle matrices335tests1500assertions each;authenticated Studio HTTP/retry/prepare/actor PASS",
+    "test_copy_acceptance": "not_performed",
+    "context": "PASS40433022926",
+    "secret_guard": "PASS",
+    "browser_CSP_and_scan": "PASS actual entrypoint CSP; full-text PDF flow and scan rejection preserve active course",
+    "mobile_template_delay": "PASS60scenarios with450ms synthetic image delay; old100ms assertion reproduced failure",
+    "infrastructure": "PASS40433023023",
+    "PDF_media_and_password": "PASS image decoded in print frame;password-protected PDF rejected without active-course changes",
+    "session_after_close_warnings": false
+  },
+  "prior_CI": {
+    "run": 40333673961,
+    "commit": "11c632839c54594393465fb95b764189e5274962",
+    "result": "failed HTTP prepare500; PHPUnit220tests906assertions passed on older base",
+    "root_cause_evidence": "Moodlev5.1.8 modlib.php535 reads PAGE context; pagelib.php572 throws in AJAX developer mode when context unset; controller regression reproduced missing PAGE context"
+  },
+  "limitations": [
+    "PDF text import requires a text layer; no OCR/images/table layout extraction",
+    "PDF export uses browser print dialog; interactivity remains SCORM-only",
+    "Test-copy acceptance required before production deployment;no server mutation"
+  ],
+  "ci_attempts": [
+    {
+      "commit": "3d13ddcd162dfddd5c3bcff4dc844ffab79ff726",
+      "review_run": 40432247264,
+      "result": "source8.3 failed legacy mobile lazy-image race before Moodle DB; source8.2 and rollback passed",
+      "context_run": 40432247276,
+      "context_result": "success",
+      "infra_run": 40432247349,
+      "infra_result": "success",
+      "correction": "Wait for actual lazy image load/decode in visual test; same failure reproduced with450ms delay, corrected60scenarios passed"
+    },
+    {
+      "commit": "c4250205c1a9c79e68bf1809b361abefc61ca522",
+      "review_run": 40433022865,
+      "result": "success",
+      "source_php82": "success",
+      "source_php83": "success",
+      "rollback": "success",
+      "prepare_rc": "success",
+      "moodle_historical": {
+        "result": "success",
+        "tests": 335,
+        "assertions": 1500,
+        "studio_authenticated_http": "PASS"
+      },
+      "moodle_518": {
+        "result": "success",
+        "tests": 335,
+        "assertions": 1500,
+        "studio_authenticated_http": "PASS"
+      },
+      "connect_db": "not_required_for_unchanged_Connect_scope",
+      "context_run": 40433022926,
+      "context_result": "success",
+      "infra_run": 40433023023,
+      "infra_result": "success"
+    }
+  ],
+  "status": "qualified_for_test_copy_acceptance",
+  "qualified_repository_commit": "c4250205c1a9c79e68bf1809b361abefc61ca522",
+  "release_artifact": {
+    "run": 40433022865,
+    "artifact_id": 12702982632,
+    "name": "frozen-release-candidate",
+    "source_commit": "c4250205c1a9c79e68bf1809b361abefc61ca522",
+    "zip_sha256": "d8ada769a6d66a08c807aeee14e6472e1441d489552877f671a9aee6a523af08",
+    "ustar_source_tar_sha256": "a1275ef3854aa45e346e6b6b2af1a686e39ca560c1ba2a681eb33121749a622d",
+    "downloaded_copy_crc": "PASS",
+    "PDF_dependencies_present": true
+  }
+}

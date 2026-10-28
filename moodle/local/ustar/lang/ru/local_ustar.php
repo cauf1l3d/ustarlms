@@ -32,6 +32,7 @@ $string['ustar:taskescalation'] = 'Контроль исключений и эс
 $string['ustar:gradeassessments'] = 'Проверять аттестации';
 $string['ustar:requeststaff'] = 'Подавать заявки на персонал по компании';
 
+$string['coursestudioconflict'] = 'Проект или его настройки уже изменены. Сохраните обе редакции или обновите проект.';
 $string['notification_ack'] = 'Принял';
 $string['notification_acknowledged'] = 'Подтверждено';
 $string['notification_read'] = 'Прочитано';

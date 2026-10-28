@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-28",
+  "kind": "owner_reported_release_acceptance",
+  "owner_statement_ru": "отлично все работает, актуализируй гитхаб и переходим к PR109",
+  "accepted_handoff": {
+    "app_commit": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
+    "operator_commit": "81118e39f54c9ac34475f640bf2b9d4d8a047f24",
+    "expected_versions": {
+      "local_ustar": 2026102801,
+      "theme_ustar": 2026102700
+    },
+    "archive": "ustar-studio-viewport-install-81118e39.tar.gz",
+    "archive_SHA256": "0bf7e718dd64115dad4e635d7e62fc48843bbd6e5a24ffd6860377f792ba1ea5"
+  },
+  "acceptance": {
+    "owner_reports_working": true,
+    "installation_and_basic_browser_accepted_from_handoff_context": true,
+    "new_terminal_status_supplied": false,
+    "independent_host_probe": false,
+    "separate_PDF_conflict_employee_scenarios_reported": false
+  },
+  "source_qualification": {
+    "commit": "c7602edfded4ec87821e1d705cfc1952156bf987",
+    "review_run": 40700783764,
+    "all_four_CI": "success"
+  },
+  "delivery_metadata_qualification": {
+    "commit": "9332829c46ec32976987ba8f2ba57fae0ea02b3d",
+    "all_four_CI": "success",
+    "review_run": 40704124775
+  },
+  "next_task": {
+    "id": "PERF-01",
+    "PR": 109,
+    "scope": "review/integrate existing RSS and operator-name query batching over accepted Studio source"
+  },
+  "boundaries": {
+    "agent_SSH": false,
+    "PR107_merged": false,
+    "automatic_main_merge_authorized": false,
+    "production_versions_independently_remeasured": false
+  }
+}

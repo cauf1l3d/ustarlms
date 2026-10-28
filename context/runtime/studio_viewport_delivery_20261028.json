@@ -1,0 +1,225 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-28",
+  "status": "owner_reported_installed_and_working",
+  "application_commit": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
+  "baseline_application": "4c48dce7dadd4da8f054f2acf0d6974bdaeecebc",
+  "predecessor_tool": "5f57115d85fbe808069b9c72d6c0ea9fa6e13f02",
+  "versions": {
+    "before": {
+      "local_ustar": 2026102800,
+      "theme_ustar": 2026102700
+    },
+    "after": {
+      "local_ustar": 2026102801,
+      "theme_ustar": 2026102700
+    }
+  },
+  "payload_files": 589,
+  "tables": 100,
+  "changed_payload": [
+    "local/ustar/course_studio/app.js",
+    "local/ustar/course_studio/editor.html",
+    "local/ustar/course_studio/style.css",
+    "local/ustar/version.php"
+  ],
+  "schema_delta": false,
+  "new_journal": "/var/lib/ustar-studio-viewport-update",
+  "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+  "worker_rollout": false,
+  "owner_observation": {
+    "statement_ru": "Все работает",
+    "scope": "general browser acceptance after corrected2800 handoff; screenshot shows collapsed header",
+    "exact_terminal_version_supplied": false,
+    "independent_host_probe": false
+  },
+  "initial_CI": {
+    "source_commit": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
+    "context_run": 40698490000,
+    "conclusion": "failure",
+    "cause": "generated application manifest and dependent context index not refreshed; corrected during delivery preparation"
+  },
+  "verification": {
+    "node_suite": "pass",
+    "local_chromium": "153.0.8010.0",
+    "browser": "pass",
+    "delayed_resize_browser": "pass",
+    "source_checks": "399PHP/33JS/100tables/57templates pass",
+    "focused_transactions": "14tests pass",
+    "focused_operator": "26tests pass; one actualUID33 local namespace skip (mandatory in infrastructure CI)",
+    "local_R16": {
+      "tests": 1332,
+      "skipped": 48,
+      "seconds": 252.073,
+      "result": "PASS",
+      "skip_scope": "local namespace and optional environment cases; actualUID33 mandatory CI passed"
+    },
+    "source_PHP82": {
+      "job_id": 122860679462,
+      "tests": 1335,
+      "skipped": 231,
+      "seconds": 206.163,
+      "result": "PASS"
+    },
+    "source_PHP83": {
+      "job_id": 122860679997,
+      "tests": 1335,
+      "skipped": 231,
+      "seconds": 214.492,
+      "result": "PASS"
+    },
+    "actual_UID33_source_read_write_denial": {
+      "job_id": 122859981824,
+      "result": "PASS"
+    },
+    "rollback_job": {
+      "job_id": 122860680023,
+      "result": "PASS"
+    },
+    "instruction_bash_syntax": "PASS (3blocks)",
+    "historical_native": {
+      "job_id": 122864326376,
+      "result": "PASS",
+      "tests": 352,
+      "assertions": 1678,
+      "fresh_upgrade_repeat": true,
+      "authenticated_HTTP": true
+    },
+    "patch518_native": {
+      "job_id": 122864326251,
+      "result": "PASS",
+      "tests": 352,
+      "assertions": 1678,
+      "fresh_upgrade_repeat": true,
+      "authenticated_HTTP": true,
+      "actual_PostgreSQL_metadata": true,
+      "tables": 100,
+      "profiles": [
+        "xml_install_indexes",
+        "server1_legacy_indexes_20261023"
+      ],
+      "SQL_mutations_denied": [
+        "partial_local_ustar_coin_accounts",
+        "partial_local_ustar_test_results",
+        "extra_index",
+        "column_default",
+        "task",
+        "extra_table",
+        "missing_ACK_index"
+      ],
+      "versions": [
+        2026102800,
+        2026102801,
+        2026102801,
+        2026102800
+      ],
+      "all_fixture_SQL_rolled_back": true,
+      "scope": "DB metadata validation across version transitions; physical transaction recovery tested separately in R16"
+    }
+  },
+  "production_changed_by_agent": false,
+  "production2801_confirmed": "owner_reported_basic_working_after_handoff; exact_terminal_status_not_supplied",
+  "PR107_merged": false,
+  "review": {
+    "mode": "self_review_per_AGENTS_no_subagents",
+    "base": "47554c153e548dd9a8cef770ba978ae484e7800f",
+    "application": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
+    "critical": [],
+    "important": [],
+    "scope": [
+      "paper-only scaling and scroll reachability",
+      "selection/DOM/persistence/focus and drawers",
+      "exact589-file four-path update guard",
+      "fixed2800 journal and derived cron admission",
+      "fresh and exact legacy indexes, raw preservation, task policy",
+      "paired pre-public rollback and post-public recovery preserve writes",
+      "offline package isolation, hashes and frozen predecessors"
+    ],
+    "limits": [
+      "production2801 owner check/apply and acceptance pending; no live host probe or SSH"
+    ]
+  },
+  "tool_commit": "81118e39f54c9ac34475f640bf2b9d4d8a047f24",
+  "qualification_commit": "c7602edfded4ec87821e1d705cfc1952156bf987",
+  "CI": {
+    "review": {
+      "run_id": 40700783764,
+      "conclusion": "success",
+      "gate_job": 122868268762
+    },
+    "infrastructure": {
+      "run_id": 40700783791,
+      "conclusion": "success"
+    },
+    "context": {
+      "run_id": 40700783730,
+      "conclusion": "success"
+    },
+    "console": {
+      "run_id": 40700783769,
+      "conclusion": "success"
+    }
+  },
+  "archive": {
+    "archive": "ustar-studio-viewport-install-81118e39.tar.gz",
+    "bytes": 20393281,
+    "sha256": "0bf7e718dd64115dad4e635d7e62fc48843bbd6e5a24ffd6860377f792ba1ea5",
+    "monolith_sha256": "3444135cb685ff91f25a5227d1044d65dbbd3b689b55e06bc6da0f6b866c567d",
+    "members": [
+      "INSTALL.json",
+      "README.txt",
+      "SHA256SUMS",
+      "update.py"
+    ],
+    "metadata": {
+      "app_commit": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
+      "baseline_commit": "4c48dce7dadd4da8f054f2acf0d6974bdaeecebc",
+      "bytes": 36367008,
+      "default_host_access": false,
+      "journal": "/var/lib/ustar-studio-viewport-update",
+      "payload_files": 589,
+      "predecessor_tool": "5f57115d85fbe808069b9c72d6c0ea9fa6e13f02",
+      "schema": 1,
+      "sha256": "3444135cb685ff91f25a5227d1044d65dbbd3b689b55e06bc6da0f6b866c567d",
+      "tables": 100,
+      "tool_commit": "81118e39f54c9ac34475f640bf2b9d4d8a047f24",
+      "versions": {
+        "local_ustar": "2026102801",
+        "theme_ustar": "2026102700"
+      },
+      "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+      "worker_rollout": false
+    },
+    "CI_comparison": {
+      "artifact_id": 12821267741,
+      "qualification_commit": "c7602edfded4ec87821e1d705cfc1952156bf987",
+      "run_id": 40700783791,
+      "zip_bytes": 40712458,
+      "zip_sha256": "0d145110424a1d6b3070131aa3532c27eb57493e46241ed5f66b002feac684ec",
+      "zip_crc": "PASS",
+      "members": [
+        "ustar-studio-viewport-install-81118e39.tar.gz",
+        "ustar-studio-viewport-install-81118e39.tar.gz.sha256",
+        "ustar-studio-viewport-update-81118e39.py",
+        "ustar-studio-viewport-update-81118e39.py.metadata.json",
+        "ustar-studio-viewport-update-81118e39.py.sha256"
+      ],
+      "independent_local_build_byte_identical": true
+    },
+    "library_file_id": "libfile_385229ea653c8191993e2d9316a2b93e",
+    "library_file_name": "ustar-studio-viewport-install-81118e39.tar.gz",
+    "saved_copy_downloaded_SHA256_verified": true
+  },
+  "owner_instruction": "docs/STUDIO_2801_INSTALL_RU.md",
+  "integration_corrections": [
+    {
+      "run": 40698490000,
+      "reason": "refresh generated application source manifest and context index"
+    },
+    {
+      "run": 40700414291,
+      "reason": "explicit source-only classification for the two new operator files; no console operation added"
+    }
+  ],
+  "owner_acceptance_receipt": "context/runtime/studio_viewport_owner_acceptance_20261028.json"
+}

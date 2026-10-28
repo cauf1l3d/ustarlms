@@ -1,0 +1,57 @@
+# SDD ledger — plan: docs/superpowers/plans/2026-10-28-studio-colors-canvas.md
+
+Owner28Oct requested final course navigation colors and collapsible title/sync chrome.
+Three screenshots inspected. Existing linked worktree was clean but stale; restored
+exact remote01e1cef2 tree/commit objects with content hashes verified, preserving old
+local branches. Work branch codex/studio-colors-canvas-20261028. No SSH/subagents.
+
+Pre-flight: Task1 model theme feeds cloud canonical manifests and both package builders;
+optional fields must not be injected into old projects. Task2 UI preference is local
+and must not enter project revision or shared sync. Task3 keeps old2700 delivery frozen.
+
+Design choices made inline within the explicit feature request: four menu colors,
+automatic active foreground, one shared title/sync collapse, compact status and
+automatic disclosure of actionable account/conflict problems. Existing API/model retained.
+Baseline Node codec PASS before changes; local PHP/DOM/browser checks follow.
+
+Task1: implementation and local verification complete. RED: missing navigation resolver
+and PHP accepted unsafe optional colors. GREEN: theme Node/PHP fixtures, old manifest
+fingerprint, palette validation/history/project/SCORM roundtrip and actual server ZIP.
+New optional native Moodle cases are queued for CI, not claimed as local DB evidence.
+
+Task2: complete locally. RED: no collapse control; GREEN full npm/DOM and real Chromium
+including palette properties/player, compact persistence, text selection/scroll, mobile
+drawers and account revocation. At1440x1000 canvas gains135px; at390x644 gains173px,
+leaving253.5px. Synthetic Academy geometry, not a production screenshot.
+
+Final review: self-review (AGENTS forbids subagents), separate pass through project
+canonicalization, both builders, live UI and error/actor boundaries. Found one important
+case: saved compact preference + failed initial session made recovery controls hidden
+behind inert workspace. Regression RED→GREEN; startup now expands sync/reload/login,
+reload handler bound before network access. No deferred minors or other unresolved findings.
+
+Task3: existing2700 CI builder now runs its exact01e1cef2 worktree so later application
+versions cannot repoint the accepted archive. Frozen operators/worker unchanged.
+New2800 source is not a production deployment; screenshot evidence has no exact version.
+
+Task3 local full R16:1275tests/46environment skips PASS140.113s; source/context/secrets PASS.
+First qualification bab48ed2: infra/context/console SUCCESS; both source R16 matrices
+1278tests/229skips and Node/PHP palette/DOM PASS, browser short-phone geometry failed.
+Controlled local reproduction: delay resize/visualViewport delivery200ms → same RED.
+The old expanded height was sampled before resize completed; click then called fitWorkspace
+and sampled a new viewport. Wait for root bounds above native bottom navigation before
+both measurements → GREEN, same +90px/200px assertions. Standard and delayed runs both
+135px desktop/173px phone gain,253.5px phone canvas. Added mandatory delayed CI scenario.
+No application byte changed; application4c48dce7 remains the exact candidate.
+
+
+Task3 final qualification:053b8c17726fb3cd060fe0564c691a3775a960ba, application4c48dce7
+byte-identical. Review/fullRC40664008041, infra40664007978, context40664007853 and
+console40664007797 all SUCCESS. Source PHP8.2/8.3 each1278R16/229environment skips;
+standard+controlled delayed resize Chromium PASS. Native historical122736180738 and
+patch-518122736180715 both352tests/1678assertions, authenticated shell/material/studio
+HTTP, fresh/upgrade/repeat and DB PASS. Rollback122733807222 and final gate122739772526 PASS.
+Frozen source artifact12805870743 downloaded: ZIP hash/CRC PASS; all589 tar members
+match exact application manifest and archive byte-identical to independent local Git.
+Receipt-only follow-up updates context/plan/PR; it does not change qualified product files.
+No unresolved review findings; no merge, SSH, worker rollout or new2800 installer claimed.

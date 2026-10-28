@@ -1,5 +1,9 @@
 # Реестр кода, проверок и deployment evidence
 
+28.10.2026 — Academy Studio/материалы/Word2700 квалифицированы на37952997: full RC40602646743, обе Moodle347тестов/1671проверка, HTTP/rollback/source PASS; context/infra/console SUCCESS.589файлов/100таблиц, новая схема не вводится. [Квитанция](studio_materials_qualification_20261028.json). Код опубликован в PR107; production остаётся2600, merge и установка2700 не выполнялись.
+
+28.10.2026 — Владелец подтвердил Studio2600 app_ready, DB available, receiver/notify active+enabled. Scheduled27Oct20:22UTC:exit0/1.452s, task5069143→5069170, new failures[], USTAR errors0; overdue19/failed2 неизменны, wrapper20Oct исторический. Студия открывается, базовая работа и импорт другой студии подтверждены словами владельца; отдельные PDF/conflict/employee сценарии не заявлены. [Квитанция](course_studio_post_deploy_owner_20261028.json). Новый Academy UI/Word/каталог2700 — отдельный неустановленный кандидат PR107.
+
 26.10.2026 — PR108 merged atc0e22e556220cc50f522a3e6b65189fd8abffa73. PR105/103/106 history preserved; application equals accepted6c56a5b6/local2300. Full RC and independent infra/console/context passed. Repository reconciliation only; no server deploy. [Receipt](repository_reconciliation_20261026.json).
 
 ## 23Oct — CON-02 application2200 и ACK runtime приняты на server1
@@ -901,3 +905,66 @@ refused offline. Local869 had one target-only MCP child import environment error
 isolatedvenv realstdio1testPASS,whole local suite green not claimed.
 Next owner prepares HTTPS backup helper pair then--check. No production action,
 new app/bridge/link/notify acceptance or main merge. Artifact12300525979.
+
+
+## 27Oct — Studio2600 установлен владельцем; ручная приёмка ожидается
+
+[Квитанция](course_studio_owner_deploy_20261027.json): archive/inner hashes OK,
+precheck2300 ready, upgrade1/2, cron_written, public release, app_ready/local2600;
+systemd Finished successfully. Operator62b0da20, app2d95137a,582files/100tables
+по фиксированному payload; worker6c56 без rollout. CI e9ffe6b5 полностью SUCCESS.
+Это owner console transcript, не независимый опрос хоста. Post-deploy status,
+scheduled cron2600 и ручная приёмка UI/PDF/shared-save/SCORM ожидаются. PR107 открыт.
+
+
+## 28Oct — цвета курса и компактная студия2800: source-qualified
+
+Application4c48dce7/local2800/theme2700,589files/100tables без новой схемы.
+Qualification053b8c17: Review40664008041, infra40664007978, context40664007853,
+console40664007797 SUCCESS. Обе Moodle матрицы352tests/1678assertions; HTTP,
+fresh/upgrade/repeat и rollback PASS. PHP/Chromium подтверждают палитру обоих builders,
+сворачивание шапки, сохранность выделения/scroll и короткий телефон.
+[Точная квитанция](studio_colors_canvas_qualification_20261028.json).
+Пакет2700 ранее выдан; новых2800 правок он не содержит. Последняя точная версия
+из owner-terminal2600, скриншоты28Oct без версии. PR107 открыт, без SSH/merge/rollout.
+
+
+## 28Oct — выдан фиксированный установщик2700→2800
+
+Tool352d009c/app4c48dce7 квалифицирован на98833ab4; review40671198755,
+infra40671198756, context40671198775, console40671198823 SUCCESS. PHP1302R16/230skips,
+обе Moodle матрицы352/1678, HTTP/upgrade/repeat/rollback/UID33 PASS. Архив20244858bytes,
+SHA b24e97cd9c62694cef78d56f4fa20b61ba5d69946db6ae14d68bf0dcad2efc0d;
+CI/независимые сборки и скачанная сохранённая копия совпадают. Старые операторы
+не изменены, worker не обновляется. [Квитанция](studio_colors_deployment_20261028.json),
+[команды](../../docs/STUDIO_2800_INSTALL_RU.md). Owner apply/приёмка2800 ожидается;
+последняя точная terminal-квитанция2600. Без SSH или слияния PR107.
+
+
+## 28Oct — исправлен отказ2800 preflight на принятом legacy-профиле
+
+Owner352d: SHA/inner sums OK, --check/schema_indexes, upgrade не запускался.
+Воспроизведена неверная привязка исторического index profile к theme0202 после2700.
+Исправленный tool5f57115d/app4c48dce7: все четыре CI SUCCESS (review40676762846,
+infra40676762784, context40676762806, console40676762843). Local1306/47; обе PHP
+1309/230, обе Moodle352/1678; realPG100table fresh/legacy и7SQL отказов PASS.
+Архив20245177bytes SHA4711766fac8d7374f5fce5d9c111b75b1bc360c87c17aa876560b578425b194e
+сверен с независимой сборкой и скачанной сохранённой копией. Старый352d заменён.
+[Квитанция](studio_colors_index_compat_20261028.json), [команды](../../docs/STUDIO_2800_INSTALL_RU.md).
+Owner corrected --check/apply ожидается. Нет SQL repair, SSH, worker rollout или merge.
+
+### 28Oct2026 — Studio2801 viewport installation package
+
+App a3df5783/local2801/theme2700; operator81118e39 qualified on c7602edf, all four CI SUCCESS.
+Both PHP1335/231skips; both Moodle352/1678, actualPG100table fresh/legacy and7SQL denials PASS.
+Archive `ustar-studio-viewport-install-81118e39.tar.gz`,20393281bytes,
+SHA256 `0bf7e718dd64115dad4e635d7e62fc48843bbd6e5a24ffd6860377f792ba1ea5`.
+Independent local/CI bytes equal; saved copy downloaded and verified. Owner check/apply pending.
+[Receipt](studio_viewport_delivery_20261028.json), [commands](../../docs/STUDIO_2801_INSTALL_RU.md).
+No SSH, worker rollout or PR107 merge.
+
+### 28Oct2026 — owner accepts Studio2801 and requests PR109
+
+Owner: «отлично всё работает» after81118e39 handoff. Basic working acceptance recorded;
+no new exact terminal inventory supplied. STUDIO-01 closed, PERF-01/PR109 active.
+[Receipt](studio_viewport_owner_acceptance_20261028.json). PR107 remains open; no automatic main merge.

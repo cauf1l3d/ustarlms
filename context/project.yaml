@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-26'
+updated_at: '2026-10-28'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -14,22 +14,19 @@ stack:
   deployment: Docker29.9.0 on Ubuntu24.04.5/kernel6.8.0-147; owner14Oct boot acceptance
   native_ui: PHP + Mustache + JS/AMD + SCSS
   theme: theme_ustar extends boost
-  secondary_frontend: Legacy Next.js source retained, excluded from active CI and
-    release since16Oct
+  secondary_frontend: Legacy Next.js source retained, excluded from active CI and release since16Oct
 components:
   business: moodle/local/ustar
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
-  context_harness: harness/ustar-contextd; local stdio tested; production/session
-    installation unverified
-  connect_worker: connect-worker; owner23Oct application_and_worker534/local2200 deployed;
-    ACK runtime active; UID130 two live ACKs verified; previous revoked checkpoint
-    historical; B1 routing design ready for review; live group deferred
+  context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
+  connect_worker: connect-worker; accepted worker6c56/local2300 from23Oct remains unchanged during Studio2600
+    owner deployment; no worker rollout27Oct
 state: context/roadmap/STATE.yaml
-runtime_evidence: context/runtime/evidence_20261026.yaml
+runtime_evidence: context/runtime/evidence_20261028.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_no_server_mutation_Docker_deferred
-latest_connect_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+latest_connect_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -38,6 +35,12 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: PERF-01
-  spec: context/reviews/20261026/VERIFIED_REVIEW_RU.md
-  status: verified_backlog_no_product_refactor_in_this_merge
+  task: STUDIO-01
+  spec: docs/superpowers/specs/2026-10-28-studio-colors-canvas-design.md
+  PR: 107
+  status: corrected2800_operator_qualified_owner_check_pending
+  frontend_scope: native local_ustar; author rights and shared revisions preserved
+  next_after_studio: PERF-01 and verified backlog
+  deployment_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
+  qualification_receipt: context/runtime/studio_colors_canvas_qualification_20261028.json
+  installation_handoff: context/runtime/studio_colors_index_compat_20261028.json

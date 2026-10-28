@@ -1,347 +1,110 @@
-<div class="u-materials">
-
+<div class="u-materials" data-materials-view="cards" data-u-view-key="{{viewkey}}">
     <header class="u-materials-head">
-
         <div>
-            <p class="u-pagehead__eyebrow">
-                Центр управления
-            </p>
-
-            <h1>
-                Материалы
-            </h1>
-
-            <p>
-                Единый каталог документов, страниц, тестов,
-                SCORM и других материалов.
-            </p>
+            <p class="u-pagehead__eyebrow">Центр управления</p>
+            <h1>Материалы</h1>
+            <p>Документы, учебные курсы и проверки знаний — в одном каталоге.</p>
         </div>
-
         {{#canmanage}}
-
         <div class="u-materials-head__actions">
-
-            <a
-                class="u-btn"
-                href="{{bulkurl}}"
-            >
-                Массовая загрузка
-            </a>
-
-            <a class="u-btn" href="{{studiourl}}">Курсы, SCORM и аттестации</a>
-
+            <a class="u-btn u-btn--primary" href="{{studiourl}}">Создать в студии</a>
+            <a class="u-btn u-materials-create-btn" href="{{createurl}}">Загрузить файл</a>
             <details class="u-materials-folder-create">
                 <summary class="u-btn">+ Папка</summary>
                 <form method="post" class="u-materials-folder-create__form">
                     <input type="hidden" name="action" value="createfolder">
                     <input type="hidden" name="parent" value="{{currentparentid}}">
                     <input type="hidden" name="sesskey" value="{{sesskey}}">
-                    <input type="text" name="foldertitle" maxlength="255" placeholder="Название папки" required>
-                    <button class="u-btn u-btn--primary" type="submit">Создать</button>
+                    <label>Название папки<input type="text" name="foldertitle" maxlength="255" required></label>
+                    <button class="u-btn u-btn--primary" type="submit">Создать папку</button>
                 </form>
             </details>
-
-            <a
-                class="u-btn u-btn--primary u-materials-create-btn"
-                href="{{createurl}}"
-            >
-                + Создать материал
-            </a>
-            <a class="u-btn u-btn--primary" href="{{assessmentstudiourl}}">+ Создать аттестацию</a>
-
+            <details class="u-materials-extra">
+                <summary class="u-btn">Ещё</summary>
+                <div class="u-materials-extra__panel">
+                    <a href="{{bulkurl}}">Массовая загрузка</a>
+                    <a href="{{assessmentstudiourl}}">Создать аттестацию</a>
+                </div>
+            </details>
         </div>
-
         {{/canmanage}}
-
-
-        <div class="u-materials-head__metric">
-            <strong>{{total}}</strong>
-            <span>в каталоге</span>
-        </div>
-
     </header>
 
-
-    <form
-        class="u-materials-search"
-        method="get"
-        action=""
-    >
-
-        <input
-            type="search"
-            name="q"
-            value="{{q}}"
-            placeholder="Найти материал, регламент, тест..."
-            autocomplete="off"
-        >
-
-        <input
-            type="hidden"
-            name="type"
-            value="{{currenttype}}"
-        >
-
+    <form class="u-materials-search" method="get">
+        <label><span class="sr-only">Поиск по названию и содержанию</span><input type="search" name="q" value="{{q}}" placeholder="Найти материал…" autocomplete="off"></label>
+        <input type="hidden" name="type" value="{{currenttype}}">
         <input type="hidden" name="parent" value="{{currentparentid}}">
-
-
-        <select name="status">
-
-            {{#statusoptions}}
-            <option
-                value="{{id}}"
-                {{#selected}}selected{{/selected}}
-            >
-                {{label}}
-            </option>
-            {{/statusoptions}}
-
-        </select>
-
-        <button
-            class="u-btn"
-            type="submit"
-        >
-            Найти
-        </button>
-
+        <label><span class="sr-only">Статус материала</span><select name="status">{{#statusoptions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/statusoptions}}</select></label>
+        <button class="u-btn" type="submit">Найти</button>
     </form>
-
-
-    <nav class="u-materials-types">
-
-        {{#typefilters}}
-
-        <a
-            href="{{url}}"
-            class="
-                u-materials-type
-                {{#selected}}is-active{{/selected}}
-            "
-        >
-            <span>{{label}}</span>
-            <strong>{{count}}</strong>
-        </a>
-
-        {{/typefilters}}
-
+    <nav class="u-materials-types" aria-label="Типы материалов; количество во всём каталоге">
+        {{#typefilters}}<a href="{{url}}" class="u-materials-type {{#selected}}is-active{{/selected}}" {{#selected}}aria-current="true"{{/selected}}><span>{{label}}</span><strong>{{count}}</strong></a>{{/typefilters}}
     </nav>
-
     <nav class="u-materials-breadcrumbs" aria-label="Путь к папке">
         <ol>
-            <li>
-                {{#hasparent}}<a href="?" data-u-drop-folder="0">Материалы</a>{{/hasparent}}
-                {{^hasparent}}<span aria-current="page">Материалы</span>{{/hasparent}}
-            </li>
-            {{#breadcrumbs}}
-            <li>
-                {{#iscurrent}}<span aria-current="page">{{title}}</span>{{/iscurrent}}
-                {{^iscurrent}}<a href="{{url}}" data-u-drop-folder="{{id}}">{{title}}</a>{{/iscurrent}}
-            </li>
-            {{/breadcrumbs}}
+            <li>{{#hasparent}}<a href="{{rooturl}}" data-u-drop-folder="0">Материалы</a>{{/hasparent}}{{^hasparent}}<span aria-current="page">Материалы</span>{{/hasparent}}</li>
+            {{#breadcrumbs}}<li>{{#iscurrent}}<span aria-current="page">{{title}}</span>{{/iscurrent}}{{^iscurrent}}<a href="{{url}}" data-u-drop-folder="{{id}}">{{title}}</a>{{/iscurrent}}</li>{{/breadcrumbs}}
         </ol>
     </nav>
 
-
     <div class="u-materials-workspace">
-
-        <section class="u-materials-catalog">
-
+        <section class="u-materials-catalog" aria-label="Каталог материалов">
             <header class="u-materials-catalog__head">
-                <div>
-                    <span>Папка</span>
-                    <strong>{{currentfolder}}</strong>
-                </div>
-                <div class="u-materials-catalog__count">
-                    {{#hasparent}}<a class="u-btn u-btn--quiet" href="{{parenturl}}">← На уровень выше</a>{{/hasparent}}
-                    <span>Объектов</span>
-                    <strong>{{visiblecount}}</strong>
+                <div><h2>{{currentfolder}}</h2><p>{{#hasmaterials}}{{rangefrom}}–{{rangeto}} из {{filteredtotal}}{{/hasmaterials}}{{^hasmaterials}}Нет материалов{{/hasmaterials}}{{#hasactivefilters}} · <a href="{{reseturl}}">Сбросить фильтры</a>{{/hasactivefilters}}</p></div>
+                <div class="u-materials-catalog__tools">
+                    {{#hasparent}}<a class="u-btn u-btn--quiet" href="{{parenturl}}">← Выше</a>{{/hasparent}}
+                    <div class="u-materials-views" role="group" aria-label="Вид каталога">
+                        <button type="button" data-u-material-view="list" aria-pressed="false" title="Список"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5h10M7 10h10M7 15h10M3 5h.1M3 10h.1M3 15h.1"/></svg><span>Список</span></button>
+                        <button type="button" data-u-material-view="blocks" aria-pressed="false" title="Блоки"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="14" height="5" rx="1"/><rect x="3" y="12" width="14" height="5" rx="1"/></svg><span>Блоки</span></button>
+                        <button type="button" data-u-material-view="cards" aria-pressed="true" title="Карточки"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="12" y="3" width="5" height="5" rx="1"/><rect x="3" y="12" width="5" height="5" rx="1"/><rect x="12" y="12" width="5" height="5" rx="1"/></svg><span>Карточки</span></button>
+                    </div>
                 </div>
             </header>
-
-
             {{#hasmaterials}}
-
-            <div class="u-materials-list">
-
+            <div class="u-materials-list" role="list">
                 {{#materials}}
-
-                <div
-                    class="u-material-row-shell u-material-row-shell--{{visualclass}} {{#isfolder}}u-material-row-shell--folder{{/isfolder}}"
-                    data-u-drag-content="{{id}}"
-                    data-u-expected-modified="{{timemodified}}"
-                    {{#isfolder}}data-u-drop-folder="{{id}}"{{/isfolder}}
-                    {{#canmove}}draggable="true"{{/canmove}}
-                >
-
-                <a
-                    href="{{url}}"
-                    class="
-                        u-material-row
-                        {{#selected}}is-selected{{/selected}}
-                    "
-                >
-
-                    <div class="u-material-row__icon u-material-row__icon--{{visualclass}} {{#isfolder}}u-material-row__icon--folder{{/isfolder}}">
-                        {{#isfolder}}
-                        <span class="u-win-folder" aria-hidden="true">
-                            <span class="u-win-folder__tab"></span>
+                <div role="listitem" class="u-material-row-shell u-material-row-shell--{{visualclass}} {{#isfolder}}u-material-row-shell--folder{{/isfolder}}" data-u-drag-content="{{id}}" data-u-expected-modified="{{timemodified}}" {{#isfolder}}data-u-drop-folder="{{id}}"{{/isfolder}} {{#canmove}}draggable="true"{{/canmove}}>
+                    <a href="{{url}}" class="u-material-row {{#selected}}is-selected{{/selected}}">
+                        <span class="u-material-kind u-material-kind--{{visualclass}}" aria-hidden="true">
+                            {{#isfolder}}<svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>{{/isfolder}}
+                            {{^isfolder}}<svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-6-6Z M14 3v6h6 M8 13h8 M8 17h6"/></svg>{{/isfolder}}
                         </span>
-                        {{/isfolder}}
-
-                        {{^isfolder}}
-                        <span class="u-win-file u-win-file--{{visualclass}}" aria-hidden="true">
-                            <span class="u-win-file__fold"></span>
-                            <strong>{{visualtype}}</strong>
-                        </span>
-                        {{/isfolder}}
-                    </div>
-
-
-                    <div class="u-material-row__body">
-
-                        <div class="u-material-row__meta">
-
-                            <span class="u-material-row__type">
-                                {{visualtype}}
-                            </span>
-
-                            <span class="u-material-row__semantic">
-                                {{visualcategory}}
-                            </span>
-
-                            <span>
-                                {{statuslabel}}
-                            </span>
-
-                            {{#needsreview}}
-                            <span class="u-material-flag">
-                                Проверить
-                            </span>
-                            {{/needsreview}}
-
+                        <div class="u-material-row__body">
+                            <div class="u-material-row__meta"><span class="u-material-row__type">{{visualtype}}</span><span class="u-material-row__semantic">{{visualcategory}}</span>{{^isfolder}}<span class="u-material-status u-material-status--{{status}}">{{statuslabel}}</span>{{/isfolder}}</div>
+                            <strong class="u-material-row__title">{{title}}</strong>
+                            {{#summary}}<p class="u-material-row__summary">{{summary}}</p>{{/summary}}
+                            {{#filename}}<small class="u-material-row__filename">{{filename}}</small>{{/filename}}
+                            {{#ismoodle}}<small>{{coursename}}</small>{{/ismoodle}}
+                            <div class="u-material-row__flags">{{#duplicate}}<span>Возможный дубль публикации</span>{{/duplicate}}{{#coursehidden}}<span>Курс скрыт</span>{{/coursehidden}}{{#activityhidden}}<span>Активность скрыта</span>{{/activityhidden}}</div>
                         </div>
-
-
-                        <strong class="u-material-row__title">
-                            {{title}}
-                        </strong>
-
-                        {{#filename}}
-                        <small class="u-material-row__filename">
-                            {{filename}}
-                        </small>
-                        {{/filename}}
-
-
-                        {{#ismoodle}}
-                        <small>
-                            {{coursename}}
-                        </small>
-                        {{/ismoodle}}
-
-
-                        <div class="u-material-row__flags">
-
-                            {{#duplicate}}
-                            <span>
-                                Возможный дубль
-                            </span>
-                            {{/duplicate}}
-
-                            {{#coursehidden}}
-                            <span>
-                                Курс скрыт
-                            </span>
-                            {{/coursehidden}}
-
-                            {{#activityhidden}}
-                            <span>
-                                Активность скрыта
-                            </span>
-                            {{/activityhidden}}
-
+                    </a>
+                    {{#canopenstudio}}<div class="u-material-row__actions"><a class="u-btn u-btn--small u-material-open-studio" href="{{openstudiourl}}" aria-label="Открыть «{{title}}» в студии">Открыть в студии <span aria-hidden="true">↗</span></a></div>{{/canopenstudio}}
+                    {{#canmove}}
+                    <details class="u-material-row-menu">
+                        <summary aria-label="Действия с «{{title}}»" title="Действия">⋯</summary>
+                        <div class="u-material-row-menu__panel">
+                            <a class="u-material-row-menu__action" href="{{url}}">{{#isfolder}}Открыть папку{{/isfolder}}{{^isfolder}}Карточка материала{{/isfolder}}</a>
+                            <form method="post" class="u-material-row-menu__move">
+                                <input type="hidden" name="action" value="move"><input type="hidden" name="contentid" value="{{id}}"><input type="hidden" name="expectedmodified" value="{{timemodified}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="parent" value="{{currentparentid}}">
+                                <label><span>Переместить в</span><select name="targetparentid" required data-u-context-move-target><option value="" selected disabled>Выберите папку</option>{{#folderoptions}}<option value="{{id}}">{{name}}</option>{{/folderoptions}}</select></label>
+                                <button class="u-btn u-btn--small" type="submit" disabled data-u-context-move-submit>Переместить</button>
+                            </form>
+                            {{#candelete}}<form method="post" class="u-material-row-menu__delete" onsubmit="return confirm('Убрать объект из рабочего каталога? История сохранится.');"><input type="hidden" name="action" value="delete"><input type="hidden" name="contentid" value="{{id}}"><input type="hidden" name="parent" value="{{currentparentid}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><button class="u-material-row-menu__danger" type="submit">Убрать из каталога</button></form>{{/candelete}}
                         </div>
-
-                    </div>
-
-                </a>
-
-                {{#canmove}}
-                <details class="u-material-row-menu">
-                    <summary aria-label="Действия с {{title}}" title="Действия">⋯</summary>
-                    <div class="u-material-row-menu__panel">
-                    <a class="u-material-row-menu__action" href="{{url}}">Открыть {{#isfolder}}папку{{/isfolder}}{{^isfolder}}материал{{/isfolder}}</a>
-                    <form method="post" class="u-material-row-menu__move">
-                        <input type="hidden" name="action" value="move">
-                        <input type="hidden" name="contentid" value="{{id}}">
-                        <input type="hidden" name="expectedmodified" value="{{timemodified}}">
-                        <input type="hidden" name="sesskey" value="{{sesskey}}">
-                        <label>
-                            <span>Переместить в</span>
-                            <select name="targetparentid" required data-u-context-move-target>
-                                <option value="" selected disabled>Выберите папку</option>
-                                {{#folderoptions}}<option value="{{id}}">{{name}}</option>{{/folderoptions}}
-                            </select>
-                        </label>
-                        <button class="u-btn u-btn--small" type="submit" disabled data-u-context-move-submit>Переместить</button>
-                    </form>
-                    {{#candelete}}
-                    <form method="post" class="u-material-row-menu__delete" onsubmit="return confirm('Убрать объект из рабочего каталога? История сохранится.');">
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="contentid" value="{{id}}">
-                    <input type="hidden" name="parent" value="{{currentparentid}}">
-                    <input type="hidden" name="sesskey" value="{{sesskey}}">
-                    <button class="u-material-row-menu__danger" type="submit">Убрать из каталога</button>
-                    </form>
-                    {{/candelete}}
-                    </div>
-                </details>
-                {{/canmove}}
-
+                    </details>
+                    {{/canmove}}
                 </div>
-
                 {{/materials}}
-
             </div>
-
             {{/hasmaterials}}
-
-
             {{^hasmaterials}}
-
             <div class="u-materials-empty" role="status">
-                <span class="u-materials-empty__icon" aria-hidden="true">📂</span>
-                {{#hasactivefilters}}
-                <strong>Ничего не найдено</strong>
-                <p>В этой папке нет объектов, соответствующих выбранным фильтрам.</p>
-                <a class="u-btn" href="{{reseturl}}">Сбросить фильтры</a>
-                {{/hasactivefilters}}
-                {{^hasactivefilters}}
-                <strong>Папка пока пуста</strong>
-                <p>Здесь появятся созданные или перемещённые материалы и папки.</p>
-                {{#canmanage}}<a class="u-btn u-btn--primary" href="{{createurl}}">Создать материал</a>{{/canmanage}}
-                {{/hasactivefilters}}
+                {{#hasactivefilters}}<strong>Ничего не найдено</strong><p>Измените запрос или сбросьте фильтры этой папки.</p><a class="u-btn" href="{{reseturl}}">Сбросить фильтры</a>{{/hasactivefilters}}
+                {{^hasactivefilters}}<strong>Здесь пока нет материалов</strong><p>Добавьте документ или создайте учебный курс в студии.</p>{{#canmanage}}<a class="u-btn u-btn--primary" href="{{studiourl}}">Создать в студии</a>{{/canmanage}}{{/hasactivefilters}}
             </div>
-
             {{/hasmaterials}}
-
+            {{#haspagination}}<nav class="u-materials-pagination" aria-label="Страницы каталога">{{#pagination}}{{#gap}}<span aria-hidden="true">…</span>{{/gap}}{{^gap}}{{#current}}<span aria-current="page">{{number}}</span>{{/current}}{{^current}}<a href="{{url}}" aria-label="Страница {{number}}">{{number}}</a>{{/current}}{{/gap}}{{/pagination}}</nav>{{/haspagination}}
         </section>
-
-
-        
-
     </div>
-
 </div>
-
-{{#canmanage}}
-<form method="post" class="u-materials-move-form" data-u-move-form hidden>
-    <input type="hidden" name="action" value="move">
-    <input type="hidden" name="contentid" value="">
-    <input type="hidden" name="targetparentid" value="">
-    <input type="hidden" name="expectedmodified" value="">
-    <input type="hidden" name="sesskey" value="{{sesskey}}">
-</form>
-<p class="sr-only" role="status" aria-live="polite" data-u-move-status></p>
-{{/canmanage}}
+{{#canmanage}}<form method="post" class="u-materials-move-form" data-u-move-form hidden><input type="hidden" name="action" value="move"><input type="hidden" name="contentid"><input type="hidden" name="targetparentid"><input type="hidden" name="expectedmodified"><input type="hidden" name="parent" value="{{currentparentid}}"><input type="hidden" name="sesskey" value="{{sesskey}}"></form><p class="sr-only" role="status" aria-live="polite" data-u-move-status></p>{{/canmanage}}

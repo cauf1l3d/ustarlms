@@ -14,7 +14,7 @@ on:
         type: boolean
         default: false
   pull_request:
-    branches: [main]
+    branches: [main, codex/shared-course-studio-20261026]
     types: [opened, synchronize, reopened, labeled]
 
 permissions:

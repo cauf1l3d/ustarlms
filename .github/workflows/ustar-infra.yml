@@ -1,7 +1,7 @@
 name: USTAR infrastructure verification
 on:
   pull_request:
-    branches: [main]
+    branches: [main, codex/shared-course-studio-20261026]
     paths:
       - 'scripts/infra/**'
       - 'connect-worker/**'

@@ -2952,8 +2952,8 @@
     {
       "path": "context/runtime/perf_query_batching_review_20261028.json",
       "domain": "runtime",
-      "size": 5001,
-      "sha256": "8bd353d02b8674ffced21390c2eb87be2e532ac1f489241ea86badda0ad5230e"
+      "size": 5395,
+      "sha256": "b0447e7ead8557fe033655d47ea1928ae1ed70cded4998525907014cb54e8d67"
     },
     {
       "path": "context/runtime/plugin_inventory_20261005.json",

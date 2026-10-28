@@ -107,7 +107,8 @@
     "result": "PASS",
     "tests": 1334,
     "skipped": 48,
-    "seconds": 244.193
+    "seconds": 240.718,
+    "application_commit": "8d4560316a6c6cb27467f3d1d2a3e19e0a6f52d5"
   },
   "CI": {
     "review": 40711325215,
@@ -141,5 +142,11 @@
     "fix": "get_records_sql with MIN(id) AS groupid; minima of disjoint groups are unique first-column keys; one aggregate SELECT, preserves all statuses",
     "assertion_weakened": false
   },
-  "previous_qualification_commit": "c77d203a552498a21168865c9de64693fb0af487"
+  "previous_qualification_commit": "c77d203a552498a21168865c9de64693fb0af487",
+  "stacked_PR_CI": {
+    "base_branch": "codex/shared-course-studio-20261026",
+    "original_filter": "main only",
+    "correction": "explicitly allow the active Studio base in pull_request filters; checks and read-only permissions unchanged",
+    "reason": "fix head did not trigger workflows after PR109 retargeting"
+  }
 }

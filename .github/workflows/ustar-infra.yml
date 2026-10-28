@@ -161,8 +161,8 @@ jobs:
         run: sudo -n env USTAR_REQUIRE_COLORS_UID33=1 python3 -m unittest tests.r16.test_studio_colors_update.ActualCodePermissions -v
       - name: Build separate fixed2800-to2801 canvas and panels updater
         run: |
-          VIEWPORT_TOOL=$(git rev-parse HEAD)
-          python3 scripts/infra/build_studio_viewport_update.py --commit "$VIEWPORT_TOOL" --output-dir artifacts/studio-viewport-production-deploy
+          git worktree add --detach .stage-input/viewport-2801-fixed 81118e39f54c9ac34475f640bf2b9d4d8a047f24
+          python3 .stage-input/viewport-2801-fixed/scripts/infra/build_studio_viewport_update.py --commit 81118e39f54c9ac34475f640bf2b9d4d8a047f24 --output-dir "$GITHUB_WORKSPACE/artifacts/studio-viewport-production-deploy"
           python3 -I -B artifacts/studio-viewport-production-deploy/ustar-studio-viewport-update-*.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

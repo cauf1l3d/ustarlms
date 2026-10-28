@@ -629,6 +629,33 @@ final class feed_article_resolver {
         }
     }
 
+    /** Statistics for the supplied sources, including sources without items. */
+    public static function source_stats_batch(array $sourceids): array {
+        global $DB;
+        $sourceids = array_values(array_unique(array_filter(array_map('intval', $sourceids),
+            static fn(int $id): bool => $id > 0)));
+        if (!$sourceids) {
+            return [];
+        }
+        $out = array_fill_keys($sourceids,
+            ['pending' => 0, 'retry' => 0, 'done' => 0, 'failed' => 0, 'limited' => 0, 'feed' => 0]);
+        [$insql, $params] = $DB->get_in_or_equal($sourceids, SQL_PARAMS_NAMED, 'rssstat');
+        // A recordset preserves multiple statuses with the same sourceid (the first column).
+        $rows = $DB->get_recordset_sql(
+            "SELECT sourceid, enrichstatus, COUNT(id) AS total
+               FROM {local_ustar_feed_sourceitem}
+              WHERE sourceid {$insql}
+           GROUP BY sourceid, enrichstatus", $params);
+        try {
+            foreach ($rows as $row) {
+                $out[(int)$row->sourceid][(string)$row->enrichstatus] = (int)$row->total;
+            }
+        } finally {
+            $rows->close();
+        }
+        return $out;
+    }
+
     public static function source_stats(int $sourceid): array {
         global $DB;
         $rows = $DB->get_records_sql(

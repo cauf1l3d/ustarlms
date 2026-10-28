@@ -165,6 +165,24 @@ class Package(unittest.TestCase):
         self.assertEqual(0,result.returncode,result.stderr)
         self.assertEqual({'phase':'PLAN_ONLY','host_access':False,'network_used':False},json.loads(result.stdout))
 
+    def test_changed_application_tree_is_still_denied(self):
+        self.package()
+        with tempfile.TemporaryDirectory() as td:
+            env={**os.environ,'GIT_INDEX_FILE':str(Path(td)/'index'),
+                 'GIT_AUTHOR_NAME':'Telegram fixture','GIT_AUTHOR_EMAIL':'fixture@example.invalid',
+                 'GIT_COMMITTER_NAME':'Telegram fixture','GIT_COMMITTER_EMAIL':'fixture@example.invalid'}
+            def git(*args,raw=None):
+                return subprocess.check_output(['git','-C',str(ROOT),*args],input=raw,env=env,
+                    stderr=subprocess.DEVNULL).decode().strip()
+            git('read-tree',self.commit)
+            path='moodle/local/ustar/version.php'
+            original=subprocess.check_output(['git','-C',str(ROOT),'show',self.commit+':'+path])
+            blob=git('hash-object','-w','--stdin',raw=original+b'\n// package fixture drift\n')
+            git('update-index','--cacheinfo','100644',blob,path)
+            changed=git('commit-tree',git('write-tree'),'-p',self.commit,'-m','Private changed-app negative fixture')
+            with self.assertRaisesRegex(c.Refusal,'tool_release_component_mismatch'):
+                self.builder().build(changed,Path(td)/'refused')
+
     def test_ordinary_file_reproducible_and_changed_payload_denied(self):
         import ast
         import connect_telegram_update as t

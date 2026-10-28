@@ -175,11 +175,9 @@ if ($rsssources) {
     );
 }
 
-$rssenrichstats = [];
-foreach ($rsssources as $source) {
-    $rssenrichstats[(int)$source->id] =
-        \local_ustar\feed_article_resolver::source_stats((int)$source->id);
-}
+$rssenrichstats = \local_ustar\feed_article_resolver::source_stats_batch(
+    array_map(static fn($source) => (int)$source->id, $rsssources)
+);
 
 $drafts = array_values($DB->get_records('local_ustar_feed_posts',
     ['status' => 'draft'], 'timemodified DESC, id DESC', '*', 0, 30));

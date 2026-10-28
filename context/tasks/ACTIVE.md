@@ -5,10 +5,13 @@
 Владелец принял работу студии после пакета2801 и поручил перейти к PR109.
 [Owner-подтверждение](../runtime/studio_viewport_owner_acceptance_20261028.json).
 PR109 ca31380d: batch RSS statistics и имён operator season; схема/версия не менялись.
-Старый source/context/infra CI зелёный, native Moodle ещё не запускался.
+Исходный source/context/infra CI зелёный. Изменения перенесены поверх79ce47b9/Studio2801;
+на этой базе воспроизведены7RED, затем9GREEN реальных PHP/SQLite сценариев.
 Нужно проверить изменения поверх принятой Studio2801, сохранить её файлы и guards,
 запустить применимый native/full RC и затем определить отдельную поставку.
-PR109 сейчас Draft, server1 этим PR не обновлялся. Не заявлять ускорение страниц по общему p95.
+Конфликты контекста разрешены в пользу актуальных Studio-квитанций; negative guard test сохранён.
+[Текущий review](../runtime/perf_query_batching_review_20261028.json).
+PR109 остаётся Draft, готовится native/full RC; server1 этим PR не обновлялся. Не заявлять ускорение страниц по общему p95.
 
 ## Завершённая студия / PR107
 

@@ -168,33 +168,21 @@ accepted_risks: context/roadmap/ACCEPTED_RISKS.yaml
 repository_reconciliation: context/runtime/repository_reconciliation_20261026.json
 infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261026.md
 development_candidate:
-  task: STUDIO-01
-  branch: codex/shared-course-studio-20261026
-  application_commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
+  task: PERF-01
+  branch: perf/query-batching-20261027
   base_main_commit: ad939373d89604119d3fd741c555deaf1ebd4ed7
-  manifest: context/code_map/generated/course_studio_candidate.json
+  accepted_Studio_application: a3df57831a5ed49b901e5116ee800f2217fb61e9
+  accepted_Studio_metadata: 79ce47b9e01c887fc2ecf500426be847b82867eb
+  source_resolution: Resolve commit at read time; component tree IDs in the manifest
+  manifest: context/code_map/generated/perf_query_batching_candidate.json
   local_ustar_version: 2026102801
   theme_ustar_version: 2026102700
-  PR: 107
-  status: qualified_unmerged_application_not_deployed
+  PR: 109
+  status: integrated_Studio_source_under_qualification_not_deployed
   deployed: false
-  production_predecessor_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
-  source_manifest_scope: Unmerged2801 canvas/panels source; owner basic browser acceptance is
-    separate from the last exact terminal2600 receipt and does not attest a fresh host inventory
-  readiness_receipt: context/runtime/studio_viewport_delivery_20261028.json
-  previous_2700_qualification:
-    application_commit: 20ed966e146378a21016c085d31ce4defaa809a8
-    qualification_commit: 3795299732609e1c2b17fe8e5beca71ae703e921
-    full_RC_run: 40602646743
-    receipt: context/runtime/studio_materials_qualification_20261028.json
-  previous_2800_qualification:
-    application_commit: 4c48dce7dadd4da8f054f2acf0d6974bdaeecebc
-    qualification_commit: 053b8c17726fb3cd060fe0564c691a3775a960ba
-    full_RC_run: 40664008041
-    all_CI: success
-  qualification_commit: c7602edfded4ec87821e1d705cfc1952156bf987
-  full_RC_run: 40700783764
-  all_CI: success
+  production_predecessor_receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json
+  source_manifest_scope: PR109 query batching over accepted Studio2801; development only, no new release version or server apply
+  readiness_receipt: context/runtime/perf_query_batching_review_20261028.json
 studio_production_intent: context/runtime/course_studio_production_intent_20261027.json
 studio_latest_owner_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 studio_materials_deployment:
@@ -254,5 +242,10 @@ studio_viewport_owner_acceptance: context/runtime/studio_viewport_owner_acceptan
 active_PR109:
   branch: perf/query-batching-20261027
   initial_head: ca31380d5916c51fadf2ac8772744acd0a050ecf
-  status: integration_review_over_accepted_Studio_source
+  status: integrated_source_preparing_native_qualification
   application_delivery: not_prepared
+accepted_Studio_source:
+  application_commit: a3df57831a5ed49b901e5116ee800f2217fb61e9
+  owner_metadata: 79ce47b9e01c887fc2ecf500426be847b82867eb
+  qualification_metadata: 9332829c46ec32976987ba8f2ba57fae0ea02b3d
+  receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json

@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-28",
+  "PR": 109,
+  "status": "integrated_source_under_native_qualification",
+  "previous_head": "ca31380d5916c51fadf2ac8772744acd0a050ecf",
+  "base_branch": "codex/shared-course-studio-20261026",
+  "base_commit": "79ce47b9e01c887fc2ecf500426be847b82867eb",
+  "accepted_Studio_app": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
+  "source_delta": [
+    "moodle/local/ustar/classes/competition.php",
+    "moodle/local/ustar/classes/feed_article_resolver.php",
+    "moodle/local/ustar/feed_admin.php"
+  ],
+  "review": {
+    "mode": "self_review_no_subagents_per_AGENTS",
+    "critical": [],
+    "important": [],
+    "checked": [
+      "operator guard precedes reads",
+      "open employment/account filtering retained",
+      "closed missing-user fallback, limit100, ties, row type and order",
+      "bound parameters, positive source IDs, empty list without SQL",
+      "recordset preserves multiple statuses per source and closes in finally",
+      "old operator/package guards retained and explicit changed-app rejection restored"
+    ]
+  },
+  "local_SQLite": {
+    "baseline": "accepted_Studio2801",
+    "expected_RED_before": 7,
+    "GREEN_after": 9,
+    "cases": [
+      {
+        "case": "rss_statuses",
+        "status": "passed",
+        "queries": 4
+      },
+      {
+        "case": "rss_empty",
+        "status": "passed",
+        "queries": 0
+      },
+      {
+        "case": "open",
+        "status": "passed",
+        "queries": 4
+      },
+      {
+        "case": "open_filtered",
+        "status": "passed",
+        "queries": 4
+      },
+      {
+        "case": "closed",
+        "status": "passed",
+        "queries": 4
+      },
+      {
+        "case": "closed_missing",
+        "status": "passed",
+        "queries": 4
+      },
+      {
+        "case": "closed_limit",
+        "status": "passed",
+        "queries": 4
+      },
+      {
+        "case": "empty",
+        "status": "passed",
+        "queries": 3
+      },
+      {
+        "case": "denied",
+        "status": "passed",
+        "queries": 0
+      }
+    ],
+    "rss_batch_reads": 1,
+    "rss_case_total_note": "rss_statuses total4 includes three single-source parity calls after the one-read assertion",
+    "scope": "production PHP against SQLite, narrow ACL/account fixtures; not native Moodle or latency proof"
+  },
+  "conflict_resolution": {
+    "metadata": "latest accepted Studio79ce context retained; immutable dated perf observations preserved",
+    "Telegram_fixture": "frozen application read-tree retained; PR109 negative changed-app case restored",
+    "code": "the three PHP files have no Studio overlap"
+  },
+  "schema_delta": false,
+  "release_version_bumped": false,
+  "server_updated": false,
+  "installer_prepared": false,
+  "main_merge_performed": false,
+  "limits": [
+    "native/full RC pending",
+    "broader performance SLO/workday baseline remains separate",
+    "source integration in main and a separately versioned frozen delivery precede server rollout"
+  ]
+}

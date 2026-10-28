@@ -139,7 +139,8 @@ jobs:
         run: sudo -n env USTAR_REQUIRE_STUDIO_UID33=1 python3 -m unittest tests.r16.test_course_studio_update.ActualCodePermissions -v
       - name: Build separate fixed2600-to2700 materials updater without host access
         run: |
-          python3 scripts/infra/build_studio_materials_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/studio-materials-production-deploy
+          git worktree add --detach .stage-input/materials-2700-fixed 01e1cef2393c78cb9bb2f3221e739ffeda236180
+          python3 .stage-input/materials-2700-fixed/scripts/infra/build_studio_materials_update.py --commit 01e1cef2393c78cb9bb2f3221e739ffeda236180 --output-dir "$GITHUB_WORKSPACE/artifacts/studio-materials-production-deploy"
           python3 -I -B artifacts/studio-materials-production-deploy/ustar-studio-materials-update-*.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

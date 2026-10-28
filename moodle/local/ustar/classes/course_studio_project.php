@@ -39,6 +39,14 @@ final class course_studio_project {
         foreach (['ink','accent','paper','background'] as $key) {
             if (!preg_match('/^#[0-9a-f]{6}$/iD', $p->theme->$key ?? '')) { self::reject('Некорректный цвет.'); }
         }
+        // Optional display fields: never add defaults to a validated manifest,
+        // because its exact bytes identify existing shared revisions.
+        foreach (['navBackground','navText','navActive','navAccent'] as $key) {
+            if (property_exists($p->theme, $key) && (!is_string($p->theme->$key)
+                    || !preg_match('/^#[0-9a-f]{6}$/iD', $p->theme->$key))) {
+                self::reject('Некорректный цвет меню курса.');
+            }
+        }
         $size = 0;
         foreach ((array)$p->assets as $path => $a) {
             if (!self::path($path) || !is_object($a) || !preg_match('/^[a-f0-9]{64}$/D', $a->hash ?? '')

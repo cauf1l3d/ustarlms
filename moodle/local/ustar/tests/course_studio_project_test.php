@@ -11,6 +11,29 @@ final class course_studio_project_test extends \advanced_testcase {
         course_studio_project::validate($p);
         $this->assertSame(hash('sha256', course_studio_project::encode($p)), course_studio_project::fingerprint($p));
     }
+    public function test_optional_menu_palette_keeps_legacy_identity_and_custom_values(): void {
+        $p = self::project(); $before = course_studio_project::encode($p);
+        course_studio_project::validate($p);
+        $this->assertSame($before, course_studio_project::encode($p));
+        foreach (['navBackground'=>'#112233','navText'=>'#ddeeff','navActive'=>'#fafafa','navAccent'=>'#aa5500'] as $key=>$value) {
+            $p->theme->$key = $value;
+        }
+        $custom = course_studio_project::encode($p); course_studio_project::validate($p);
+        $this->assertSame($custom, course_studio_project::encode($p));
+        $this->assertNotSame(hash('sha256', $before), course_studio_project::fingerprint($p));
+    }
+    public static function invalid_navigation_colors(): array {
+        return [
+            ['navBackground', '#fff;}body{background:url(https://example.org)}'],
+            ['navText', null], ['navActive', ['#ffffff']], ['navAccent', 'red'],
+        ];
+    }
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalid_navigation_colors')]
+    public function test_invalid_menu_palette_is_rejected(string $key, mixed $value): void {
+        $p = self::project(); $p->theme->$key = $value;
+        $this->expectException(\invalid_parameter_exception::class);
+        course_studio_project::validate($p);
+    }
     public function test_encoded_script_is_rejected(): void {
         $p = self::project(); $p->data->pages[0]->html = '<a href="jav&#97;script:alert(1)">Open</a>';
         $this->expectException(\invalid_parameter_exception::class);

@@ -190,8 +190,25 @@ body.u-course-studio-page .u-container { width:100%; max-width:none; }
 .u-course-studio .cloud-bar a { color:var(--ink);text-decoration:underline; }
 .u-course-studio .cloud-bar [data-kind="synced"] { color:var(--u-success-fg,#277c4f); }
 .u-course-studio .cloud-bar [data-kind="conflict"], .u-course-studio .cloud-bar [data-kind="offline"], .u-course-studio .cloud-bar [data-kind="account"] { color:var(--u-warning-fg,#a8540c); }
+.u-course-studio .cloud-bar [data-kind="startup"] { color:var(--u-danger-fg,#b42318); }
 .u-course-studio .material-origin { padding:8px 18px;font-size:12px;line-height:1.5;background:var(--u-brand-soft,#fff9d9);border-bottom:1px solid var(--line);flex:0 0 auto; }
 .u-course-studio .material-origin a { color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:2px; }
+.u-course-studio.chrome-collapsed .app-header,
+.u-course-studio.chrome-collapsed .cloud-bar { display:none; }
+.u-course-studio .canvas-topline { padding-top:6px;padding-bottom:6px; }
+.u-course-studio #chrome-toggle { font-size:12px;flex-shrink:0; }
+.u-course-studio #compact-status { max-width:190px;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:11px;color:var(--muted); }
+.u-course-studio #compact-status[data-kind="synced"] { color:var(--u-success-fg,#277c4f); }
+.u-course-studio #compact-status[data-kind="offline"],
+.u-course-studio #compact-status[data-kind="pending"] { color:var(--u-warning-fg,#a8540c); }
+.u-course-studio #compact-status[data-kind="error"],
+.u-course-studio #compact-status[data-kind="account"],
+.u-course-studio #compact-status[data-kind="conflict"] { color:var(--u-danger-fg,#b42318);border-color:currentColor; }
+.u-course-studio .nav-theme-preview { background:var(--nav-bg);color:var(--nav-text);border-radius:8px;padding:12px;margin-top:16px;display:grid;gap:7px;font-size:12px; }
+.u-course-studio .nav-theme-preview>strong { color:var(--nav-accent);font-size:12px; }
+.u-course-studio .nav-theme-preview>span { display:flex;gap:8px;padding:8px;border-radius:5px; }
+.u-course-studio .nav-theme-preview b { color:var(--nav-accent);font-weight:500; }
+.u-course-studio .nav-theme-preview .active { background:var(--nav-active);color:var(--nav-active-ink);box-shadow:inset 3px 0 var(--nav-accent); }
 .u-course-studio .review-list { display:grid;gap:10px;margin:18px 0; }
 .u-course-studio .review-list button { text-align:left;white-space:normal;font-size:13px;line-height:1.5; }
 .u-course-studio .pdf-import-preview { max-height:45vh;overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);margin:20px 0;padding:0 20px; }

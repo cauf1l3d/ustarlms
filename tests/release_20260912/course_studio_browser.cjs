@@ -32,7 +32,19 @@ const server=http.createServer(async(req,res)=>{try{
  await new Promise(r=>server.listen(0,'127.0.0.1',r));
  const browser=await chromium.launch({headless:true,...(process.env.USTAR_CHROMIUM?{executablePath:process.env.USTAR_CHROMIUM,args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']}: {})});
  try{
-  const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage();
+  const context=await browser.newContext({viewport:{width:1440,height:1000}});
+  // Controlled slow resize delivery reproduces the browser's asynchronous
+  // viewport/visualViewport handoff; no product function is replaced.
+  if(process.env.USTAR_STUDIO_DELAY_RESIZE==='1')await context.addInitScript(()=>{
+   const add=EventTarget.prototype.addEventListener;
+   EventTarget.prototype.addEventListener=function(type,listener,...args){
+    if(type==='resize'&&typeof listener==='function'&&(this===window||this===window.visualViewport)){
+     return add.call(this,type,event=>setTimeout(()=>listener.call(this,event),200),...args);
+    }
+    return add.call(this,type,listener,...args);
+   };
+  });
+  const page=await context.newPage();
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   const fixture=await context.newPage();await fixture.setContent('<meta charset="utf-8"><h1>Учебник Академии</h1><p>Первый раздел: знания и практика.</p><div style="break-before:page"><h2>Следующая тема</h2><p>Проверка кириллицы и второго экрана.</p></div>');
   const pdf=await fixture.pdf({format:'A4'});await fixture.close();
@@ -117,9 +129,19 @@ const server=http.createServer(async(req,res)=>{try{
   assert(await page.locator('#file-menu').isHidden());assert(await page.locator('#more-button').evaluate(el=>el===document.activeElement));
   await page.locator('#focus-button').click();assert(await page.locator('.left-panel').isHidden());
   await page.setViewportSize({width:390,height:644});
+  // Viewport size changes before resize/visualViewport callbacks necessarily
+  // finish. Compare two settled layouts, both above the native bottom bar.
+  const canvasFits=()=>page.waitForFunction(()=>{
+   const root=document.querySelector('.u-course-studio').getBoundingClientRect();
+   const bottom=document.querySelector('.u-bottomnav').getBoundingClientRect();
+   return root.height>0&&root.bottom<=Math.min(visualViewport.height,bottom.top)+1;
+  });
+  await canvasFits();
   const shortExpanded=await page.locator('#canvas-scroll').boundingBox();
   await page.locator('#chrome-toggle').click();
+  await canvasFits();
   const shortCompact=await page.locator('#canvas-scroll').boundingBox();
+  console.log('COURSE_STUDIO_SHORT_PHONE_GEOMETRY '+JSON.stringify({expanded:shortExpanded,compact:shortCompact}));
   assert(shortCompact.height>shortExpanded.height+90,'short phone gains meaningful editing height');
   assert(shortCompact.height>=200,'short phone retains a usable canvas');
   assert(await page.locator('.toolbar').isVisible());assert(await page.locator('#chrome-toggle').isVisible());

@@ -630,8 +630,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 8514,
-      "sha256": "0e0ba642ad44b94b61811e0f537c7a9589f5d123bb668f6919722a9380c4b2c8"
+      "size": 8482,
+      "sha256": "5c7d4b8496866b448a4b65d31298cd4931ad1a98df9250b3aa9a8e471e36eb0f"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -1458,8 +1458,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 10476,
-      "sha256": "6779aaf19e3db636c4fbbef6287661abed45f74c0d3ffd2c2e7c4a66ea452543"
+      "size": 10448,
+      "sha256": "c0de61358a1865b3ec77c62be8a575f2cdc8f2d9b2f61705dbd374e0633d52ad"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3354,14 +3354,14 @@
     {
       "path": "context/runtime/studio_colors_canvas_progress_20261028.md",
       "domain": "runtime",
-      "size": 2400,
-      "sha256": "f3cc065291e6b251669e6d02afede4507314d4f893eae3bf405784460058dc9d"
+      "size": 3191,
+      "sha256": "c168e683b3282824708833b33f6033b607b5aeef0568c4069a5a24eefc367a2c"
     },
     {
       "path": "context/runtime/studio_colors_canvas_qualification_20261028.json",
       "domain": "runtime",
-      "size": 1385,
-      "sha256": "f5d40ebf7d32c4f9f2d543648ed40cf417545cbf721aa6a42527a7598d107cec"
+      "size": 2353,
+      "sha256": "0fb31af4908b773213aba9a4cae89b1315455a7bdcd4ff5b2d2e754b21b99cec"
     },
     {
       "path": "context/runtime/studio_materials_delivery_20261028.json",
@@ -3462,8 +3462,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3145,
-      "sha256": "42f2bd61279866d4efb4f1b63f58813c3daf8c4749074996e0400cee957817ab"
+      "size": 3255,
+      "sha256": "5d5d78627bc04683a68a2d6843ce9425c86c826fd029bdcdac33971ad1e02d4b"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

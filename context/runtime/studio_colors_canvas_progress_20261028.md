@@ -33,3 +33,13 @@ reload handler bound before network access. No deferred minors or other unresolv
 Task3: existing2700 CI builder now runs its exact01e1cef2 worktree so later application
 versions cannot repoint the accepted archive. Frozen operators/worker unchanged.
 New2800 source is not a production deployment; screenshot evidence has no exact version.
+
+Task3 local full R16:1275tests/46environment skips PASS140.113s; source/context/secrets PASS.
+First qualification bab48ed2: infra/context/console SUCCESS; both source R16 matrices
+1278tests/229skips and Node/PHP palette/DOM PASS, browser short-phone geometry failed.
+Controlled local reproduction: delay resize/visualViewport delivery200ms → same RED.
+The old expanded height was sampled before resize completed; click then called fitWorkspace
+and sampled a new viewport. Wait for root bounds above native bottom navigation before
+both measurements → GREEN, same +90px/200px assertions. Standard and delayed runs both
+135px desktop/173px phone gain,253.5px phone canvas. Added mandatory delayed CI scenario.
+No application byte changed; application4c48dce7 remains the exact candidate.

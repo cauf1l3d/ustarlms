@@ -90,6 +90,8 @@ jobs:
       - run: cd tests/mobile && npx playwright install --with-deps chromium
       - run: npm test --prefix tests/mobile
       - run: node tests/release_20260912/course_studio_browser.cjs
+      - name: Studio viewport resize handoff preserves compact canvas height
+        run: USTAR_STUDIO_DELAY_RESIZE=1 node tests/release_20260912/course_studio_browser.cjs
       - run: node tests/release_20260912/materials_browser.cjs
       - name: Native notification acknowledgement controls with synthetic UI transport
         run: node tests/mobile/notification_ack.cjs

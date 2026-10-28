@@ -3,10 +3,10 @@ updated_at: '2026-10-28'
 project: USTAR Academy
 stage: studio_colors_canvas_verifying
 stage_label: Studio palette and compact2800 verifying; fixed2700 delivery preserved
-current_activity: 'Owner28Oct requested final course menu colors and collapsible title/sync chrome. Implemented2800
-  locally: Node/PHP palette and legacy identity checks, full npm and Chromium PASS; R16/native CI pending.
-  Exact last owner terminal receipt remains2600;2700 package delivered, screenshots show Academy Studio
-  without a version census.'
+current_activity: Owner28Oct palette and compact2800 implemented. Full local npm/PHP/Chromium and R161275/46
+  PASS. First CI source browser measurement raced resize; controlled reproduction RED, settled-layout
+  wait GREEN with same thresholds; retry pending. Other three CI successful; production evidence remains
+  separate.
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []

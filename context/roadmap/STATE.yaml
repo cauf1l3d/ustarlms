@@ -274,3 +274,16 @@ development_candidate:
   manifest: context/code_map/feed_media_development_source.json
   status: unmerged2803_source_not_deployed
   scope: RSS media and passive workday capture; schema/theme/worker unchanged
+  PR: 110
+  application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
+feed_media_workday_delivery:
+  status: fixed_source_local_tests_passed_final_CI_pending
+  application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
+  baseline_application: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+  predecessor_tool: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
+  new_journal: /var/lib/ustar-feed-media-update
+  PR: 110
+  owner_installed: false
+  agent_SSH: false
+  worker_rollout: false
+  progress: context/runtime/feed_media_workday_progress_20261029.md

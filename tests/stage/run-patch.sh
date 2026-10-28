@@ -11,3 +11,4 @@ bash /source/tests/stage/run.sh
 python3 /source/tests/stage/studio_colors_legacy_native.py --verify
 python3 /source/tests/stage/studio_viewport_legacy_native.py --verify
 python3 /source/tests/stage/perf_query_legacy_native.py --verify
+python3 /source/tests/stage/feed_media_legacy_native.py --verify

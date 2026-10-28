@@ -1482,8 +1482,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 14616,
-      "sha256": "5db3a21bc7b90a003ea331199b9874f6a0c922291cb854a9f9f48bdb43c5bddb"
+      "size": 15160,
+      "sha256": "adc8aeff4d09c78d6999de8948163f14ec019c9d12f7cac570a99d0ba2e893bb"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -2334,8 +2334,8 @@
     {
       "path": "context/runtime/feed_media_workday_progress_20261029.md",
       "domain": "runtime",
-      "size": 1632,
-      "sha256": "3dfe2bf248f27323d6cb2387bea949fd083d622382df9c023d169cf33c7a8c7d"
+      "size": 3351,
+      "sha256": "6de7ec8860f552b1848264f8dea2a99f182892bc95fe4d22f1a5582f6e5dbe16"
     },
     {
       "path": "context/runtime/git_state.yaml",

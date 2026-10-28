@@ -56,6 +56,16 @@ class Summary(unittest.TestCase):
 
 
 class NumericLog(unittest.TestCase):
+    def test_copytruncate_regrowth_is_detected_even_when_inode_and_size_look_current(self):
+        m=observer()
+        with tempfile.TemporaryDirectory() as directory:
+            p=Path(directory)/'numeric';p.write_text('099 200 1000\n'*4)
+            log=m.NumericLog(p,owner=os.getuid());log.sample(100)
+            p.write_text('101 200 2000\n'*10)
+            value=log.sample(102)
+            self.assertTrue(value['coverage_gap'])
+            self.assertEqual([[2,10]],value['histogram'])
+
     def test_append_only_numeric_samples_are_counted_once_and_fragments_wait(self):
         m=observer()
         with tempfile.TemporaryDirectory() as directory:
@@ -92,6 +102,24 @@ class NumericLog(unittest.TestCase):
 
 
 class Boundaries(unittest.TestCase):
+    def test_capture_reads_the_outer_production_config_and_finishes_private_report(self):
+        from unittest.mock import patch
+        m=observer()
+        def config(path, limit):
+            self.assertEqual(Path('/opt/ustar/data/moodle/public/config.php'),path)
+            return b"<?php $CFG->prefix = 'mdl_';"
+        with tempfile.TemporaryDirectory() as directory:
+            output=Path(directory)/'report'
+            with patch.object(m.os,'geteuid',return_value=0), patch.object(m,'regular_read',side_effect=config), \
+                 patch.object(m,'database_sample',return_value={'status':'ok'}), \
+                 patch.object(m,'private_output',side_effect=lambda p:p.mkdir(mode=0o700)), \
+                 patch.object(m,'host_sample',return_value={'status':'no_data'}), \
+                 patch.object(m.NumericLog,'sample',return_value={'status':'no_data'}), \
+                 patch.object(m.time,'monotonic',side_effect=[0,61,61]):
+                self.assertTrue(m.collect(60,60,output)['completed_requested_duration'])
+            self.assertEqual({'samples.jsonl','summary.json','SHA256SUMS'}, {p.name for p in output.iterdir()})
+            self.assertFalse(json.loads((output/'summary.json').read_text())['workday_SLO_accepted'])
+
     def test_default_cli_is_offline_and_timing_rejection_precedes_host_access(self):
         m=observer()
         with contextlib.redirect_stdout(io.StringIO()) as out:self.assertEqual(0,m.main([]))

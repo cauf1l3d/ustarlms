@@ -18,7 +18,7 @@ import time
 LOG_BUDGET = 1024 * 1024
 REPORT_BUDGET = 32 * 1024 * 1024
 COMMAND_BUDGET = 32768
-CODE = Path('/opt/ustar/data/moodle/public/public')
+CODE = Path('/opt/ustar/data/moodle/public')
 ACCESS = Path('/var/lib/ustar-console-collector/requests.log')
 COUNTERS = ('numbackends','xact_commit','xact_rollback','blks_read','blks_hit','temp_files','temp_bytes','deadlocks')
 CRON = ('raw_scheduled_overdue_10m','scheduled_failed','adhoc_queued','adhoc_failed','latest_task_epoch')
@@ -95,7 +95,12 @@ def command(argv, raw=b'', timeout=8):
 class NumericLog:
     """Read each new numeric record once, never export request paths, addresses or raw lines."""
     def __init__(self, path=ACCESS, owner=0):
-        self.path=Path(path); self.owner=owner; self.identity=None; self.offset=0; self.pending=b''; self.started=None
+        self.path=Path(path); self.owner=owner; self.identity=None; self.offset=0; self.pending=b''; self.started=None; self.anchor=b''
+
+    def tail_at_offset(self, fd):
+        length=min(64,self.offset)
+        os.lseek(fd,self.offset-length,os.SEEK_SET)
+        return os.read(fd,length)
 
     def sample(self, now):
         fd=None
@@ -107,15 +112,21 @@ class NumericLog:
             identity=(info.st_dev,info.st_ino)
             if self.identity is None:
                 self.identity=identity; self.offset=info.st_size; self.started=now
+                self.anchor=self.tail_at_offset(fd)
                 return {'status':'no_data','reason':'starting_now','coverage_gap':True}
             gap=identity!=self.identity or info.st_size<self.offset
+            if not gap and self.tail_at_offset(fd)!=self.anchor:
+                gap=True # Detect copytruncate followed by regrowth past the old offset.
             if gap:
                 self.offset=0; self.pending=b''; self.identity=identity
             if info.st_size-self.offset > LOG_BUDGET:
-                self.offset=info.st_size;self.pending=b''
+                self.offset=info.st_size;self.pending=b'';self.anchor=self.tail_at_offset(fd)
                 return {'status':'no_data','reason':'source_limit','coverage_gap':True}
             os.lseek(fd,self.offset,os.SEEK_SET)
-            raw=os.read(fd,min(LOG_BUDGET,info.st_size-self.offset));self.offset+=len(raw)
+            expected=min(LOG_BUDGET,info.st_size-self.offset)
+            raw=os.read(fd,expected);self.offset+=len(raw)
+            gap=gap or len(raw)!=expected or os.fstat(fd).st_size<info.st_size
+            self.anchor=self.tail_at_offset(fd)
             lines=(self.pending+raw).split(b'\n'); self.pending=lines.pop()
             if len(self.pending)>256:
                 self.pending=b'';raise ValueError('invalid_numeric_record')
@@ -155,7 +166,7 @@ SELECT json_build_object(
    'scheduled_failed',(SELECT count(*) FROM {prefix}task_scheduled WHERE disabled=0 AND faildelay>0),
    'adhoc_queued',(SELECT count(*) FROM {prefix}task_adhoc),
    'adhoc_failed',(SELECT count(*) FROM {prefix}task_adhoc WHERE faildelay>0),
-   'latest_task_epoch',(SELECT max(timeend) FROM {prefix}task_log)),
+   'latest_task_epoch',(SELECT timeend FROM {prefix}task_log ORDER BY id DESC LIMIT 1)),
  'pg_stat_statements_installed',EXISTS(SELECT 1 FROM pg_extension WHERE extname='pg_stat_statements'))
 FROM pg_stat_database d WHERE d.datname=current_database();
 ROLLBACK;

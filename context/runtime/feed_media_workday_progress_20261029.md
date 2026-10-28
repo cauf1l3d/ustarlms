@@ -21,3 +21,26 @@ sharing the same Leonardo UUID; synthetic fixtures will avoid copying article te
 
 Task1: six actual-PHP fixture cases RED (missing methods) → GREEN. Existing query-batching9cases GREEN;400PHP/33JS/100tables/57templates source checks PASS. Native file/ACL and RSS/enrichment cases added; await actual Moodle CI.
 Task2:11 observer tests RED (missing module) → GREEN; real bounded process and numeric-file fixtures included.
+
+Task1: frozen application ef903b7d276f1d62c4879f8a943a435b48e89117; PR110 Draft.
+First source/context CI1375 tests found one inventory omission: workday_observer
+was not yet registered as source-only knowledge. Registered all three new sources;
+no executable console action added. Do not weaken the inventory test.
+Task2:11 GREEN actual file/process tests; native PG READ ONLY query/write-denial
+probe now wired into patch518 stage.
+Task3:4 contract tests RED, then26 tests GREEN/1 namespace GID33 skip in50.885s.
+Includes old-source refusal, nested baseline envelope, deterministic5-member archive,
+paired changed-file recovery, process-loss preservation and current task/cron guards.
+Local first full R16 invocation ended without a unittest summary; no local full-pass
+claim. Required complete source/context CI and final complete local run remain.
+
+Review: corrected observer config path to the outer Moodle code root used by the fixed deployment contract. Capture-boundary regression test RED→GREEN; no PHP/component bytes changed from app ef903b7d.
+
+Review: observer copytruncate/regrowth regression RED→GREEN,13 observer tests PASS.
+Latest task observation uses the primary-key tail (ORDER BY id DESC LIMIT1), avoiding
+MAX(timeend) scans over millions of historical task logs. Native probe also verifies
+no application metadata changed after observer READ ONLY/write-denial cases.
+Final review mode: author self-review mandated by AGENTS; no subagents used.
+Review bounds: no source/schema/worker delta beyond seven qualified PHP/UI files;
+unknown legacy resized variants are retained behind details; no destructive cleanup.
+SQL/page, Web-SAPI OPcache, real workday/SLO and outside-host restore remain open.

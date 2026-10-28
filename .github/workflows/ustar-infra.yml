@@ -181,6 +181,19 @@ jobs:
           path: artifacts/perf-query-production-deploy/
       - name: Query2802 source denies actual UID33 writes
         run: sudo -n env USTAR_REQUIRE_PERF_UID33=1 python3 -m unittest tests.r16.test_perf_query_update.ActualCodePermissions -v
+      - name: Build fixed2802-to2803 RSS media updater and workday observer
+        run: |
+          python3 scripts/infra/build_feed_media_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/feed-media-production-deploy
+          python3 -I -B artifacts/feed-media-production-deploy/ustar-feed-media-update-*.py
+          python3 -I -B scripts/infra/workday_observer.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: feed-media-production-deploy
+          path: artifacts/feed-media-production-deploy/
+      - name: RSS2803 source denies actual UID33 writes and observer preserves root-only output
+        run: |
+          sudo -n env USTAR_REQUIRE_FEED_UID33=1 python3 -m unittest tests.r16.test_feed_media_update.ActualCodePermissions -v
+          sudo -n python3 -m unittest tests.r16.test_workday_observer -v
       - name: PostgreSQL handoff config is readable but cannot be overwritten by actual UID33
         run: sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_postgres_app_handoff.ActualUnixPermissions -v
       - name: Code hardening archive and actual UID33 isolation

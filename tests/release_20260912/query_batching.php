@@ -96,7 +96,6 @@ if (str_starts_with($case, 'rss')) {
     } else {
         $rows = \local_ustar\feed_article_resolver::source_stats_batch([1,2,3,1]);
         $assert($DB->reads === 1, 'RSS statistics query count grows with source count');
-        $assert($DB->closed === 1, 'RSS recordset not closed');
         $assert(array_keys($rows) === [1,2,3], 'Unexpected source scope or duplicate keys');
         $assert($rows[1] === ['pending'=>2,'retry'=>0,'done'=>1,'failed'=>0,'limited'=>0,'feed'=>0,'disabled'=>1], 'Lost one of the statuses of source1');
         $assert($rows[2] === ['pending'=>0,'retry'=>1,'done'=>1,'failed'=>0,'limited'=>0,'feed'=>0], 'Source statistics mixed across source IDs');

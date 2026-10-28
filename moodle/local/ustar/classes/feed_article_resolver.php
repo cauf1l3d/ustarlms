@@ -640,18 +640,16 @@ final class feed_article_resolver {
         $out = array_fill_keys($sourceids,
             ['pending' => 0, 'retry' => 0, 'done' => 0, 'failed' => 0, 'limited' => 0, 'feed' => 0]);
         [$insql, $params] = $DB->get_in_or_equal($sourceids, SQL_PARAMS_NAMED, 'rssstat');
-        // A recordset preserves multiple statuses with the same sourceid (the first column).
-        $rows = $DB->get_recordset_sql(
-            "SELECT sourceid, enrichstatus, COUNT(id) AS total
+        // Moodle keys records by the first column. Groups are disjoint, so their
+        // minimum primary keys are unique. A buffered aggregate also avoids the
+        // PostgreSQL recordset's DECLARE/FETCH/CLOSE round trips.
+        $rows = $DB->get_records_sql(
+            "SELECT MIN(id) AS groupid, sourceid, enrichstatus, COUNT(id) AS total
                FROM {local_ustar_feed_sourceitem}
               WHERE sourceid {$insql}
            GROUP BY sourceid, enrichstatus", $params);
-        try {
-            foreach ($rows as $row) {
-                $out[(int)$row->sourceid][(string)$row->enrichstatus] = (int)$row->total;
-            }
-        } finally {
-            $rows->close();
+        foreach ($rows as $row) {
+            $out[(int)$row->sourceid][(string)$row->enrichstatus] = (int)$row->total;
         }
         return $out;
     }

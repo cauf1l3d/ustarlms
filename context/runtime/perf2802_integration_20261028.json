@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-28",
+  "owner_instruction": "ок давай к следующему этапу",
+  "previous_assistant_proposal": "PR109 remains Draft. Next stage: integration and a separate server delivery.",
+  "authorization_basis": "Owner agreed to the immediately preceding integration and delivery stage; bounded source merges and archive preparation. Agent does not access or change server1.",
+  "main_before": "ad939373d89604119d3fd741c555deaf1ebd4ed7",
+  "PR107": {
+    "head": "06ba6b305d19394e316deac45ea3f3eb2d35a62d",
+    "merge": "84a078ef83f3812d252129d3a79f717cb3bf0591",
+    "four_CI": "success",
+    "merge_tree_matches_qualified_head": true
+  },
+  "PR109": {
+    "reviewed_head": "aa2b09be0041ff4f74af0ca6c7b0e533d0b28658",
+    "four_CI": "success",
+    "base": "main",
+    "status": "preparing_versioned_delivery_before_merge"
+  },
+  "execution": "native_author_review_no_subagents",
+  "agent_SSH": false,
+  "server_updated": false,
+  "worker_rollout": false,
+  "plan": "docs/superpowers/plans/2026-10-28-perf2802-delivery.md",
+  "application_commit": "22607c69a27c9be65d78fd407ce240f9dc2b8c8b",
+  "progress": {
+    "task1": "complete: Studio merged84a078ef; payload22607c69 frozen; canonical source maps refreshed to StudioA3",
+    "task2": "complete:6 initial RED/11 assertions, then26 GREEN/1 local UID33 skip; paired recovery and added file checks PASS",
+    "task3": "full local R16 PASS1360/69 in318.844s; source structure/JS PASS, PHP absent locally; native/full CI pending"
+  },
+  "rulings": [
+    "Use the existing linked PR109 worktree and native execution: AGENTS forbids subagents.",
+    "Version/release are configuration; no mirror-only test. Release reference tests enforce the entire bounded transition.",
+    "Use baseline2801 namespace for new predecessor bytes, retaining nested2800 baseline assets."
+  ]
+}

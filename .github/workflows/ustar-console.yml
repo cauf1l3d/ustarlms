@@ -1,7 +1,7 @@
 name: USTAR console
 on:
   pull_request:
-    branches: [main]
+    branches: [main, codex/shared-course-studio-20261026]
     paths: ['server-console/**', '.github/workflows/ustar-console.yml']
   workflow_dispatch:
 permissions:

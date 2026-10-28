@@ -32,14 +32,15 @@ successor заморожен и на сервер не поставлен. SSH/f
 
 ## Репозиторий и текущая работа
 
-Владелец28Oct принял пакет Studio2801/81118e39: «отлично всё работает» и поручил PR109.
-[Owner-квитанция](context/runtime/studio_viewport_owner_acceptance_20261028.json).
-Новой точной terminal-квитанции нет; прежняя2600 остаётся последним точным status/source.
-App a3df5783/metadata9332829c прошли все четыре CI; архив выдан. STUDIO-01 завершён.
+Owner принял Studio2801/81118e39 и согласился на интеграцию/отдельную поставку PR109.
+[Приёмка](context/runtime/studio_viewport_owner_acceptance_20261028.json),
+[новый этап](context/runtime/perf2802_integration_20261028.json). Новой terminal-квитанции нет.
+PR107 слит как84a078ef: main содержит app a3df5783/local2801/theme2700; STUDIO-01 завершён.
 
-Текущая задача PERF-01/PR109: batch RSS statistics и operator season names. Draft ca31380d
-имеет source/context/infra CI PASS; требуется интеграция с принятой студией и native/full RC.
-Main содержит6c56/local2300, PR107 открыт; автоматическое слияние не разрешено.
-Принятую студию и её замороженные операторы сохранять. SSH/субагенты запрещены.
+PERF-01/PR109: source aa2b09be прошёл все четыре CI, оба native354/1695. Теперь готовится
+версионированная поставка2801→2802/app22607c69 с новым frozen оператором и журналом.
+[План](docs/superpowers/plans/2026-10-28-perf2802-delivery.md). Новый релиз ещё квалифицируется.
+Рабочий день/SLO остаются отдельной приёмкой. Серверную установку выполняет владелец.
+SSH/субагенты запрещены; Studio/старые операторы и worker6c56 сохраняются.
 Исходники: moodle/local/ustar и moodle/theme/ustar; frontend — legacy.
-[Индекс](context/CONTEXT_INDEX.md), [история входов](context/archive/reconciliation_20261026).
+[Индекс](context/CONTEXT_INDEX.md), [история](context/archive/reconciliation_20261026).

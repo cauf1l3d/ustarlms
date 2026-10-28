@@ -1,6 +1,6 @@
 # PHP files
 
-Source: `6c56a5b6ab830b97b706a5d7028b49cfae31e7a4`. Git source only; not a live database snapshot.
+Source: `a3df57831a5ed49b901e5116ee800f2217fb61e9`. Git source only; not a live database snapshot.
 
 - `moodle/local/ustar/achievements.php`
 - `moodle/local/ustar/activity_launch.php`
@@ -73,6 +73,12 @@ Source: `6c56a5b6ab830b97b706a5d7028b49cfae31e7a4`. Git source only; not a live 
 - `moodle/local/ustar/classes/content.php`
 - `moodle/local/ustar/classes/content_ack_report.php`
 - `moodle/local/ustar/classes/content_admin.php`
+- `moodle/local/ustar/classes/course_studio.php`
+- `moodle/local/ustar/classes/course_studio_conflict.php`
+- `moodle/local/ustar/classes/course_studio_material.php`
+- `moodle/local/ustar/classes/course_studio_package.php`
+- `moodle/local/ustar/classes/course_studio_project.php`
+- `moodle/local/ustar/classes/course_studio_source.php`
 - `moodle/local/ustar/classes/department_learning.php`
 - `moodle/local/ustar/classes/development_assessment.php`
 - `moodle/local/ustar/classes/economy.php`
@@ -142,6 +148,7 @@ Source: `6c56a5b6ab830b97b706a5d7028b49cfae31e7a4`. Git source only; not a live 
 - `moodle/local/ustar/classes/learning_path.php`
 - `moodle/local/ustar/classes/learning_route.php`
 - `moodle/local/ustar/classes/learning_tasks.php`
+- `moodle/local/ustar/classes/material_catalog.php`
 - `moodle/local/ustar/classes/material_studio.php`
 - `moodle/local/ustar/classes/mobile_app.php`
 - `moodle/local/ustar/classes/moodle_activity_bridge.php`
@@ -253,6 +260,8 @@ Source: `6c56a5b6ab830b97b706a5d7028b49cfae31e7a4`. Git source only; not a live 
 - `moodle/local/ustar/connect_bridge.php`
 - `moodle/local/ustar/continue.php`
 - `moodle/local/ustar/course_launch.php`
+- `moodle/local/ustar/course_studio.php`
+- `moodle/local/ustar/course_studio_api.php`
 - `moodle/local/ustar/db/access.php`
 - `moodle/local/ustar/db/caches.php`
 - `moodle/local/ustar/db/events.php`
@@ -347,6 +356,9 @@ Source: `6c56a5b6ab830b97b706a5d7028b49cfae31e7a4`. Git source only; not a live 
 - `moodle/local/ustar/tests/connect_notification_action_test.php`
 - `moodle/local/ustar/tests/connect_notification_test.php`
 - `moodle/local/ustar/tests/connect_signup_test.php`
+- `moodle/local/ustar/tests/course_studio_material_test.php`
+- `moodle/local/ustar/tests/course_studio_project_test.php`
+- `moodle/local/ustar/tests/course_studio_test.php`
 - `moodle/local/ustar/tests/evidence_lifecycle_test.php`
 - `moodle/local/ustar/tests/feed_article_resolver_test.php`
 - `moodle/local/ustar/tests/feed_external_content_test.php`
@@ -359,6 +371,7 @@ Source: `6c56a5b6ab830b97b706a5d7028b49cfae31e7a4`. Git source only; not a live 
 - `moodle/local/ustar/tests/grade_promotion_display_test.php`
 - `moodle/local/ustar/tests/grade_rules_test.php`
 - `moodle/local/ustar/tests/home_layout_test.php`
+- `moodle/local/ustar/tests/material_catalog_test.php`
 - `moodle/local/ustar/tests/material_studio_review_test.php`
 - `moodle/local/ustar/tests/notebook_board_test.php`
 - `moodle/local/ustar/tests/notebook_test.php`

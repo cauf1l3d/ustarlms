@@ -1,27 +1,30 @@
 # Активная работа —28.10.2026
 
-## PERF-01 / PR109
+## PERF-01 / PR109: серверная поставка2802
 
-Владелец принял работу студии после пакета2801 и поручил перейти к PR109.
-[Owner-подтверждение](../runtime/studio_viewport_owner_acceptance_20261028.json).
-PR109 ca31380d: batch RSS statistics и имён operator season; схема/версия не менялись.
-Старый source/context/infra CI зелёный, native Moodle ещё не запускался.
-Нужно проверить изменения поверх принятой Studio2801, сохранить её файлы и guards,
-запустить применимый native/full RC и затем определить отдельную поставку.
-PR109 сейчас Draft, server1 этим PR не обновлялся. Не заявлять ускорение страниц по общему p95.
+Владелец согласился на следующий этап интеграции и отдельной серверной поставки.
+[Разрешение и source integration](../runtime/perf2802_integration_20261028.json).
+PR107 слит как84a078ef; main содержит принятую Studio2801. PR109 переведён на main.
+Query source aa2b09be прошёл все четыре CI; PHP1337/231, оба native354/1695.
+[Предыдущая квалификация](../runtime/perf_query_batching_review_20261028.json).
 
-## Завершённая студия / PR107
+App22607c69 фиксирует local2802/theme2700: три рабочих PHP-файла, version.php и один
+добавленный native test относительно принятой Studio.589→590файлов;100таблиц без schema delta.
+Готовится новый адаптер/точный Git builder поверх оператора81118e39 с отдельным журналом
+/var/lib/ustar-perf-query-update. Обязательны точный2801 predecessor, shared locks,
+paired copy/recovery, неизменные cron/task/worker guards, actual UID33 и PG legacy/fresh profiles.
+[План](../../docs/superpowers/plans/2026-10-28-perf2802-delivery.md).
+Новый оператор/релиз ещё квалифицируется;2802 на server1 не устанавливался.
 
-App a3df5783/local2801/theme2700, оператор81118e39; квалификация c7602edf и финальный
-metadata9332829c: все четыре CI SUCCESS. Архив выдан, владелец сообщает «всё работает».
-[Квитанция](../runtime/studio_viewport_delivery_20261028.json),
-[команды](../../docs/STUDIO_2801_INSTALL_RU.md). STUDIO-01 завершён по owner acceptance.
-Новой terminal-квитанции нет: последнее точное status/source подтверждение2600 хранится
-отдельно, не переименовывать его в новую инвентаризацию. Worker6c56 не обновлялся.
+## Принятая студия
+
+STUDIO-01 завершён: app a3df5783/local2801/theme2700, оператор81118e39, архив принят по
+owner «всё работает». [Квитанция](../runtime/studio_viewport_owner_acceptance_20261028.json).
+Нового точного terminal status нет; последняя2600-квитанция остаётся отдельным фактом.
+Worker6c56 не обновлялся. [Команды2801](../../docs/STUDIO_2801_INSTALL_RU.md).
 
 ## Границы
 
-PR107 пока открыт: автоматическое слияние не разрешено. Main всё ещё содержит6c56/local2300.
-Можно готовить и проверять PR109 поверх ветки принятой студии без слияния в main.
+После green exact-head CI — слияние PR109 и отдельный комплект владельцу.
 SSH, субагенты и отправки через провайдеров запрещены. Логи/health/recreate — в Moodle window.
-Не повторять2600/cron20Oct или принятый инфраструктурный цикл; внешний restore unknown.
+Workday/SLO и внешний restore остаются отдельными задачами; общий p95 не доказывает ускорение.

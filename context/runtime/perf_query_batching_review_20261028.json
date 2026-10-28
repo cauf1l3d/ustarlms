@@ -1,0 +1,251 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-28",
+  "PR": 109,
+  "status": "full_RC_passed_source_only_not_deployed",
+  "previous_head": "ca31380d5916c51fadf2ac8772744acd0a050ecf",
+  "base_branch": "codex/shared-course-studio-20261026",
+  "base_commit": "06ba6b305d19394e316deac45ea3f3eb2d35a62d",
+  "accepted_Studio_app": "a3df57831a5ed49b901e5116ee800f2217fb61e9",
+  "source_delta": [
+    "moodle/local/ustar/classes/competition.php",
+    "moodle/local/ustar/classes/feed_article_resolver.php",
+    "moodle/local/ustar/feed_admin.php"
+  ],
+  "review": {
+    "mode": "self_review_no_subagents_per_AGENTS",
+    "critical": [],
+    "important": [],
+    "checked": [
+      "operator guard precedes reads",
+      "open employment/account filtering retained",
+      "closed missing-user fallback, limit100, ties, row type and order",
+      "bound parameters, positive source IDs, empty list without SQL",
+      "buffered aggregate uses unique disjoint-group MIN keys and preserves all statuses",
+      "old operator/package guards retained and explicit changed-app rejection restored",
+      "PG buffered aggregate avoids cursor auxiliary reads; disjoint-group MIN primary key retains Moodle first-column uniqueness"
+    ],
+    "after_PG_fix": "Reviewed production SQL/result shape, unique first-column keys, operator ACL before reads, bound maximum100 user IDs and parity of all statuses; no blocking findings",
+    "CI_workflow_scope": "Only the pull_request base-branch allowlist expands; jobs, assertions, pinned action identities and read-only permissions stay unchanged"
+  },
+  "local_SQLite": {
+    "baseline": "accepted_Studio2801",
+    "expected_RED_before": 7,
+    "GREEN_after": 9,
+    "cases": [
+      {
+        "case": "rss_statuses",
+        "status": "passed",
+        "queries": 4
+      },
+      {
+        "case": "rss_empty",
+        "status": "passed",
+        "queries": 0
+      },
+      {
+        "case": "open",
+        "status": "passed",
+        "queries": 4
+      },
+      {
+        "case": "open_filtered",
+        "status": "passed",
+        "queries": 4
+      },
+      {
+        "case": "closed",
+        "status": "passed",
+        "queries": 4
+      },
+      {
+        "case": "closed_missing",
+        "status": "passed",
+        "queries": 4
+      },
+      {
+        "case": "closed_limit",
+        "status": "passed",
+        "queries": 4
+      },
+      {
+        "case": "empty",
+        "status": "passed",
+        "queries": 3
+      },
+      {
+        "case": "denied",
+        "status": "passed",
+        "queries": 0
+      }
+    ],
+    "rss_batch_reads": 1,
+    "rss_case_total_note": "rss_statuses total4 includes three single-source parity calls after the one-read assertion",
+    "scope": "production PHP against SQLite, narrow ACL/account fixtures; not native Moodle or latency proof"
+  },
+  "conflict_resolution": {
+    "metadata": "latest accepted Studio79ce context retained; immutable dated perf observations preserved",
+    "Telegram_fixture": "frozen application read-tree retained; PR109 negative changed-app case restored",
+    "code": "the three PHP files have no Studio overlap",
+    "immutable_owner_transcript_SHA256": "c5c3bb9278bfd3fb6931be44fff530230d8f296cc69eb8b85172b485c71ef3c1"
+  },
+  "schema_delta": false,
+  "release_version_bumped": false,
+  "server_updated": false,
+  "installer_prepared": false,
+  "main_merge_performed": false,
+  "limits": [
+    "source integration in main and a separately versioned frozen delivery precede server rollout",
+    "broader performance SLO/workday baseline remains separate"
+  ],
+  "application_commit": "8d4560316a6c6cb27467f3d1d2a3e19e0a6f52d5",
+  "focused_operator_package_tests": {
+    "result": "PASS",
+    "tests": 6,
+    "seconds": 14.404
+  },
+  "local_R16": {
+    "result": "PASS",
+    "tests": 1334,
+    "skipped": 48,
+    "seconds": 240.718,
+    "application_commit": "8d4560316a6c6cb27467f3d1d2a3e19e0a6f52d5"
+  },
+  "CI": {
+    "review": 40736531122,
+    "infrastructure": 40736530607,
+    "context": 40736530670,
+    "console": 40736531107,
+    "status": "all_four_workflows_success",
+    "context_conclusion": "success",
+    "infrastructure_conclusion": "success",
+    "console_conclusion": "success",
+    "rollback_conclusion": "success",
+    "source": [
+      {
+        "PHP": "8.2",
+        "job": 122986473087,
+        "result": "PASS",
+        "tests": 1337,
+        "skipped": 231,
+        "seconds": 220.049
+      },
+      {
+        "PHP": "8.3",
+        "job": 122986472538,
+        "result": "PASS",
+        "tests": 1337,
+        "skipped": 231,
+        "seconds": 229.685
+      }
+    ],
+    "native_jobs": [
+      122990276158,
+      122990276291
+    ],
+    "review_conclusion": "success",
+    "gate_conclusion": "success",
+    "gate_job": 122993807926,
+    "prepare_rc_conclusion": "success",
+    "connect_db": {
+      "result": "skipped",
+      "reason": "No Connect schema/service changes relative to the Studio base; workflow scope detector"
+    },
+    "native": [
+      {
+        "runtime": "patch-518",
+        "job": 122990276158,
+        "result": "PASS",
+        "tests": 354,
+        "assertions": 1695
+      },
+      {
+        "runtime": "historical",
+        "job": 122990276291,
+        "result": "PASS",
+        "tests": 354,
+        "assertions": 1695
+      }
+    ],
+    "native_scope": [
+      "fresh installation, upgrade and repeat upgrade",
+      "authenticated Studio/material HTTP scenarios",
+      "strict RSS one-read assertion and multi-status parity",
+      "closed operator snapshot names query bound",
+      "all existing Moodle regression tests"
+    ],
+    "legacy_schema_probe": {
+      "runtime": "patch-518",
+      "result": "PASS",
+      "actual_PostgreSQL_metadata": true,
+      "tables": 100,
+      "profiles": [
+        "xml_install_indexes",
+        "server1_legacy_indexes_20261023"
+      ],
+      "SQL_mutations_denied": [
+        "partial_local_ustar_coin_accounts",
+        "partial_local_ustar_test_results",
+        "extra_index",
+        "column_default",
+        "task",
+        "extra_table",
+        "missing_ACK_index"
+      ],
+      "versions_checked": [
+        [
+          2026102700,
+          2026102800,
+          2026102800,
+          2026102700
+        ],
+        [
+          2026102800,
+          2026102801,
+          2026102801,
+          2026102800
+        ]
+      ],
+      "all_fixture_SQL_rolled_back": true
+    },
+    "immutable_source_receipt": "ffc43884d36f35801aebb3de26a7a41c60abcc43",
+    "followup_metadata_commit_scope": "Documentation/current views and merge of the already-identical PR107 checkpoint only; application tree stays equal to the qualified application"
+  },
+  "preserved_components": [
+    "course_studio source and assets",
+    "theme_ustar",
+    "version.php",
+    "all frozen scripts/infra operators and builders",
+    "connect-worker"
+  ],
+  "preserved_components_basis": "git diff against79ce47b9 for each scope is empty",
+  "initial_native_failure": {
+    "qualification_commit": "c77d203a552498a21168865c9de64693fb0af487",
+    "review_run": 40711325215,
+    "jobs": [
+      122901241942,
+      122901242036
+    ],
+    "tests_each": 354,
+    "failures_each": 1,
+    "case": "RSS one-read assertion: actual3 expected1",
+    "root_cause": "Moodle PostgreSQL cursor recordset executes DECLARE, FETCH and CLOSE; perf_get_reads counts auxiliary commands too",
+    "primary_source": "https://github.com/moodle/moodle/blob/cc0bf17da8b5fbd290faf95b2b14a03d64331923/public/lib/dml/pgsql_native_moodle_database.php",
+    "fix": "get_records_sql with MIN(id) AS groupid; minima of disjoint groups are unique first-column keys; one aggregate SELECT, preserves all statuses",
+    "assertion_weakened": false
+  },
+  "previous_qualification_commit": "c77d203a552498a21168865c9de64693fb0af487",
+  "stacked_PR_CI": {
+    "base_branch": "codex/shared-course-studio-20261026",
+    "original_filter": "main only",
+    "correction": "explicitly allow the active Studio base in pull_request filters; checks and read-only permissions unchanged",
+    "reason": "fix head did not trigger workflows after PR109 retargeting"
+  },
+  "base_checkpoint_correction": {
+    "commit": "06ba6b305d19394e316deac45ea3f3eb2d35a62d",
+    "initial_context_run": 40709748449,
+    "reason": "Generated checkpoint still named STUDIO-01 after task transition; regenerated to PERF-01; application tree unchanged"
+  },
+  "qualification_commit": "ffc43884d36f35801aebb3de26a7a41c60abcc43",
+  "qualification_application_trees_match": true
+}

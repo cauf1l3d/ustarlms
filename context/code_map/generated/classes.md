@@ -1,6 +1,6 @@
 # Classes, interfaces and traits
 
-Source: `6c56a5b6ab830b97b706a5d7028b49cfae31e7a4`. Git source only; not a live database snapshot.
+Source: `a3df57831a5ed49b901e5116ee800f2217fb61e9`. Git source only; not a live database snapshot.
 
 | Symbol | File |
 |---|---|
@@ -55,6 +55,12 @@ Source: `6c56a5b6ab830b97b706a5d7028b49cfae31e7a4`. Git source only; not a live 
 | `local_ustar\content` | `moodle/local/ustar/classes/content.php` |
 | `local_ustar\content_ack_report` | `moodle/local/ustar/classes/content_ack_report.php` |
 | `local_ustar\content_admin` | `moodle/local/ustar/classes/content_admin.php` |
+| `local_ustar\course_studio` | `moodle/local/ustar/classes/course_studio.php` |
+| `local_ustar\course_studio_conflict` | `moodle/local/ustar/classes/course_studio_conflict.php` |
+| `local_ustar\course_studio_material` | `moodle/local/ustar/classes/course_studio_material.php` |
+| `local_ustar\course_studio_package` | `moodle/local/ustar/classes/course_studio_package.php` |
+| `local_ustar\course_studio_project` | `moodle/local/ustar/classes/course_studio_project.php` |
+| `local_ustar\course_studio_source` | `moodle/local/ustar/classes/course_studio_source.php` |
 | `local_ustar\department_learning` | `moodle/local/ustar/classes/department_learning.php` |
 | `local_ustar\development_assessment` | `moodle/local/ustar/classes/development_assessment.php` |
 | `local_ustar\economy` | `moodle/local/ustar/classes/economy.php` |
@@ -124,6 +130,7 @@ Source: `6c56a5b6ab830b97b706a5d7028b49cfae31e7a4`. Git source only; not a live 
 | `local_ustar\learning_path` | `moodle/local/ustar/classes/learning_path.php` |
 | `local_ustar\learning_route` | `moodle/local/ustar/classes/learning_route.php` |
 | `local_ustar\learning_tasks` | `moodle/local/ustar/classes/learning_tasks.php` |
+| `local_ustar\material_catalog` | `moodle/local/ustar/classes/material_catalog.php` |
 | `local_ustar\material_studio` | `moodle/local/ustar/classes/material_studio.php` |
 | `local_ustar\mobile_app` | `moodle/local/ustar/classes/mobile_app.php` |
 | `local_ustar\moodle_activity_bridge` | `moodle/local/ustar/classes/moodle_activity_bridge.php` |

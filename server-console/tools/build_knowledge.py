@@ -190,6 +190,7 @@ SOURCE_ONLY = SOURCE_ONLY | {'course_studio_update', 'build_course_studio_update
 SOURCE_ONLY = SOURCE_ONLY | {'studio_materials_update', 'build_studio_materials_update'}
 SOURCE_ONLY = SOURCE_ONLY | {'studio_colors_update', 'build_studio_colors_update'}
 SOURCE_ONLY = SOURCE_ONLY | {'studio_viewport_update', 'build_studio_viewport_update'}
+SOURCE_ONLY = SOURCE_ONLY | {'perf_query_update', 'build_perf_query_update'}
 METADATA.update({'academy_https': ('Владелец HTTPS Академии',
                    'Исходники проверенных поставок',
                    'Справка об исходнике; конкретная версия и режим указаны в dated runtime-квитанции.',

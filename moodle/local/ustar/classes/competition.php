@@ -261,16 +261,20 @@ final class competition {
             $scores=array_values($DB->get_records_sql('SELECT r.id,r.rankno AS rank,r.points,p.publiclabel AS displayname,p.userid
                 FROM {local_ustar_comp_results} r JOIN {local_ustar_comp_participants} p ON p.id=r.participantid
                 WHERE r.competitionid=:id ORDER BY r.rankno,p.id',['id'=>$id],0,100));
+            $users = [];
+            if ($scores) {
+                [$insql, $params] = $DB->get_in_or_equal(array_unique(array_column($scores, 'userid')), SQL_PARAMS_NAMED);
+                $users = $DB->get_records_select('user', 'id ' . $insql, $params, '',
+                    'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename');
+            }
+            foreach ($scores as $score) {
+                $score->displayname = isset($users[$score->userid])
+                    ? fullname($users[$score->userid]) : 'Удалённая учётная запись';
+            }
         } else {
+            // scoreboard already resolves names after the participant/account boundary checks.
             $scores=array_slice(self::scoreboard($id,0),0,100);
         }
-        foreach ($scores as &$score) {
-            $userid=is_array($score)?(int)$DB->get_field('local_ustar_comp_participants','userid',['id'=>$score['participantid']]):(int)$score->userid;
-            $u=$DB->get_record('user',['id'=>$userid],'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename');
-            if (is_array($score)) { $score['displayname']=$u?fullname($u):'Удалённая учётная запись'; }
-            else { $score->displayname=$u?fullname($u):'Удалённая учётная запись'; }
-        }
-        unset($score);
         return ['definition'=>(array)$c,'scores'=>$scores];
     }
     public static function revise_draft(int $id,int $actor,int $expected,string $title,string $dept,int $start,int $end,int $rate,string $mode='game',string $learningsource='route'): void {

@@ -14,7 +14,7 @@ on:
         type: boolean
         default: false
   pull_request:
-    branches: [main]
+    branches: [main, codex/shared-course-studio-20261026]
     types: [opened, synchronize, reopened, labeled]
 
 permissions:
@@ -212,6 +212,7 @@ jobs:
           python3 scripts/ci/prepare_stage.py
           python3 tests/stage/studio_colors_legacy_native.py --prepare
           python3 tests/stage/studio_viewport_legacy_native.py --prepare
+          python3 tests/stage/perf_query_legacy_native.py --prepare
           mkdir -p artifacts
           cp .stage-input/baseline.json artifacts/baseline.json
       - name: Build isolated test runtime

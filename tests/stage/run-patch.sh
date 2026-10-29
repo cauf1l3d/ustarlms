@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+trap 'printf "PATCH_STAGE_FAILURE_LINE=%s\n" "$LINENO" >&2' ERR
 test "$PWD" = /stage
 mkdir -p /artifacts
 cp /opt/ustar-runtime.json /artifacts/runtime-profile.json
@@ -8,5 +9,6 @@ test "$(git -C /opt/moodle rev-parse HEAD)" = "$(php -r 'echo json_decode(file_g
 pg_dump --version > /artifacts/pg-client.txt
 grep -q 'PostgreSQL) 16\.' /artifacts/pg-client.txt
 bash /source/tests/stage/run.sh
+cd /stage/moodle
 bash /source/tests/stage/run-connect-role-upgrade.sh
 python3 /source/tests/stage/legacy_100_projection.py

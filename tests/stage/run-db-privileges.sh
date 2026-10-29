@@ -5,7 +5,7 @@ trap 'printf "DB_PRIVILEGES_FAILURE_LINE=%s\n" "$LINENO" >&2' ERR
 test "$PWD" = /stage/moodle
 test "${USTAR_DB_PRIVILEGE_FIXTURE:-}" = 1
 test ! -e /opt/ustar
-test -d /source/moodle/local/ustar
+test -d /source/.stage-input/telegram-presentation-target/moodle/local/ustar
 test -f /stage/telegram-presentation-state.json
 test ! -e /stage/db-privileges-private
 umask 077
@@ -66,8 +66,10 @@ baseline=$(php "$probe" version)
 # Existing paired-recovery runner has restored2200; exercise the real2300 upgrade
 # and its repeat with a fresh ordinary app session, not SET ROLE in a superuser PHP session.
 rm -rf public/local/ustar public/theme/ustar
-cp -a /source/moodle/local/ustar public/local/ustar
-cp -a /source/moodle/theme/ustar public/theme/ustar
+# This regression proves the frozen2300 privilege lifecycle. Current2900 has
+# separate actual migration/metadata/HTTP gates; do not weaken the old version guard.
+cp -a /source/.stage-input/telegram-presentation-target/moodle/local/ustar public/local/ustar
+cp -a /source/.stage-input/telegram-presentation-target/moodle/theme/ustar public/theme/ustar
 php admin/cli/upgrade.php --non-interactive > /artifacts/db-privileges-upgrade.log 2>&1
 target=$(php "$probe" version)
 php admin/cli/upgrade.php --non-interactive > /artifacts/db-privileges-repeat.log 2>&1

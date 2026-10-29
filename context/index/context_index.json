@@ -1414,6 +1414,12 @@
       "sha256": "3b466c19700777233f38130eb0c1f3ac9df4d704c768322333a4c40c70206919"
     },
     {
+      "path": "context/reviews/20261029/CONNECT_ROLE_BOT_SELF_REVIEW_RU.md",
+      "domain": "reviews",
+      "size": 6567,
+      "sha256": "9d39ab66acf0bdf4ea921549ac5b604ec33635e8d2539b72ac8c18f9a4ea9af4"
+    },
+    {
       "path": "context/roadmap/ACCEPTED_RISKS.yaml",
       "domain": "roadmap",
       "size": 983,
@@ -2004,8 +2010,8 @@
     {
       "path": "context/runtime/connect_role_bot_progress_20261029.md",
       "domain": "runtime",
-      "size": 8607,
-      "sha256": "b5012f375697b69d9feb4f6ddb766b1679815b60144ca4658ea6dfa064abc8b2"
+      "size": 10157,
+      "sha256": "867657e56947543b8e4e66187d153b55233bed5a119b13b4a3d7a0f657a00616"
     },
     {
       "path": "context/runtime/connect_telegram_finish_20261023.md",

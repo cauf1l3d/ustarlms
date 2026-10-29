@@ -197,7 +197,7 @@ jobs:
           sudo -n python3 -m unittest tests.r16.test_workday_observer -v
       - name: Build coordinated role bot app and worker from exact qualified Git trees
         run: |
-          python3 scripts/infra/build_connect_role_bot_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/connect-role-bot-production-deploy
+          python3 scripts/infra/build_connect_role_bot_update.py --commit 99dbecaac7fe9c6bd2fa9e77349d336e448ca8a6 --output-dir artifacts/connect-role-bot-production-deploy
           python3 -I -B artifacts/connect-role-bot-production-deploy/ustar-connect-role-bot-update-*.py
           sudo -n env USTAR_REQUIRE_ROLE_BOT_UID33=1 python3 -m unittest tests.r16.test_connect_role_bot_update.ActualCodePermissions -v
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

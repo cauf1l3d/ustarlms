@@ -74,3 +74,9 @@ the real HTTP fixture now retains an unrelated unsent photo/form across POST/rep
 - The staged application follow-up also preserves a newer bot form/private photo while an older independent native command is confirmed, clears abandoned private photo drafts and keeps canonical report files, and authorizes ACK only under the explicit linked/opt-in profile. Native cases added; qualification remains pending the new immutable candidate.
 
 Application and worker frozen at `5cc02944e1059ba015afcc7c5e8068ca56c34a92`. Coordinated operator now pins that source, including ACK profile/draft lifecycle/optional photo size fixes. Candidate tool commit and all final CI remain pending; production stays2803/worker6c56.
+
+### Qualification candidate d36b6540 — isolated HTTP fixture correction
+
+- On d36b6540, source8.2/source8.3, rollback, console, context and infrastructure all passed. Actual systemd/UID33/credentials/privateTLS role bot activation and recovery passed. ActualPG frozen2803->2900 upgrade/repeat and103-table metadata passed. Connect172tests/875assertions and both full Moodle suites371tests/1751assertions passed.
+- The overall review gate correctly remained red: the new positive nativeHTTP fixture tried linking the Moodle site administrator. Canonical accounts::is_business_account intentionally excludes site administrators, so identity_service refused inactive_actor. This is a fixture error; production account/authorization rules are unchanged.
+- Corrected fixture creates an active synthetic non-admin HRD through existing account/employment/role APIs, links that identity, logs in through a separate real HTTP cookie, asserts another logged-in actor cannot see/confirm the prepared command, and retains anonymous/GET/invalid-CSRF/valid-POST/repeat/newer-draft assertions. PHP syntax and shell parsing pass; new immutable candidate native rerun pending.

@@ -7,6 +7,19 @@ $mode=$argv[1]??'';$state='/stage/connect-role-http.json';
 if($mode==='seed') {
     $USER=get_admin();\core\session\manager::set_user($USER);
     \local_ustar\accounts::ensure_profile_field();
+    require_once($CFG->dirroot.'/user/lib.php');
+    $reviewerid=user_create_user((object)['username'=>'connect_http_hrd','auth'=>'manual',
+        'password'=>'Fixture-Only-Password1!','confirmed'=>1,'mnethostid'=>$CFG->mnet_localhost_id,
+        'firstname'=>'Synthetic','lastname'=>'HTTP HRD','email'=>'connect.http.hrd@example.invalid']);
+    $roleid=(int)$DB->get_field('role','id',['shortname'=>'ustar_hrd'],MUST_EXIST);
+    role_assign($roleid,$reviewerid,\context_system::instance()->id);
+    \local_ustar\employment::set_status($reviewerid,\local_ustar\employment::ACTIVE,(int)$USER->id,'isolated_role_http');
+    unset_user_preference('auth_forcepasswordchange',$reviewerid);
+    $USER=\core_user::get_user($reviewerid,'*',MUST_EXIST);\core\session\manager::set_user($USER);
+    accesslib_clear_all_caches(true);
+    if(!\local_ustar\accounts::is_business_account($reviewerid) || is_siteadmin($reviewerid)){
+        throw new RuntimeException('FIXTURE_REQUIRES_BUSINESS_HRD');
+    }
     $sender=new \local_ustar\connect\identity('telegram','123456','999777');
     $code=\local_ustar\connect\identity_service::issue('telegram','123456')['code'];
     \local_ustar\connect\identity_service::claim_verified($code,$sender,hash('sha256','isolated-role-http'));

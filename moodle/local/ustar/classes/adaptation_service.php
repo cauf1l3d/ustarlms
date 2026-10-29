@@ -833,6 +833,9 @@ final class adaptation_service {
         $perspective = self::perspective($adaptation, $actorid);
         $map = self::submissions($adaptation);
         $workdate = self::due_workdate($adaptation, $perspective, $map);
+        if (isset($input['expectedworkdate']) && $input['expectedworkdate'] !== $workdate) {
+            throw new \invalid_parameter_exception('Лист изменился в другой сессии. Обновите карточку.');
+        }
         if ($workdate === null || isset($map[$perspective][$workdate])) {
             throw new \invalid_parameter_exception('Обязательный лист уже заполнен или ещё не открыт');
         }
@@ -947,6 +950,9 @@ final class adaptation_service {
         $perspective = self::perspective($adaptation, $actorid);
         $round = self::current_round($adaptationid);
         $reports = self::final_reports($adaptationid, $round);
+        if (isset($input['expectedround']) && (int)$input['expectedround'] !== $round) {
+            throw new \invalid_parameter_exception('Цикл изменился в другой сессии. Обновите карточку.');
+        }
         if ($reports[$perspective]) {
             throw new \invalid_parameter_exception('Итоговый отчёт этой стороны уже отправлен');
         }
@@ -1005,6 +1011,11 @@ final class adaptation_service {
         try {
             $transaction = $DB->start_delegated_transaction();
             try {
+                if(preg_match('/\Aadaptation-final-([1-9][0-9]*)\z/',$key,$match)) {
+                    // The row lock survives nested commits until a channel receipt commits.
+                    $DB->get_record_sql('SELECT id FROM {local_ustar_adaptations} WHERE id=:id FOR UPDATE',
+                        ['id'=>(int)$match[1]],MUST_EXIST);
+                }
                 $result = $command();
                 $transaction->allow_commit();
                 return $result;

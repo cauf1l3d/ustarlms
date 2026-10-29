@@ -4,11 +4,11 @@ project: USTAR Academy
 stage: connect_role_bot_implementation_after_owner2803_acceptance
 stage_label: Owner installed2803 and accepted RSS; full role Telegram bot authorized,
   Mini App last
-current_activity: Owner29Oct verified2803 archive/check/upgrade/status and RSS attachments.
-  Last completed cron03:37MSK exit0/1.282s; current adhoc1/overdue56/failed2 retained,
-  no drain claim. Workday report pending; reminder30Oct11:00Europe/Moscow created.
-  Next implement one coherent button-driven role Connect bot, self/no subagents; no
-  SSH/provider sends/automatic merge.
+current_activity: 'Implementing the unified role Telegram bot candidate2900: canonical
+  role forms/writers, scoped read receipts, native sensitive confirmation, private
+  photo drafts and rich cards. Local protocol/SQLite14 pass; native PostgreSQL qualification
+  and coordinated app/worker operator pending. Production remains owner2803/worker6c56;
+  no deployment claim.'
 entrypoint: START_HERE.md
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -279,15 +279,14 @@ perf_query_deployment:
   workday_SLO: pending
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
 development_candidate:
-  manifest: context/code_map/feed_media_development_source.json
-  status: source_PR110_unmerged_owner_installed2803
-  scope: RSS media and passive workday capture; schema/theme/worker unchanged
-  PR: 110
-  application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
-  qualification_commit: 36be3f108f2eac6a3db728f93b4456a729b97a3e
-  owner_receipt: context/runtime/feed2803_owner_deploy_20261029.json
-  manifest_note: Frozen pre-deployment qualification source inventory; deployed=false
-    is historical, current owner deployment is recorded separately.
+  manifest: context/code_map/connect_role_bot_development_source.json
+  status: implementation_native_qualification_pending
+  scope: Unified button-first Telegram role bot; metadata103 tables; paired app/worker
+    release still pending
+  branch: feat/connect-role-bot-20261029
+  deployed: false
+  progress: context/runtime/connect_role_bot_progress_20261029.md
+  baseline_owner_receipt: context/runtime/feed2803_owner_deploy_20261029.json
 feed_media_workday_delivery:
   status: owner_installed_status_and_RSS_accepted_workday_pending
   application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117

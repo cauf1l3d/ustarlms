@@ -671,17 +671,12 @@ final class route_quiz_grading {
             );
         }
 
+        $gradetransaction = null;
         try {
-            $attempt = $DB->get_record(
-                'quiz_attempts',
-                [
-                    'id' => $attemptid,
-                    'state' => 'finished',
-                    'preview' => 0,
-                ],
-                '*',
-                MUST_EXIST
-            );
+            $gradetransaction = $DB->start_delegated_transaction();
+            $attempt = $DB->get_record_sql(
+                'SELECT * FROM {quiz_attempts} WHERE id=:id AND state=:state AND preview=0 FOR UPDATE',
+                ['id'=>$attemptid,'state'=>'finished'],MUST_EXIST);
 
             $cfg = self::config_for_attempt($attempt);
             $quiz = $cfg['quiz'];
@@ -769,7 +764,6 @@ final class route_quiz_grading {
 
             // Canonical grade persistence comes first. Moodle remains the source
             // of truth for question state, marks and the final quiz grade.
-            $gradetransaction = $DB->start_delegated_transaction();
             if (!$replayed) { $attemptobj->apply_manual_grades($normalized); }
 
             // USTAR audit must not depend on optional event observers/message
@@ -927,6 +921,9 @@ final class route_quiz_grading {
                     );
                 }
             }
+        } catch(\Throwable $e) {
+            if($gradetransaction && !$gradetransaction->is_disposed()){$gradetransaction->rollback($e);}
+            throw $e;
         } finally {
             $lock->release();
         }

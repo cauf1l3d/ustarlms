@@ -87,11 +87,11 @@ production:
   post_deploy_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   previous_addon_receipt: context/runtime/perf2802_owner_deploy_20261029.json
 current_work:
-  activity: Owner29Oct verified2803 archive/check/upgrade/status and RSS attachments.
-    Last completed cron03:37MSK exit0/1.282s; current adhoc1/overdue56/failed2 retained,
-    no drain claim. Workday report pending; reminder30Oct11:00Europe/Moscow created.
-    Next implement one coherent button-driven role Connect bot, self/no subagents;
-    no SSH/provider sends/automatic merge.
+  activity: 'Implementing the unified role Telegram bot candidate2900: canonical role
+    forms/writers, scoped read receipts, native sensitive confirmation, private photo
+    drafts and rich cards. Local protocol/SQLite14 pass; native PostgreSQL qualification
+    and coordinated app/worker operator pending. Production remains owner2803/worker6c56;
+    no deployment claim.'
   next_task: INTEGRATIONS-01
   ready_tasks: []
   task_statuses:

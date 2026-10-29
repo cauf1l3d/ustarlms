@@ -7,6 +7,7 @@ defined('MOODLE_INTERNAL') || die();
 final class bridge_auth {
     public const PATH = '/local/ustar/connect_bridge.php';
     public const OPERATIONS = ['launch.create', 'launch.exchange', 'entry.status', 'entry.revoke', 'link.claim',
+        'bot.update', 'bot.upload',
         'registration.options', 'registration.submit', 'registration.status',
         'notification.lease', 'notification.begin', 'notification.begin_v2', 'notification.begin_v3', 'notification.finish', 'notification.ack',
         'actor.open', 'actor.status', 'actor.revoke'];
@@ -52,6 +53,12 @@ final class bridge_auth {
             throw new \InvalidArgumentException('invalid_request');
         }
         $operation = $value['operation'];
+        if (str_starts_with($operation,'bot.')) {
+            $scopes=$key['operations']??[];
+            if(!is_array($scopes)){throw new \InvalidArgumentException('forbidden_operation');}
+            sort($scopes);
+            if ($scopes!==['bot.update','bot.upload']) { throw new \InvalidArgumentException('forbidden_operation'); }
+        }
         if (!in_array($operation, self::OPERATIONS, true) || !is_array($key['operations'] ?? null)
                 || !in_array($operation, $key['operations'], true)) {
             throw new \InvalidArgumentException('forbidden_operation');

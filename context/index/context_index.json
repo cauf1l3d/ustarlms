@@ -538,6 +538,12 @@
       "sha256": "bb8e0d051a17def1e01762016abdceba53c195c242b24050589848f6dcfa96c7"
     },
     {
+      "path": "context/code_map/connect_role_bot_development_source.json",
+      "domain": "code_map",
+      "size": 97080,
+      "sha256": "a1bccd613dc2e5a1677209095a5e5103a40e99c743370458d36097b4e762b880"
+    },
+    {
       "path": "context/code_map/database.yaml",
       "domain": "code_map",
       "size": 624,
@@ -648,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 8858,
-      "sha256": "a49957ce221c43144bbdf67fc52305e91c3fc7265be84dfa290524ce85858104"
+      "size": 8849,
+      "sha256": "ff5e65feaf3fbc195a5f9322b44e26c608258710a237bf98756439e6511c89bf"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -1482,8 +1488,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 16105,
-      "sha256": "4638c33db98ef4bb29d6de4ce55aaed2cbd95d46fe2311295495c10906743c53"
+      "size": 15981,
+      "sha256": "d62b1fe1e3c5864190db6fb378864a3f6679ffe5f266c03ff335550aebc549e6"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1994,6 +2000,12 @@
       "domain": "runtime",
       "size": 1838,
       "sha256": "4b4ff9fef1c04a36115914d3f54c955a80ca722bd55a5191a3ba99a81443f529"
+    },
+    {
+      "path": "context/runtime/connect_role_bot_progress_20261029.md",
+      "domain": "runtime",
+      "size": 2469,
+      "sha256": "99119dd626d816309dcf50e80002ce7da0f1677155dfd1e21d8e4e0e94474f32"
     },
     {
       "path": "context/runtime/connect_telegram_finish_20261023.md",
@@ -3606,8 +3618,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 2664,
-      "sha256": "ebe0a19a6c35ac8d51ab1cde03c40c0a58a4b3fa6464b49524b62369ce1a8534"
+      "size": 2816,
+      "sha256": "d98201c91a7009cb785ac961243a5c723792fe3623f202d28f80ab09efa65460"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

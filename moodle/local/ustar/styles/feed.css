@@ -93,6 +93,11 @@
   color: var(--u-brand, #9c356b); text-decoration: none; }
 .u-feed__external-origin:hover { text-decoration: underline; }
 .u-feed__media { display: grid; gap: 12px; margin: 12px 0 14px; min-width: 0; }
+.u-feed__additional-media { min-width: 0; border-top: 1px solid var(--u-border, #d9e1dc); padding-top: 8px; }
+.u-feed__additional-media > summary { cursor: pointer; padding: 8px 4px;
+    color: var(--u-muted, #63716a); font-size: .875rem; }
+.u-feed__additional-media > summary:focus-visible { outline: 2px solid var(--u-accent, #c67c9a); outline-offset: 3px; }
+.u-feed__additional-media[open] > .u-feed__file { margin-top: 12px; }
 .u-feed__file { margin: 0; min-width: 0; border: 1px solid var(--u-border, #e1e6e2);
   border-radius: 12px; overflow: hidden; background: var(--u-surface-subtle, #f8faf9); }
 .u-feed__image-link { display: flex; justify-content: center; align-items: center; padding: 8px;

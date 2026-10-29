@@ -1,0 +1,96 @@
+/home/aduk/ustar-feed-media-install-36be3f10.tar.gz \
+  /root/ustar-feed-media-install-36be3f10/package.tar.gz
+cd /root/ustar-feed-media-install-36be3f10
+printf '%s  %s\n' f09b21a969c91b9ce5e884065573586779b50ce699aa789edc394f20bad9589a package.tar.gz | sha256sum --check --strict -
+tar --extract --gzip --file package.tar.gz --no-same-owner --no-same-permissions
+sha256sum --check --strict SHA256SUMS
+/usr/bin/python3 -I -B update.py --check
+ROOT
+package.tar.gz: OK
+INSTALL.json: OK
+README.txt: OK
+observe.py: OK
+update.py: OK
+{"baseline_index_profile": "server1_legacy_indexes_20261023", "host_changes": false, "local_ustar": "2026102802", "phase": "ready_for_feed_media_update", "provider_called": false}
+aduk@server1:~$ sudo systemd-run --unit=ustar-feed-media-update-36be3f10 \
+  --property=Type=oneshot --property=TimeoutStartSec=infinity \
+  /usr/bin/python3 -I -B -u /root/ustar-feed-media-install-36be3f10/update.py \
+  --upgrade --acknowledge-outage
+sudo journalctl -fu ustar-feed-media-update-36be3f10.service -o cat
+Running as unit: ustar-feed-media-update-36be3f10.service
+{"phase": "source_activated"}
+{"phase": "upgrade_1"}
+{"phase": "upgrade_2"}
+{"phase": "cron_written"}
+{"phase": "public_release_committed"}
+{"phase": "app_ready"}
+{"ack_enabled": true, "local_ustar": "2026102803", "phase": "app_ready"}
+ustar-feed-media-update-36be3f10.service: Deactivated successfully.
+Finished ustar-feed-media-update-36be3f10.service - /usr/bin/python3 -I -B -u /root/ustar-feed-media-install-36be3f10/update.py --upgrade --acknowledge-outage.
+ustar-feed-media-update-36be3f10.service: Consumed 3min 6.396s CPU time.
+^C
+aduk@server1:~$ sudo timeout --kill-after=2s 40s /usr/bin/python3 -I -B \
+  /root/ustar-feed-media-install-36be3f10/update.py --status
+sudo timeout --kill-after=2s 40s /usr/bin/python3 -I -B -u \
+  /usr/local/sbin/USTAR_CRON_SETUP_20261005.py --status
+{"app": {"generation": "cbc8148fff48407fa76b6821eb630a89", "phase": "app_ready"}, "database_available": true, "host_changes": false, "runtime": null, "services": {"ustar-connect-notify.service": {"active": true, "enabled": true}, "ustar-connect-receiver.service": {"active": true, "enabled": true}}, "versions": {"local_ustar": "2026102803", "theme_ustar": "2026102700"}}
+CRON_SETUP_VERSION=3
+{
+  "schedule_present": true,
+  "containers_match_installation": true,
+  "last_run": {
+    "started_utc": "2026-10-29T00:37:01.999301+00:00",
+    "trigger": "scheduled",
+    "email_disabled": false,
+    "before": {
+      "last_task_log_id": 5117816,
+      "adhoc_queued": 0,
+      "adhoc_failed": 0,
+      "scheduled_overdue_10m": 19,
+      "scheduled_failed": 2,
+      "ustar_failed": 0,
+      "latest_task_utc": "2026-10-29T00:36:02Z",
+      "failures_24h": []
+    },
+    "cron_exit_code": 0,
+    "log_truncated": false,
+    "finished_utc": "2026-10-29T00:37:03.280884+00:00",
+    "elapsed_seconds": 1.282,
+    "ustar": {
+      "error_lines": 0,
+      "warning_lines": 0,
+      "worker_errors": 0,
+      "grade_errors": 0,
+      "enrolment_errors": 0,
+      "enrolment_missing_manual": 0,
+      "cancelled_login_notifications": 0
+    },
+    "after": {
+      "last_task_log_id": 5117843,
+      "adhoc_queued": 0,
+      "adhoc_failed": 0,
+      "scheduled_overdue_10m": 19,
+      "scheduled_failed": 2,
+      "ustar_failed": 0,
+      "latest_task_utc": "2026-10-29T00:37:03Z",
+      "new_failures": []
+    }
+  },
+  "current": {
+    "last_task_log_id": 5117843,
+    "adhoc_queued": 1,
+    "adhoc_failed": 0,
+    "scheduled_overdue_10m": 56,
+    "scheduled_failed": 2,
+    "ustar_failed": 0,
+    "latest_task_utc": "2026-10-29T00:37:03Z",
+    "failures_24h": []
+  },
+  "last_wrapper_error": {
+    "utc": "2026-10-20T17:33:01.250048+00:00",
+    "error": "Production application versions differ from the reviewed snapshot"
+  }
+}
+Данные от сборщика скину завтра, поставь задачу завтра на 11:00 запустить сборщика. Rss лента работает как надо, вложения открываются через еще.
+
+После фиксации в гитхаб и постановки задача, начинай реализовывать полностью контур UStar Conect(рабочий бот по ролям), мини апп в конце. не делай обрывками, кусками, не запускай субагентов, не трать время на бесконечные тесты, используй скиллы разработки рационально. В самом боте вместо команд реализуй понятные кнопки и короткие понятные объяснения от бота. В сами ответы по действиям и сценариям чуть больше визуальных акцентов и графиков, таблиц, в общем приятной визуальной составляющей вместо сухого текста

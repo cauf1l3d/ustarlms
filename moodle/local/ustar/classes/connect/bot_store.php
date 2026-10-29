@@ -32,7 +32,14 @@ final class bot_store {
         $DB->update_record('local_ustar_conn_dialogs',$d);
     }
     public static function state(\stdClass $d, string $phase, array $value=[]): void {
+        if($phase==='menu'){self::clear_drafts($d);}
         $d->phase=$phase; $d->payload=self::json($value); $d->revision++; self::save($d);
+    }
+    public static function clear_drafts(\stdClass $d): void {
+        if((int)$d->userid>0) {
+            get_file_storage()->delete_area_files(\context_user::instance((int)$d->userid)->id,
+                'local_ustar','connectbotdraft',(int)$d->id);
+        }
     }
     public static function data(\stdClass $d): array { return json_decode($d->payload,true,32,JSON_THROW_ON_ERROR); }
     public static function action(\stdClass $d, string $intent, array $payload=[], string $summary='', bool $native=false): string {

@@ -54,3 +54,21 @@ Author review before candidate publication: dialog/actor replay/current scope, n
 private draft retention/bounds, root credential separation, uncertain transport and paired/public recovery checked.
 This is author self-review, not independent or CodeRabbit review. No subagents per owner instruction.
 No archive is marked installable until exact candidate CI/bytes/retained copy qualification.
+
+Pre-publication review of62773f82 operator snapshot found a material pilot boundary:
+notification_action::recipient_allowed required the pilot UID-list property, which new role profile unsets.
+RealPHP policy test observed RED (broad explicit profile false); fixed via server-only explicit
+ustar_connect_role_delivery_profile + bot_enabled, keeping absent/unconfigured and empty-list denials.
+New15 local bot tests PASS/0.110s; native old-token/new-recipient ACK lifecycle added, not yet executed.
+393 app/627 operator snapshots are superseded candidates, never installed/delivered and not published to PR head.
+Refresh app/worker freeze before qualifying final operator. No protocol downgrade or personal opt-in change.
+Also bounded photo-draft lifecycle: completed/cancelled/replaced forms remove only their private
+FileAPI drafts (canonical report images remain). Stale partial uploads from replaced dialog revisions
+no longer consume the next form's unfinished-upload quota. Native photo test checks canonical bytes
+still readable and private area empty. Independent native confirmation preserves a newer bot form;
+the real HTTP fixture now retains an unrelated unsent photo/form across POST/repeat. Native pending.
+
+### Final application freeze refresh
+
+- Optional Telegram `PhotoSize.file_size` / `File.file_size` no longer silently discard an otherwise valid photo. Actual download is still bounded to512KiB, each supplied size must match actual bytes, and the canonical private upload authorization precedes downloading. Three new tests reproduced2failures/1error before the change; complete focused bot suite18tests passes afterwards. Reference: official Telegram Bot API PhotoSize/File optional fields,29Oct2026.
+- The staged application follow-up also preserves a newer bot form/private photo while an older independent native command is confirmed, clears abandoned private photo drafts and keeps canonical report files, and authorizes ACK only under the explicit linked/opt-in profile. Native cases added; qualification remains pending the new immutable candidate.

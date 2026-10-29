@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "22607c69a27c9be65d78fd407ce240f9dc2b8c8b",
   "component_tree_ids": {
-    "moodle/local/ustar": "d2a93976fd482d87de1fcb1899b50785d524d6f6",
+    "moodle/local/ustar": "5ec9585fea8b9a933a0ee26c8ffa3b118328a24f",
     "moodle/theme/ustar": "c60e0657cb957288c914fa46444d2d692012cb7e"
   },
   "versions": {
@@ -281,11 +281,11 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_confirmation.php",
-      "sha256": "5852a5b61e948bd94102d13ed1845d58a59fb086c4ee866d2066a94e14274650"
+      "sha256": "139fee66bad23f04b52574384135223fde367fd28e438b38dd4ed0493c5990ce"
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_forms.php",
-      "sha256": "fdcb88d46d3aab90bd449ac2ce878f66522c47227df6cac3f114605ef30db7da"
+      "sha256": "f81da9cdbcc804320d94b3982062b0ac032fa55f73cefc27e4d61878393d7acb"
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_guards.php",
@@ -313,11 +313,11 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_store.php",
-      "sha256": "eaa1a30d7ea1f983f7d7aa5f2edf14064425b694bb09d94405d1599d716533be"
+      "sha256": "9e72068a7f5a38df088460a38b8222fab632550c7c0f85f6051b5837e131d03d"
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_upload.php",
-      "sha256": "a1bc49afcf650d0019479628ed83fe9ca02a6f770d8898a98e59f1032316305b"
+      "sha256": "1c9d62b2c42f85f2dea628a963d4df52e1b6894b79b4fafa86dc8fdf8cc5d7e5"
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_work.php",
@@ -357,7 +357,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/notification_action.php",
-      "sha256": "196d46b7ff370a5e9b8b96ca063194a4f8ad905adc7d0d02dddf71b82804b1ab"
+      "sha256": "feb2ab6a2abce145cdcc7ee1ccb00b111349e249927b8602f0c86999cf4decc5"
     },
     {
       "path": "moodle/local/ustar/classes/connect/notification_delivery.php",
@@ -2021,7 +2021,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/connect_bot_test.php",
-      "sha256": "b56c6ffce76bda5d8c9666115e0f0031272322e894a9d1834ebbd8f74ae12371"
+      "sha256": "1a10e8b95a49852465e2a61c4018bb47bff5da4021c5e4e628f6956ea02b4950"
     },
     {
       "path": "moodle/local/ustar/tests/connect_bridge_test.php",
@@ -2045,7 +2045,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/connect_notification_action_test.php",
-      "sha256": "ef27cbfdd0ef4e921581cc6019f5ee17af0aef2c38f40a8904b35b7857187947"
+      "sha256": "c00b44fcc7882d031387dc096779e32d0350bd8d54d3b9248ddf4b42aa62688e"
     },
     {
       "path": "moodle/local/ustar/tests/connect_notification_test.php",

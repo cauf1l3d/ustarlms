@@ -42,11 +42,12 @@ def parse_update(update, *, bot_id, username, now):
             sizes=message['photo']
             if not isinstance(sizes,list) or not 1<=len(sizes)<=10:return None
             candidates=[s for s in sizes if isinstance(s,dict) and isinstance(s.get('file_id'),str)
-                and re.fullmatch(r'[A-Za-z0-9_-]{1,256}',s['file_id']) and type(s.get('file_size')) is int
-                and 0<s['file_size']<=512*1024]
+                and re.fullmatch(r'[A-Za-z0-9_-]{1,256}',s['file_id']) and ('file_size' not in s or
+                (type(s['file_size']) is int and 0<s['file_size']<=512*1024))]
             if not candidates:return None
-            chosen=max(candidates,key=lambda s:s['file_size'])
-            photo=(chosen['file_id'],chosen['file_size'])
+            # Telegram may omit file_size. Prefer a known bounded size; downloads remain bounded too.
+            chosen=max(candidates,key=lambda s:s.get('file_size',0))
+            photo=(chosen['file_id'],chosen.get('file_size'))
             text=message.get('caption','')
             if not isinstance(text,str) or len(text)>1000:return None
     elif set(update)=={'update_id','callback_query'}:

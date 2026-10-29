@@ -219,6 +219,19 @@ final class connect_notification_action_test extends \advanced_testcase {
         $this->assertNull(identity_service::atomic(fn()=>$class::issue($f['notice'],$f['delivery'],$f['link'],time())));
     }
 
+    public function test_explicit_role_profile_preserves_old_ack_and_issues_new_recipient_button(): void {
+        global $CFG;
+        $f=$this->delivery_fixture();$old=$this->action($f);
+        $CFG->ustar_connect_bot_enabled=true;$CFG->ustar_connect_role_delivery_profile='academy_linked_opt_in';
+        $CFG->ustar_connect_notify_since=time()+60;unset($CFG->ustar_connect_notify_userids);
+        $first=$this->ack($f,$old['action']);
+        $this->assertSame($first,$this->ack($f,$old['action']));
+        $this->assertSame('acknowledged',$first['status']);
+        $other=$this->delivery_fixture();unset($CFG->ustar_connect_notify_userids);
+        $new=$this->action($other);$this->assertNotEmpty($new['action']);
+        $this->assertSame('acknowledged',$this->ack($other,$new['action'])['status']);
+    }
+
     private function dispatch(string $op, array $payload, string $kid = 'tg_ack'): array {
         $key = [];
         foreach (['tg_ack'=>['notification.ack'],

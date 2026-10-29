@@ -5,14 +5,17 @@ defined('MOODLE_INTERNAL') || die();
 /** Bounded private image chunks; only an active photo question can receive a file. */
 final class bot_upload {
     public const MAX_BYTES=524288;
-    private static function capacity(int $userid): void {
+    private static function capacity(\stdClass $d): void {
+        $userid=(int)$d->userid;
         $dir=make_temp_directory('ustar-connect-bot');$own=0;$total=0;$seen=0;
         foreach(new \DirectoryIterator($dir) as $entry) {
             if($entry->isDot()){continue;}
             if(++$seen>512){throw new \InvalidArgumentException('rate_limited');}
             if(!$entry->isFile() || $entry->isLink() || !preg_match('/\A[0-9a-f]{64}\.json\z/',$entry->getFilename())){continue;}
             $meta=json_decode(file_get_contents($entry->getPathname()),true);
-            if(is_array($meta) && (int)($meta['expires']??0)<time()) {
+            $stale=is_array($meta) && (int)($meta['userid']??0)===$userid
+                && (($meta['authority']??'')!==$d->authority || (int)($meta['revision']??0)!==(int)$d->revision);
+            if(is_array($meta) && ((int)($meta['expires']??0)<time() || $stale)) {
                 $part=substr($entry->getPathname(),0,-5).'.part';
                 if(is_file($part) && !is_link($part)){unlink($part);}unlink($entry->getPathname());continue;
             }
@@ -44,7 +47,7 @@ final class bot_upload {
                 if($p['part']==='start') {
                     if($p['upload']!=='' || $p['chunk']!=='' || !preg_match('/\A[A-Za-z0-9_-]{1,256}\z/',$p['file'])){throw new \InvalidArgumentException('invalid_bot_upload');}
                     if(count(get_file_storage()->get_area_files(\context_user::instance($id)->id,'local_ustar','connectbotdraft',$d->id,'',false))>=5){throw new \InvalidArgumentException('invalid_bot_upload');}
-                    self::capacity($id);
+                    self::capacity($d);
                     $token='bf4_'.rtrim(strtr(base64_encode(random_bytes(32)),'+/','-_'),'=');$base=self::path($token);
                     $meta=['userid'=>$id,'authority'=>$d->authority,'revision'=>(int)$d->revision,'next'=>1,'size'=>0,
                         'event'=>$p['event'],'expires'=>time()+300,'file'=>$p['file']];

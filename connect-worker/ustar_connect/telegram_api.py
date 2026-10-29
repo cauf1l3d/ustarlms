@@ -144,18 +144,20 @@ class TelegramClient:
         return self._call('getWebhookInfo', {})
 
     def download_bot_photo(self,file_id,expected_size):
-        if not isinstance(file_id,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,256}',file_id) or type(expected_size) is not int or not 0<expected_size<=512*1024:
+        def bounded(size):return type(size) is int and 0<size<=512*1024
+        if not isinstance(file_id,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,256}',file_id) or (expected_size is not None and not bounded(expected_size)):
             raise ValueError('invalid_bot_photo')
         value=self._call('getFile',{'file_id':file_id})
         path=value.get('file_path');size=value.get('file_size')
-        if not isinstance(path,str) or not re.fullmatch(r'photos/[A-Za-z0-9_.-]{1,200}',path) or type(size) is not int or not 0<size<=512*1024:
+        if not isinstance(path,str) or not re.fullmatch(r'photos/[A-Za-z0-9_.-]{1,200}',path) or ('file_size' in value and not bounded(size)):
             raise ValueError('invalid_bot_photo')
         try:
             request=Request('https://api.telegram.org/file/bot'+self._token+'/'+path,method='GET')
             with self._opener.open(request,timeout=10) as response:data=response.read(512*1024+1)
         except (HTTPError,URLError,OSError):
             raise TelegramError('transport_unavailable') from None
-        if len(data)!=size or len(data)>512*1024:raise ValueError('invalid_bot_photo')
+        if not 0<len(data)<=512*1024 or any(len(data)!=n for n in (expected_size,size) if n is not None):
+            raise ValueError('invalid_bot_photo')
         return data
 
     def get_updates(self, offset, *, acknowledgements_enabled=False):

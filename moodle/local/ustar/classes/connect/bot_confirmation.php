@@ -52,7 +52,8 @@ final class bot_confirmation {
             $tx=$DB->start_delegated_transaction();
             try {
                 bot_people::execute($a->intent,json_decode($a->payload,true,32,JSON_THROW_ON_ERROR),$userid);
-                bot_store::state($d,'menu');
+                // A separately confirmed command must not discard a newer bot form.
+                if((int)$d->revision===(int)$a->revision){bot_store::state($d,'menu');}
                 $view=bot_store::card('✓ Решение сохранено','Действие выполнено в Академии. История и автор сохранены.',[bot_service::home($d)]);
                 bot_store::done($a,$view);$tx->allow_commit();return $view;
             } catch(\Throwable $e) { $tx->rollback($e); }

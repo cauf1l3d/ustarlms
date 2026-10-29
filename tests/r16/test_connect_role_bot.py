@@ -49,6 +49,24 @@ class BotRequestValues(unittest.TestCase):
             echo json_encode([$a!==$b,strlen($a),strlen(\local_ustar\connect\bot_request::digest($a))]);''')
         self.assertEqual(result, [True, 47, 64])
 
+    def test_role_delivery_requires_explicit_profile_and_preserves_ack_without_pilot_list(self):
+        source=r'''namespace local_ustar\connect {
+            class notification_delivery {public static function recipient_enabled(int $id):bool {
+                global $CFG;return !property_exists($CFG,'ustar_connect_notify_userids') ||
+                    (is_array($CFG->ustar_connect_notify_userids) && in_array($id,$CFG->ustar_connect_notify_userids,true));}}
+        } namespace {define('MOODLE_INTERNAL',true);require %s;
+            $method=new \ReflectionMethod(\local_ustar\connect\notification_action::class,'recipient_allowed');
+            $out=[];foreach([
+                [],['ustar_connect_bot_enabled'=>true],
+                ['ustar_connect_bot_enabled'=>false,'ustar_connect_role_delivery_profile'=>'academy_linked_opt_in'],
+                ['ustar_connect_bot_enabled'=>true,'ustar_connect_role_delivery_profile'=>'academy_linked_opt_in'],
+                ['ustar_connect_bot_enabled'=>true,'ustar_connect_role_delivery_profile'=>'academy_linked_opt_in','ustar_connect_notify_userids'=>[]],
+                ['ustar_connect_notify_userids'=>[55]],['ustar_connect_notify_userids'=>[56]],
+            ] as $cfg){$CFG=(object)$cfg;$out[]=$method->invoke(null,55);}echo json_encode($out); }''' % json.dumps(str(ROOT/'moodle/local/ustar/classes/connect/notification_action.php'))
+        result=subprocess.run([os.environ.get('USTAR_TEST_PHP','php'),'-n','-r',source],capture_output=True,text=True)
+        self.assertEqual(0,result.returncode,result.stderr+result.stdout)
+        self.assertEqual([False,False,False,True,False,True,False],json.loads(result.stdout))
+
 
 class TelegramBotInterface(unittest.TestCase):
     def view(self):
@@ -99,6 +117,37 @@ class TelegramBotInterface(unittest.TestCase):
     def test_start_link_stays_with_existing_two_sided_link_flow(self):
         from ustar_connect.bot_handler import parse_update
         self.assertIsNone(parse_update(self.message('/start uc1_'+'A'*43),bot_id='123456',username='ustarcorp_bot',now=1000))
+
+    def test_photo_accepts_optional_size_but_rejects_invalid_advertised_size(self):
+        from ustar_connect.bot_handler import parse_update
+        value=self.message('');value['message']['photo']=[{'file_id':'synthetic_photo','width':100,'height':100}]
+        event=parse_update(value,bot_id='123456',username='ustarcorp_bot',now=1000)
+        self.assertIsNotNone(event)
+        self.assertEqual(('synthetic_photo',None),event.photo)
+        for invalid in [None,True,0,512*1024+1,'100']:
+            value['message']['photo'][0]['file_size']=invalid
+            self.assertIsNone(parse_update(value,bot_id='123456',username='ustarcorp_bot',now=1000))
+
+    def test_photo_transport_bounds_actual_bytes_when_sizes_are_optional(self):
+        from unittest.mock import MagicMock,Mock
+        from ustar_connect.telegram_api import TelegramClient
+        api=TelegramClient('123456:'+'x'*30);api._call=Mock(return_value={'file_path':'photos/synthetic.jpg'})
+        api._opener=MagicMock();response=api._opener.open.return_value.__enter__.return_value
+        response.read.return_value=b'photo'
+        self.assertEqual(b'photo',api.download_bot_photo('synthetic_photo',None))
+        response.read.assert_called_once_with(512*1024+1)
+        for data in [b'',b'x'*(512*1024+1)]:
+            response.read.return_value=data
+            with self.assertRaises(ValueError):api.download_bot_photo('synthetic_photo',None)
+
+    def test_photo_transport_checks_each_provided_size(self):
+        from unittest.mock import MagicMock,Mock
+        from ustar_connect.telegram_api import TelegramClient
+        api=TelegramClient('123456:'+'x'*30);api._opener=MagicMock()
+        api._opener.open.return_value.__enter__.return_value.read.return_value=b'photo'
+        for declared,metadata in [(6,5),(5,6),(None,6),(5,True)]:
+            api._call=Mock(return_value={'file_path':'photos/synthetic.jpg','file_size':metadata})
+            with self.assertRaises(ValueError):api.download_bot_photo('synthetic_photo',declared)
 
     def test_old_message_date_is_not_used_as_callback_click_time(self):
         from ustar_connect.bot_handler import parse_update

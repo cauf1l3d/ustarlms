@@ -87,11 +87,11 @@ production:
   post_deploy_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   previous_addon_receipt: context/runtime/perf2802_owner_deploy_20261029.json
 current_work:
-  activity: Unified Connect role bot app/worker source3935779f is frozen for qualification
-    in PR111. Coordinated successor operator, separate bot key, future-only opted-in
-    recipients, native HTTP confirmation, actual2803 legacy-index CLI upgrade/repeat
-    and systemd/HTTPS-owner drills prepared. Qualification/owner archive pending.
-    Production stays owner2803/worker6c56; PERF report pending.
+  activity: Final author review found ACK still depended on the old one-user pilot
+    property. Real PHP policy test reproduced failure; explicit role-delivery profile
+    fix passes15 local bot tests. App freeze is being refreshed before coordinated
+    operator qualification. No deployment/archive readiness claim; production remains
+    owner2803/worker6c56.
   next_task: INTEGRATIONS-01
   ready_tasks: []
   task_statuses:

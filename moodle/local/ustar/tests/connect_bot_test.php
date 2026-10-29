@@ -120,6 +120,10 @@ final class connect_bot_test extends \advanced_testcase {
         $files=get_file_storage()->get_area_files(\context_system::instance()->id,'local_ustar',task_files::RESULT,$id,'',false);
         $this->assertCount(1,$files);$file=reset($files);$this->assertSame('image/png',$file->get_mimetype());
         $this->assertStringContainsString('synthetic_picture',$file->get_source());
+        $this->assertNotEmpty($file->get_content());
+        $dialog=$DB->get_record('local_ustar_conn_dialogs',['identityhash'=>$sender->key()]);
+        $this->assertCount(0,get_file_storage()->get_area_files(\context_user::instance((int)$dialog->userid)->id,
+            'local_ustar','connectbotdraft',$dialog->id,'',false),'Consumed private drafts must not exhaust the next report quota');
     }
     public function test_preferences_changed_in_native_page_are_not_silently_flipped(): void {
         $sender=$this->linked();$user=clone $GLOBALS['USER'];

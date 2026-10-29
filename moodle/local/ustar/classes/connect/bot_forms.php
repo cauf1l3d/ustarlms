@@ -6,6 +6,7 @@ defined('MOODLE_INTERNAL') || die();
 final class bot_forms {
     public static function start(\stdClass $d,string $title,array $fields,string $commit,array $context=[]): array {
         if (!$fields || count($fields)>250) { throw new \InvalidArgumentException('invalid_bot_form'); }
+        bot_store::clear_drafts($d); // A new form replaces only this dialog's abandoned private files.
         bot_store::state($d,'form.input',['title'=>$title,'fields'=>$fields,'index'=>0,'values'=>[],
             'commit'=>$commit,'context'=>$context]);
         return self::ask($d);

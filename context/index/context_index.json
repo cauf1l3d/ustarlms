@@ -1440,8 +1440,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 36810,
-      "sha256": "3a9e4a928e1c94e4b00e04006a06efe8538710b50610279fa0d65af6552b0401"
+      "size": 37071,
+      "sha256": "41da26770e846c88a958cdc1fb18df8777c264d346cbbac3efa9acba79083679"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1494,8 +1494,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 16765,
-      "sha256": "7aeb48d448aed1d6e8cde451dfd60c4cf8aac460493d5d35a5faf3e85392ae5d"
+      "size": 17341,
+      "sha256": "a2340b5774c098ee01366c0b501cab6bbf32a3341a55d9ebc1c7d6dd4a94e915"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -2010,8 +2010,14 @@
     {
       "path": "context/runtime/connect_role_bot_progress_20261029.md",
       "domain": "runtime",
-      "size": 11583,
-      "sha256": "b5d2e5389978f959ced0538bc16c04f3b08ffa10ed76478712b350cc12a2f4a6"
+      "size": 12337,
+      "sha256": "a4135fa993800ef26c340c212965cc35848f5a6aaca22f814fdd146efd82a283"
+    },
+    {
+      "path": "context/runtime/connect_role_bot_qualification_20261029.json",
+      "domain": "runtime",
+      "size": 12835,
+      "sha256": "a970a92fd08d64f5c9ee4e13badf2845cb1fcccc6a62792c4ecd49e1d53d50ad"
     },
     {
       "path": "context/runtime/connect_telegram_finish_20261023.md",
@@ -3624,8 +3630,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 2833,
-      "sha256": "ef316b8495c3b886acf19612b03dcb5f2f081d6d6ffce44b80f11cf4fe0b9f7e"
+      "size": 3155,
+      "sha256": "235d134e3b830d033058abdf7a6e2059b56966231d451631f998b7c41802b0a5"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

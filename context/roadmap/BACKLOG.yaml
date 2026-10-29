@@ -514,13 +514,17 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: owner_resumed29Oct_complete_button_role_bot_MiniApp_last
+  phase: role_bot2900_qualified_owner_install_and_role_acceptance_pending
   owner_priority: complete_Telegram_role_bot_before_MiniApp_public_HTTPS
-  current_summary: Owner29Oct resumes complete role-based Telegram bot after2803 receipt
-    and reminder. Russian buttons, concise guidance, visual summaries/charts/tables;
-    self implementation/no subagents, proportional verification, one coherent release.
-    Reuse current Academy actors/writers/history. Public Academy HTTPS/Mini App last;
-    existing6c56 notification/ACK runtime preserved until qualified coordinated rollout.
+  current_summary: >-
+    Telegram role bot2900 complete in PR111: app/worker5cc02944, fixed tool99dbecaa.
+    FullRC/all4CI qualified on022fddee; native371/1751 both Moodle runtimes, Connect172/875,
+    actual103-table upgrade/repeat, UID33/systemd/privateTLS/recovery pass.
+    Archive21081981bytes/SHA13333646 verified against CI and downloaded saved copy.
+    Production remains owner2803/worker6c56; owner installation and live role acceptance pending.
+    Native LAN confirmation/first password remain explicit; Mini App/public HTTPS next.
+  role_bot_qualification: context/runtime/connect_role_bot_qualification_20261029.json
+  role_bot_runbook: docs/CONNECT_BOT_2900_INSTALL_RU.md
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity
     remains separate

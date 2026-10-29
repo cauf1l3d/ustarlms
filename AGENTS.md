@@ -2,7 +2,10 @@
 
 Актуально29.10.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
 Канонический baseline — main2802; активный кандидат — PR111/app2900/worker5cc02944.
-PR110/owner2803 ещё не слит. Новая согласованная поставка не квалифицирована/не установлена.
+PR110/owner2803 ещё не слит. Поставка2900/tool99dbecaa квалифицирована, не установлена.
+[Квалификация](context/runtime/connect_role_bot_qualification_20261029.json),
+[команды](docs/CONNECT_BOT_2900_INSTALL_RU.md):4CI/native371/1751,Connect172/875,103tables,UID33.
+Реальная приёмка ролей/Telegram владельцем ещё впереди.
 
 ## Работа и разрешения
 
@@ -25,7 +28,7 @@ Owner29Oct возобновил полный Connect: кнопки/коротк�
 Новые слияния автоматически не делать. Старые операторы не переписывать.
 Субагенты запрещены. Агент не подключается по SSH к production, не отправляет
 сообщения/письма/архивы через провайдеров и не меняет сервер в рамках Git-работ.
-Worker6c56 отдельный, без rollout. Docker rotation/health/recreate отложены до
+Production worker6c56 сохраняется до owner установки согласованного99dbecaa/worker5cc02944. Docker rotation/health/recreate отложены до
 планового Moodle/PHP upgrade; эксперимент infra/docker-successor-frozen не поставлен.
 
 ## Источники истины

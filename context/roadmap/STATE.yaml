@@ -267,7 +267,7 @@ perf_query_deployment:
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
 development_candidate:
   manifest: context/code_map/connect_role_bot_development_source.json
-  status: source_frozen_qualification_pending
+  status: qualified_owner_install_pending
   scope: Unified button-first Telegram role bot; metadata103 tables; paired app/worker release still pending
   branch: feat/connect-role-bot-20261029
   deployed: false
@@ -277,6 +277,8 @@ development_candidate:
   previous_app_candidate: 3935779fd432a1a057f5f24e41d93f38a651a1e2
   application_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
   worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+  qualification_receipt: context/runtime/connect_role_bot_qualification_20261029.json
+  qualification_head: 022fddee2993c67de1b618e27faa45ff1cdcb96d
 feed_media_workday_delivery:
   status: owner_installed_status_and_RSS_accepted_workday_pending
   application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
@@ -300,7 +302,7 @@ feed_media_workday_delivery:
   workday_reminder_local: '2026-10-30T11:00:00+03:00'
 connect_role_bot_order: context/runtime/connect_bot_owner_order_20261029.json
 connect_role_bot_delivery:
-  status: source_frozen_qualification_pending
+  status: qualified_owner_install_pending
   PR: 111
   baseline_application: ef903b7d276f1d62c4879f8a943a435b48e89117
   baseline_worker: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
@@ -314,3 +316,11 @@ connect_role_bot_delivery:
   application_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
   worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
   coordinated_worker_rollout_planned: true
+  qualification_receipt: context/runtime/connect_role_bot_qualification_20261029.json
+  qualification_head: 022fddee2993c67de1b618e27faa45ff1cdcb96d
+  tool_commit: 99dbecaac7fe9c6bd2fa9e77349d336e448ca8a6
+  archive_sha256: 1333364609478dab4c56764ec0e7481c5b59c11ca1c50a1fb981667849157078
+  archive_bytes: 21081981
+  retained_copy_verified: true
+  owner_instruction: docs/CONNECT_BOT_2900_INSTALL_RU.md
+  owner_role_acceptance: pending

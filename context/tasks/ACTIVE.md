@@ -3,13 +3,14 @@
 ## INTEGRATIONS-01: полный рабочий Telegram-бот; Mini App в конце
 
 [Owner поручение](../runtime/connect_bot_owner_order_20261029.json) возобновляет Connect.
-2803 и напоминание зафиксированы. Кандидат2900 app/worker5cc02944 заморожен в PR111; поставка ещё не квалифицирована.
+2803 и напоминание зафиксированы. Поставка2900 app/worker5cc02944 + tool99dbecaa квалифицирована в PR111, не установлена.
+[4CI/FullRC](../runtime/connect_role_bot_qualification_20261029.json), [команды](../../docs/CONNECT_BOT_2900_INSTALL_RU.md).
 [План](../../docs/superpowers/plans/2026-10-29-connect-role-bot.md), [прогресс](../runtime/connect_role_bot_progress_20261029.md).
 Русские кнопки вместо необходимости знать команды, короткие объяснения, визуальные
 сводки/прогресс/компактные таблицы и графики. Существующие Academy identities, writers,
 права и история; самостоятельная работа без субагентов, рациональные проверки.
 Mini App и публичный HTTPS Академии отложены до конца; Bitrix/WhatsApp не включаются
-автоматически. Текущий worker6c56 сохраняется до отдельной квалифицированной поставки.
+автоматически. Текущий worker6c56 сохраняется до owner установки готового комплекта. Следом — приёмка ролей, затем Mini App/публичный HTTPS.
 Нового автоматического merge/agent SSH/provider sends нет.
 
 ## RSS-01 завершён owner acceptance; PERF-01 report ожидается
@@ -26,5 +27,5 @@ wrapper20Oct и не доказательство разгруженной оч�
 
 Напоминание владельцу30Oct11:00Europe/Moscow создано: запустить observe.py на8h
 обычной работы, затем прислать отчёт. Фактический запуск/отчёт ещё не подтверждены.
-[Команды](../../docs/FEED_2803_INSTALL_RU.md). SQL/page, Web-SAPI OPcache и SLO не
+[Сборщик2803/2900](../../docs/CONNECT_BOT_2900_INSTALL_RU.md); старый2803 комплект остаётся допустимым до обновления. SQL/page, Web-SAPI OPcache и SLO не
 выводить из Apache aggregate. Работа Connect не закрывает PERF-01 автоматически.

@@ -18,6 +18,12 @@ final class provider implements
     \core_privacy\local\request\user_preference_provider {
 
     public static function get_metadata(collection $collection): collection {
+        foreach (['local_ustar_conn_dialogs'=>['userid','identityhash','linkid','linkrevision','revision','phase','payload','expiresat','ratewindow','ratecount','timemodified','authority'],
+                'local_ustar_conn_actions'=>['userid','dialogid','revision','intent','payload','summary','status','resultjson','expiresat','timecreated','tokenhash','authority'],
+                'local_ustar_conn_updates'=>['userid','identityhash','linkrevision','payloadhash','responsejson','timecreated','eventhash','authority']] as $table=>$fields) {
+            $collection->add_database_table($table,array_fill_keys($fields,'privacy:metadata:connect:bot'),'privacy:metadata:connect:bot');
+        }
+        $collection->add_subsystem_link('core_files',[],'privacy:metadata:connect:bot');
         $collection->add_database_table('local_ustar_conn_links', [
             'userid' => 'privacy:metadata:connect:userid',
             'provider' => 'privacy:metadata:connect:provider',
@@ -99,6 +105,8 @@ final class provider implements
 
     public static function get_contexts_for_userid(int $userid): contextlist {
         $contexts = new contextlist();
+        $contexts->add_from_sql('SELECT DISTINCT contextid FROM {files} WHERE component=:component AND filearea=:area AND userid=:uid',
+            ['component'=>'local_ustar','area'=>'connectbotdraft','uid'=>$userid]);
         $contexts->add_from_sql('SELECT c.id FROM {context} c WHERE c.contextlevel = :level
             AND (EXISTS (SELECT l.id FROM {local_ustar_conn_links} l WHERE l.userid = :linkuser)
               OR EXISTS (SELECT x.id FROM {local_ustar_conn_challenges} x WHERE x.userid = :challengeuser)
@@ -116,9 +124,15 @@ final class provider implements
     }
 
     public static function get_users_in_context(userlist $userlist): void {
+        if ($userlist->get_context()->contextlevel===CONTEXT_USER) {
+            $userlist->add_from_sql('userid','SELECT DISTINCT userid FROM {files} WHERE contextid=:ctx AND component=:component AND filearea=:area',
+                ['ctx'=>$userlist->get_context()->id,'component'=>'local_ustar','area'=>'connectbotdraft']);
+            return;
+        }
         if ($userlist->get_context()->contextlevel !== CONTEXT_SYSTEM) { return; }
         foreach (['local_ustar_conn_links', 'local_ustar_conn_challenges',
-                'local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups', 'local_ustar_conn_acktokens'] as $table) {
+                'local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups', 'local_ustar_conn_acktokens',
+                'local_ustar_conn_dialogs','local_ustar_conn_actions','local_ustar_conn_updates'] as $table) {
             $userlist->add_from_sql('userid', 'SELECT DISTINCT userid FROM {' . $table . '} WHERE userid > 0', []);
         }
         $userlist->add_from_sql('userid', 'SELECT userid FROM {user_preferences} WHERE name = :name',
@@ -139,6 +153,13 @@ final class provider implements
 
     public static function export_user_data(approved_contextlist $contextlist): void {
         global $DB;
+        $userid=(int)$contextlist->get_user()->id;
+        $usercontext=\context_user::instance($userid);
+        if(in_array($usercontext->id,$contextlist->get_contextids())) {
+            $ids=$DB->get_fieldset_sql('SELECT DISTINCT itemid FROM {files} WHERE contextid=:ctx AND component=:component AND filearea=:area',
+                ['ctx'=>$usercontext->id,'component'=>'local_ustar','area'=>'connectbotdraft']);
+            foreach($ids as $itemid){writer::with_context($usercontext)->export_area_files(['Connect','Drafts',(string)$itemid],'local_ustar','connectbotdraft',(int)$itemid);}
+        }
         if (!in_array(\context_system::instance()->id, $contextlist->get_contextids())) { return; }
         $userid = (int)$contextlist->get_user()->id;
         $links = $DB->get_records('local_ustar_conn_links', ['userid' => $userid], 'id',
@@ -163,20 +184,27 @@ final class provider implements
             'registrations' => array_values($signups),
             'notification_deliveries' => array_values($deliveries),
             'notification_actions' => array_values($actions),
+            'bot_dialogs'=>self::bot_export($userid),
         ]);
     }
 
     public static function delete_data_for_all_users_in_context(\context $context): void {
+        if($context->contextlevel===CONTEXT_USER){get_file_storage()->delete_area_files($context->id,'local_ustar','connectbotdraft');}
         if ($context->contextlevel === CONTEXT_SYSTEM) { self::erase(null); }
     }
 
     public static function delete_data_for_user(approved_contextlist $contextlist): void {
+        $ctx=\context_user::instance((int)$contextlist->get_user()->id);
+        if(in_array($ctx->id,$contextlist->get_contextids())){get_file_storage()->delete_area_files($ctx->id,'local_ustar','connectbotdraft');}
         if (in_array(\context_system::instance()->id, $contextlist->get_contextids())) {
             self::erase([(int)$contextlist->get_user()->id]);
         }
     }
 
     public static function delete_data_for_users(approved_userlist $userlist): void {
+        if($userlist->get_context()->contextlevel===CONTEXT_USER && in_array((int)$userlist->get_context()->instanceid,$userlist->get_userids())) {
+            get_file_storage()->delete_area_files($userlist->get_context()->id,'local_ustar','connectbotdraft');
+        }
         if ($userlist->get_context()->contextlevel === CONTEXT_SYSTEM) {
             self::erase(array_map('intval', $userlist->get_userids()));
         }
@@ -191,6 +219,7 @@ final class provider implements
         try {
             $transaction = $DB->start_delegated_transaction();
             try {
+                self::erase_bot($userids);
                 if ($userids === null) {
                     $DB->delete_records('local_ustar_conn_acktokens');
                     $DB->delete_records('local_ustar_notify_delivery', ['connectversion' => 1]);
@@ -226,5 +255,40 @@ final class provider implements
                 $transaction->rollback($error);
             }
         } finally { $lock->release(); }
+    }
+
+    private static function bot_dialogs(int $userid): array {
+        global $DB;
+        return $DB->get_records_sql('SELECT d.* FROM {local_ustar_conn_dialogs} d WHERE d.userid=:owner OR d.identityhash IN
+            (SELECT identityhash FROM {local_ustar_conn_links} WHERE userid=:linked)', ['owner'=>$userid,'linked'=>$userid]);
+    }
+    private static function bot_export(int $userid): array {
+        global $DB;
+        $dialogs=self::bot_dialogs($userid);$out=[];
+        foreach($dialogs as $d) {
+            $actions=$DB->get_records('local_ustar_conn_actions',['dialogid'=>$d->id],'id','id,intent,payload,summary,status,expiresat,timecreated');
+            $item=['phase'=>$d->phase,'draft'=>json_decode($d->payload,true),'expires'=>$d->expiresat,'actions'=>array_values($actions)];
+            // Action/file handles are execution internals, never portable credentials in an export.
+            $clean=preg_replace('/(?:cb4|bf4)_[A-Za-z0-9_-]{43}/','[redacted-action]',json_encode($item,JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR));
+            $out[]=json_decode($clean,true,64,JSON_THROW_ON_ERROR);
+        }
+        return $out;
+    }
+    private static function erase_bot(?array $userids): void {
+        global $DB;
+        if($userids===null) {
+            foreach(['local_ustar_conn_actions','local_ustar_conn_updates','local_ustar_conn_dialogs'] as $table){$DB->delete_records($table);}
+            return;
+        }
+        foreach($userids as $userid) {
+            $dialogs=self::bot_dialogs((int)$userid);
+            foreach($dialogs as $d) {
+                $DB->delete_records('local_ustar_conn_actions',['dialogid'=>$d->id]);
+                $DB->delete_records('local_ustar_conn_updates',['identityhash'=>$d->identityhash]);
+                $DB->delete_records('local_ustar_conn_dialogs',['id'=>$d->id]);
+            }
+            $DB->delete_records('local_ustar_conn_actions',['userid'=>$userid]);
+            $DB->delete_records('local_ustar_conn_updates',['userid'=>$userid]);
+        }
     }
 }

@@ -10,6 +10,8 @@ final class bridge_service {
         $op = $request['operation'];
         $payload = $request['payload'];
         $fields = match ($op) {
+            'bot.update' => bot_request::FIELDS,
+            'bot.upload' => ['auth_date','chunk','event','file','part','provider','subject','tenant','upload'],
             'launch.create' => ['provider', 'subject', 'tenant'],
             'launch.exchange' => ['auth_date', 'browser', 'launch', 'proof', 'provider', 'subject', 'tenant'],
             'actor.open', 'actor.status', 'actor.revoke', 'entry.status', 'entry.revoke' => ['browser', 'session'],
@@ -37,6 +39,8 @@ final class bridge_service {
         }
         identity_service::remember_transport($request['nonce_hash'], $request['nonce_expires']);
         $kid = $request['key_id'];
+        if ($op==='bot.update') { return bot_service::update($sender,$payload); }
+        if ($op==='bot.upload') { return bot_upload::chunk($sender,$payload); }
         if ($op === 'notification.lease') {
             if ($payload['limit'] !== '1') { throw new \InvalidArgumentException('invalid_payload'); }
             return notification_delivery::lease($kid, $request['provider'], $request['tenant']) ?? ['status' => 'empty'];

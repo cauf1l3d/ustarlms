@@ -181,6 +181,30 @@ jobs:
           path: artifacts/perf-query-production-deploy/
       - name: Query2802 source denies actual UID33 writes
         run: sudo -n env USTAR_REQUIRE_PERF_UID33=1 python3 -m unittest tests.r16.test_perf_query_update.ActualCodePermissions -v
+      - name: Build fixed2802-to2803 RSS media updater and workday observer
+        run: |
+          git worktree add --detach .stage-input/feed-2803-fixed 36be3f108f2eac6a3db728f93b4456a729b97a3e
+          python3 .stage-input/feed-2803-fixed/scripts/infra/build_feed_media_update.py --commit 36be3f108f2eac6a3db728f93b4456a729b97a3e --output-dir "$GITHUB_WORKSPACE/artifacts/feed-media-production-deploy"
+          python3 -I -B artifacts/feed-media-production-deploy/ustar-feed-media-update-*.py
+          python3 -I -B scripts/infra/workday_observer.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: feed-media-production-deploy
+          path: artifacts/feed-media-production-deploy/
+      - name: RSS2803 source denies actual UID33 writes and observer preserves root-only output
+        run: |
+          sudo -n env USTAR_REQUIRE_FEED_UID33=1 python3 -m unittest tests.r16.test_feed_media_update.ActualCodePermissions -v
+          sudo -n python3 -m unittest tests.r16.test_workday_observer -v
+      - name: Build coordinated role bot app and worker from exact qualified Git trees
+        run: |
+          python3 -m unittest tests.r16.test_connect_role_bot_update.Predecessor tests.r16.test_connect_role_bot_update.Contract -v
+          python3 scripts/infra/build_connect_role_bot_update.py --commit 9a68246b170dd6a08dc6a8e2118e69f32e16bea9 --output-dir artifacts/connect-role-bot-production-deploy
+          python3 -I -B artifacts/connect-role-bot-production-deploy/ustar-connect-role-bot-update-*.py
+          sudo -n env USTAR_REQUIRE_ROLE_BOT_UID33=1 python3 -m unittest tests.r16.test_connect_role_bot_update.ActualCodePermissions -v
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-role-bot-production-deploy
+          path: artifacts/connect-role-bot-production-deploy/
       - name: PostgreSQL handoff config is readable but cannot be overwritten by actual UID33
         run: sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_postgres_app_handoff.ActualUnixPermissions -v
       - name: Code hardening archive and actual UID33 isolation
@@ -202,6 +226,7 @@ jobs:
           artifacts/con02-update-legacy/ustar-notify-pilot-*.pyz
           artifacts/con02-update-legacy/ustar-bridge-activate-*.pyz
           artifacts/telegram-update-command/ustar-telegram-update-*.py
+          artifacts/connect-role-bot-production-deploy/ustar-connect-role-bot-update-*.py
       - name: CON02 controller respects actual HTTPS owner renewal and recovery
         run: >-
           sudo -n env GITHUB_ACTIONS=true USTAR_CONNECT_CON02_FIXTURE=1
@@ -209,6 +234,7 @@ jobs:
           artifacts/con02-update-command/ustar-con02-update-*.py
           artifacts/con02-callback-old-worker/ustar-connect-receiver-*.tar.gz
           artifacts/telegram-update-command/ustar-telegram-update-*.py
+          artifacts/connect-role-bot-production-deploy/ustar-connect-role-bot-update-*.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -221,6 +247,8 @@ jobs:
             artifacts/telegram-update-command/
             artifacts/telegram-update-runtime.json
             artifacts/telegram-update-https-owner.json
+            artifacts/connect-role-bot-systemd.json
+            artifacts/connect-role-bot-https-owner.json
       - name: Native additive Academy TLS probe and graceful recovery on isolated high ports
         run: |
           sudo -n env USTAR_ACADEMY_TLS_FIXTURE=1 python3 tests/stage/academy_tls_probe_native.py

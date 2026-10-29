@@ -138,7 +138,10 @@ jobs:
           git archive 1e8a8819f50785ebb4fb2640eeb9386c969d59d1 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/con02-update-baseline
           git show a86e208029b6104150e85d0e90384f84da214c22:moodle/local/ustar/classes/connect/notification_delivery.php > .stage-input/con02-update-baseline/moodle/local/ustar/classes/connect/notification_delivery.php
           git archive 534764821c4f65437ab50b3c7f25578d538e9504 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/con02-update-target
+          mkdir -p .stage-input/telegram-presentation-target
+          git archive 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/telegram-presentation-target
           python3 tests/stage/con02_update_native.py prepare
+          python3 tests/stage/connect_role_bot_native.py --prepare
           python3 - <<'PYCONFIG'
           import importlib.util
           from pathlib import Path
@@ -213,6 +216,8 @@ jobs:
           python3 tests/stage/studio_colors_legacy_native.py --prepare
           python3 tests/stage/studio_viewport_legacy_native.py --prepare
           python3 tests/stage/perf_query_legacy_native.py --prepare
+          python3 tests/stage/feed_media_legacy_native.py --prepare
+          python3 tests/stage/connect_role_bot_native.py --prepare
           mkdir -p artifacts
           cp .stage-input/baseline.json artifacts/baseline.json
       - name: Build isolated test runtime

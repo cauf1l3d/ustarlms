@@ -26,50 +26,55 @@ application_baseline:
   scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source
     integration is separate from owner server acceptance.
 production:
-  latest_owner_browser_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
+  latest_owner_browser_acceptance: context/runtime/feed2803_owner_deploy_20261029.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
-  latest_cron_contract: context/runtime/perf2802_owner_deploy_20261029.json
-  previous_scheduled_cron_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
-  latest_addon_preflight: context/runtime/perf2802_owner_deploy_20261029.json
+  latest_cron_contract: context/runtime/feed2803_owner_deploy_20261029.json
+  previous_scheduled_cron_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+  latest_addon_preflight: context/runtime/connect_role_bot_owner_deploy_20261029.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
-  latest_Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  latest_Telegram_owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
   effective_addon_deployment:
-    receipt: context/runtime/perf2802_owner_deploy_20261029.json
+    receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
     reported_date_msk: '2026-10-29'
-    status: owner_install_status_scheduled_cron_confirmed_browser_workday_pending
-    installer_commit: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
-    payload_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+    status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
+    installer_commit: 9a68246b170dd6a08dc6a8e2118e69f32e16bea9
+    payload_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
     versions:
-      local_ustar: 2026102802
+      local_ustar: 2026102900
       theme_ustar: 2026102700
-    files: 590
-    tables: 100
+    files: 606
+    tables: 103
     counts_basis: fixed_controller_payload_not_new_whole_host_manifest
     independent_probe: false
-    worker_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
-    worker_rollout: false
-    previous_exact_terminal_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
-    previous_2801_preflight_in_same_receipt: true
-    post_deploy_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  status: owner_perf2802_install_status_and_scheduled_cron_confirmed
+    worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+    worker_rollout: true
+    previous_exact_terminal_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+    previous_2801_preflight_in_same_receipt: false
+    post_deploy_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
+    browser_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+    role_bot_enabled: true
+    runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
+    post_check: role_bot_ready
+    live_role_acceptance: pending
+  status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
   observed_at: '2026-10-29'
-  source: context/runtime/evidence_20261029.yaml
+  source: context/runtime/evidence_connect2900_20261029.yaml
   independently_measured: false
-  current_source_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+  current_source_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
   current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh
     host filesystem census
   current_versions:
-    local_ustar: 2026102802
+    local_ustar: 2026102900
     theme_ustar: 2026102700
   last_exact_source_manifest:
-    commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+    commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
     date: '2026-10-29'
-    matching_files: 590
+    matching_files: 606
     kind: owner_verified_controller_payload_not_fresh_manifest
-    evidence: context/runtime/perf2802_owner_deploy_20261029.json
-  cron: owner_scheduled29Oct00_42MSK_exit0_no_new_failures_ustar_errors0_adhoc0_overdue19_failed2
-  cron_current_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+    evidence: context/runtime/connect_role_bot_owner_deploy_20261029.json
+  cron: completed29Oct03_37MSK_exit0_1_282s_no_new_failures; current_adhoc1_overdue56_failed2_not_yet_drained
+  cron_current_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
   regular_backup_current_receipt: context/runtime/infra_readonly_owner_20261023.json
   later_observations: context/runtime/RELEASE_LEDGER.md
@@ -83,14 +88,16 @@ production:
     Docker: 29.9.0
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
-  post_deploy_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+  post_deploy_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
+  previous_addon_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  post2900_cron_run_receipt: pending; last supplied scheduled cron remains pre2900
+  current_worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 current_work:
-  activity: Owner29Oct passed exact2801 preflight and installed2802 using3c1ddd09;
-    status app_ready/DB available/local2802/theme2700, both Connect services active+enabled.
-    Scheduled cron00:42MSK exit0/34.311s with no new failures; adhoc1 to0, overdue63
-    to19, failed2. Bounded source delivery is accepted; post2802 browser smoke and
-    broader workday/concurrency/SLO remain open. Agent did not access server1.
-  next_task: PERF-01
+  activity: Owner29Oct directly enabled pinned9a controller and worker5cc; runtime_active/ACK
+    true and role_bot_ready confirmed on local2900/theme2700. All4CI onfe2f05d passed.
+    Live role scenarios, fresh scheduled cron and workday report remain pending; Mini
+    App/public HTTPS follow role acceptance.
+  next_task: INTEGRATIONS-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -115,7 +122,7 @@ current_work:
     INF-12: planned
     INF-13: planned
     INF-14: in_progress
-    INTEGRATIONS-01: deferred
+    INTEGRATIONS-01: in_progress
     MOB-01: planned
     MOB-02: planned
     MOB-03: planned
@@ -126,6 +133,7 @@ current_work:
     PERF-01: in_progress
     PLAT-01: deferred
     PRIVACY-01: deferred
+    RSS-01: done
     STUDIO-01: done
     TECH-01: planned
 server_facts:

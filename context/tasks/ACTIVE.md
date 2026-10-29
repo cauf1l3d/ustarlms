@@ -1,35 +1,35 @@
 # Активная работа —29.10.2026
 
-## PERF-01:2802 установлен, browser/workday/SLO остаются
+## INTEGRATIONS-01: полный рабочий Telegram-бот; Mini App в конце
 
-PR107/109 слиты в main как84a078ef/01904eda. Main source — app22607c69/local2802/theme2700.
-Оператор3c1ddd09 принимает только принятый2801/81118e39 и использует новый журнал
-/var/lib/ustar-perf-query-update.589→590файлов,100таблиц без schema delta; worker6c56 без rollout.
-[Интеграция](../runtime/perf2802_integration_20261028.json),
-[квалификация](../runtime/perf2802_qualification_20261028.json).
+[Owner поручение](../runtime/connect_bot_owner_order_20261029.json) возобновляет Connect.
+Owner29Oct установил2900/theme2700 и включил worker5cc через tool9a: runtime_active,
+ACK true и role_bot_ready. [Квитанция](../runtime/connect_role_bot_owner_deploy_20261029.json).
+All4CI наfe2f05d PASS; следующий шаг — реальная приёмка ролей. Owner99 preflight — история.
+[Исправленный9a установщик](../runtime/connect_role_bot_cron_preflight_fix_20261029.json) прошёл
+cron guard/systemd/UID33/TLS/recovery CI; архив0860a867 совпал с CI и скачанной копией.
+[4CI/FullRC](../runtime/connect_role_bot_qualification_20261029.json), [команды](../../docs/CONNECT_BOT_2900_INSTALL_RU.md).
+[План](../../docs/superpowers/plans/2026-10-29-connect-role-bot.md), [прогресс](../runtime/connect_role_bot_progress_20261029.md).
+Русские кнопки вместо необходимости знать команды, короткие объяснения, визуальные
+сводки/прогресс/компактные таблицы и графики. Существующие Academy identities, writers,
+права и история; самостоятельная работа без субагентов, рациональные проверки.
+Mini App и публичный HTTPS Академии отложены до конца; Bitrix/WhatsApp не включаются
+автоматически. Worker5cc02944 включён. Следом — приёмка ролей, затем Mini App/публичный HTTPS.
+Нового автоматического merge/agent SSH/provider sends нет.
 
-Все четыре CI на3c1ddd09 SUCCESS: PHP8.2/8.3 по1363/232, оба native Moodle354/1695.
-Actual PG16 fresh/paired-legacy profiles и7SQL отказов, mandatory UID33 PASS.
-Парное восстановление/added-file rollback, process-loss recovery, task/cron/source guards сохранены.
-Архив1319be48... сверён побайтно с CI; сохранённая копия скачана и проверена.
-[Команды установки/проверки](../../docs/PERF_2802_INSTALL_RU.md).
+## RSS-01 завершён owner acceptance; PERF-01 report ожидается
 
-Владелец29Oct прислал check2801 ready_for_perf_update, успешный upgrade2802 и status:
-app_ready/DB available, local2802/theme2700, receiver+notify active/enabled.
-[Production receipt](../runtime/perf2802_owner_deploy_20261029.json),
-[точный переданный текст](../runtime/perf-20261029/owner_install_2802.txt).
-Scheduled cron29Oct00:42MSK exit0/34.311s; adhoc1→0, overdue63→19, failed2,
-новые ошибки отсутствуют. Остаточные19/2 совпадают с прежними счётчиками, состав не показан.
-Wrapper20Oct исторический; не чистить историю и не утверждать устранение старых задач.
+[Owner2803](../runtime/feed2803_owner_deploy_20261029.json): archive+inner hashes OK,
+preflight2802 legacy indexes принят, upgrade/app_ready, local2803/theme2700, DB available,
+receiver+notify active/enabled. RSS работает, вложения раскрываются через «Ещё».
+Source PR110 app ef903b7d/operator36be3f10 не слит. Его4CI/native357/1706/actualPG/UID33
+и побайтно проверенный архив остаются действительными; старые операторы не менять.
 
-Следом — browser smoke материалов/студии/RSS/сезона, затем пассивный baseline рабочего дня,
-согласованные concurrency/SLO и отдельное сравнение p50/p95/p99. Не считать длительность
-одного cron или прежний Apache aggregate доказательством ускорения страниц.
+Cron last scheduled29Oct03:37MSK exit0/1.282s, new failures[], USTAR counters0.
+Текущий срез: adhoc1/overdue56/failed2, без failed adhoc/USTAR. Это не новая ошибка
+wrapper20Oct и не доказательство разгруженной очереди; история сохраняется.
 
-## Принятая студия и границы
-
-STUDIO-01 завершён по owner acceptance2801; теперь точный guarded preflight также подтверждает2801
-перед обновлением.2802 — owner terminal receipt, не новая whole-host инвентаризация.
-[Owner-приёмка](../runtime/studio_viewport_owner_acceptance_20261028.json).
-SSH, субагенты и отправки через провайдеров запрещены. Логи/health/recreate — в Moodle window.
-Внешний restore unknown; принятые инфраструктурные циклы не повторять.
+Напоминание владельцу30Oct11:00Europe/Moscow создано: запустить observe.py на8h
+обычной работы, затем прислать отчёт. Фактический запуск/отчёт ещё не подтверждены.
+[Сборщик2803/2900](../../docs/CONNECT_BOT_2900_INSTALL_RU.md); для2900 использовать новый observe.py. SQL/page, Web-SAPI OPcache и SLO не
+выводить из Apache aggregate. Работа Connect не закрывает PERF-01 автоматически.

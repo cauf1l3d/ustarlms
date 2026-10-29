@@ -20,13 +20,13 @@ components:
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
   context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
-  connect_worker: connect-worker; accepted worker6c56 from23Oct remains unchanged during owner2802 deployment; no
-    worker rollout
+  connect_worker: connect-worker; owner29Oct enabled fixed5cc02944 through tool9a68246b; runtime_active/role_bot_ready,
+    live role acceptance pending
 state: context/roadmap/STATE.yaml
-runtime_evidence: context/runtime/evidence_20261029.yaml
+runtime_evidence: context/runtime/evidence_connect2900_20261029.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_no_server_mutation_Docker_deferred
-latest_connect_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+latest_connect_owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -35,11 +35,16 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: PERF-01
-  spec: docs/superpowers/specs/2026-10-28-perf2802-delivery-design.md
-  PR: 109
-  status: owner_installed2802_browser_workday_SLO_pending
-  frontend_scope: native local_ustar; accepted Studio2801 retained
-  deployment_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  qualification_receipt: context/runtime/perf2802_qualification_20261028.json
-  installation_handoff: docs/PERF_2802_INSTALL_RU.md
+  task: INTEGRATIONS-01
+  related_task: PERF-01
+  status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
+  spec: docs/superpowers/specs/2026-10-29-connect-role-bot-design.md
+  plan: docs/superpowers/plans/2026-10-29-connect-role-bot.md
+  browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
+  production_version: 2026102900
+  candidate_version: 2026102900
+  PR: 111
+  qualification_receipt: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json
+  installation_handoff: docs/CONNECT_BOT_2900_INSTALL_RU.md
+  owner_order: context/runtime/connect_bot_owner_order_20261029.json
+  owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json

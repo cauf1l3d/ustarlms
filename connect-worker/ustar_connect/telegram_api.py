@@ -45,7 +45,7 @@ def _error(code, parameters, sending):
 
 
 class TelegramClient:
-    def __init__(self, token, *, proxy=None):
+    def __init__(self, token, *, proxy=None,role_navigation=False):
         if not isinstance(token, str) or not re.fullmatch(r'[1-9][0-9]{0,19}:[A-Za-z0-9_-]{20,256}', token):
             raise ValueError('invalid_bot_configuration')
         proxies = {}
@@ -57,14 +57,16 @@ class TelegramClient:
                 raise ValueError('invalid_proxy_configuration')
             proxies = {'https': proxy}
         self._token = token
+        if type(role_navigation) is not bool:raise ValueError('invalid_bot_configuration')
+        self._role_navigation=role_navigation
         self._opener = build_opener(ProxyHandler(proxies), HTTPSHandler(context=ssl.create_default_context()), _NoRedirect())
 
     def _call(self, method, payload):
         if method not in ('getMe', 'getWebhookInfo', 'getUpdates', 'sendMessage',
-                          'answerCallbackQuery', 'editMessageReplyMarkup'):
+                          'answerCallbackQuery', 'editMessageReplyMarkup', 'editMessageText', 'getFile', 'sendPhoto'):
             raise ValueError('invalid_api_method')
-        sending = method == 'sendMessage'
-        body = json.dumps(payload, separators=(',', ':'), allow_nan=False).encode()
+        sending = method in ('sendMessage','editMessageText','sendPhoto')
+        body = json.dumps(payload, separators=(',', ':'), allow_nan=False,ensure_ascii=False).encode()
         if len(body) > 16384:
             raise ValueError('api_payload_too_large')
         request = Request('https://api.telegram.org/bot'+self._token+'/'+method, data=body,
@@ -109,8 +111,54 @@ class TelegramClient:
     def get_me(self):
         return self._call('getMe', {})
 
+    def send_bot_view(self,subject,payload):
+        return self._send(subject,payload)
+
+    def send_bot_photo(self,subject,file_id):
+        if type(subject) is not int or not 0<subject<2**52 or not isinstance(file_id,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,256}',file_id):
+            raise ValueError('invalid_bot_photo')
+        return self._call('sendPhoto',{'chat_id':subject,'photo':file_id,'protect_content':True,'caption':'Фото отчёта · Академия'})
+
+    def edit_bot_view(self,subject,message_id,payload):
+        if type(subject) is not int or not 0<subject<2**52 or type(message_id) is not int or not 0<message_id<2**52:
+            raise ValueError('invalid_message_reference')
+        return self._call('editMessageText',{'chat_id':subject,'message_id':message_id,**payload})
+
+    def answer_bot_callback(self,query_id):
+        if not isinstance(query_id,str) or not re.fullmatch(r'[!-~]{1,256}',query_id):
+            raise ValueError('invalid_callback')
+        return self._call('answerCallbackQuery',{'callback_query_id':query_id,'text':'Проверяю…','cache_time':0})
+
+    def send_bot_hint(self,subject,reason):
+        texts={'expired_bot_action':'Кнопка устарела. Нажмите «Меню» и откройте карточку заново.',
+               'stale_revision':'Запись изменилась. Откройте её заново — новые данные сохранены.',
+               'native_auth_required':'Нужен вход в Академию из офисной сети. Проверьте первый пароль и требования входа.',
+               'forbidden_scope':'Действие недоступно по вашим текущим правам.',
+               'bot_disabled':'Рабочие функции бота пока не включены.',
+               'rate_limited':'Слишком много действий. Подождите минуту.',
+               'uncertain':'Результат пока не подтверждён. Нажмите «Меню» и проверьте состояние записи перед повтором.'}
+        return self._send(subject,{'text':texts.get(reason,'Не удалось выполнить действие. Нажмите «Меню» и обновите карточку.'),
+            'reply_markup':{'keyboard':[[{'text':'Меню'}]],'resize_keyboard':True,'is_persistent':True}})
+
     def get_webhook_info(self):
         return self._call('getWebhookInfo', {})
+
+    def download_bot_photo(self,file_id,expected_size):
+        def bounded(size):return type(size) is int and 0<size<=512*1024
+        if not isinstance(file_id,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,256}',file_id) or (expected_size is not None and not bounded(expected_size)):
+            raise ValueError('invalid_bot_photo')
+        value=self._call('getFile',{'file_id':file_id})
+        path=value.get('file_path');size=value.get('file_size')
+        if not isinstance(path,str) or not re.fullmatch(r'photos/[A-Za-z0-9_.-]{1,200}',path) or ('file_size' in value and not bounded(size)):
+            raise ValueError('invalid_bot_photo')
+        try:
+            request=Request('https://api.telegram.org/file/bot'+self._token+'/'+path,method='GET')
+            with self._opener.open(request,timeout=10) as response:data=response.read(512*1024+1)
+        except (HTTPError,URLError,OSError):
+            raise TelegramError('transport_unavailable') from None
+        if not 0<len(data)<=512*1024 or any(len(data)!=n for n in (expected_size,size) if n is not None):
+            raise ValueError('invalid_bot_photo')
+        return data
 
     def get_updates(self, offset, *, acknowledgements_enabled=False):
         if type(offset) is not int or not 0 <= offset < 2**63 or type(acknowledgements_enabled) is not bool:
@@ -176,20 +224,31 @@ class TelegramClient:
                 raise ValueError('invalid_notification_action')
             _token(ack['action'], 'ua1')
         date=datetime.fromtimestamp(occurred_at,timezone.utc).strftime('%d.%m.%Y %H:%M UTC')
-        keyboard = self._notification_keyboard(category)
+        keyboard = self._notification_keyboard(category,role_navigation=self._role_navigation)
         if ack is not None:
             keyboard.insert(0, [{'text': 'Принял', 'callback_data': ack['action']}])
+        if self._role_navigation:
+            import html
+            from zoneinfo import ZoneInfo
+            date=datetime.fromtimestamp(occurred_at,timezone.utc).astimezone(ZoneInfo('Europe/Moscow')).strftime('%d.%m.%Y %H:%M МСК')
+            explanation='«Принял» подтверждает получение. Выполнение задачи отмечается отдельно.' if category=='tasks' else 'Откройте рабочее меню для доступных действий.'
+            return self._send(subject,{'text':'🔔 <b>USTAR · '+html.escape(titles[category])+'</b>\n\n'+
+                '<b>'+html.escape(event_label(category,event) if event else labels[severity])+'</b>\n'+html.escape(labels[severity])+
+                '\n'+date+'\n\n'+explanation,'parse_mode':'HTML','reply_markup':{'inline_keyboard':keyboard},
+                'link_preview_options':{'is_disabled':True}})
         return self._send(subject,{'text':f'Академия USTAR · {titles[category]}\n{heading}\n{date}\n\n'
             'Подробности доступны в Академии с учётом ваших текущих прав. Откройте её в браузере и войдите своей учётной записью.',
             'reply_markup':{'inline_keyboard':keyboard},
             'link_preview_options':{'is_disabled':True}})
 
     @staticmethod
-    def _notification_keyboard(category):
+    def _notification_keyboard(category,*,role_navigation=False):
         paths = {'registration':'profile.php','tasks':'tasks.php','feed':'feed.php','grades':'profile.php'}
         if not isinstance(category, str) or category not in paths:
             raise ValueError('invalid_notification_category')
-        return [[{'text':'Открыть в Академии','url':'https://ustar.local/local/ustar/'+paths[category]}]]
+        keyboard=[[{'text':'Открыть в Академии','url':'https://ustar.local/local/ustar/'+paths[category]}]]
+        if role_navigation:keyboard.append([{'text':'Рабочее меню','callback_data':'uc4_menu'}])
+        return keyboard
 
     def answer_notification_ack(self, query_id, outcome, acknowledged_at=0):
         from datetime import datetime, timezone
@@ -212,7 +271,7 @@ class TelegramClient:
         if (type(subject) is not int or not 0 < subject < 2**52
                 or type(message_id) is not int or not 0 < message_id < 2**63):
             raise ValueError('invalid_message_reference')
-        keyboard = self._notification_keyboard(category)
+        keyboard = self._notification_keyboard(category,role_navigation=self._role_navigation)
         if acknowledged_at is not None:
             from datetime import datetime, timezone
             if type(acknowledged_at) is not int or not 0 < acknowledged_at < 2**32:

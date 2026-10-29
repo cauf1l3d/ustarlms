@@ -1,0 +1,203 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-29",
+  "status": "qualified_owner_install_pending",
+  "PR": 111,
+  "application_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+  "worker_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+  "tool_commit": "99dbecaac7fe9c6bd2fa9e77349d336e448ca8a6",
+  "qualification_head": "022fddee2993c67de1b618e27faa45ff1cdcb96d",
+  "component_tree_ids": {
+    "moodle/local/ustar": "5ec9585fea8b9a933a0ee26c8ffa3b118328a24f",
+    "moodle/theme/ustar": "c60e0657cb957288c914fa46444d2d692012cb7e",
+    "connect-worker": "5420473d9e9c9d8d278f05569b162fb94a65531d"
+  },
+  "payload_files": 606,
+  "tables": 103,
+  "versions": {
+    "local_ustar": "2026102900",
+    "theme_ustar": "2026102700"
+  },
+  "baseline_application": "ef903b7d276f1d62c4879f8a943a435b48e89117",
+  "baseline_worker": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+  "predecessor_tool": "36be3f108f2eac6a3db728f93b4456a729b97a3e",
+  "archive": {
+    "filename": "ustar-connect-role-bot-install-99dbecaa.tar.gz",
+    "bytes": 21081981,
+    "sha256": "1333364609478dab4c56764ec0e7481c5b59c11ca1c50a1fb981667849157078",
+    "CI_artifact_id": 12884197508,
+    "CI_zip_sha256": "e87a7349a939894815d56a62046bbe62dbbc163567c314a58c4380e0cc79118d",
+    "CI_zip_CRC": "OK",
+    "CI_archive_equals_local": true,
+    "library_file_id": "libfile_f6ae8a3bbed08191848a83a670a64d5b",
+    "file_id": "file_00000000888482308d57980fc4b6c65d",
+    "saved_copy_downloaded_and_sha256_verified": true,
+    "saved_copy_metadata_verified": true
+  },
+  "install_guide": {
+    "repo_path": "docs/CONNECT_BOT_2900_INSTALL_RU.md",
+    "library_file_id": "libfile_5f1ef8cb2f6c8191b79499b643117fd6",
+    "sha256": "31a896d0943c3e6300f505d3a007ebebd50cb0092cbd5f3053e1e9634a09cdb5"
+  },
+  "owner_installed": false,
+  "provider_sends": false,
+  "agent_SSH": false,
+  "automatic_merge": false,
+  "subagents": false,
+  "owner_role_acceptance": "pending",
+  "mini_app": "deferred",
+  "public_Academy_HTTPS": "deferred",
+  "real_workday_capture": "pending",
+  "note": "Qualified application/worker trees, archive tool identity and CI qualification head are separate pins. The archive controller modules equal tested source; post-tool commits modify tests/docs/workflow packaging selection only.",
+  "CI": {
+    "review": 40851511933,
+    "infrastructure": 40851511973,
+    "context": 40851511946,
+    "console": 40851512033
+  },
+  "current_source_and_historical_Moodle_facts": [
+    {
+      "job_id": 123371859185,
+      "lines": [
+        "2026-10-29T09:41:16.1603322Z CURRENT_SOURCE_OK php=416 js=33 tables=103 templates=57",
+        "2026-10-29T09:48:10.6336086Z Ran 1436 tests in 407.722s",
+        "2026-10-29T09:48:10.6336462Z OK (skipped=235)"
+      ]
+    },
+    {
+      "job_id": 123371859469,
+      "lines": [
+        "2026-10-29T09:41:10.3203883Z CURRENT_SOURCE_OK php=416 js=33 tables=103 templates=57",
+        "2026-10-29T09:46:28.8488489Z Ran 1436 tests in 311.904s",
+        "2026-10-29T09:46:28.8488632Z OK (skipped=235)"
+      ]
+    },
+    {
+      "job_id": 123376240079,
+      "lines": [
+        "2026-10-29T09:56:57.8609585Z runner-1  | CONNECT_ROLE_BOT_NATIVE_COOKIE_POST_CSRF_REPLAY_AND_CANONICAL_ACTOR=PASS",
+        "2026-10-29T09:59:11.8849978Z runner-1  | OK (371 tests, 1751 assertions)",
+        "2026-10-29T09:59:11.9543011Z runner-1  | INSTALL_UPGRADE_REPEAT_AND_DB_TESTS=PASS"
+      ]
+    }
+  ],
+  "all_four_CI": "success",
+  "full_RC": "success",
+  "current_native_facts": [
+    {
+      "job_id": 123376100154,
+      "lines": [
+        "2026-10-29T09:50:42.8014796Z CONNECT_ROLE_BOT_FIXED2803_INPUT=READY",
+        "2026-10-29T09:55:21.9589609Z runner-1  | CONNECT_ROLE_BOT_ACTUAL2803_LEGACY=READY",
+        "2026-10-29T09:55:30.3889948Z runner-1  | CONNECT_ROLE_BOT_ACTUAL_UPGRADE=PASS",
+        "2026-10-29T09:55:31.3566892Z runner-1  | CONNECT_ROLE_BOT_ACTUAL2803_TO2900_REPEAT=PASS",
+        "2026-10-29T09:55:33.1376673Z runner-1  | CONNECT_ROLE_BOT_NATIVE=PASS {\"SQL_mutations_denied\": [\"partial_local_ustar_coin_accounts\", \"partial_local_ustar_test_results\", \"new_column_length\", \"extra_new_index\", \"missing_new_table\", \"old_column_default\", \"scheduled_task_policy\"], \"actual_postgres_metadata\": true, \"all_metadata_fixture_SQL_rolled_back\": true, \"baseline_tables\": 100, \"note\": \"Metadata projections are separate from the actual frozen2803 CLI upgrade/repeat and physical pair recovery tests.\", \"observer2900_fixed_SQL_executed\": true, \"profiles\": [\"xml_install_indexes\", \"server1_legacy_indexes_20261023\"], \"result\": \"PASS\", \"tables\": 103}",
+        "2026-10-29T09:57:16.5606059Z runner-1  | OK (172 tests, 875 assertions)",
+        "2026-10-29T09:57:22.9892223Z runner-1  | CONNECT_ROLE_BOT_NATIVE_COOKIE_POST_CSRF_REPLAY_AND_CANONICAL_ACTOR=PASS",
+        "2026-10-29T10:00:32.9995814Z runner-1  | DB_PRIVILEGES_NATIVE=PASS",
+        "2026-10-29T10:00:35.4361453Z runner-1  | DB_APP_HANDOFF_NATIVE=PASS"
+      ]
+    },
+    {
+      "job_id": 123376240132,
+      "lines": [
+        "2026-10-29T09:51:32.4008623Z CONNECT_ROLE_BOT_FIXED2803_INPUT=READY",
+        "2026-10-29T09:56:45.1589431Z runner-1  | CONNECT_ROLE_BOT_NATIVE_COOKIE_POST_CSRF_REPLAY_AND_CANONICAL_ACTOR=PASS",
+        "2026-10-29T09:59:01.2717609Z runner-1  | OK (371 tests, 1751 assertions)",
+        "2026-10-29T09:59:55.7859531Z runner-1  | CONNECT_ROLE_BOT_ACTUAL2803_LEGACY=READY",
+        "2026-10-29T10:00:04.6571848Z runner-1  | CONNECT_ROLE_BOT_ACTUAL_UPGRADE=PASS",
+        "2026-10-29T10:00:05.6868696Z runner-1  | CONNECT_ROLE_BOT_ACTUAL2803_TO2900_REPEAT=PASS",
+        "2026-10-29T10:00:07.6164707Z runner-1  | CONNECT_ROLE_BOT_NATIVE=PASS {\"SQL_mutations_denied\": [\"partial_local_ustar_coin_accounts\", \"partial_local_ustar_test_results\", \"new_column_length\", \"extra_new_index\", \"missing_new_table\", \"old_column_default\", \"scheduled_task_policy\"], \"actual_postgres_metadata\": true, \"all_metadata_fixture_SQL_rolled_back\": true, \"baseline_tables\": 100, \"note\": \"Metadata projections are separate from the actual frozen2803 CLI upgrade/repeat and physical pair recovery tests.\", \"observer2900_fixed_SQL_executed\": true, \"profiles\": [\"xml_install_indexes\", \"server1_legacy_indexes_20261023\"], \"result\": \"PASS\", \"tables\": 103}",
+        "2026-10-29T10:00:17.2271895Z runner-1  | STUDIO2800_LEGACY_NATIVE=PASS {\"SQL_mutations_denied\": [\"partial_local_ustar_coin_accounts\", \"partial_local_ustar_test_results\", \"extra_index\", \"column_default\", \"task\", \"extra_table\", \"missing_ACK_index\"], \"actual_postgres_metadata\": true, \"all_fixture_SQL_rolled_back\": true, \"profiles\": [\"xml_install_indexes\", \"server1_legacy_indexes_20261023\"], \"result\": \"PASS\", \"scope\": \"DB metadata validation across version transitions; physical transaction recovery is tested separately\", \"tables\": 100, \"versions\": [2026102700, 2026102800, 2026102800, 2026102700]}",
+        "2026-10-29T10:00:17.2278787Z runner-1  | STUDIO2801_LEGACY_NATIVE=PASS {\"SQL_mutations_denied\": [\"partial_local_ustar_coin_accounts\", \"partial_local_ustar_test_results\", \"extra_index\", \"column_default\", \"task\", \"extra_table\", \"missing_ACK_index\"], \"actual_postgres_metadata\": true, \"all_fixture_SQL_rolled_back\": true, \"profiles\": [\"xml_install_indexes\", \"server1_legacy_indexes_20261023\"], \"result\": \"PASS\", \"scope\": \"DB metadata validation across version transitions; physical transaction recovery is tested separately\", \"tables\": 100, \"versions\": [2026102800, 2026102801, 2026102801, 2026102800]}",
+        "2026-10-29T10:00:17.2285122Z runner-1  | PERF2802_LEGACY_NATIVE=PASS {\"SQL_mutations_denied\": [\"partial_local_ustar_coin_accounts\", \"partial_local_ustar_test_results\", \"extra_index\", \"column_default\", \"task\", \"extra_table\", \"missing_ACK_index\"], \"actual_postgres_metadata\": true, \"all_fixture_SQL_rolled_back\": true, \"profiles\": [\"xml_install_indexes\", \"server1_legacy_indexes_20261023\"], \"result\": \"PASS\", \"scope\": \"DB metadata validation across version transitions; physical transaction recovery is tested separately\", \"tables\": 100, \"versions\": [2026102801, 2026102802, 2026102802, 2026102801]}",
+        "2026-10-29T10:00:17.2291918Z runner-1  | FEED2803_LEGACY_NATIVE=PASS {\"SQL_mutations_denied\": [\"partial_local_ustar_coin_accounts\", \"partial_local_ustar_test_results\", \"extra_index\", \"column_default\", \"task\", \"extra_table\", \"missing_ACK_index\"], \"actual_postgres_metadata\": true, \"all_fixture_SQL_rolled_back\": true, \"observer_WRITE_refused\": true, \"observer_fixed_SQL_executed\": true, \"profiles\": [\"xml_install_indexes\", \"server1_legacy_indexes_20261023\"], \"query_text_exported\": false, \"result\": \"PASS\", \"scope\": \"DB metadata validation across version transitions; physical transaction recovery is tested separately\", \"tables\": 100, \"versions\": [2026102802, 2026102803, 2026102803, 2026102802]}",
+        "2026-10-29T10:00:17.2296789Z runner-1  | FROZEN100_HISTORICAL_PROJECTION=PASS actual2900_schema_untouched=true"
+      ]
+    }
+  ],
+  "current_infrastructure_facts": {
+    "job_id": 123371860143,
+    "lines": [
+      "2026-10-29T09:42:24.5597891Z test_query_source_is_readable_but_not_writable_by_actual_uid33 (tests.r16.test_perf_query_update.ActualCodePermissions.test_query_source_is_readable_but_not_writable_by_actual_uid33) ... ok",
+      "2026-10-29T09:42:38.5441977Z test_feed_source_is_readable_but_not_writable_by_actual_uid33 (tests.r16.test_feed_media_update.ActualCodePermissions.test_feed_source_is_readable_but_not_writable_by_actual_uid33) ... ok",
+      "2026-10-29T09:42:48.8735526Z {\"app_commit\": \"5cc02944e1059ba015afcc7c5e8068ca56c34a92\", \"archive\": \"artifacts/connect-role-bot-production-deploy/ustar-connect-role-bot-install-99dbecaa.tar.gz\", \"bytes\": 21081981, \"sha256\": \"1333364609478dab4c56764ec0e7481c5b59c11ca1c50a1fb981667849157078\", \"tool_commit\": \"99dbecaac7fe9c6bd2fa9e77349d336e448ca8a6\", \"worker_rollout\": true}",
+      "2026-10-29T09:42:50.1278432Z test_new_component_file_is_readable_but_not_writable_by_actual_uid33 (tests.r16.test_connect_role_bot_update.ActualCodePermissions.test_new_component_file_is_readable_but_not_writable_by_actual_uid33) ... ok",
+      "2026-10-29T09:43:31.0236928Z CONNECT_ROLE_BOT_ACTUAL_SYSTEMD_UID33_CREDENTIALS_TLS_AND_MENU=PASS",
+      "2026-10-29T09:43:53.7876231Z CONNECT_ROLE_BOT_HTTPS_OWNER=PASS"
+    ],
+    "qualified_artifact": {
+      "id": 12887875649,
+      "name": "connect-role-bot-production-deploy",
+      "size_in_bytes": 42090832,
+      "url": "https://api.github.com/repos/cauf1l3d/ustarlms/actions/artifacts/12887875649",
+      "archive_download_url": "https://api.github.com/repos/cauf1l3d/ustarlms/actions/artifacts/12887875649/zip",
+      "expired": false,
+      "created_at": "2026-10-29T09:42:52Z",
+      "expires_at": "2027-01-27T09:40:41Z",
+      "updated_at": "2026-10-29T09:42:52Z",
+      "digest": "sha256:bfc8a041af85f19b1a8958ae2edc802ff1edb02a931b9d4824f8859adbf88325",
+      "workflow_run": {
+        "id": 40851511973,
+        "repository_id": 1341962792,
+        "head_repository_id": 1341962792,
+        "head_branch": "feat/connect-role-bot-20261029",
+        "head_sha": "022fddee2993c67de1b618e27faa45ff1cdcb96d"
+      }
+    }
+  },
+  "source_summary": {
+    "PHP8.2": {
+      "tests": 1436,
+      "skipped": 235
+    },
+    "PHP8.3": {
+      "tests": 1436,
+      "skipped": 235
+    },
+    "syntax": {
+      "php": 416,
+      "js": 33,
+      "tables": 103,
+      "templates": 57
+    }
+  },
+  "native_summary": {
+    "Connect": {
+      "tests": 172,
+      "assertions": 875
+    },
+    "Moodle5.1.1": {
+      "tests": 371,
+      "assertions": 1751
+    },
+    "Moodle5.1.8": {
+      "tests": 371,
+      "assertions": 1751
+    },
+    "actual_2803_to2900_upgrade_repeat": true,
+    "actual103_table_SQL": true,
+    "native_cookie_POST_CSRF_owner_replay_newer_draft": true,
+    "historical100_projection_not_actual103_release": true,
+    "ordinary_DB_role2300_and_ownership_handoff": true
+  },
+  "infrastructure_summary": {
+    "actual_UID33_code_isolation": true,
+    "actual_systemd_LoadCredential_private_TLS": true,
+    "separate_bot_HMAC_scope_and_menu_roundtrip": true,
+    "actual_service_failure_v3_handback": true,
+    "actual_Apache_OpenSSL_PHP_owner_preserved": true,
+    "SQL_and_Bot_API_in_runtime_fixture": "synthetic; actual Moodle/PG/HTTP in separate native gate"
+  },
+  "frozen_predecessor_modules_verified": true,
+  "self_review": "context/reviews/20261029/CONNECT_ROLE_BOT_SELF_REVIEW_RU.md",
+  "independent_review_claimed": false,
+  "reminder": {
+    "when_msk": "2026-10-30T11:00:00+03:00",
+    "created": true,
+    "prompt_updated_for_2803_and2900_observers": true,
+    "collector_run": false
+  },
+  "owner_installation_followup": "context/runtime/connect_role_bot_cron_preflight_fix_20261029.json",
+  "archive_delivery_status": "superseded_after_owner_preflight_cron_derivation_bug"
+}

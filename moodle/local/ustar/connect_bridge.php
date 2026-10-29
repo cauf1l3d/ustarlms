@@ -18,7 +18,9 @@ try {
     }
     $result = \local_ustar\connect\bridge_service::dispatch((string)$body, $headers,
         (array)($CFG->ustar_connect_bridge_keys ?? []));
-    echo json_encode(['ok' => true, 'result' => $result], JSON_THROW_ON_ERROR);
+    $flags=JSON_THROW_ON_ERROR;
+    if(isset($result['title'],$result['buttons'])){$flags|=JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES;}
+    echo json_encode(['ok' => true, 'result' => $result], $flags);
 } catch (\local_ustar\registration_validation_exception $error) {
     http_response_code(422);
     echo json_encode(\local_ustar\connect\signup_request::validation_error($error));

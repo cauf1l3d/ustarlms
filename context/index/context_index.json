@@ -538,6 +538,12 @@
       "sha256": "bb8e0d051a17def1e01762016abdceba53c195c242b24050589848f6dcfa96c7"
     },
     {
+      "path": "context/code_map/connect_role_bot_development_source.json",
+      "domain": "code_map",
+      "size": 97080,
+      "sha256": "7233126695716615a56927e5e3333a2c089a790bc7c4f4bfc17de9fe1ce2bf21"
+    },
+    {
       "path": "context/code_map/database.yaml",
       "domain": "code_map",
       "size": 624,
@@ -554,6 +560,12 @@
       "domain": "code_map",
       "size": 89132,
       "sha256": "be0d34986b9499eb5f1e24823eb26b79a2b3c29647dd50bb87d2d51300e5e627"
+    },
+    {
+      "path": "context/code_map/feed_media_development_source.json",
+      "domain": "code_map",
+      "size": 94457,
+      "sha256": "66ca2bfe98674530b4a591f3dc73bfbdd20eccb0d819d4d0b6db9a1ca9c4208e"
     },
     {
       "path": "context/code_map/frontend.yaml",
@@ -642,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 8772,
-      "sha256": "600157f14770817aeece64c81d49750f125f5a8e5d95d9367a158885d932fa13"
+      "size": 9184,
+      "sha256": "056ab26becc59acfd97497af8121d14e808d95f10cbbdf2e83337b3d706f1054"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -864,8 +876,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2288,
-      "sha256": "0a429c45fa635939bbcd403cb8e3fed826bbe59a790bec22186983fe136b20d3"
+      "size": 2609,
+      "sha256": "0b0c3b9129cb8edaeae6d05e55c5e40c7f0726fd1b12a97c474c4d5dc0577609"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1402,6 +1414,12 @@
       "sha256": "3b466c19700777233f38130eb0c1f3ac9df4d704c768322333a4c40c70206919"
     },
     {
+      "path": "context/reviews/20261029/CONNECT_ROLE_BOT_SELF_REVIEW_RU.md",
+      "domain": "reviews",
+      "size": 7315,
+      "sha256": "8121f2aaa6196fc8dc3fa1b9a10de2189c6ea9baf9f63a9b68c78fe47558634a"
+    },
+    {
       "path": "context/roadmap/ACCEPTED_RISKS.yaml",
       "domain": "roadmap",
       "size": 983,
@@ -1422,8 +1440,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 35180,
-      "sha256": "f8ac125fd79f2f0cbcb8ca60715ab3c0bf5ee904d49a65ed29629d2a06df7cef"
+      "size": 37315,
+      "sha256": "91b89b3ec845dc3aa7adc9b544a8f85cd9304f366ad905d4c88c265cc91c03b9"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1476,8 +1494,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 14211,
-      "sha256": "96b92aaf02cc68565cbce35ec979fded772f402ea0e99a1a5db68edd9a33b851"
+      "size": 18450,
+      "sha256": "dd81c5375402f1b3e59eb2a31179b7845721402630d30dbb9320e36957528d95"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1566,14 +1584,14 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 506,
-      "sha256": "917731c1bbc6e887582c9daddda23ef7cbe0dc2e6a0dc0b2c875a0b18be9dcdb"
+      "size": 516,
+      "sha256": "99a247ec5593dcf613bb838752e4238005d9d6cdf185ee6adfd55258b72024ea"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 92774,
-      "sha256": "97bc608da1cc5c0cd64dca2ced0d569dcfbdb2db0f0b8cc01bf5aec9c8e96287"
+      "size": 94659,
+      "sha256": "00dc514c76f6100b25a2558306e309be5c6328a87471cd9cc7758a320339f97d"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -1724,6 +1742,12 @@
       "domain": "runtime",
       "size": 2143,
       "sha256": "f68c98fbc2540f20fa41b9bc0f30957099eb555c7cdb78ff99af3b2acdb9cde5"
+    },
+    {
+      "path": "context/runtime/connect_bot_owner_order_20261029.json",
+      "domain": "runtime",
+      "size": 2384,
+      "sha256": "784925f3d30c2f4b94b271f77b34937bcc659f224f92c717a8e7f60d6a24b9ba"
     },
     {
       "path": "context/runtime/connect_chat_link_ci_20261020.json",
@@ -1982,6 +2006,30 @@
       "domain": "runtime",
       "size": 1838,
       "sha256": "4b4ff9fef1c04a36115914d3f54c955a80ca722bd55a5191a3ba99a81443f529"
+    },
+    {
+      "path": "context/runtime/connect_role_bot_cron_preflight_fix_20261029.json",
+      "domain": "runtime",
+      "size": 4407,
+      "sha256": "fb56164790dc997174df7bd9e09127ff4afad9426cea589ee0a8198c78149c10"
+    },
+    {
+      "path": "context/runtime/connect_role_bot_owner_deploy_20261029.json",
+      "domain": "runtime",
+      "size": 4685,
+      "sha256": "fc3319e02a9556c2eff6422849ef778c84eb60c8b993e68408e21e18e97e851f"
+    },
+    {
+      "path": "context/runtime/connect_role_bot_progress_20261029.md",
+      "domain": "runtime",
+      "size": 15389,
+      "sha256": "117d7f1bf498ead072790624138fc6056f1dcca6b9cd05d14e2376151bc61526"
+    },
+    {
+      "path": "context/runtime/connect_role_bot_qualification_20261029.json",
+      "domain": "runtime",
+      "size": 13022,
+      "sha256": "784c861457805a0187a50869aec94dc6b694192d12f52a0364c5949b4822f32b"
     },
     {
       "path": "context/runtime/connect_telegram_finish_20261023.md",
@@ -2316,14 +2364,44 @@
     {
       "path": "context/runtime/evidence_20261029.yaml",
       "domain": "runtime",
-      "size": 3850,
-      "sha256": "21fdfd2219040a42e24840c0433173c062539bf5dd14c599bbe5d08d0b491480"
+      "size": 4310,
+      "sha256": "008ba16da98451d3dec4e12044453c6aa5226c36b68c399eb92231c51e2bbe68"
+    },
+    {
+      "path": "context/runtime/evidence_connect2900_20261029.yaml",
+      "domain": "runtime",
+      "size": 4861,
+      "sha256": "cf23b7dbe0caf388bf902bf846d695bee0172c0ccfdc87b1f4e68752ecb666ea"
     },
     {
       "path": "context/runtime/external_network_result_20261017.json",
       "domain": "runtime",
       "size": 2412,
       "sha256": "350ebaa3d72a6ef681c1b382e085ad2573991a6b13cad6e9877ada74ace7935b"
+    },
+    {
+      "path": "context/runtime/feed-20261029/owner_install_2803.txt",
+      "domain": "runtime",
+      "size": 4985,
+      "sha256": "0e0f0edf743172a4fe86023f9e07d416daf765a63c932181c9e197b280382ba2"
+    },
+    {
+      "path": "context/runtime/feed2803_owner_deploy_20261029.json",
+      "domain": "runtime",
+      "size": 4894,
+      "sha256": "6083f797a390af18e6ceab66a84647659cadf50d41ce4461ebeeca87ede093fc"
+    },
+    {
+      "path": "context/runtime/feed2803_qualification_20261029.json",
+      "domain": "runtime",
+      "size": 7952,
+      "sha256": "93c0278d487fdaa69a07c595790b5cd8cb1b76c39c4a2cd33406bb8dcf750186"
+    },
+    {
+      "path": "context/runtime/feed_media_workday_progress_20261029.md",
+      "domain": "runtime",
+      "size": 5134,
+      "sha256": "317fb78bb4e549b837363ca6e7e0fe57bb498292c7cd1f8daa4bde93c3a3f492"
     },
     {
       "path": "context/runtime/git_state.yaml",
@@ -2898,8 +2976,8 @@
     {
       "path": "context/runtime/moodle.yaml",
       "domain": "runtime",
-      "size": 1181,
-      "sha256": "8cfc36dcde2e597430d89e33c2b43a708ed266fae8cfdfbf73b95be80896a497"
+      "size": 1193,
+      "sha256": "17cab3c079d764fde7c6b24ee2febf5c43384343602dcf8595ad932159159e9f"
     },
     {
       "path": "context/runtime/moodle53_preparation_20261014.md",
@@ -2960,6 +3038,12 @@
       "domain": "runtime",
       "size": 2253,
       "sha256": "a6da6b23599c3609846c09d95f3b031241d99f44bb50e50be8e78677d8e65643"
+    },
+    {
+      "path": "context/runtime/perf2802_owner_browser_acceptance_20261029.json",
+      "domain": "runtime",
+      "size": 1862,
+      "sha256": "596434e081be3da4b890f517efbeb1546e73d6403270b3ac0a550d24c1c8d5c1"
     },
     {
       "path": "context/runtime/perf2802_owner_deploy_20261029.json",
@@ -3564,8 +3648,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 2992,
-      "sha256": "65165af83dfd19c4a7d44ead1e09abebc7f1254bcd40a39a5f348cbc1522ea95"
+      "size": 3437,
+      "sha256": "11e0f7041ea96aa02515738c66ae69035730c4f7da8044c61a5ef142f1bbfb23"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

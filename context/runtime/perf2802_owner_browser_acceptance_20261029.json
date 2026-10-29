@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "reported_date_msk": "2026-10-29",
+  "source": "owner_message_and_screenshot_in_current_dialogue",
+  "agent_SSH": false,
+  "independently_measured_on_server": false,
+  "application_commit": "22607c69a27c9be65d78fd407ce240f9dc2b8c8b",
+  "installation_receipt": "context/runtime/perf2802_owner_deploy_20261029.json",
+  "owner_report": "материалы, настройки ленты, соревнования, студия все работает и ок, единственное в rss ленте в записях почему то фото в некоторых записях отображаются три раза вместо одного но это было и раньше, лучше это исправить чтоб пост выглядел органично и не засорял ленту. Исправь это и заодно следующую задачу, сделаем в один проход вместе",
+  "accepted_basic_browser_areas": [
+    "Materials",
+    "Feed settings",
+    "Competitions",
+    "Studio"
+  ],
+  "known_preexisting_defect": "repeated RSS photographs in some cards; owner explicitly reports it predates2802",
+  "screenshot": {
+    "filename": "image(20261028-221317).png",
+    "sha256": "58617508bbe49e26a9ececcf938732cf0a91c749180e77231263bd86cbb96205",
+    "binary_not_published_in_repository": true
+  },
+  "not_individually_accepted": [
+    "every role/ACL edge",
+    "PDF/Word edge cases",
+    "actual SQL/page",
+    "real-workday performance",
+    "concurrency/SLO"
+  ],
+  "next_scope": {
+    "owner_requested": "fix RSS media and next task together",
+    "agent_interpretation": "PERF-01 passive workday capture preparation, matching ACTIVE and previous handoff",
+    "design": "docs/superpowers/specs/2026-10-29-feed-media-workday-design.md",
+    "no_automatic_merge": true
+  }
+}

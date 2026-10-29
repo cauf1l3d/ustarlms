@@ -4990,5 +4990,15 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         // Presentation only: retain links, v1 preferences, queues and ACK facts; no activation/replay.
         upgrade_plugin_savepoint(true, 2026102300, 'local', 'ustar');
     }
+    if ($oldversion < 2026102900) {
+        // Add metadata only. Runtime activation and new recipients remain explicit owner operations.
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load role bot schema'); }
+        foreach (['local_ustar_conn_dialogs', 'local_ustar_conn_actions', 'local_ustar_conn_updates'] as $name) {
+            $table = $schema->getStructure()->getTable($name);
+            if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
+        }
+        upgrade_plugin_savepoint(true, 2026102900, 'local', 'ustar');
+    }
 return true;
 }

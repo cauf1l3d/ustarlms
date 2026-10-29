@@ -2,13 +2,8 @@ schema_version: 2
 updated_at: '2026-10-29'
 project: USTAR Academy
 stage: connect_role_bot_implementation_after_owner2803_acceptance
-stage_label: Owner installed2803 and accepted RSS; full role Telegram bot authorized,
-  Mini App last
-current_activity: Final author review found ACK still depended on the old one-user
-  pilot property. Real PHP policy test reproduced failure; explicit role-delivery
-  profile fix passes15 local bot tests. App freeze is being refreshed before coordinated
-  operator qualification. No deployment/archive readiness claim; production remains
-  owner2803/worker6c56.
+stage_label: Owner installed2803 and accepted RSS; full role Telegram bot authorized, Mini App last
+current_activity: Final author review found ACK still depended on the old one-user pilot property. Real PHP policy test reproduced failure; explicit role-delivery profile fix passes15 local bot tests. App freeze is being refreshed before coordinated operator qualification. No deployment/archive readiness claim; production remains owner2803/worker6c56.
 entrypoint: START_HERE.md
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -26,8 +21,7 @@ code_baseline:
     full_RC_run: 40761497871
     merge: 01904edaf01dc6e340018eae8bf351dcc692b0c2
     receipt: context/runtime/perf2802_qualification_20261028.json
-  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source
-    integration is separate from owner server acceptance.
+  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source integration is separate from owner server acceptance.
 production:
   latest_owner_browser_acceptance: context/runtime/feed2803_owner_deploy_20261029.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
@@ -61,8 +55,7 @@ production:
   source: context/runtime/evidence_20261029.yaml
   independently_measured: false
   current_source_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
-  current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh
-    host filesystem census
+  current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh host filesystem census
   current_versions:
     local_ustar: 2026102803
     theme_ustar: 2026102700
@@ -147,17 +140,11 @@ server_facts:
   followup: context/runtime/server_facts_followup_20261017.json
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
-  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance
-    and hardening still separate
-  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019
-    test failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live
-    overrides remain unverified
-  - 18 component skips explained by DB/source; effective runtime overrides/cache and
-    native full-cycle acceptance not checked
-  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware
-    redundancy not confirmed
-  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded
-    plugin/vendor provenance remain separate; native restore/RTO awaited
+  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still separate
+  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live overrides remain unverified
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle acceptance not checked
+  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not confirmed
+  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance remain separate; native restore/RTO awaited
   additional_observations:
     provenance: context/runtime/core_extra_received_20261017.json
     review: context/reviews/20261017/core_extra_reconciliation.md
@@ -280,15 +267,16 @@ perf_query_deployment:
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
 development_candidate:
   manifest: context/code_map/connect_role_bot_development_source.json
-  status: ACK_profile_followup_refreshing_source_freeze
-  scope: Unified button-first Telegram role bot; metadata103 tables; paired app/worker
-    release still pending
+  status: source_frozen_qualification_pending
+  scope: Unified button-first Telegram role bot; metadata103 tables; paired app/worker release still pending
   branch: feat/connect-role-bot-20261029
   deployed: false
   progress: context/runtime/connect_role_bot_progress_20261029.md
   baseline_owner_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   PR: 111
   previous_app_candidate: 3935779fd432a1a057f5f24e41d93f38a651a1e2
+  application_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+  worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 feed_media_workday_delivery:
   status: owner_installed_status_and_RSS_accepted_workday_pending
   application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
@@ -312,15 +300,17 @@ feed_media_workday_delivery:
   workday_reminder_local: '2026-10-30T11:00:00+03:00'
 connect_role_bot_order: context/runtime/connect_bot_owner_order_20261029.json
 connect_role_bot_delivery:
-  status: ACK_profile_followup_refreshing_source_freeze
+  status: source_frozen_qualification_pending
   PR: 111
   baseline_application: ef903b7d276f1d62c4879f8a943a435b48e89117
   baseline_worker: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
   predecessor_tool: 36be3f108f2eac6a3db728f93b4456a729b97a3e
   new_journal: /var/lib/ustar-connect-role-bot-update
-  worker_rollout: true
   owner_installed: false
   agent_SSH: false
   provider_sends: false
   guide: docs/CONNECT_BOT_RU.md
   progress: context/runtime/connect_role_bot_progress_20261029.md
+  application_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+  worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+  coordinated_worker_rollout_planned: true

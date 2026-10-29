@@ -9,7 +9,7 @@ import connect_con02_contract as c
 import feed_media_update as previous
 from connect_con02_state import Journal, Locks, capture, descriptor, unique
 
-APP_COMMIT='3935779fd432a1a057f5f24e41d93f38a651a1e2'
+APP_COMMIT='5cc02944e1059ba015afcc7c5e8068ca56c34a92'
 WORKER_COMMIT=APP_COMMIT
 BASELINE_COMMIT=previous.APP_COMMIT
 PREDECESSOR_TOOL='36be3f108f2eac6a3db728f93b4456a729b97a3e'
@@ -21,7 +21,7 @@ BOT_ID='tg_role_bot_v4'
 NEW_TABLES={'local_ustar_conn_dialogs','local_ustar_conn_actions','local_ustar_conn_updates'}
 CHANGED=frozenset('local/ustar/'+n for n in (
     'classes/adaptation_service.php','classes/connect/actor_service.php','classes/connect/bridge_auth.php',
-    'classes/connect/bridge_service.php','classes/connect/identity_service.php','classes/forced_retraining.php',
+    'classes/connect/bridge_service.php','classes/connect/identity_service.php','classes/connect/notification_action.php','classes/forced_retraining.php',
     'classes/privacy/provider.php','classes/route_quiz_grading.php','classes/staffing_requests.php',
     'classes/task/prune_connect_identity.php','classes/task_files.php','connect_bridge.php',
     'db/install.xml','db/upgrade.php','lang/en/local_ustar.php','lang/ru/local_ustar.php',
@@ -143,7 +143,7 @@ def profiles(ctx,before,*,generation,cutoff,notify_secret,ack_secret):
         "$CFG->ustar_connect_bridge_keys['"+BOT_ID+"']=['secret'=>'"+notify_secret.decode()+
         "','provider'=>'telegram','tenant'=>'"+tenants[0].decode()+"','operations'=>['bot.update','bot.upload']];\n"
         "unset($CFG->ustar_connect_notify_userids);\n$CFG->ustar_connect_notify_since="+str(cutoff)+";\n"
-        "$CFG->ustar_connect_bot_enabled=true;\n").encode()
+        "$CFG->ustar_connect_role_delivery_profile='academy_linked_opt_in';\n$CFG->ustar_connect_bot_enabled=true;\n").encode()
     sender.update(role_bot_delivery=True,notification_subjects='academy_linked_opt_in')
     result={'include':include,'bot_key':notify_secret+b'\n','notifications':(json.dumps(sender,sort_keys=True)+'\n').encode()}
     for name,cfg in receivers.items():

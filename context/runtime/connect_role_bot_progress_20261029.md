@@ -72,3 +72,5 @@ the real HTTP fixture now retains an unrelated unsent photo/form across POST/rep
 
 - Optional Telegram `PhotoSize.file_size` / `File.file_size` no longer silently discard an otherwise valid photo. Actual download is still bounded to512KiB, each supplied size must match actual bytes, and the canonical private upload authorization precedes downloading. Three new tests reproduced2failures/1error before the change; complete focused bot suite18tests passes afterwards. Reference: official Telegram Bot API PhotoSize/File optional fields,29Oct2026.
 - The staged application follow-up also preserves a newer bot form/private photo while an older independent native command is confirmed, clears abandoned private photo drafts and keeps canonical report files, and authorizes ACK only under the explicit linked/opt-in profile. Native cases added; qualification remains pending the new immutable candidate.
+
+Application and worker frozen at `5cc02944e1059ba015afcc7c5e8068ca56c34a92`. Coordinated operator now pins that source, including ACK profile/draft lifecycle/optional photo size fixes. Candidate tool commit and all final CI remain pending; production stays2803/worker6c56.

@@ -51,7 +51,7 @@ final class connect_notification_action_test extends \advanced_testcase {
     public function test_schema_and_metadata_lifecycle(): void {
         global $DB;
         $this->table();
-        $this->assertCount(100, array_filter($DB->get_tables(), fn($t) => str_starts_with($t, 'local_ustar_')));
+        $this->assertCount(103, array_filter($DB->get_tables(), fn($t) => str_starts_with($t, 'local_ustar_')));
         $f = $this->delivery_fixture(); $other = $this->delivery_fixture();
         $this->token_row($f, time()+3600); $this->token_row($other, time()+3600);
         $provider = \local_ustar\privacy\provider::class;

@@ -62,6 +62,7 @@ php vendor/bin/phpunit --testsuite local_ustar_testsuite --filter 'connect_(iden
     --fail-on-notice --display-notices --log-junit /artifacts/connect-phpunit.xml \
     2>&1 | tee /artifacts/connect-phpunit.log
 php /source/tests/stage/connect_concurrency.php 2>&1 | tee /artifacts/connect-concurrency.log
+USTAR_STAGE_PREFIX=stage_ bash /source/tests/stage/connect_bot_http_smoke.sh --standalone
 bash /source/tests/stage/run-academy-https-moodle.sh
 echo 'CONNECT_SCHEMA_UPGRADE_REPEAT_FRESH_AND_DB=PASS' | tee /artifacts/connect-result.txt
 

@@ -11,6 +11,7 @@ final class bot_service {
         if ($sender->provider!==$p['provider'] || $sender->tenant!==$p['tenant'] || $sender->subject!==$p['subject']) {
             throw new \InvalidArgumentException('invalid_bot_request');
         }
+        try {
         $result=identity_service::locked(function() use($sender,$p):array {
             global $DB;
             $userid=bot_actor::active($sender); $link=bot_actor::link($sender);
@@ -27,12 +28,19 @@ final class bot_service {
             }
             if ((int)$d->ratewindow<time()-60) { $d->ratewindow=time(); $d->ratecount=0; }
             if (++$d->ratecount>40) { throw new \InvalidArgumentException('rate_limited'); }
+            bot_store::save($d); // Count rejected inputs too, outside any business rollback.
             $action=$p['callback']!==''?bot_store::resolve($d,$p['callback']):null;
             $intent=$action?$action->intent:self::command($p['text']);
             $data=$action?json_decode($action->payload,true,32,JSON_THROW_ON_ERROR):[];
             $operate=function() use($d,$link,$p,$action,$intent,$data):array {
-                if ($action && $action->status==='done') { return json_decode($action->resultjson,true,32,JSON_THROW_ON_ERROR); }
-                if ($action && $action->status!=='issued') { throw new \InvalidArgumentException('expired_bot_action'); }
+                if ($action && $action->status==='done' && !self::read_intent($intent)) {
+                    // Repeated writes return their receipt. An old answered form never advances twice.
+                    if(str_starts_with($intent,'form.')) {
+                        return $d->phase==='form.input'?bot_forms::ask($d):self::menu($d,$link);
+                    }
+                    return json_decode($action->resultjson,true,32,JSON_THROW_ON_ERROR);
+                }
+                if ($action && !in_array($action->status,['issued','done'],true)) { throw new \InvalidArgumentException('expired_bot_action'); }
                 if (in_array($intent,['menu','cancel','help'],true)) { return self::menu($d,$link); }
                 if (!(int)$d->userid) { return bot_registration::route($d,$link,$intent,$data,$p['text']); }
                 if ($intent==='input') { $intent=$d->phase; $data=bot_store::data($d); }
@@ -60,10 +68,33 @@ final class bot_service {
                 $tx->allow_commit(); return $view;
             } catch(\Throwable $e) { $tx->rollback($e); }
         });
+        } catch(\local_ustar\registration_validation_exception $error) {
+            $fields=['email'=>'email','username'=>'логин','firstname'=>'имя','lastname'=>'фамилию','departmentid'=>'подразделение'];
+            return self::input_problem($sender,'Проверьте '.($fields[$error->field]??'поля анкеты').'. Формат или занятые данные не позволяют отправить заявку.');
+        } catch(\invalid_parameter_exception $error) {
+            return self::input_problem($sender,'Проверьте ответы, обязательные поля и дату. Запись не принята; измените ответы и отправьте заново.');
+        } catch(\required_capability_exception $error) {
+            throw new \InvalidArgumentException('forbidden_scope');
+        } catch(\dml_missing_record_exception $error) {
+            throw new \InvalidArgumentException('expired_bot_action');
+        }
         if(isset($result['_guard'])) {
             bot_guards::verify($result['_guard'],bot_actor::active($sender));unset($result['_guard']);
         }
         return $result;
+    }
+    private static function input_problem(identity $sender,string $text): array {
+        return identity_service::locked(function()use($sender,$text):array {
+            $id=bot_actor::active($sender);$link=bot_actor::link($sender);$d=bot_store::dialog($sender,$id,$link);
+            $make=static function()use($d,$link,$text):array {
+                $view=$d->phase==='form.confirm'?bot_forms::preview($d):self::menu($d,$link);
+                $view['title']='⚠️ Проверьте данные';$view['text']=$text;
+                $view['buttons']=array_values(array_filter($view['buttons'],static fn($b)=>$b['label']!=='✓ Подтвердить'));
+                if(isset($view['_guard'])){bot_guards::verify($view['_guard'],(int)$d->userid);unset($view['_guard']);}
+                return $view;
+            };
+            return $id?bot_actor::run($id,$make):$make();
+        });
     }
     public static function remember(\stdClass $d,string $event,string $hash,array $view): void {
         global $DB;
@@ -81,6 +112,14 @@ final class bot_service {
             '/register','Регистрация'=>'registration.start',default=>'input',
         };
     }
+    private static function read_intent(string $intent): bool {
+        return in_array($intent,['menu','cancel','help','form.preview','work.mine','work.team','work.review','work.company','work.task','work.photos',
+            'work.checklists','work.checklist','work.report','work.return','work.assign','learn.mine','learn.results','learn.inbox',
+            'learn.team','learn.person','settings','settings.edit','settings.unlink','people.requests','people.request',
+            'people.request.approve','people.request.reject','people.request.adapt','people.hire','people.terminate','people.grades','people.grade',
+            'people.retrain','people.adaptations','people.adaptation','people.adaptation.daily','people.adaptation.final',
+            'people.adaptation.decision','people.adaptation.case','people.adaptation.control','people.adaptation.reset','people.confirmation.status'],true);
+    }
     public static function menu(\stdClass $d, ?\stdClass $link=null): array {
         bot_store::state($d,'menu');
         if (!(int)$d->userid) {
@@ -93,6 +132,11 @@ final class bot_service {
             }
             return bot_store::card('USTAR · Добро пожаловать','Свяжите существующую учётку через «Личный кабинет → Мессенджеры» в Академии. Новому сотруднику доступна заявка без пароля.',
                 [bot_store::button($d,'📝 Зарегистрироваться','registration.start'),bot_store::button($d,'🔗 Как привязать учётку','help')]);
+        }
+        if(!bot_actor::eligible((int)$d->userid)) {
+            return bot_store::card('🔐 Завершите вход в Академии',
+                'Рабочие действия требуют завершённой настройки учётной записи. Откройте Академию из офисной сети и выполните требование входа или смены первого пароля. Пароль в чат не отправляйте. Если для входа включён дополнительный фактор или внешний провайдер, используйте защищённую Академию.',
+                [bot_store::button($d,'Проверить доступ','menu')]);
         }
         $buttons=[bot_store::button($d,'📋 Мои задачи','work.mine'),bot_store::button($d,'☑️ Чек-листы','work.checklists'),
             bot_store::button($d,'🎓 Обучение','learn.mine'),bot_store::button($d,'📊 Мои результаты','learn.results'),
@@ -129,8 +173,9 @@ final class bot_service {
         if($intent==='settings.edit') {
             $fields=[['key'=>'quiet_start','label'=>'Начало тихих часов · ЧЧ:ММ','type'=>'clock','required'=>true],
                 ['key'=>'quiet_end','label'=>'Конец тихих часов · ЧЧ:ММ','type'=>'clock','required'=>true],
-                ['key'=>'timezone','label'=>'Часовой пояс (например Europe/Moscow)','required'=>true],
-                ['key'=>'interval','label'=>'Интервал между уведомлениями в минутах','type'=>'number','min'=>1,'max'=>1440,'required'=>true]];
+                ['key'=>'timezone','label'=>'Часовой пояс (например Europe/Moscow)','type'=>'timezone','required'=>true],
+                ['key'=>'interval','label'=>'Интервал между уведомлениями в минутах','type'=>'integer','min'=>1,'max'=>1440,'required'=>true],
+                ['key'=>'severity','label'=>'Важность уведомлений','choices'=>['normal'=>'Все события','action'=>'Действия и критичные','critical'=>'Только критичные'],'required'=>true]];
             foreach(['registration'=>'Регистрация','tasks'=>'Задачи','feed'=>'Лента','grades'=>'Грейды'] as $key=>$label){
                 $fields[]=['key'=>$key,'label'=>'Получать: '.$label,'choices'=>['1'=>'Да','0'=>'Нет'],'required'=>true];
             }
@@ -139,7 +184,7 @@ final class bot_service {
         if($intent==='settings.commit') {
             if(!hash_equals($hash,$data['context']['expected']??'')){throw new \InvalidArgumentException('stale_revision');}
             $v=$data['values'];$p['quiet_start']=$v['quiet_start'];$p['quiet_end']=$v['quiet_end'];$p['timezone']=$v['timezone'];
-            $p['interval_minutes']=(int)$v['interval'];$p['categories']=[];
+            $p['interval_minutes']=(int)$v['interval'];$p['min_severity']=$v['severity'];$p['categories']=[];
             foreach(notification_preferences::CATEGORIES as $key){if(($v[$key]??'0')==='1'){$p['categories'][]=$key;}}
             notification_preferences::save_own($p);
         }

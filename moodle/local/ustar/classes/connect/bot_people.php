@@ -59,7 +59,8 @@ final class bot_people {
             if ($offset+8<count($all)) { $buttons[]=bot_store::button($d,'Далее →','people.requests',['offset'=>$offset+8]); }
             if ($offset) { $buttons[]=bot_store::button($d,'← Назад','people.requests',['offset'=>max(0,$offset-8)]); }
             $buttons[]=bot_service::home($d);
-            return bot_store::card('👤 Кадровые заявки',$all?'Выберите заявку.':'Доступных заявок нет.',$buttons,[],$rows);
+            return bot_store::guarded(bot_store::card('👤 Кадровые заявки',$all?'Выберите заявку.':'Доступных заявок нет.',$buttons,[],$rows),
+                ['staffing'=>array_column(array_slice($all,$offset,8),'id')]);
         }
         $request=null;
         foreach(staffing_requests::list_for($id) as $item) { if ($item['id']===(int)($data['id']??$data['context']['id']??0)) { $request=$item;break; } }
@@ -68,9 +69,21 @@ final class bot_people {
             bot_store::state($d,'menu');$buttons=[];
             if ($request['canapprove']) { $buttons[]=bot_store::button($d,'Одобрить','people.request.approve',['id'=>$request['id']]); }
             if ($request['canreview']) { $buttons[]=bot_store::button($d,'Отклонить','people.request.reject',['id'=>$request['id']]); }
+            if(!empty($request['canassignadaptation'])){$buttons[]=bot_store::button($d,'🧭 Назначить адаптацию','people.request.adapt',['id'=>$request['id']]);}
             $buttons[]=bot_service::home($d);
             return bot_store::guarded(bot_store::card('👤 '.$request['fullname'],$request['typelabel'],$buttons,[],[
                 ['Подразделение',$request['department']],['Должность',$request['position']],['Статус',$request['statuslabel']]]),['staffing'=>$request['id']]);
+        }
+        if($intent==='people.request.adapt' || $intent==='people.request.adapt.prepare') {
+            if(empty($request['canassignadaptation'])){throw new \InvalidArgumentException('forbidden_scope');}
+            if($intent==='people.request.adapt.prepare') {
+                return bot_store::guarded(bot_confirmation::prepare($d,'execute.adaptation.assign',$data,
+                    'Адаптация: '.$request['fullname']."\nНачало: ".$data['values']['date']."\nРабочих дней: ".$data['values']['days']),['staffing'=>$request['id']]);
+            }
+            return bot_forms::start($d,'🧭 Адаптация: '.$request['fullname'],[
+                ['key'=>'date','label'=>'Дата начала · не раньше '.$request['requesteddateiso'],'type'=>'date','required'=>true],
+                ['key'=>'days','label'=>'Срок в рабочих днях (1–180)','type'=>'integer','min'=>1,'max'=>180,'required'=>true]],
+                'people.request.adapt.prepare',['id'=>$request['id']]);
         }
         if (!$request['canreview']) { throw new \InvalidArgumentException('forbidden_scope'); }
         if ($intent==='people.request.prepare') {
@@ -84,7 +97,7 @@ final class bot_people {
         }
         if ($approve && $request['ishire']) {
             $fields[]=['key'=>'username','label'=>'Логин нового сотрудника','required'=>true];
-            $fields[]=['key'=>'email','label'=>'Email нового сотрудника','required'=>true];
+            $fields[]=['key'=>'email','label'=>'Email нового сотрудника','type'=>'email','required'=>true];
         }
         $fields[]=['key'=>'reviewcomment','label'=>$approve?'Комментарий к решению':'Причина отказа','required'=>!$approve];
         return bot_forms::start($d,$approve?'Одобрение заявки':'Отклонение заявки',$fields,'people.request.prepare',
@@ -108,23 +121,44 @@ final class bot_people {
         $a=route_quiz_grading::detail($attempt);
         if ($intent==='people.grade.prepare') {
             $summary='Ручная оценка: '.$a['employee'].' · '.$a['quizname'];
-            foreach($a['questions'] as $q){if($q['needgrading']){$summary.="\nОтвет №".$q['number'].': '.$data['values']['mark_'.$q['slot']].'/'.$q['maxmark'];}}
+            foreach($a['questions'] as $q){if($q['needgrading'] && array_key_exists('mark_'.$q['slot'],$data['values'])){$summary.="\nОтвет №".$q['number'].': '.$data['values']['mark_'.$q['slot']].'/'.$q['maxmark'].
+                "\nКомментарий: ".($data['values']['comment_'.$q['slot']]??'—');}}
             return bot_store::guarded(bot_confirmation::prepare($d,'execute.grade',$data,$summary),['attempt'=>$attempt]);
         }
         if ($intent!=='people.grade') { throw new \InvalidArgumentException('invalid_bot_action'); }
         $fields=[];
         foreach($a['questions'] as $q) {
             if(!$q['needgrading']){continue;}
+            if(count($fields)>=50){break;}
             $body=self::plain($q['questionhtml'])."\nОтвет: ".self::plain($q['responsehtml']);
             $fields[]=['key'=>'mark_'.$q['slot'],'label'=>'Ответ №'.$q['number']." · Баллы (0–".$q['maxmark'].')',
                 'reference'=>$body,'type'=>'number','min'=>0,'max'=>(float)$q['maxmark'],'required'=>true];
             $fields[]=['key'=>'comment_'.$q['slot'],'label'=>'Комментарий к ответу №'.$q['number']];
         }
         if (!$fields) { return bot_store::card('✓ Проверка завершена','Нет ответов, ожидающих ручной оценки.',[bot_service::home($d)]); }
-        return bot_forms::start($d,'📝 '.$a['employee'],$fields,'people.grade.prepare',['attempt'=>$attempt,'stamp'=>self::grade_stamp($a)]);
+        return bot_forms::start($d,'📝 '.$a['employee'].(count($fields)===50?' · до 25 ответов за отправку':''),$fields,'people.grade.prepare',['attempt'=>$attempt,'stamp'=>self::grade_stamp($a)]);
+    }
+    public static function guard_command(string $intent,array $data,int $id): void {
+        $v=$data['values']??[];$context=$data['context']??[];
+        if($intent==='execute.staffing') {bot_guards::verify(['staffing'=>(int)$context['id']],$id);}
+        else if($intent==='execute.grade') {bot_guards::verify(['attempt'=>(int)$context['attempt']],$id);}
+        else if($intent==='execute.retrain') {
+            \local_ustar\task_workspace\recipients::validate($id,(int)$v['person'],$v['department'],$v['position']);
+        } else if($intent==='execute.adaptation.assign'){bot_guards::verify(['staffing'=>(int)$context['id']],$id);}
+        else if(str_starts_with($intent,'execute.adaptation.')){bot_guards::verify(['adaptation'=>(int)$context['id']],$id);}
+        else if($intent==='execute.staffing.create') {
+            $scope=staffing_requests::manager_scope($id);
+            if(empty($scope['allowed']) || ($context['type']==='hire'?!in_array($v['positionid'],array_column($scope['positions'],'id'),true):
+                    !in_array((int)$v['employeeid'],array_map('intval',array_column($scope['employees'],'id')),true))){
+                throw new \InvalidArgumentException('forbidden_scope');
+            }
+        }else {throw new \InvalidArgumentException('invalid_bot_action');}
     }
     public static function execute(string $intent,array $data,int $id): void {
         $v=$data['values']??[];$c=$data['context']??[];
+        if($intent==='execute.adaptation.assign') {
+            \local_ustar\adaptation_service::assign_from_request((int)$c['id'],$id,$v['date'],(int)$v['days']);return;
+        }
         if($intent==='execute.staffing.create') {
             global $USER;
             $v['requesteddate']=(new \DateTimeImmutable($v['date'].' 12:00',\core_date::get_user_timezone_object($USER)))->getTimestamp();
@@ -140,7 +174,7 @@ final class bot_people {
             hr_access::require_grader();$a=route_quiz_grading::detail((int)$c['attempt']);
             if(!hash_equals($c['stamp'],self::grade_stamp($a))){throw new \InvalidArgumentException('stale_revision');}
             $grades=[];
-            foreach($a['questions'] as $q){if($q['needgrading']){$grades[$q['slot']]=['mark'=>(float)$v['mark_'.$q['slot']],'comment'=>$v['comment_'.$q['slot']]??''];}}
+            foreach($a['questions'] as $q){if($q['needgrading'] && array_key_exists('mark_'.$q['slot'],$v)){$grades[$q['slot']]=['mark'=>(float)$v['mark_'.$q['slot']],'comment'=>$v['comment_'.$q['slot']]??''];}}
             route_quiz_grading::manual_grade_batch((int)$c['attempt'],$grades,$id);return;
         }
         if($intent==='execute.staffing') {

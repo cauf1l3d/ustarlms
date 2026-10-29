@@ -1015,6 +1015,9 @@ final class adaptation_service {
                     // The row lock survives nested commits until a channel receipt commits.
                     $DB->get_record_sql('SELECT id FROM {local_ustar_adaptations} WHERE id=:id FOR UPDATE',
                         ['id'=>(int)$match[1]],MUST_EXIST);
+                } else if(preg_match('/\Aadaptation-request-([1-9][0-9]*)\z/',$key,$match)) {
+                    $DB->get_record_sql('SELECT id FROM {local_ustar_staff_requests} WHERE id=:id FOR UPDATE',
+                        ['id'=>(int)$match[1]],MUST_EXIST);
                 }
                 $result = $command();
                 $transaction->allow_commit();

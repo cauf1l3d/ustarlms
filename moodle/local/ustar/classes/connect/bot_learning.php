@@ -31,22 +31,26 @@ final class bot_learning {
         if (!in_array($intent,['learn.mine','learn.results'],true)) { throw new \InvalidArgumentException('invalid_bot_action'); }
         $identity=\local_ustar\organization_identity::resolve($id);
         $snapshot=\local_ustar\route_model::read_only_snapshot((string)$identity['positionid'],$id);
-        bot_store::state($d,'menu'); $rows=[];
-        foreach (array_slice($snapshot['points']??[],0,15) as $point) {
+        bot_store::state($d,'menu'); $rows=[];$buttons=[];$offset=max(0,(int)($data['offset']??0));$all=$snapshot['points']??[];
+        foreach (array_slice($all,$offset,8) as $point) {
             $rows[]=[$point['title'],$point['done']?'✓ Завершён':($point['current']?'▶ Следующий':'Позже')];
         }
         if($intent==='learn.results'){
             $rows=[];
-            foreach(\local_ustar\assessment_summary::for_employee($id,$id,array_slice($snapshot['points']??[],0,12)) as $result){
+            $all=\local_ustar\assessment_summary::for_employee($id,$id,$snapshot['points']??[]);
+            foreach(array_slice($all,$offset,8) as $result){
                 $rows[]=[$result['quizname'],$result['statuslabel'].' · '.($result['lastscore']??'—')];
             }
             if(!$rows){$rows[]=['Аттестации','Завершённых попыток пока нет'];}
         }
+        if($offset){$buttons[]=bot_store::button($d,'← Назад',$intent,['offset'=>max(0,$offset-8)]);}
+        if($offset+8<count($all)){$buttons[]=bot_store::button($d,'Далее →',$intent,['offset'=>$offset+8]);}
+        $buttons[]=bot_service::home($d);
         $current=$snapshot['currentpoint']['title']??'';
         $text=empty($snapshot['ok'])?'Для вашей должности маршрут пока не опубликован.':
             ($current!==''?'Следующий шаг: '.$current:'Все текущие шаги завершены.');
         $text.="\n\nПолный курс, Quiz и SCORM открываются в Академии из офисной сети. Просмотр сообщения не засчитывает прохождение.";
-        return bot_store::card($intent==='learn.results'?'📊 Мои результаты':'🎓 Мой маршрут',$text,[bot_service::home($d)],
+        return bot_store::card($intent==='learn.results'?'📊 Мои результаты':'🎓 Мой маршрут',$text,$buttons,
             [['label'=>'Маршрут','value'=>(int)($snapshot['donepoints']??0),'total'=>(int)($snapshot['totalpoints']??0)]],$rows);
     }
     private static function team(\stdClass $d,string $intent,array $data): array {

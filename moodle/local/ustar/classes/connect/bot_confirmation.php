@@ -5,8 +5,13 @@ defined('MOODLE_INTERNAL') || die();
 /** Independent native-session confirmation for sensitive bot-prepared commands. */
 final class bot_confirmation {
     public static function prepare(\stdClass $d,string $intent,array $payload,string $summary): array {
+        bot_people::guard_command($intent,$payload,(int)$d->userid);
         $token=bot_store::action($d,$intent,$payload,$summary,true);
-        return self::pending($d,$token,$summary);
+        $context=$payload['context']??[];$guard=[];
+        if(in_array($intent,['execute.staffing','execute.adaptation.assign'],true)){$guard=['staffing'=>(int)$context['id']];}
+        else if($intent==='execute.grade'){$guard=['attempt'=>(int)$context['attempt']];}
+        else if(str_starts_with($intent,'execute.adaptation.')){$guard=['adaptation'=>(int)$context['id']];}
+        return bot_store::guarded(self::pending($d,$token,$summary),$guard);
     }
     private static function pending(\stdClass $d,string $token,string $summary): array {
         return bot_store::card('🔐 Подтвердите решение',$summary."\n\nОткройте защищённую Академию из офисной сети. Проверьте карточку и подтвердите действие своей учёткой. Срок — 15 минут.",[
@@ -26,6 +31,7 @@ final class bot_confirmation {
                 || !hash_equals($a->authority,bot_actor::authority($sender,$userid,$link))) {
             throw new \InvalidArgumentException('actor_unavailable');
         }
+        bot_people::guard_command($a->intent,json_decode($a->payload,true,32,JSON_THROW_ON_ERROR),$userid);
         return [$a,$d];
     }
     public static function status(\stdClass $d,string $token): array {

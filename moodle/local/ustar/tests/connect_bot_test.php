@@ -51,7 +51,7 @@ final class connect_bot_test extends \advanced_testcase {
         $link=$DB->get_record('local_ustar_conn_links',['identityhash'=>$sender->key()]);
         identity_service::revoke((int)$link->id);
         $result=bot_service::update($sender,$this->request(3));
-        $this->assertStringContainsString('Привяз',json_encode($result,JSON_UNESCAPED_UNICODE));
+        $this->assertStringContainsString('привяз',json_encode($result,JSON_UNESCAPED_UNICODE));
         $this->assertStringNotContainsString('Мои задачи',json_encode($result,JSON_UNESCAPED_UNICODE));
     }
     private function click(identity $sender,array $view,string $label,int $event): array {
@@ -73,7 +73,8 @@ final class connect_bot_test extends \advanced_testcase {
     public function test_task_report_button_twice_keeps_one_canonical_report_and_guest_context(): void {
         global $DB,$USER;
         $sender=$this->linked();$id=$this->work($sender);
-        $list=bot_service::update($sender,$this->request(10,'Мои задачи'));
+        $menu=bot_service::update($sender,$this->request(9));
+        $list=$this->click($sender,$menu,'Мои задачи',10);
         $card=$this->click($sender,$list,'Synthetic',11);
         $photo=$this->click($sender,$card,'Отправить отчёт',12);
         $this->click($sender,$photo,'Пропустить',121);
@@ -83,6 +84,10 @@ final class connect_bot_test extends \advanced_testcase {
         $this->assertSame($a,$b);
         $this->assertSame('in_review',$DB->get_field('local_ustar_learning_tasks','status',['id'=>$id]));
         $this->assertSame(1,$DB->count_records('local_ustar_task_reports',['taskid'=>$id]));
+        $fresh=$this->click($sender,$menu,'Мои задачи',16);
+        $review=$this->click($sender,$fresh,'На проверке',17);
+        $detail=$this->click($sender,$review,'Synthetic',18);
+        $this->assertStringContainsString('Готово, результат проверен',$detail['text']);
         $this->assertTrue(isguestuser($USER));
     }
     public function test_other_client_changed_task_is_not_overwritten(): void {
@@ -138,7 +143,13 @@ final class connect_bot_test extends \advanced_testcase {
         $this->expectException(\InvalidArgumentException::class);
         bot_service::update($sender,$this->request(60,'Мои задачи'));
     }
-    public function test_native_hr_confirmation_rejects_once_and_keeps_canonical_actor(): void {
+    public function test_first_password_policy_shows_setup_instead_of_unusable_work_buttons(): void {
+        $sender=$this->linked();set_user_preference('auth_forcepasswordchange',1,(int)$GLOBALS['USER']->id);
+        $this->setGuestUser();$result=bot_service::update($sender,$this->request(65));
+        $this->assertStringContainsString('Завершите вход',$result['title']);
+        $this->assertStringNotContainsString('Мои задачи',json_encode($result,JSON_UNESCAPED_UNICODE));
+    }
+    public function test_cookie_free_bridge_cannot_execute_a_prepared_hr_command(): void {
         global $DB,$USER;
         $sender=$this->linked();$reviewer=clone $USER;$context=\context_system::instance();
         $role=$this->getDataGenerator()->create_role();
@@ -157,11 +168,10 @@ final class connect_bot_test extends \advanced_testcase {
         $url=array_values(array_filter($pending['buttons'],static fn($b)=>isset($b['url'])))[0]['url'];
         parse_str(parse_url($url,PHP_URL_QUERY),$query);
         $this->setUser($reviewer);
-        $first=\local_ustar\connect\bot_confirmation::confirm($query['action'],(int)$reviewer->id);
-        $this->assertSame($first,\local_ustar\connect\bot_confirmation::confirm($query['action'],(int)$reviewer->id));
-        $fresh=$DB->get_record('local_ustar_staff_requests',['id'=>$request->id]);
-        $this->assertSame('rejected',$fresh->status);$this->assertSame((int)$reviewer->id,(int)$fresh->reviewedby);
-        $this->assertSame('Ошибочные данные, подайте заново',$fresh->reviewcomment);
+        $this->assertTrue(defined('NO_MOODLE_COOKIES') && NO_MOODLE_COOKIES);
+        try{\local_ustar\connect\bot_confirmation::confirm($query['action'],(int)$reviewer->id);$this->fail('Cookie-free confirmation accepted');}
+        catch(\InvalidArgumentException $e){$this->assertSame('native_auth_required',$e->getMessage());}
+        $this->assertSame('pending',$DB->get_field('local_ustar_staff_requests','status',['id'=>$request->id]));
     }
     public function test_anon_signup_has_no_chat_password_and_refresh_button_works_after_link_created(): void {
         global $DB,$CFG;

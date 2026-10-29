@@ -21,8 +21,10 @@ final class bot_guards {
         }
         if(isset($guard['staffing'])) {
             $visible=\local_ustar\staffing_requests::list_for($userid);
-            if(!in_array((int)$guard['staffing'],array_map('intval',array_column($visible,'id')),true)){
-                throw new \InvalidArgumentException('forbidden_scope');
+            foreach((array)$guard['staffing'] as $id){
+                if(!in_array((int)$id,array_map('intval',array_column($visible,'id')),true)){
+                    throw new \InvalidArgumentException('forbidden_scope');
+                }
             }
         }
         if(isset($guard['attempt'])){
@@ -30,8 +32,8 @@ final class bot_guards {
                 \local_ustar\hr_access::require_grader();\local_ustar\route_quiz_grading::detail((int)$guard['attempt']);
             });
         }
-        if(isset($guard['adaptation'])){
-            $a=$DB->get_record('local_ustar_adaptations',['id'=>(int)$guard['adaptation']]);
+        foreach(array_merge((array)($guard['adaptation']??[]),$guard['adaptations']??[]) as $id){
+            $a=$DB->get_record('local_ustar_adaptations',['id'=>(int)$id]);
             if(!$a || ((int)$a->userid!==$userid && (int)$a->managerid!==$userid && !\local_ustar\adaptation_service::is_hrd_actor($userid))){
                 throw new \InvalidArgumentException('forbidden_scope');
             }

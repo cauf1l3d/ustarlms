@@ -5,17 +5,18 @@ defined('MOODLE_INTERNAL') || die();
 /** Server-owned finite forms. Callback values are opaque actions, never executable client data. */
 final class bot_forms {
     public static function start(\stdClass $d,string $title,array $fields,string $commit,array $context=[]): array {
-        if (!$fields || count($fields)>50) { throw new \InvalidArgumentException('invalid_bot_form'); }
+        if (!$fields || count($fields)>250) { throw new \InvalidArgumentException('invalid_bot_form'); }
         bot_store::state($d,'form.input',['title'=>$title,'fields'=>$fields,'index'=>0,'values'=>[],
             'commit'=>$commit,'context'=>$context]);
         return self::ask($d);
     }
     public static function route(\stdClass $d,string $intent,array $action,array $p): array {
+        if($intent==='form.preview' && $d->phase==='form.confirm'){return self::preview($d,max(0,(int)($action['offset']??0)));}
         if($intent==='form.restart' && $d->phase==='form.confirm') {
             $f=bot_store::data($d);$f['index']=0;$f['values']=[];bot_store::state($d,'form.input',$f);return self::ask($d);
         }
         if ($d->phase!=='form.input') { throw new \InvalidArgumentException('expired_bot_action'); }
-        $f=bot_store::data($d); $field=$f['fields'][$f['index']];
+        $f=bot_store::data($d); $field=self::field($f);
         bot_guards::form($d,$f);
         if($intent==='form.back') {
             $f['index']=max(0,$f['index']-1);
@@ -31,11 +32,13 @@ final class bot_forms {
         if (!is_scalar($value) || (strlen((string)$value)>4000)
                 || (!empty($field['required']) && trim((string)$value)==='')) { return self::ask($d,0,'Заполните обязательное поле.'); }
         $value=(string)$value;
-        if (($field['type']??'')==='number' && ($value==='' || !is_numeric($value) || !is_finite((float)$value))) {
+        if(($field['type']??'')==='email' && !validate_email($value)){return self::ask($d,0,'Проверьте адрес email.');}
+        if (in_array($field['type']??'',['number','integer'],true) && ($value==='' || !is_numeric($value) || !is_finite((float)$value))) {
             return self::ask($d,0,'Укажите число.');
         }
+        if(($field['type']??'')==='integer' && !preg_match('/\A[0-9]+\z/',$value)){return self::ask($d,0,'Укажите целое число.');}
         if(isset($field['maxlen']) && \core_text::strlen($value)>(int)$field['maxlen']){return self::ask($d,0,'Сократите ответ: максимум '.$field['maxlen'].' символов.');}
-        if(($field['type']??'')==='number' && ((isset($field['min']) && (float)$value<$field['min']) || (isset($field['max']) && (float)$value>$field['max']))){return self::ask($d,0,'Число вне допустимого диапазона.');}
+        if(in_array($field['type']??'',['number','integer'],true) && ((isset($field['min']) && (float)$value<$field['min']) || (isset($field['max']) && (float)$value>$field['max']))){return self::ask($d,0,'Число вне допустимого диапазона.');}
         if (($field['type']??'')==='date') {
             if (preg_match('/\A(\d{2})\.(\d{2})\.(\d{4})\z/',$value,$m)) { $value=$m[3].'-'.$m[2].'-'.$m[1]; }
             if (!preg_match('/\A(\d{4})-(\d{2})-(\d{2})\z/',$value,$m) || !checkdate((int)$m[2],(int)$m[3],(int)$m[1])) {
@@ -45,19 +48,35 @@ final class bot_forms {
         if (($field['type']??'')==='clock' && !preg_match('/\A(?:[01][0-9]|2[0-3]):[0-5][0-9]\z/',$value)) {
             return self::ask($d,0,'Время в формате ЧЧ:ММ.');
         }
+        if(($field['type']??'')==='timezone' && !in_array($value,\DateTimeZone::listIdentifiers(\DateTimeZone::ALL_WITH_BC),true)){
+            return self::ask($d,0,'Укажите существующий часовой пояс, например Europe/Moscow.');
+        }
         $f['values'][$field['key']]=$value; $f['index']++;
         if ($f['index']<count($f['fields'])) { bot_store::state($d,'form.input',$f); return self::ask($d); }
-        bot_store::state($d,'form.confirm',$f); $rows=[];
-        foreach ($f['fields'] as $item) {
+        bot_store::state($d,'form.confirm',$f);return self::preview($d);
+    }
+    public static function preview(\stdClass $d,int $offset=0): array {
+        $f=bot_store::data($d);bot_guards::form($d,$f);$rows=[];$buttons=[];
+        foreach (array_slice($f['fields'],$offset,8) as $item) {
             $choices=self::choices($d,$item,$f['values']); $v=$f['values'][$item['key']];
+            if(($item['type']??'')==='photo'){$v=$v!==''?'Фото приложено':'Без фото';}
             $rows[]=[$item['label'],$choices[$v]??($v===''?'—':$v)];
         }
-        return bot_store::guarded(bot_store::card('Проверьте перед отправкой',$f['title'].(count($rows)>12?"\nВ таблице первые 12 полей. Все ответы сохранены в форме; кнопка «Изменить ответы» позволяет пройти их заново.":''),
-            [bot_store::button($d,'✓ Подтвердить',$f['commit'],['values'=>$f['values'],'context'=>$f['context']]),
-             bot_store::button($d,'Изменить ответы','form.restart'),bot_service::cancel($d)],[],array_slice($rows,0,12)),bot_guards::form_guard($f));
+        if($offset){$buttons[]=bot_store::button($d,'← Предыдущие ответы','form.preview',['offset'=>max(0,$offset-8)]);}
+        if($offset+8<count($f['fields'])){$buttons[]=bot_store::button($d,'Следующие ответы →','form.preview',['offset'=>$offset+8]);}
+        $buttons[]=bot_store::button($d,'✓ Подтвердить',$f['commit'],['values'=>$f['values'],'context'=>$f['context']]);
+        $buttons[]=bot_store::button($d,'Изменить ответы','form.restart');$buttons[]=bot_service::cancel($d);
+        return bot_store::guarded(bot_store::card('Проверьте перед отправкой',$f['title']."\nПоля ".($offset+1).'–'.min(count($f['fields']),$offset+8).' из '.count($f['fields']),$buttons,[],$rows),bot_guards::form_guard($f));
+    }
+    private static function field(array $form): array {
+        $field=$form['fields'][$form['index']];
+        foreach($field['required_if']??[] as $key=>$matches){
+            if(in_array($form['values'][$key]??'',(array)$matches,true)){$field['required']=true;}
+        }
+        return $field;
     }
     public static function ask(\stdClass $d,int $offset=0,string $error='',int $referencepart=0): array {
-        $f=bot_store::data($d); $field=$f['fields'][$f['index']];
+        $f=bot_store::data($d); $field=self::field($f);
         bot_guards::form($d,$f);
         if(!empty($field['reference'])) {
             $parts=(int)ceil(\core_text::strlen($field['reference'])/1050);

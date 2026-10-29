@@ -14,7 +14,7 @@ final class bot_registration {
             return bot_forms::start($d,'📝 Заявка в Академию',[
                 ['key'=>'firstname','label'=>'Ваше имя','required'=>true],
                 ['key'=>'lastname','label'=>'Ваша фамилия','required'=>true],
-                ['key'=>'email','label'=>'Ваш email','required'=>true],
+                ['key'=>'email','label'=>'Ваш email','type'=>'email','required'=>true],
                 ['key'=>'username','label'=>'Логин для Академии','required'=>true],
                 ['key'=>'departmentid','label'=>'Выберите подразделение','provider'=>'registration.departments','required'=>true],
             ],'registration.confirm');

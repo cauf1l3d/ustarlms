@@ -26,3 +26,16 @@ actualSQLite duplicate/uncertain transport receipts and photo authorization-befo
 Earlier affected139 tests PASS before latest role/guard/privacy changes; must not substitute for final run.
 Native tests written (no localMoodle/PG/Docker available); CI not started yet. Task4 operator/archive pending.
 No provider sends, SSH, activation, merge or independent review claimed.
+
+First candidate b57679db published in draftPR111 (no merge). Local fullR16:1414 tests/303.092s PASS,
+50 environment skips. Source416PHP/33JS/103tables/57templates, context/secret guard PASS.
+CI review40817085586 bothPHP source PASS; infra40817085547/context40817085548/console40817085555 PASS.
+Connect-native170/850: migrations/fresh/repeat and new task/photo/registration flows passed, three checks failed:
+- old ACK schema lifecycle still asserted100 instead of103;
+- revoked-link button assertion used wrong letter case;
+- positive native confirmation attempted in NO_MOODLE_COOKIES CLI and correctly refused.
+Ruling: preserve no-cookie guard; replace that positive CLI case with genuine native HTTP login/GET/invalidCSRF/
+POST/repeat/actor test, retain CLI denial. Added103 schema expectation, clearer first-password menu,
+fresh read navigation, full paged report/question/form review, all learning pages, scoped adaptation assignment/HRD.
+New successor operator/profile/builder in progress; pureprofile/contract5 RED(missing module) ->GREEN;
+reference/envelope2 GREEN against first candidate before later app freeze. Not qualified for deployment.

@@ -541,7 +541,7 @@
       "path": "context/code_map/connect_role_bot_development_source.json",
       "domain": "code_map",
       "size": 97080,
-      "sha256": "a1bccd613dc2e5a1677209095a5e5103a40e99c743370458d36097b4e762b880"
+      "sha256": "0c664761fe9ee13b5c749f451d9e47ca5ed18200e075a21322f43e5dff7d6081"
     },
     {
       "path": "context/code_map/database.yaml",
@@ -2004,8 +2004,8 @@
     {
       "path": "context/runtime/connect_role_bot_progress_20261029.md",
       "domain": "runtime",
-      "size": 2469,
-      "sha256": "99119dd626d816309dcf50e80002ce7da0f1677155dfd1e21d8e4e0e94474f32"
+      "size": 3622,
+      "sha256": "ea4426827303d6e95a5438257b57a46af028168ab9794085b8fa313d14f0e04b"
     },
     {
       "path": "context/runtime/connect_telegram_finish_20261023.md",

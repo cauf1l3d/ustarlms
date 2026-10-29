@@ -120,9 +120,21 @@ final class bot_work {
         if(array_filter($t['files'],static fn($file)=>!empty($file['image']))){$buttons[]=bot_store::button($d,'📷 Показать фото','work.photos',$target);}
         $buttons[]=bot_service::home($d); $last=$t['reports'][0]??null;
         $text=trim(html_entity_decode(strip_tags($t['description']),ENT_QUOTES,'UTF-8'));
-        if ($last) { $text.="\n\nПоследний отчёт: ".\core_text::substr((string)$last->commenttext,0,1000); }
-        return bot_store::guarded(bot_store::card('📋 '.$t['title'],\core_text::substr($text,0,1800),$buttons,[],
-            [['Статус',bot_service::status_label($t['status'])],['Исполнитель',$t['assignee']],['Срок',self::date($t['dueat'])],['Версия',(string)$t['version']]]),['tasks'=>[$t['id']]]);
+        if ($last) {
+            $text.="\n\nПоследний отчёт: ".(string)$last->commenttext;
+            $answers=json_decode($last->answersjson,true)?:[];
+            foreach($t['fields'] as $field){
+                $answer=$answers[$field['key']]??'—';
+                if($field['type']==='check'){$answer=$answer?'✓ Выполнено':'Не выполнено';}
+                if($field['type']==='photo'){$answer='См. кнопку «Показать фото»';}
+                $text.="\n".$field['label'].': '.(is_scalar($answer)?(string)$answer:'См. полную запись в Академии');
+            }
+        }
+        $pages=max(1,(int)ceil(\core_text::strlen($text)/1050));$part=min($pages-1,max(0,(int)($data['part']??0)));
+        if($part){$buttons[]=bot_store::button($d,'← Предыдущая часть','work.task',['id'=>$t['id'],'part'=>$part-1]);}
+        if($part+1<$pages){$buttons[]=bot_store::button($d,'Следующая часть →','work.task',['id'=>$t['id'],'part'=>$part+1]);}
+        return bot_store::guarded(bot_store::card('📋 '.$t['title'],($pages>1?'Часть '.($part+1).' из '.$pages."\n\n":'').\core_text::substr($text,$part*1050,1050),$buttons,[],
+            [['Статус',bot_service::status_label($t['status'])],['Исполнитель',$t['assignee']],['Проверяет',$t['reviewer']],['Срок',self::date($t['dueat'])],['Версия',(string)$t['version']]]),['tasks'=>[$t['id']]]);
     }
     private static function company(\stdClass $d,array $data): array {
         if(!bot_actor::capability((int)$d->userid,'executive')){throw new \InvalidArgumentException('forbidden_scope');}
@@ -147,14 +159,21 @@ final class bot_work {
         $id=(int)$d->userid; $scope=$intent==='work.mine'?'mine':'team';
         if ($intent==='work.company' && !bot_actor::capability($id,'executive')) { throw new \InvalidArgumentException('forbidden_scope'); }
         $summary=service::summary($id,$scope); $offset=max(0,(int)($data['offset']??0));
-        $page=service::rows($id,$scope,$intent==='work.review'?'review':'active',(int)floor($offset/50));
+        $filter=$intent==='work.review'?'review':($data['filter']??'active');
+        if(!in_array($filter,['active','review','done','all'],true)){throw new \InvalidArgumentException('invalid_bot_action');}
+        $page=service::rows($id,$scope,$filter,(int)floor($offset/50));
         $items=array_slice($page['items'],$offset%50,8); bot_store::state($d,'menu'); $buttons=[]; $rows=[];
         foreach ($items as $t) {
             $buttons[]=bot_store::button($d,\core_text::substr($t['title'],0,52),'work.task',['id'=>$t['id']]);
             $rows[]=[$t['assignee'],bot_service::status_label($t['status'])];
         }
-        if ($offset>0) { $buttons[]=bot_store::button($d,'← Назад',$intent,['offset'=>max(0,$offset-8)]); }
-        if ($offset+count($items)<$page['total']) { $buttons[]=bot_store::button($d,'Далее →',$intent,['offset'=>$offset+count($items)]); }
+        if ($offset>0) { $buttons[]=bot_store::button($d,'← Назад',$intent,['offset'=>max(0,$offset-8),'filter'=>$filter]); }
+        if ($offset+count($items)<$page['total']) { $buttons[]=bot_store::button($d,'Далее →',$intent,['offset'=>$offset+count($items),'filter'=>$filter]); }
+        if($intent!=='work.review'){
+            foreach(['active'=>'▶ В работе','review'=>'⏳ На проверке','done'=>'✓ Завершённые','all'=>'Все задачи'] as $key=>$label){
+                if($key!==$filter){$buttons[]=bot_store::button($d,$label,$intent,['filter'=>$key]);}
+            }
+        }
         $buttons[]=bot_service::home($d);
         return bot_store::guarded(bot_store::card($intent==='work.mine'?'📋 Мои задачи':($intent==='work.review'?'✅ Очередь проверки':'📊 Сводка по задачам'),
             $items?'Выберите задачу.':'В этой выборке задач нет.',$buttons,[

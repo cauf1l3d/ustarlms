@@ -195,6 +195,15 @@ jobs:
         run: |
           sudo -n env USTAR_REQUIRE_FEED_UID33=1 python3 -m unittest tests.r16.test_feed_media_update.ActualCodePermissions -v
           sudo -n python3 -m unittest tests.r16.test_workday_observer -v
+      - name: Build coordinated role bot app and worker from exact qualified Git trees
+        run: |
+          python3 scripts/infra/build_connect_role_bot_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/connect-role-bot-production-deploy
+          python3 -I -B artifacts/connect-role-bot-production-deploy/ustar-connect-role-bot-update-*.py
+          sudo -n env USTAR_REQUIRE_ROLE_BOT_UID33=1 python3 -m unittest tests.r16.test_connect_role_bot_update.ActualCodePermissions -v
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-role-bot-production-deploy
+          path: artifacts/connect-role-bot-production-deploy/
       - name: PostgreSQL handoff config is readable but cannot be overwritten by actual UID33
         run: sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_postgres_app_handoff.ActualUnixPermissions -v
       - name: Code hardening archive and actual UID33 isolation
@@ -216,6 +225,7 @@ jobs:
           artifacts/con02-update-legacy/ustar-notify-pilot-*.pyz
           artifacts/con02-update-legacy/ustar-bridge-activate-*.pyz
           artifacts/telegram-update-command/ustar-telegram-update-*.py
+          artifacts/connect-role-bot-production-deploy/ustar-connect-role-bot-update-*.py
       - name: CON02 controller respects actual HTTPS owner renewal and recovery
         run: >-
           sudo -n env GITHUB_ACTIONS=true USTAR_CONNECT_CON02_FIXTURE=1
@@ -223,6 +233,7 @@ jobs:
           artifacts/con02-update-command/ustar-con02-update-*.py
           artifacts/con02-callback-old-worker/ustar-connect-receiver-*.tar.gz
           artifacts/telegram-update-command/ustar-telegram-update-*.py
+          artifacts/connect-role-bot-production-deploy/ustar-connect-role-bot-update-*.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -235,6 +246,8 @@ jobs:
             artifacts/telegram-update-command/
             artifacts/telegram-update-runtime.json
             artifacts/telegram-update-https-owner.json
+            artifacts/connect-role-bot-systemd.json
+            artifacts/connect-role-bot-https-owner.json
       - name: Native additive Academy TLS probe and graceful recovery on isolated high ports
         run: |
           sudo -n env USTAR_ACADEMY_TLS_FIXTURE=1 python3 tests/stage/academy_tls_probe_native.py

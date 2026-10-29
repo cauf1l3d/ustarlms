@@ -4,11 +4,11 @@ project: USTAR Academy
 stage: connect_role_bot_implementation_after_owner2803_acceptance
 stage_label: Owner installed2803 and accepted RSS; full role Telegram bot authorized,
   Mini App last
-current_activity: 'Implementing the unified role Telegram bot candidate2900: canonical
-  role forms/writers, scoped read receipts, native sensitive confirmation, private
-  photo drafts and rich cards. Local protocol/SQLite14 pass; native PostgreSQL qualification
-  and coordinated app/worker operator pending. Production remains owner2803/worker6c56;
-  no deployment claim.'
+current_activity: Unified Connect role bot app/worker source3935779f is frozen for
+  qualification in PR111. Coordinated successor operator, separate bot key, future-only
+  opted-in recipients, native HTTP confirmation, actual2803 legacy-index CLI upgrade/repeat
+  and systemd/HTTPS-owner drills prepared. Qualification/owner archive pending. Production
+  stays owner2803/worker6c56; PERF report pending.
 entrypoint: START_HERE.md
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -280,13 +280,16 @@ perf_query_deployment:
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
 development_candidate:
   manifest: context/code_map/connect_role_bot_development_source.json
-  status: implementation_native_qualification_pending
+  status: app_worker_frozen_coordinated_operator_qualification_pending
   scope: Unified button-first Telegram role bot; metadata103 tables; paired app/worker
     release still pending
   branch: feat/connect-role-bot-20261029
   deployed: false
   progress: context/runtime/connect_role_bot_progress_20261029.md
   baseline_owner_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  application_commit: 3935779fd432a1a057f5f24e41d93f38a651a1e2
+  worker_commit: 3935779fd432a1a057f5f24e41d93f38a651a1e2
+  PR: 111
 feed_media_workday_delivery:
   status: owner_installed_status_and_RSS_accepted_workday_pending
   application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
@@ -309,3 +312,18 @@ feed_media_workday_delivery:
   browser_accepted: true
   workday_reminder_local: '2026-10-30T11:00:00+03:00'
 connect_role_bot_order: context/runtime/connect_bot_owner_order_20261029.json
+connect_role_bot_delivery:
+  status: qualification_pending
+  PR: 111
+  application_commit: 3935779fd432a1a057f5f24e41d93f38a651a1e2
+  worker_commit: 3935779fd432a1a057f5f24e41d93f38a651a1e2
+  baseline_application: ef903b7d276f1d62c4879f8a943a435b48e89117
+  baseline_worker: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  predecessor_tool: 36be3f108f2eac6a3db728f93b4456a729b97a3e
+  new_journal: /var/lib/ustar-connect-role-bot-update
+  worker_rollout: true
+  owner_installed: false
+  agent_SSH: false
+  provider_sends: false
+  guide: docs/CONNECT_BOT_RU.md
+  progress: context/runtime/connect_role_bot_progress_20261029.md

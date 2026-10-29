@@ -32,7 +32,7 @@ def artifact_bundle(path):
     return bundle
 
 
-def verify(bundle,previous,journal,locks,host,*,cursor=None,actual_services=False):
+def verify(bundle,previous,journal,locks,host,*,cursor=None,actual_services=False,role_bundle=None):
     if os.geteuid()!=0 or os.environ.get('GITHUB_ACTIONS')!='true' or os.environ.get('USTAR_CONNECT_CON02_FIXTURE')!='1':
         raise RuntimeError('disposable_ci_only')
     target=previous.root/str(t.BASE).lstrip('/')
@@ -67,6 +67,9 @@ def verify(bundle,previous,journal,locks,host,*,cursor=None,actual_services=Fals
         assert c.https_snapshot(ctx)==owner
         assert state.capture(journal.path)==old_image
         assert paths['pointer'].resolve().name==t.APP_COMMIT
+        if role_bundle is not None:
+            from connect_role_bot_systemd import verify as role_verify
+            role_verify(role_bundle,ctx,new_journal,new_locks,host,cursor=cursor,actual_services=actual_services)
         assert op.disable()['ack_enabled'] is True
         assert {n:state.capture(p) for n,p in paths.items()}==controls['files']
         if actual_services:

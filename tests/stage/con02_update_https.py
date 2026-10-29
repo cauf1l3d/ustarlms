@@ -17,7 +17,7 @@ def main():
     if (os.geteuid()!=0 or os.environ.get('GITHUB_ACTIONS')!='true'
             or os.environ.get('USTAR_CONNECT_CON02_FIXTURE')!='1' or Path('/opt/ustar').exists()):
         raise RuntimeError('disposable_ci_only')
-    if len(sys.argv) not in (3,4):raise RuntimeError('plain_artifact_and_frozen_worker_required')
+    if len(sys.argv) not in (3,4,5):raise RuntimeError('plain_artifact_and_frozen_worker_required')
     bundle=artifact_bundle(sys.argv[1]);archive=Path(sys.argv[2])
     legacy=c.frozen_legacy(bundle)
     commit,values=legacy['connect_install'].validate_archive(archive,c.sha(archive.read_bytes()));assert commit==c.LEGACY_COMMIT
@@ -69,7 +69,7 @@ def main():
             'provider_requests':False,'production_access':False}
         (ROOT/'artifacts/con02-update-https-owner.json').write_text(json.dumps(report,indent=2)+'\n')
         print('CON02_UPDATE_HTTPS_OWNER=PASS')
-        if len(sys.argv)==4:
+        if len(sys.argv)>=4:
             # An owner-registered independent virtual host, as with AutoReport,
             # remains part of the exact topology during the successor handoff.
             from telegram_update_runtime import artifact_bundle as successor_bundle, verify as verify_successor
@@ -86,7 +86,11 @@ def main():
                 saved['topology'][binding]=observed[binding]
                 manager.topology(saved,observed);manager.save(saved)
                 before_site=site.read_bytes()
-                verify_successor(successor_bundle(sys.argv[3]),ctx,journal,locks,host)
+                role_bundle=None
+                if len(sys.argv)==5:
+                    from connect_role_bot_systemd import artifact_bundle as role_artifact
+                    role_bundle=role_artifact(sys.argv[4])
+                verify_successor(successor_bundle(sys.argv[3]),ctx,journal,locks,host,role_bundle=role_bundle)
                 assert site.read_bytes()==before_site and owner.vhosts()[binding]==observed[binding]
             finally:
                 # Only this fixture-created site is removed. The outer native

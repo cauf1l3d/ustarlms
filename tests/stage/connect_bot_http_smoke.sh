@@ -7,12 +7,13 @@ WEBROOT=http://127.0.0.1:8087
 COOKIE=/artifacts/shell-cookies.txt
 SERVER_PID=
 cleanup() {
-    rm -f /stage/connect-role-http.json /stage/connect-bot-csrf /stage/connect-bot-login.html
+    rm -f /stage/connect-role-http.json /stage/connect-bot-csrf /stage/connect-bot-login.html /stage/connect-bot-anonymous.html /stage/connect-bot-before.html /stage/connect-bot-csrf.html /stage/connect-bot-after.html
     if [[ -n $SERVER_PID ]]; then
         kill "$SERVER_PID" 2>/dev/null || true
         wait "$SERVER_PID" 2>/dev/null || true
         rm -f "$COOKIE"
     fi
+    php -n -r 'foreach(["/artifacts/connect-bot-http-server.log","/artifacts/shell-http-server.log"] as $p){if(is_file($p))file_put_contents($p,preg_replace("/(?:cb4|bf4)_[A-Za-z0-9_-]{43}/","[opaque-redacted]",file_get_contents($p)));}'
 }
 trap cleanup EXIT
 if [[ ${1:-} = --standalone ]]; then

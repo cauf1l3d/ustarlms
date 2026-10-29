@@ -39,3 +39,18 @@ POST/repeat/actor test, retain CLI denial. Added103 schema expectation, clearer 
 fresh read navigation, full paged report/question/form review, all learning pages, scoped adaptation assignment/HRD.
 New successor operator/profile/builder in progress; pureprofile/contract5 RED(missing module) ->GREEN;
 reference/envelope2 GREEN against first candidate before later app freeze. Not qualified for deployment.
+
+App/worker freeze3935779fd432a1a057f5f24e41d93f38a651a1e2 (component trees only; not a deployment).
+New coordinated successor retains old operators unchanged; separate bot-only key, old link/ACK/v3 keys retained.
+Recipient profile becomes explicit academy_linked_opt_in after future cutoff; personal prefs untouched.
+Local successor13 tests PASS (7reference/profile/contract13.889s +6real-files/SQLite recovery20.261s),
+plus updated3profile tests PASS/2.229s. ActualUID33/package/complete native qualification still pending.
+Native gate now exports exact2803, installs legacy pair in separate botold_ prefix, upgrades2900/repeats,
+checks actual103 schema and SQL denials; frozen100 validators run on labeled historical projection.
+Old2100→2300 callback/presentation drills now pin6c56 instead of accidentally installing newer schema.
+Additional actual systemd/LoadCredential/privateTLS role-menu roundtrip and actual HTTPS-owner preservation
+are prepared for CI. API/store synthetic there; actual Moodle/PG/cookie/CSRF verification stays separate.
+Author review before candidate publication: dialog/actor replay/current scope, nested transaction row locks,
+private draft retention/bounds, root credential separation, uncertain transport and paired/public recovery checked.
+This is author self-review, not independent or CodeRabbit review. No subagents per owner instruction.
+No archive is marked installable until exact candidate CI/bytes/retained copy qualification.

@@ -7,17 +7,19 @@
 
 Владелец разрешил push; согласованная интеграция PR107/109 завершена28Oct.
 [Основание](context/runtime/perf2802_integration_20261028.json).
-Main app22607c69/local2802/theme2700. Owner29Oct подтвердил установку/status/cron
-и основные browser-сценарии: [terminal](context/runtime/perf2802_owner_deploy_20261029.json),
-[browser](context/runtime/perf2802_owner_browser_acceptance_20261029.json).
+Main source app22607c69/local2802; PR110 source2803 ещё не слит. Owner29Oct
+установил app ef903b7d/operator36be3f10, local2803/theme2700 и принял RSS:
+[receipt](context/runtime/feed2803_owner_deploy_20261029.json). App_ready/DB available,
+receiver+notify active/enabled. Последний cron03:37MSK exit0/1.282s без новых ошибок;
+текущий adhoc1/overdue56/failed2 не выдавать за разгруженную очередь.
+Реальный рабочий день ожидается; напоминание30Oct11:00МСК создано.
 
-RSS-01+PERF-01: прежние повторы фото и пассивный рабочий день одним комплектом2803.
-App ef903b7d/operator36be3f10, PR110:4CI SUCCESS, PHP1403/234, native357/1706,
-actualPG/UID33 PASS. [Квалификация](context/runtime/feed2803_qualification_20261029.json),
-[owner команды](docs/FEED_2803_INSTALL_RU.md). Архив совпадает с CI и скачанной
-сохранённой копией. Owner apply2803 и реальный8h report ожидаются; кандидат не слит.
-SQL/page, Web-SAPI OPcache, concurrency/SLO не измерены. Старые resize-варианты без
-идентичности могут оставаться за details; исходные файлы не удаляются.
+Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,
+все роли через существующую Академию; Mini App и внешний HTTPS в конце.
+[Поручение](context/runtime/connect_bot_owner_order_20261029.json).
+Самостоятельная реализация, без субагентов, соразмерные проверки, один целый выпуск.
+[Квалификация2803](context/runtime/feed2803_qualification_20261029.json) сохраняет
+4CI/native357/1706/actualPG/UID33. Архив/старые операторы неизменны.
 
 Новые слияния автоматически не делать. Старые операторы не переписывать.
 Субагенты запрещены. Агент не подключается по SSH к production, не отправляет

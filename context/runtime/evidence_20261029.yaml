@@ -1,4 +1,4 @@
-kind: owner_perf2802_install_status_cron_plus_preserved_prior_receipts
+kind: owner_feed2803_install_status_RSS_plus_preserved_prior_receipts
 published_at: '2026-10-29'
 independently_measured_on_server: false
 sources:
@@ -11,22 +11,23 @@ sources:
     99: ee0b07b09b9a0dfadc70f3bfb2a80b0f4cb8be46
     100: d1a3b6e1f62aa00a550016fdb55a55a4c47344a3
     102: 7f29c9367aed623d68ddc9bdb79c701f6dfba9f6
-  owner_terminal_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+  owner_terminal_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  previous_terminal_receipt: context/runtime/perf2802_owner_deploy_20261029.json
 application:
-  reference_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+  reference_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
   manifest_observed_at: '2026-10-29'
   matching_files: 590
   counts_basis: fixed_verified_controller_payload_not_new_whole_host_manifest
-  local_ustar: 2026102802
+  local_ustar: 2026102803
   theme_ustar: 2026102700
   tables: 100
-  receipt: context/runtime/perf2802_owner_deploy_20261029.json
+  receipt: context/runtime/feed2803_owner_deploy_20261029.json
   independent_probe: false
-  functional_acceptance: owner_basic_Materials_feed_settings_Competitions_Studio; known_preexisting_RSS_media_defect
+  functional_acceptance: owner_RSS_compact_cover_and_additional_attachments; prior2802_four_areas_preserved
   worker_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
-  post_deploy_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  generation: b000e3fb09a949629f3183cb781df2d9
-  browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
+  post_deploy_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  generation: cbc8148fff48407fa76b6821eb630a89
+  browser_receipt: context/runtime/feed2803_owner_deploy_20261029.json
 platform:
   moodle: 5.1.8
   core_database_version: '2025100608.00'
@@ -59,6 +60,7 @@ accepted:
   Studio2801_general_browser_report: context/runtime/studio_viewport_owner_acceptance_20261028.json
   Perf2802_controller_status_and_scheduled_cron: context/runtime/perf2802_owner_deploy_20261029.json
   Perf2802_basic_browser: context/runtime/perf2802_owner_browser_acceptance_20261029.json
+  Feed2803_install_status_RSS: context/runtime/feed2803_owner_deploy_20261029.json
 open:
   clean_host_restore: owner_explicit_unknown_no_repeat_prompt
   whole_host_restore: not_verified
@@ -69,4 +71,5 @@ open:
   independent_host_loss_observer: not_verified
   UPS_auto_shutdown: presence_confirmed_shutdown_unverified
   Studio_functional_acceptance: detailed_PDF_shared_save_employee_cases_not_individually_reported
-  RSS_media: known_preexisting_repeated_photographs_fix_in_progress
+  RSS_media: owner_accepted2803_RSS; old_unidentified_resize_variants_retained_behind_details
+  current_cron_backlog: adhoc1_overdue56_failed2; no_post_update_drain_receipt

@@ -14,14 +14,16 @@ stack:
   deployment: Docker29.9.0 on Ubuntu24.04.5/kernel6.8.0-147; owner14Oct boot acceptance
   native_ui: PHP + Mustache + JS/AMD + SCSS
   theme: theme_ustar extends boost
-  secondary_frontend: Legacy Next.js source retained, excluded from active CI and release since16Oct
+  secondary_frontend: Legacy Next.js source retained, excluded from active CI and
+    release since16Oct
 components:
   business: moodle/local/ustar
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
-  context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
-  connect_worker: connect-worker; accepted worker6c56 from23Oct remains unchanged during owner2802 deployment; no
-    worker rollout
+  context_harness: harness/ustar-contextd; local stdio tested; production/session
+    installation unverified
+  connect_worker: connect-worker; accepted6c56 retained during2803. New role-bot implementation
+    authorized29Oct; no rollout yet.
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261029.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
@@ -35,14 +37,16 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: PERF-01
-  related_task: RSS-01
-  status: qualified2803_archive_saved_owner_apply_and_workday_pending
+  task: INTEGRATIONS-01
+  related_task: PERF-01
+  status: owner2803_accepted_role_bot_authorized
   spec: docs/superpowers/specs/2026-10-29-feed-media-workday-design.md
   plan: docs/superpowers/plans/2026-10-29-feed-media-workday.md
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
-  production_version: 2026102802
+  production_version: 2026102803
   candidate_version: 2026102803
   PR: 110
   qualification_receipt: context/runtime/feed2803_qualification_20261029.json
   installation_handoff: docs/FEED_2803_INSTALL_RU.md
+  owner_order: context/runtime/connect_bot_owner_order_20261029.json
+  owner_receipt: context/runtime/feed2803_owner_deploy_20261029.json

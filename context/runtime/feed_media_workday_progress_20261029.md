@@ -62,3 +62,7 @@ actual UID33 and exact fresh/legacy PG profiles PASS. Archive and retained downl
 Task4: implementation handoff complete — frozen archive, SHA and8 parsed owner command blocks;
 PR110 remains unmerged, production2802 unchanged. Final metadata checks follow.
 Final review: author self-review per AGENTS;0subagents. No Critical/Important open, no deferred minors.
+
+## Owner acceptance29Oct and next order
+
+Owner archive/check/upgrade/status2803 and RSS «Ещё» accepted; exact receipt feed2803_owner_deploy_20261029.json. Current cron adhoc1/overdue56 is retained separately from last successful run; no drain claim. Workday reminder30Oct11:00Europe/Moscow created; report pending. Owner resumes full role Telegram bot; Mini App last, no subagents, proportional verification. Source PR110 remains unmerged.

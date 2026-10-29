@@ -1,42 +1,31 @@
 # USTAR Academy — начало работы
 
-Актуально29.10.2026. Канонический код и контекст — main.
+Актуально29.10.2026. Канонический код — main; PR110 source2803 не слит.
 
-1. [STATE](context/roadmap/STATE.yaml): версии, SHA и квитанции.
-2. [ACTIVE](context/tasks/ACTIVE.md): работа сейчас; [BACKLOG](context/roadmap/BACKLOG.yaml): задачи.
-3. [Ревью26Oct](context/reviews/20261026/VERIFIED_REVIEW_RU.md),
-   [риски](context/roadmap/ACCEPTED_RISKS.yaml), [архитектура](context/architecture/overview.md).
+1. [STATE](context/roadmap/STATE.yaml), [ACTIVE](context/tasks/ACTIVE.md), [BACKLOG](context/roadmap/BACKLOG.yaml).
+2. [Поручение Connect29Oct](context/runtime/connect_bot_owner_order_20261029.json).
+3. [Owner2803](context/runtime/feed2803_owner_deploy_20261029.json), [ADR Connect](context/decisions/0015-ustar-connect.md).
 
 ## Подтверждённый production
 
-Владелец29Oct установил2802: payload22607c69, local2026102802/theme2026102700;
-app_ready/DB available, receiver+notify active/enabled, worker6c56 без rollout.
-[Установка/status/cron](context/runtime/perf2802_owner_deploy_20261029.json),
-[evidence](context/runtime/evidence_20261029.yaml).590файлов/100таблиц — payload,
-не новая whole-host инвентаризация. Cron00:42MSK exit0/34.311s, новых ошибок нет;
-adhoc1→0, overdue63→19, failed2. Состав остаточных заданий не показан.
-Moodle5.1.8/PHP8.3.33/PostgreSQL16.15 — прежние датированные platform receipts.
-
-Владелец принял Материалы/настройки Ленты/Соревнования/Студию и сообщил о прежних
-повторах RSS фото: [приёмка](context/runtime/perf2802_owner_browser_acceptance_20261029.json).
-Это basic browser acceptance, не вся ролевая/security/performance матрица.
+Owner29Oct установил2803: payload ef903b7d/operator36be3f10, local2026102803/theme2026102700.
+App_ready/DB available, receiver+notify active/enabled; worker6c56 без rollout.
+RSS принят: одна обложка, вложения через «Ещё». Payload590/100 не является новой
+whole-host инвентаризацией. Последний завершённый cron03:37MSK exit0/1.282s без новых
+ошибок; текущий срез adhoc1/overdue56/failed2 ещё не доказывает разгрузку после upgrade.
+Исторический wrapper20Oct и остаточные failures не сбрасывать.
 
 ## Текущая работа
 
-RSS-01 + PERF-01: исправить изображения и подготовить passive workday capture
-одним комплектом2803. [План](docs/superpowers/plans/2026-10-29-feed-media-workday.md),
-[ledger](context/runtime/feed_media_workday_progress_20261029.md).
-Кандидат2803 app ef903b7d/operator36be3f10 прошёл4CI/native357/1706.
-[Архив/квалификация](context/runtime/feed2803_qualification_20261029.json),
-[owner установка/рабочий день](docs/FEED_2803_INSTALL_RU.md).
-Он отделён от main/production2802, не слит и не установлен.
-Реальный рабочий день, SQL/page, Web-SAPI OPcache и concurrency/SLO ещё открыты.
-Нового автоматического merge нет. Агент работает сам, без SSH и provider sends.
+Owner29Oct возобновил полный рабочий Telegram-бот по ролям: русские кнопки,
+пошаговые формы, короткие пояснения, визуальные сводки/таблицы/графики. Мини App
+и публичный HTTPS Академии — в конце. Существующие учётки/права/writers/история
+остаются едиными. Работать самому без субагентов; один согласованный выпуск,
+проверки по изменениям и обязательному gate без повторения принятых циклов.
+PERF-01 report ожидается; напоминание владельцу30Oct11:00МСК создано. Сборщик не
+запускался агентом, SQL/page/Web-SAPI OPcache/concurrency/SLO не измерены.
+Нового автоматического merge, SSH и provider sends нет.
 
-## Границы
-
-Исходники — moodle/local/ustar и moodle/theme/ustar; frontend — legacy.
-Логи/health/recreate отложены до планового Moodle upgrade; SSH/firewall — перед
-внешним доступом. Копии переданы, внешний restore unknown. Принятые SSD/core/OS/
-DB-role/code/HTTPS/Connect проверки не повторять. ИБП есть, shutdown не проверен.
-[Индекс](context/CONTEXT_INDEX.md), [история](context/archive/reconciliation_20261026).
+Логи/health/recreate — плановый Moodle window; SSH/firewall — перед внешним доступом.
+Копии переданы, внешний restore unknown. [Риски](context/roadmap/ACCEPTED_RISKS.yaml),
+[ревью26Oct](context/reviews/20261026/VERIFIED_REVIEW_RU.md), [индекс](context/CONTEXT_INDEX.md).

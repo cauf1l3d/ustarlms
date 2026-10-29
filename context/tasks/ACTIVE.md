@@ -1,28 +1,29 @@
 # Активная работа —29.10.2026
 
-## RSS-01 + PERF-01: комплект2803 готов, owner apply и рабочий день остаются
+## INTEGRATIONS-01: полный рабочий Telegram-бот; Mini App в конце
 
-Production2802 подтверждён [terminal/status/cron](../runtime/perf2802_owner_deploy_20261029.json)
-и [основными browser-сценариями](../runtime/perf2802_owner_browser_acceptance_20261029.json).
-Владелец поручил прежние дубли RSS фото исправить вместе со следующим PERF-01 этапом.
+[Owner поручение](../runtime/connect_bot_owner_order_20261029.json) возобновляет Connect.
+Сначала зафиксировать2803 и создать напоминание, затем реализовать целый контур по ролям.
+Русские кнопки вместо необходимости знать команды, короткие объяснения, визуальные
+сводки/прогресс/компактные таблицы и графики. Существующие Academy identities, writers,
+права и история; самостоятельная работа без субагентов, рациональные проверки.
+Mini App и публичный HTTPS Академии отложены до конца; Bitrix/WhatsApp не включаются
+автоматически. Текущий worker6c56 сохраняется до отдельной квалифицированной поставки.
+Нового автоматического merge/agent SSH/provider sends нет.
 
-PR110: app ef903b7d/operator36be3f10, не слит и не установлен. Четыре CI SUCCESS:
-PHP8.2/8.3 по1403/234, оба native357/1706, actualPG100tables/fresh+legacy7denials,
-actualUID33 и root-only observer output PASS. Local full1400/50 в321.153s PASS.
-[Квалификация](../runtime/feed2803_qualification_20261029.json),
-[ledger](../runtime/feed_media_workday_progress_20261029.md).
+## RSS-01 завершён owner acceptance; PERF-01 report ожидается
 
-Архив f09b21a9...20688439bytes содержит update.py и observe.py. Все5 CI-файлов
-совпадают побайтно, сохранённая копия скачана и проверена. Схема/theme/worker6c56
-и все старые операторы неизменны. Новый journal /var/lib/ustar-feed-media-update.
-Одна обложка RSS; дополнительные изображения раскрываются без JS. Точные копии
-скрыты, исходники/личные сохранения/employee ACL сохранены; неизвестные старые
-resize-варианты могут оставаться среди дополнительных фото.
+[Owner2803](../runtime/feed2803_owner_deploy_20261029.json): archive+inner hashes OK,
+preflight2802 legacy indexes принят, upgrade/app_ready, local2803/theme2700, DB available,
+receiver+notify active/enabled. RSS работает, вложения раскрываются через «Ещё».
+Source PR110 app ef903b7d/operator36be3f10 не слит. Его4CI/native357/1706/actualPG/UID33
+и побайтно проверенный архив остаются действительными; старые операторы не менять.
 
-Следом владелец выполняет [установку/status2803](../../docs/FEED_2803_INSTALL_RU.md),
-проверяет RSS и запускает из того же комплекта8h passive capture в обычный рабочий день.
-Отчёт/реальная нагрузка/SLO ещё не получены. Не выдавать Apache aggregate за отдельные
-страницы, SQL/page или Web-SAPI OPcache; observer READ ONLY транзакции входят в DB counters.
+Cron last scheduled29Oct03:37MSK exit0/1.282s, new failures[], USTAR counters0.
+Текущий срез: adhoc1/overdue56/failed2, без failed adhoc/USTAR. Это не новая ошибка
+wrapper20Oct и не доказательство разгруженной очереди; история сохраняется.
 
-Агент работает сам, без SSH/provider sends/автоматического merge. Логи/health/recreate
-отложены до Moodle window; принятые инфраструктурные циклы не повторять.
+Напоминание владельцу30Oct11:00Europe/Moscow создано: запустить observe.py на8h
+обычной работы, затем прислать отчёт. Фактический запуск/отчёт ещё не подтверждены.
+[Команды](../../docs/FEED_2803_INSTALL_RU.md). SQL/page, Web-SAPI OPcache и SLO не
+выводить из Apache aggregate. Работа Connect не закрывает PERF-01 автоматически.

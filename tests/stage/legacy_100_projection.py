@@ -26,14 +26,22 @@ def main():
     if len(original['tables'])!=103:raise ValueError('actual2900_schema_required')
     if query("SELECT count(*)::int FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'histx\\_%';"):
         raise ValueError('historical_projection_exists')
-    # Serial default sequences may still refer to fresh_: the fixture never inserts a
-    # generated ID. Column/index definitions and copied synthetic rows are sufficient.
-    sql("DO $clone$ DECLARE item record; target text; BEGIN FOR item IN SELECT tablename FROM pg_tables "
+    # LIKE copies serial defaults verbatim. Each historical plugin table needs its
+    # own correctly named sequence so the frozen default-name assertions stay strict.
+    sql("DO $clone$ DECLARE item record; field record; target text; seq text; BEGIN FOR item IN SELECT tablename FROM pg_tables "
         "WHERE schemaname='public' AND tablename LIKE 'fresh\\_%' AND tablename NOT IN "
         "('fresh_local_ustar_conn_dialogs','fresh_local_ustar_conn_actions','fresh_local_ustar_conn_updates') ORDER BY tablename "
         "LOOP target:='histx_'||substring(item.tablename from 7); "
         "EXECUTE format('CREATE TABLE %I (LIKE %I INCLUDING ALL)',target,item.tablename); "
-        "EXECUTE format('INSERT INTO %I SELECT * FROM %I',target,item.tablename); END LOOP; END $clone$;"
+        "EXECUTE format('INSERT INTO %I SELECT * FROM %I',target,item.tablename); "
+        "IF left(item.tablename,18)='fresh_local_ustar_' THEN "
+        "FOR field IN SELECT c.column_name FROM information_schema.columns c WHERE c.table_schema='public' "
+        "AND c.table_name=item.tablename AND c.column_default LIKE 'nextval(%' LOOP "
+        "seq:=target||'_'||field.column_name||'_seq'; EXECUTE format('CREATE SEQUENCE %I',seq); "
+        "EXECUTE format('ALTER TABLE %I ALTER COLUMN %I SET DEFAULT nextval(%L::regclass)',target,field.column_name,seq); "
+        "EXECUTE format('ALTER SEQUENCE %I OWNED BY %I.%I',seq,target,field.column_name); "
+        "EXECUTE format('SELECT setval(%L::regclass,COALESCE(max(%I),0)+1,false) FROM %I',seq,field.column_name,target); "
+        "END LOOP; END IF; END LOOP; END $clone$;"
         "UPDATE histx_config_plugins SET value='2026102803' WHERE plugin='local_ustar' AND name='version';")
     try:
         historical=query(db_query('histx_'))

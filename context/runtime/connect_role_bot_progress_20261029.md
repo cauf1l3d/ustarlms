@@ -91,3 +91,7 @@ Application and worker frozen at `5cc02944e1059ba015afcc7c5e8068ca56c34a92`. Coo
 ### Historical projection SQL width
 
 Static follow-through caught a remaining fixture-only defect before accepting the gate: replacing fresh_ by the shorter hist_ retained db_query's numeric substring/left widths. Reproduced that the transformed SQL differed from a real hist_ query; use equal-width histx_ and assert the width. The transformed SQL now equals db_query(histx_) byte-for-byte. Frozen100 validators and actual103 release checks remain unchanged. No application/controller/worker/archive bytes change.
+
+### be0d19f0 native results and historical sequence correction
+
+All new release-native checks passed on be0d19f0, including the complete Connect job (ordinary DB role/handoff restored), actual2803->2900/repeat/strict103 metadata, native cookie/CSRF/actor/newer-draft confirmation, and full Moodle371/1751 on both runtimes. Only the following historical100 projection failed: PostgreSQL LIKE copies serial defaults as fresh_* sequences, while the unchanged strict validator correctly requires histx_* sequence names. The projection now creates/owns correctly named sequences for historical plugin columns and preserves the next value; source fresh103 and all frozen validators remain untouched. This corrects the test adapter, not application/controller/worker/archive bytes. Source1436/235-skips eachPHP and infrastructure already passed. Final gate remains red until the corrected historical adapter passes.

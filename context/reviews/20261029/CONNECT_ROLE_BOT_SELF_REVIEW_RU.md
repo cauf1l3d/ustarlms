@@ -43,3 +43,7 @@ Mini App, публичный Academy HTTPS, Bitrix/WhatsApp и новая пол
 Окончательный CI, побайтная проверка архива и факт owner deployment фиксируются
 отдельно. На момент этого авторского прохода production подтверждён только на2803,
 worker6c56. Real Telegram/role acceptance после установки выполняет владелец.
+
+## Owner preflight follow-up:29Oct
+
+The previous archive99 incorrectly compared accepted2803 cron with feed adapter baseline2802. Previous native application and runtime qualification did not cover this predecessor derivation. Exact owner refusal reproduced; fixed role Host advances immutable2802 once and retains all receipt/live drift guards. Five new predecessor regressions cover accepted2803 read-only, stale2802, live drift, rewritten live+receipt and malformed source. Seven focused tests and actual systemd/UID33/TLS/recovery gate pass for tool9a; app/worker5cc assets are identical. This remains author review, not independent review or owner production acceptance. See context/runtime/connect_role_bot_cron_preflight_fix_20261029.json.

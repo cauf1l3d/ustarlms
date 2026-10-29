@@ -87,10 +87,10 @@ production:
   post_deploy_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   previous_addon_receipt: context/runtime/perf2802_owner_deploy_20261029.json
 current_work:
-  activity: Owner99dbecaa preflight refused before upgrade; installer compared2803
-    journal with baseline2802 cron. Exact refusal reproduced and corrected; strict
-    drift guards remain. Replacement operator qualification pending; app/worker5cc
-    unchanged, production remains2803/worker6c56.
+  activity: Fixed installer9a68246b passed predecessor cron regressions and actual
+    systemd/UID33/TLS/HTTPS recovery CI onb9f338c8. Archive0860a867 matches CI and
+    downloaded saved copy. App/worker5cc unchanged and retain prior FullRC qualification.
+    Owner preflight/install pending; production remains2803/worker6c56.
   next_task: INTEGRATIONS-01
   ready_tasks: []
   task_statuses:

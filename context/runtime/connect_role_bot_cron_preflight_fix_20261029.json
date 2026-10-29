@@ -2,7 +2,7 @@
   "schema": 1,
   "date_msk": "2026-10-29",
   "PR": 111,
-  "status": "installer_fix_under_qualification",
+  "status": "installer_infrastructure_qualified_owner_preflight_pending",
   "owner_attempt": {
     "tool_commit": "99dbecaac7fe9c6bd2fa9e77349d336e448ca8a6",
     "archive_SHA256_verified": true,
@@ -26,5 +26,62 @@
   "agent_SSH": false,
   "provider_sends": false,
   "automatic_merge": false,
-  "subagents": false
+  "subagents": false,
+  "tool_commit": "9a68246b170dd6a08dc6a8e2118e69f32e16bea9",
+  "qualification_head": "b9f338c855339d398028a4655ceaff7ce18f692f",
+  "local_operator_tests": {
+    "tests": 19,
+    "skips": 1,
+    "skip_reason": "Local namespace cannot map GID33; real UID33 is mandatory in infra CI",
+    "seconds": 90.248
+  },
+  "archive": {
+    "archive": "/workspace/scratch/69dcd20368d2/delivery/connect-role-cronfix-9a68246b/ustar-connect-role-bot-install-9a68246b.tar.gz",
+    "sha256": "0860a86786a6db2c3b88cc940203a4ed756b8ac372d9b21c69db53c4e03cfd4e",
+    "bytes": 21082058,
+    "members_inner_SHA256": "PASS",
+    "worker_ZIP_CRC": "PASS",
+    "only_changed_embedded_module": "connect_role_bot_update.py",
+    "application_worker_assets_unchanged": true,
+    "library_file_id": "libfile_b57186d409088191befc44012b02b1ea",
+    "file_id": "file_0000000056bc820eb65f0f0ce5fb4b91",
+    "saved_copy_downloaded_and_SHA256_verified": true,
+    "saved_copy_metadata_verified": true,
+    "CI_artifact_id": 12890970067,
+    "CI_zip_SHA256": "034459edd3ae767ec82aaf5a889fec847dfbdcdc7d59abb9bc6bbd7ed146bfa5",
+    "CI_zip_CRC": "PASS",
+    "CI_archive_equals_local": true
+  },
+  "install_guide": {
+    "library_file_id": "libfile_5f1ef8cb2f6c8191b79499b643117fd6",
+    "file_id": "file_00000000d80081f580e090ce7fd7a54b",
+    "version": 1,
+    "repo_path": "docs/CONNECT_BOT_2900_INSTALL_RU.md",
+    "sha256": "1436e09d254705ed4a7df6bb1be06d76556d5880009910d117a3be39bb152954"
+  },
+  "CI": {
+    "console": 40858001505,
+    "context": 40858001545,
+    "review": 40858001480,
+    "infrastructure": 40858001554,
+    "infrastructure_job": 123393850267,
+    "infrastructure_status": "success",
+    "context_status": "success",
+    "console_status": "success",
+    "review_status_at_handoff": "in_progress; application/worker trees already FullRC-qualified on022fddee; no new application claim"
+  },
+  "qualification_scope": {
+    "new_installer": "7 focused predecessor/contract regressions; actual UID33, systemd/LoadCredential/private TLS/menu, failure handback and HTTPS owner PASS",
+    "unchanged_application_worker": "Same component trees and all payload/worker assets as previously FullRC-qualified5cc02944; see old_qualification",
+    "full_RC_repeated": false,
+    "reason": "Only the role installer cron derivation changed; no application, worker or frozen predecessor module changes."
+  },
+  "infrastructure_proof": {
+    "job": 123393850267,
+    "regressions": "7 tests in4.436s PASS",
+    "systemd": "CONNECT_ROLE_BOT_ACTUAL_SYSTEMD_UID33_CREDENTIALS_TLS_AND_MENU=PASS",
+    "HTTPS_owner": "CONNECT_ROLE_BOT_HTTPS_OWNER=PASS",
+    "synthetic": "Academy SQL and Bot API in systemd fixture; prior real Moodle/PG/native HTTP unchanged component qualification retained",
+    "external_provider_requests": false
+  }
 }

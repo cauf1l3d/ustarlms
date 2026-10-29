@@ -3,8 +3,9 @@
 ## INTEGRATIONS-01: полный рабочий Telegram-бот; Mini App в конце
 
 [Owner поручение](../runtime/connect_bot_owner_order_20261029.json) возобновляет Connect.
-2803 и напоминание зафиксированы. App/worker5cc02944 квалифицированы. Owner99dbecaa preflight отказал до upgrade:
-[cron fix](../runtime/connect_role_bot_cron_preflight_fix_20261029.json) проверяется; архив99 заменяется.
+2803 и напоминание зафиксированы. App/worker5cc02944 квалифицированы. Owner99 preflight отказал до upgrade.
+[Исправленный9a установщик](../runtime/connect_role_bot_cron_preflight_fix_20261029.json) прошёл
+cron guard/systemd/UID33/TLS/recovery CI; архив0860a867 совпал с CI и скачанной копией.
 [4CI/FullRC](../runtime/connect_role_bot_qualification_20261029.json), [команды](../../docs/CONNECT_BOT_2900_INSTALL_RU.md).
 [План](../../docs/superpowers/plans/2026-10-29-connect-role-bot.md), [прогресс](../runtime/connect_role_bot_progress_20261029.md).
 Русские кнопки вместо необходимости знать команды, короткие объяснения, визуальные

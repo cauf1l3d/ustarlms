@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 8771,
-      "sha256": "c2aacf83704571e79a168e38873e51372923aaabe7a4c6415151b7d4ed041b8d"
+      "size": 8800,
+      "sha256": "62c7cb86c4aabf3e4d97b9a6e7eaf337aa02d7bcef4cfc6ccf920b25d458ac7d"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -1416,8 +1416,8 @@
     {
       "path": "context/reviews/20261029/CONNECT_ROLE_BOT_SELF_REVIEW_RU.md",
       "domain": "reviews",
-      "size": 6567,
-      "sha256": "9d39ab66acf0bdf4ea921549ac5b604ec33635e8d2539b72ac8c18f9a4ea9af4"
+      "size": 7315,
+      "sha256": "8121f2aaa6196fc8dc3fa1b9a10de2189c6ea9baf9f63a9b68c78fe47558634a"
     },
     {
       "path": "context/roadmap/ACCEPTED_RISKS.yaml",
@@ -1440,8 +1440,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 37239,
-      "sha256": "c057b2c00adf61f37d397c09b0f3c0b60d938ffeaaf2fd81b163acddf4d15f02"
+      "size": 37465,
+      "sha256": "a0c61a717c2560b7a58a76c8e9e93fa86852d7876534fbd507fbc89a67b66842"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1494,8 +1494,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 17388,
-      "sha256": "b06b1ae3af272bbc1efc3fc595241ea8f6660e132173336e9c6a21b63a1ac7de"
+      "size": 17725,
+      "sha256": "c09b78718910c1a3d5d07cf3e9947a7815bd1de93dbbb70279fcc5e3b131af95"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -2010,14 +2010,14 @@
     {
       "path": "context/runtime/connect_role_bot_cron_preflight_fix_20261029.json",
       "domain": "runtime",
-      "size": 1582,
-      "sha256": "c8aa9df15e9e94b08c2eafeb3c7fd751e6a509be7d26952b7f9316d1d22abf38"
+      "size": 4407,
+      "sha256": "fb56164790dc997174df7bd9e09127ff4afad9426cea589ee0a8198c78149c10"
     },
     {
       "path": "context/runtime/connect_role_bot_progress_20261029.md",
       "domain": "runtime",
-      "size": 13285,
-      "sha256": "39ea89543bd5bfe41321605858b0219b7513f82056a649a8b272303981d05aad"
+      "size": 14320,
+      "sha256": "3a7ab1eb0cb847dcaa88b4368f16b7ed317288a2f3eb8bfb00feb507c24cf693"
     },
     {
       "path": "context/runtime/connect_role_bot_qualification_20261029.json",
@@ -3636,8 +3636,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3266,
-      "sha256": "e90d5e4eba3527c753d23f2acea07a67dff2d5789963def223e16e6ec93710dd"
+      "size": 3369,
+      "sha256": "44f6a83194a0bb8bf8cccd1877158e40530516f92ce943c29435bcd6d7a01473"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

@@ -514,18 +514,20 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: role_bot2900_installer_cron_fix_under_qualification
+  phase: role_bot2900_fixed_installer_qualified_owner_preflight_pending
   owner_priority: complete_Telegram_role_bot_before_MiniApp_public_HTTPS
   current_summary: >-
-    Telegram role bot2900 complete in PR111: app/worker5cc02944, fixed tool99dbecaa.
+    Telegram role bot2900 complete in PR111: app/worker5cc02944, fixed tool9a68246b; previous99 rejected on owner preflight.
     FullRC/all4CI qualified on022fddee; native371/1751 both Moodle runtimes, Connect172/875,
     actual103-table upgrade/repeat, UID33/systemd/privateTLS/recovery pass.
-    Archive21081981bytes/SHA13333646 verified against CI and downloaded saved copy.
+    Replacement archive21082058bytes/SHA0860a867 equals CI and downloaded saved copy.
     Owner99 preflight refused before changes:2803 journal was compared with2802 cron.
-    Strict installer fix under qualification; old archive superseded, app/worker5cc unchanged.
+    Fixed9a installer passed7 predecessor regressions and actual systemd/UID33/TLS/HTTPS recovery.
+    Context/console CI pass; broader automatic source gate still running at handoff.
+    Old99 archive superseded; app/worker5cc retain prior FullRC qualification.
     Production remains owner2803/worker6c56; owner installation and live role acceptance pending.
     Native LAN confirmation/first password remain explicit; Mini App/public HTTPS next.
-  role_bot_qualification: context/runtime/connect_role_bot_qualification_20261029.json
+  role_bot_qualification: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json
   role_bot_runbook: docs/CONNECT_BOT_2900_INSTALL_RU.md
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity

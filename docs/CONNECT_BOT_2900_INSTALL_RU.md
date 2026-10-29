@@ -1,16 +1,16 @@
 # USTAR Connect · установка рабочего бота по ролям
 
-> Обновление29Oct: архив99dbecaa отклонён на preflight из-за ошибки сравнения cron2803 с2802. Не применять до замены архива; вручную cron/журналы не менять. Приложение/worker5cc не меняются.
+> Исправленный комплект после отказа `accepted_cron_journal_changed`. Ошибка была в сравнении cron2803 с2802; файлы сервера и старые журналы менять не нужно. Использовать новый каталог ниже, старый99dbecaa оставить как есть.
 
 29 октября 2026, Europe/Moscow. Комплект обновляет принятую версию2803 до
 local2026102900/theme2026102700 и затем переключает Connect worker на согласованную
 версию. Требуется перерыв работы Академии. Исходники приложения и worker:
 `5cc02944e1059ba015afcc7c5e8068ca56c34a92`; установщик:
-`99dbecaac7fe9c6bd2fa9e77349d336e448ca8a6`.
+`9a68246b170dd6a08dc6a8e2118e69f32e16bea9`.
 
-Архив: `ustar-connect-role-bot-install-99dbecaa.tar.gz`, **21 081 981 байт**.
+Архив: `ustar-connect-role-bot-install-9a68246b.tar.gz`, **21 082 058 байт**.
 SHA256 архива:
-`1333364609478dab4c56764ec0e7481c5b59c11ca1c50a1fb981667849157078`.
+`0860a86786a6db2c3b88cc940203a4ed756b8ac372d9b21c69db53c4e03cfd4e`.
 Это хеш архива, а не отдельного `update.py`.
 
 ## Что изменится
@@ -42,12 +42,12 @@ sudo -v
 sudo bash <<'ROOT'
 set -euo pipefail
 umask 077
-install -d -o root -g root -m 700 /root/ustar-connect-role-bot-install-99dbecaa
+install -d -o root -g root -m 700 /root/ustar-connect-role-bot-install-9a68246b
 install -o root -g root -m 600 \
-  /home/aduk/ustar-connect-role-bot-install-99dbecaa.tar.gz \
-  /root/ustar-connect-role-bot-install-99dbecaa/package.tar.gz
-cd /root/ustar-connect-role-bot-install-99dbecaa
-printf '%s  %s\n' 1333364609478dab4c56764ec0e7481c5b59c11ca1c50a1fb981667849157078 package.tar.gz | sha256sum --check --strict -
+  /home/aduk/ustar-connect-role-bot-install-9a68246b.tar.gz \
+  /root/ustar-connect-role-bot-install-9a68246b/package.tar.gz
+cd /root/ustar-connect-role-bot-install-9a68246b
+printf '%s  %s\n' 0860a86786a6db2c3b88cc940203a4ed756b8ac372d9b21c69db53c4e03cfd4e package.tar.gz | sha256sum --check --strict -
 tar --extract --gzip --file package.tar.gz --no-same-owner --no-same-permissions
 sha256sum --check --strict SHA256SUMS
 /usr/bin/python3 -I -B update.py --check
@@ -63,11 +63,11 @@ ROOT
 ## 2. Установка в отдельной службе
 
 ```bash
-sudo systemd-run --unit=ustar-connect-role-bot-update-99dbecaa \
+sudo systemd-run --unit=ustar-connect-role-bot-update-9a68246b \
   --property=Type=oneshot --property=TimeoutStartSec=infinity \
-  /usr/bin/python3 -I -B -u /root/ustar-connect-role-bot-install-99dbecaa/update.py \
+  /usr/bin/python3 -I -B -u /root/ustar-connect-role-bot-install-9a68246b/update.py \
   --upgrade --acknowledge-outage
-sudo journalctl -fu ustar-connect-role-bot-update-99dbecaa.service -o cat
+sudo journalctl -fu ustar-connect-role-bot-update-9a68246b.service -o cat
 ```
 
 Дождаться завершения приложения и затем `runtime_active` с
@@ -79,9 +79,9 @@ Ctrl+C закрывает просмотр журнала; отдельная с
 
 ```bash
 sudo timeout --kill-after=2s 40s /usr/bin/python3 -I -B \
-  /root/ustar-connect-role-bot-install-99dbecaa/update.py --status
+  /root/ustar-connect-role-bot-install-9a68246b/update.py --status
 sudo timeout --kill-after=2s 40s /usr/bin/python3 -I -B \
-  /root/ustar-connect-role-bot-install-99dbecaa/update.py --check
+  /root/ustar-connect-role-bot-install-9a68246b/update.py --check
 sudo timeout --kill-after=2s 40s /usr/bin/python3 -I -B -u \
   /usr/local/sbin/USTAR_CRON_SETUP_20261005.py --status
 ```
@@ -125,7 +125,7 @@ wrapper20Oct сохраняем; их наличие само по себе не
 
 ```bash
 sudo /usr/bin/python3 -I -B -u \
-  /root/ustar-connect-role-bot-install-99dbecaa/update.py --recover
+  /root/ustar-connect-role-bot-install-9a68246b/update.py --recover
 ```
 
 До публикации приложения восстанавливается согласованная2803 копия; после
@@ -135,14 +135,14 @@ sudo /usr/bin/python3 -I -B -u \
 
 ```bash
 sudo /usr/bin/python3 -I -B -u \
-  /root/ustar-connect-role-bot-install-99dbecaa/update.py --enable-bot
+  /root/ustar-connect-role-bot-install-9a68246b/update.py --enable-bot
 ```
 
 Временно вернуть прежний профиль Connect без отката приложения:
 
 ```bash
 sudo /usr/bin/python3 -I -B -u \
-  /root/ustar-connect-role-bot-install-99dbecaa/update.py --disable-bot
+  /root/ustar-connect-role-bot-install-9a68246b/update.py --disable-bot
 ```
 
 Полный поздний `--restore` удаляет записи после снимка и требует отдельных
@@ -160,7 +160,7 @@ sudo /usr/bin/python3 -I -B -u \
 sudo systemd-run --unit=ustar-workday-20261030-01 \
   --property=Type=oneshot --property=TimeoutStartSec=9h \
   --property=MemoryMax=384M --property=CPUQuota=10% --property=Nice=10 \
-  /usr/bin/python3 -I -B -u /root/ustar-connect-role-bot-install-99dbecaa/observe.py \
+  /usr/bin/python3 -I -B -u /root/ustar-connect-role-bot-install-9a68246b/observe.py \
   --collect --duration-seconds 28800 --interval-seconds 60 \
   --output-dir /var/lib/ustar-workday-20261030-01
 ```

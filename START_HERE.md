@@ -17,11 +17,12 @@ whole-host инвентаризацией. Последний завершённ
 
 ## Текущая работа
 
-App/worker5cc02944 прошли4CI/FullRC; owner99dbecaa preflight выявил ошибку cron.
-[Исправление](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json) проверяется; архив99 не применять.
-[Квалификация](context/runtime/connect_role_bot_qualification_20261029.json),
-[установка](docs/CONNECT_BOT_2900_INSTALL_RU.md). Production ещё2803/worker6c56;
-установка и живая приёмка ролей владельцем впереди.
+Исправленный комплект2900: app/worker5cc02944 + tool9a68246b. Ошибка owner preflight99
+устранена, новый cron guard и actual systemd/UID33/TLS/recovery CI прошли.
+[Квитанция](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
+[установка](docs/CONNECT_BOT_2900_INSTALL_RU.md). Архив0860a867 совпал с CI и скачанной
+копией. App/worker не менялись и сохраняют предыдущую FullRC квалификацию.
+Production ещё2803/worker6c56; установка и живая приёмка ролей владельцем впереди.
 
 Owner29Oct возобновил полный рабочий Telegram-бот по ролям: русские кнопки,
 пошаговые формы, короткие пояснения, визуальные сводки/таблицы/графики. Мини App

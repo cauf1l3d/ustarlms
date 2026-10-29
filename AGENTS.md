@@ -2,10 +2,12 @@
 
 Актуально29.10.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
 Канонический baseline — main2802; активный кандидат — PR111/app2900/worker5cc02944.
-PR110/owner2803 ещё не слит. App/worker2900 квалифицированы; tool99dbecaa отклонён на owner preflight.
-[Исправление cron](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
-[команды](docs/CONNECT_BOT_2900_INSTALL_RU.md):4CI/native371/1751,Connect172/875,103tables,UID33.
-Реальная приёмка ролей/Telegram владельцем ещё впереди.
+Owner99 preflight отказал до upgrade:2803 cron сравнивался с2802. Исправленный tool9a68246b
+прошёл регрессии и actual systemd/UID33/TLS/recovery; архив0860a867 совпал с CI и
+скачанной копией. App/worker5cc сохраняют предыдущую FullRC квалификацию.
+[Квитанция](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
+[команды](docs/CONNECT_BOT_2900_INSTALL_RU.md). Production ещё2803/worker6c56;
+новый owner preflight, установка и реальная приёмка ролей/Telegram впереди.
 
 ## Работа и разрешения
 
@@ -28,7 +30,7 @@ Owner29Oct возобновил полный Connect: кнопки/коротк�
 Новые слияния автоматически не делать. Старые операторы не переписывать.
 Субагенты запрещены. Агент не подключается по SSH к production, не отправляет
 сообщения/письма/архивы через провайдеров и не меняет сервер в рамках Git-работ.
-Production worker6c56 сохраняется до owner установки согласованного99dbecaa/worker5cc02944. Docker rotation/health/recreate отложены до
+Production worker6c56 сохраняется до owner установки согласованного9a68246b/worker5cc02944. Docker rotation/health/recreate отложены до
 планового Moodle/PHP upgrade; эксперимент infra/docker-successor-frozen не поставлен.
 
 ## Источники истины

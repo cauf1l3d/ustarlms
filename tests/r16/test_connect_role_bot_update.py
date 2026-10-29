@@ -124,6 +124,67 @@ class Reference(unittest.TestCase):
             with self.subTest(name=name),self.assertRaises(c.Refusal):m.load_embedded(manifest,sources,bad)
 
 
+class Predecessor(unittest.TestCase):
+    """Real2803 journal/cron/source; Docker, SQL and older runtime use the existing fixture."""
+    def setUp(self):
+        import test_feed_media_update as feed_fixture
+        import connect_con02_state as state
+        import connect_role_bot_update as m
+        f=feed_fixture.Application(methodName='runTest');f.setUp();self.addCleanup(f.doCleanups)
+        self.assertEqual('app_ready',f.op.upgrade()['phase'])
+        self.f=f;self.cron=f.f.cron;self.raw=self.cron.read_bytes()
+        self.assertEqual(b"VERSIONS = {'local_ustar': '2026102803', 'theme_ustar': '2026102700'}\n",self.raw)
+        self.ctx=c.Context(SimpleNamespace(reference={'tool_commit':'f'*40,'app_commit':m.APP_COMMIT}),
+            f.ctx.root,f.ctx.uid,None,SimpleNamespace(base=f.ctx.root/'role-preflight'))
+        self.host=m.Host(self.ctx);self.ctx.host=self.host;self.host._previous=f.ctx
+        # feed.Host.accepted_cron() reconstructs its BASELINE2802, not its target2803.
+        # Keep that predecessor contract; exercise the real role Host consumer.
+        f.ctx.host.accepted_cron=lambda:b"VERSIONS = {'local_ustar': '2026102802', 'theme_ustar': '2026102700'}\n"
+        f.ctx.host.previous_context=lambda:SimpleNamespace()
+        f.ctx.host.verify_runtime=lambda previous:None
+        self.state=state
+
+    def snapshot(self):
+        return {str(p):(p.stat().st_ino,p.read_bytes()) for p in self.ctx.root.rglob('*') if p.is_file()}
+
+    def rewrite_receipt(self,raw):
+        saved=self.f.journal.load();row=saved['app']
+        row['files']['cron_script']['after']=self.state.descriptor(self.state.capture(self.cron))
+        (self.f.journal.folder(row)/'cron_script.after').write_bytes(raw)
+        self.f.journal.save(saved)
+
+    def test_real2803_preflight_accepts_current_cron_without_writing_any_files(self):
+        before=self.snapshot();controls=self.host.predecessor()
+        self.assertEqual(c.sha(self.raw),self.host.accepted_cron_sha)
+        self.assertEqual('absent',controls['files']['bot_key']['kind'])
+        self.assertEqual(before,self.snapshot());self.assertFalse(self.ctx.engine.base.exists())
+        after,record=self.host.cron_patch(self.raw,json.loads(self.f.f.install.read_bytes()))
+        self.assertEqual(b"VERSIONS = {'local_ustar': '2026102900', 'theme_ustar': '2026102700'}\n",after)
+        self.assertEqual(c.sha(after),record['script_sha256'])
+        self.assertEqual(before,self.snapshot())
+
+    def test_forged_live2803_cron_and_matching_receipt_cannot_bless_foreign_code(self):
+        raw=self.raw+b'# foreign executable code\n';self.cron.write_bytes(raw);self.rewrite_receipt(raw)
+        before=self.snapshot()
+        with self.assertRaisesRegex(c.Refusal,'accepted_cron_journal_changed'):self.host.predecessor()
+        self.assertEqual(before,self.snapshot());self.assertFalse(self.ctx.engine.base.exists())
+
+    def test_stale2802_cron_and_matching_receipt_are_still_refused(self):
+        raw=self.raw.replace(b'2026102803',b'2026102802');self.cron.write_bytes(raw);self.rewrite_receipt(raw)
+        with self.assertRaisesRegex(c.Refusal,'accepted_cron_journal_changed'):self.host.predecessor()
+        self.assertFalse(self.ctx.engine.base.exists())
+
+    def test_live_cron_drift_without_rewriting_receipt_is_refused(self):
+        self.cron.write_bytes(self.raw+b'# live drift\n');before=self.snapshot()
+        with self.assertRaisesRegex(c.Refusal,'unknown_control_drift'):self.host.predecessor()
+        self.assertEqual(before,self.snapshot())
+
+    def test_predecessor_reconstruction_rejects_missing_or_duplicate_version_line(self):
+        for raw in (b'# missing version\n',self.raw,self.raw.replace(b'2803',b'2802')*2):
+            self.f.ctx.host.accepted_cron=lambda:raw
+            with self.subTest(raw=raw),self.assertRaisesRegex(c.Refusal,'cron_source_changed'):self.host.predecessor()
+
+
 class Runtime(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

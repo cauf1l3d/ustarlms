@@ -17,7 +17,8 @@ whole-host инвентаризацией. Последний завершённ
 
 ## Текущая работа
 
-Готов единый комплект2900: app/worker5cc02944 + tool99dbecaa,4CI/FullRC зелёные.
+App/worker5cc02944 прошли4CI/FullRC; owner99dbecaa preflight выявил ошибку cron.
+[Исправление](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json) проверяется; архив99 не применять.
 [Квалификация](context/runtime/connect_role_bot_qualification_20261029.json),
 [установка](docs/CONNECT_BOT_2900_INSTALL_RU.md). Production ещё2803/worker6c56;
 установка и живая приёмка ролей владельцем впереди.

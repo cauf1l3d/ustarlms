@@ -3,7 +3,7 @@ updated_at: '2026-10-29'
 project: USTAR Academy
 stage: connect_role_bot_implementation_after_owner2803_acceptance
 stage_label: Owner installed2803 and accepted RSS; full role Telegram bot authorized, Mini App last
-current_activity: Final author review found ACK still depended on the old one-user pilot property. Real PHP policy test reproduced failure; explicit role-delivery profile fix passes15 local bot tests. App freeze is being refreshed before coordinated operator qualification. No deployment/archive readiness claim; production remains owner2803/worker6c56.
+current_activity: Owner99dbecaa preflight refused before upgrade; installer compared2803 journal with baseline2802 cron. Exact refusal reproduced and corrected; strict drift guards remain. Replacement operator qualification pending; app/worker5cc unchanged, production remains2803/worker6c56.
 entrypoint: START_HERE.md
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -267,7 +267,7 @@ perf_query_deployment:
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
 development_candidate:
   manifest: context/code_map/connect_role_bot_development_source.json
-  status: qualified_owner_install_pending
+  status: installer_cron_fix_under_qualification
   scope: Unified button-first Telegram role bot; metadata103 tables; paired app/worker release still pending
   branch: feat/connect-role-bot-20261029
   deployed: false
@@ -302,7 +302,7 @@ feed_media_workday_delivery:
   workday_reminder_local: '2026-10-30T11:00:00+03:00'
 connect_role_bot_order: context/runtime/connect_bot_owner_order_20261029.json
 connect_role_bot_delivery:
-  status: qualified_owner_install_pending
+  status: installer_cron_fix_under_qualification
   PR: 111
   baseline_application: ef903b7d276f1d62c4879f8a943a435b48e89117
   baseline_worker: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
@@ -324,3 +324,4 @@ connect_role_bot_delivery:
   retained_copy_verified: true
   owner_instruction: docs/CONNECT_BOT_2900_INSTALL_RU.md
   owner_role_acceptance: pending
+  owner_preflight_followup: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json

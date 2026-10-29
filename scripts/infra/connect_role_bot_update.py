@@ -161,6 +161,12 @@ class Host(c.Host):
             self._previous.host.log=self.log
         return self._previous
     def legacy(self):return self.previous_context().host.legacy()
+    def accepted_cron(self):
+        # The frozen feed adapter reconstructs its baseline2802. Advance once
+        # to the accepted2803 image before comparing its journal and live files.
+        raw=self.previous_context().host.accepted_cron()
+        c.require(raw.count(previous.CRON_LINE)==1,'cron_source_changed')
+        return raw.replace(previous.CRON_LINE,CRON_LINE)
     def control_paths(self):
         paths=super().control_paths();r=self.ctx.root
         paths['bot_key']=r/'etc/ustar-connect/bot-bridge.key'
@@ -176,7 +182,7 @@ class Host(c.Host):
         previous.verify_database(database,{**row['database'],'tasks':database['tasks']},p.bundle.reference,target=True)
         controls=p.host.controls(saved);journal.guard('app')
         p.host.verify_runtime(p.host.previous_context())
-        accepted=p.host.accepted_cron();self.accepted_cron_sha=c.sha(accepted)
+        accepted=self.accepted_cron();self.accepted_cron_sha=c.sha(accepted)
         c.require(row['files']['cron_script']['after']['sha256']==self.accepted_cron_sha,'accepted_cron_journal_changed')
         for name in ('cron_script','cron_installation','cron_schedule'):
             image=row['files'][name]['after'];c.require(descriptor(capture(Path(image['path'])))==image,'accepted_cron_not_effective')

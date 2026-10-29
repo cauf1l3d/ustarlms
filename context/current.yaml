@@ -87,11 +87,10 @@ production:
   post_deploy_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   previous_addon_receipt: context/runtime/perf2802_owner_deploy_20261029.json
 current_work:
-  activity: Final author review found ACK still depended on the old one-user pilot
-    property. Real PHP policy test reproduced failure; explicit role-delivery profile
-    fix passes15 local bot tests. App freeze is being refreshed before coordinated
-    operator qualification. No deployment/archive readiness claim; production remains
-    owner2803/worker6c56.
+  activity: Owner99dbecaa preflight refused before upgrade; installer compared2803
+    journal with baseline2802 cron. Exact refusal reproduced and corrected; strict
+    drift guards remain. Replacement operator qualification pending; app/worker5cc
+    unchanged, production remains2803/worker6c56.
   next_task: INTEGRATIONS-01
   ready_tasks: []
   task_statuses:

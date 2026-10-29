@@ -197,5 +197,7 @@
     "created": true,
     "prompt_updated_for_2803_and2900_observers": true,
     "collector_run": false
-  }
+  },
+  "owner_installation_followup": "context/runtime/connect_role_bot_cron_preflight_fix_20261029.json",
+  "archive_delivery_status": "superseded_after_owner_preflight_cron_derivation_bug"
 }

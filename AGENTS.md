@@ -2,8 +2,8 @@
 
 Актуально29.10.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
 Канонический baseline — main2802; активный кандидат — PR111/app2900/worker5cc02944.
-PR110/owner2803 ещё не слит. Поставка2900/tool99dbecaa квалифицирована, не установлена.
-[Квалификация](context/runtime/connect_role_bot_qualification_20261029.json),
+PR110/owner2803 ещё не слит. App/worker2900 квалифицированы; tool99dbecaa отклонён на owner preflight.
+[Исправление cron](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
 [команды](docs/CONNECT_BOT_2900_INSTALL_RU.md):4CI/native371/1751,Connect172/875,103tables,UID33.
 Реальная приёмка ролей/Telegram владельцем ещё впереди.
 

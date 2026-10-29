@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-29",
+  "PR": 111,
+  "status": "installer_fix_under_qualification",
+  "owner_attempt": {
+    "tool_commit": "99dbecaac7fe9c6bd2fa9e77349d336e448ca8a6",
+    "archive_SHA256_verified": true,
+    "all_inner_SHA256_verified": true,
+    "mode": "--check",
+    "phase": "refused",
+    "reason": "accepted_cron_journal_changed",
+    "upgrade_invoked": false,
+    "production_changes": false
+  },
+  "root_cause": "Role Host compared accepted2803 journal with feed Host baseline2802 cron bytes; missed advancing the frozen cron image one version.",
+  "fix": "Derive accepted2803 from the immutable predecessor2802 bytes, then retain exact journal/live file comparisons and all existing schema/runtime guards.",
+  "qualification_gap": "Prior native app/worker and systemd gates did not execute the role Host predecessor cron derivation. New regression executes that consumer with a real2803 journal and live files; only external SQL/runtime dependencies are modeled.",
+  "red": "Real2803 preflight reproduced accepted_cron_journal_changed before the fix.",
+  "focused_green": "7 tests passed, including live/receipt tampering, stale2802 and malformed predecessor denial.",
+  "application_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+  "worker_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+  "old_qualification": "context/runtime/connect_role_bot_qualification_20261029.json",
+  "old_archive_superseded": true,
+  "owner_installed": false,
+  "agent_SSH": false,
+  "provider_sends": false,
+  "automatic_merge": false,
+  "subagents": false
+}

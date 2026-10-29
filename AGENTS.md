@@ -1,13 +1,13 @@
 # USTAR — инструкции агентам
 
 Актуально29.10.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
-Канонический baseline — main2802; активный кандидат — PR111/app2900/worker5cc02944.
-Owner99 preflight отказал до upgrade:2803 cron сравнивался с2802. Исправленный tool9a68246b
-прошёл регрессии и actual systemd/UID33/TLS/recovery; архив0860a867 совпал с CI и
-скачанной копией. App/worker5cc сохраняют предыдущую FullRC квалификацию.
-[Квитанция](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
-[команды](docs/CONNECT_BOT_2900_INSTALL_RU.md). Production ещё2803/worker6c56;
-новый owner preflight, установка и реальная приёмка ролей/Telegram впереди.
+Канонический baseline — main2802; PR110/111 ещё не слиты. Owner29Oct установил
+app2900/theme2700 и включил worker5cc02944 штатным tool9a68246b:
+[owner receipt](context/runtime/connect_role_bot_owner_deploy_20261029.json).
+Runtime_active/ACK true, role_bot_ready/role_bot_enabled true; all4CI наfe2f05d PASS.
+Реальная приёмка ролей и свежий scheduled cron ещё впереди. Mini App/внешний HTTPS позже.
+[Квалификация](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
+[команды](docs/CONNECT_BOT_2900_INSTALL_RU.md).
 
 ## Работа и разрешения
 
@@ -30,7 +30,7 @@ Owner29Oct возобновил полный Connect: кнопки/коротк�
 Новые слияния автоматически не делать. Старые операторы не переписывать.
 Субагенты запрещены. Агент не подключается по SSH к production, не отправляет
 сообщения/письма/архивы через провайдеров и не меняет сервер в рамках Git-работ.
-Production worker6c56 сохраняется до owner установки согласованного9a68246b/worker5cc02944. Docker rotation/health/recreate отложены до
+Production worker5cc02944 включён владельцем через tool9a; приёмка ролей ожидается. Docker rotation/health/recreate отложены до
 планового Moodle/PHP upgrade; эксперимент infra/docker-successor-frozen не поставлен.
 
 ## Источники истины

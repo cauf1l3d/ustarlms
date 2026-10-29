@@ -58,7 +58,9 @@ STATE/ACTIVE/BACKLOG/ADR/inventories and qualification receipt.
 - [x] Perform separate author self-review, fix material findings, publish one PR/package.
 - [x] Verify archive/CI/saved downloaded copy; leave owner installation/role acceptance explicit.
 
-Qualified source/worker5cc02944, tool99dbecaa; exact FullRC022fddee and all4CI PASS.
-Evidence: context/runtime/connect_role_bot_qualification_20261029.json.
-Archive/CI/saved readback checked. This completes implementation and the owner handoff;
-server installation/live role acceptance and the later Mini App/public HTTPS remain owner/later-stage work.
+Qualified app/worker5cc02944 and replacement tool9a68246b; previous FullRC022fddee
+and all4CI onfe2f05d PASS. Owner29Oct installed2900 and enabled the unchanged controller:
+runtime_active/ACK true, role_bot_ready/role_bot_enabled true.
+Evidence: context/runtime/connect_role_bot_owner_deploy_20261029.json.
+Implementation, package handoff and owner installation are complete. Live role acceptance,
+fresh scheduled cron and workday report remain pending; Mini App/public HTTPS follow.

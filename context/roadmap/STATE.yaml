@@ -1,9 +1,9 @@
 schema_version: 2
 updated_at: '2026-10-29'
 project: USTAR Academy
-stage: connect_role_bot_implementation_after_owner2803_acceptance
-stage_label: Owner installed2803 and accepted RSS; full role Telegram bot authorized, Mini App last
-current_activity: Fixed installer9a68246b passed predecessor cron regressions and actual systemd/UID33/TLS/HTTPS recovery CI onb9f338c8. Archive0860a867 matches CI and downloaded saved copy. App/worker5cc unchanged and retain prior FullRC qualification. Owner preflight/install pending; production remains2803/worker6c56.
+stage: connect_role_bot_owner_installed_role_acceptance
+stage_label: Owner installed2900 and enabled role bot; live role acceptance next; Mini App last
+current_activity: Owner29Oct directly enabled pinned9a controller and worker5cc; runtime_active/ACK true and role_bot_ready confirmed on local2900/theme2700. All4CI onfe2f05d passed. Live role scenarios, fresh scheduled cron and workday report remain pending; Mini App/public HTTPS follow role acceptance.
 entrypoint: START_HERE.md
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -28,43 +28,47 @@ production:
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
   latest_cron_contract: context/runtime/feed2803_owner_deploy_20261029.json
   previous_scheduled_cron_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  latest_addon_preflight: context/runtime/feed2803_owner_deploy_20261029.json
+  latest_addon_preflight: context/runtime/connect_role_bot_owner_deploy_20261029.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
-  latest_Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  latest_Telegram_owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
   effective_addon_deployment:
-    receipt: context/runtime/feed2803_owner_deploy_20261029.json
+    receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
     reported_date_msk: '2026-10-29'
-    status: owner2803_installed_status_and_RSS_accepted
-    installer_commit: 36be3f108f2eac6a3db728f93b4456a729b97a3e
-    payload_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
+    status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
+    installer_commit: 9a68246b170dd6a08dc6a8e2118e69f32e16bea9
+    payload_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
     versions:
-      local_ustar: 2026102803
+      local_ustar: 2026102900
       theme_ustar: 2026102700
-    files: 590
-    tables: 100
+    files: 606
+    tables: 103
     counts_basis: fixed_controller_payload_not_new_whole_host_manifest
     independent_probe: false
-    worker_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
-    worker_rollout: false
-    previous_exact_terminal_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+    worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+    worker_rollout: true
+    previous_exact_terminal_receipt: context/runtime/feed2803_owner_deploy_20261029.json
     previous_2801_preflight_in_same_receipt: false
-    post_deploy_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+    post_deploy_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
     browser_receipt: context/runtime/feed2803_owner_deploy_20261029.json
-  status: owner_feed2803_install_status_and_RSS_accepted
+    role_bot_enabled: true
+    runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
+    post_check: role_bot_ready
+    live_role_acceptance: pending
+  status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
   observed_at: '2026-10-29'
-  source: context/runtime/evidence_20261029.yaml
+  source: context/runtime/evidence_connect2900_20261029.yaml
   independently_measured: false
-  current_source_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
+  current_source_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
   current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh host filesystem census
   current_versions:
-    local_ustar: 2026102803
+    local_ustar: 2026102900
     theme_ustar: 2026102700
   last_exact_source_manifest:
-    commit: ef903b7d276f1d62c4879f8a943a435b48e89117
+    commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
     date: '2026-10-29'
-    matching_files: 590
+    matching_files: 606
     kind: owner_verified_controller_payload_not_fresh_manifest
-    evidence: context/runtime/feed2803_owner_deploy_20261029.json
+    evidence: context/runtime/connect_role_bot_owner_deploy_20261029.json
   cron: completed29Oct03_37MSK_exit0_1_282s_no_new_failures; current_adhoc1_overdue56_failed2_not_yet_drained
   cron_current_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
@@ -80,8 +84,10 @@ production:
     Docker: 29.9.0
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
-  post_deploy_receipt: context/runtime/feed2803_owner_deploy_20261029.json
-  previous_addon_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+  post_deploy_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
+  previous_addon_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  post2900_cron_run_receipt: pending; last supplied scheduled cron remains pre2900
+  current_worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
@@ -90,7 +96,7 @@ audit:
   scope: Original infrastructure audit immutable; current verification in context/reviews/20261026/VERIFIED_REVIEW_RU.md
 next_agent_read:
 - context/runtime/connect_bot_owner_order_20261029.json
-- context/runtime/feed2803_owner_deploy_20261029.json
+- context/runtime/connect_role_bot_owner_deploy_20261029.json
 - context/tasks/ACTIVE.md
 - context/decisions/0015-ustar-connect.md
 sysadmin_restore:
@@ -267,10 +273,11 @@ perf_query_deployment:
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
 development_candidate:
   manifest: context/code_map/connect_role_bot_development_source.json
-  status: installer_infrastructure_qualified_owner_preflight_pending
-  scope: Unified button-first Telegram role bot; metadata103 tables; paired app/worker release still pending
+  status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
+  scope: Owner installed fixed606-file/103-table payload and worker; live role acceptance pending; Git
+    source still unmerged
   branch: feat/connect-role-bot-20261029
-  deployed: false
+  deployed: true
   progress: context/runtime/connect_role_bot_progress_20261029.md
   baseline_owner_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   PR: 111
@@ -280,6 +287,7 @@ development_candidate:
   previous_application_qualification: context/runtime/connect_role_bot_qualification_20261029.json
   qualification_receipt: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json
   qualification_head: b9f338c855339d398028a4655ceaff7ce18f692f
+  owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
 feed_media_workday_delivery:
   status: owner_installed_status_and_RSS_accepted_workday_pending
   application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
@@ -303,13 +311,13 @@ feed_media_workday_delivery:
   workday_reminder_local: '2026-10-30T11:00:00+03:00'
 connect_role_bot_order: context/runtime/connect_bot_owner_order_20261029.json
 connect_role_bot_delivery:
-  status: installer_infrastructure_qualified_owner_preflight_pending
+  status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
   PR: 111
   baseline_application: ef903b7d276f1d62c4879f8a943a435b48e89117
   baseline_worker: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
   predecessor_tool: 36be3f108f2eac6a3db728f93b4456a729b97a3e
   new_journal: /var/lib/ustar-connect-role-bot-update
-  owner_installed: false
+  owner_installed: true
   agent_SSH: false
   provider_sends: false
   guide: docs/CONNECT_BOT_RU.md
@@ -328,3 +336,9 @@ connect_role_bot_delivery:
   owner_instruction: docs/CONNECT_BOT_2900_INSTALL_RU.md
   owner_role_acceptance: pending
   owner_preflight_followup: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json
+  owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
+  runtime_phase: runtime_active
+  role_bot_enabled: true
+  ack_enabled: true
+  coordinated_worker_rollout_completed: true
+  post_check: role_bot_ready

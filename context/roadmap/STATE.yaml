@@ -6,7 +6,7 @@ stage_label: Shared Telegram egress reset; owner recovery pending; visual succes
 current_activity: Owner31Oct logs show shared Telegram egress reset after CONNECT200;
   four services active, pointer5cc and cb7128 visual journal rolled_back. Owner recovery
   commands provided, fresh result pending. New worker-only successor preserves terminal
-  journal and integrates corrected external graphics; qualification in progress.
+  journal and integrates corrected external graphics; archive267e5587 qualified; owner recovery/deploy pending.
 entrypoint: START_HERE.md
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -355,8 +355,9 @@ connect_role_bot_delivery:
 connect_visual_candidate:
   previous_source_commit: 5646e2de78b798056168169249c2ed764062d756
   previous_qualification: context/runtime/connect_bot_visual_publication_20261031.json
+  source_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
   previous_successor_source: a1bc5ddab211104ec279ca40cf3af91c9ea683a3
-  status: successor_recovery_followup_qualification_owner_recovery_pending
+  status: qualified_successor_archive_ready_owner_network_recovery_and_deploy_pending
   deployed: false
   qualification: context/runtime/connect_outage_visual_successor_20261101.json
   runbook: docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md

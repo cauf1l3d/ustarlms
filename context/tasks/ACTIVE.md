@@ -11,7 +11,7 @@ All4CI наfe2f05d PASS. Owner30Oct принял кнопки и задачи м
 console warning/no_data. Pointer5cc, cb7128/rolled_back. [Диагностика/successor](../runtime/connect_outage_visual_successor_20261101.json).
 Owner восстанавливает сеть через прежний pinned refresh; свежий результат ожидается.
 Новый worker-only successor сохраняет terminal journal, отдельный state на commit,
-probe перед остановкой. Внешний renderer проверен/исправлен. [Команды](../../docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md).
+probe перед остановкой. Архив267e5587 проверен. [Команды](../../docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md).
 App2900 прежний; HRD/review впереди.
 [История5646/CI](../runtime/connect_bot_visual_publication_20261031.json).
 [Квалификация9a](../runtime/connect_role_bot_cron_preflight_fix_20261029.json): CI/архив0860a867 проверены.

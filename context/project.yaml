@@ -37,7 +37,7 @@ current_operator_handoff:
 current_work:
   task: INTEGRATIONS-01
   related_task: PERF-01
-  status: telegram_egress_outage_owner_recovery_visual_successor_in_progress
+  status: qualified_worker_successor_owner_network_recovery_pending
   spec: docs/superpowers/specs/2026-10-29-connect-role-bot-design.md
   plan: docs/superpowers/plans/2026-10-29-connect-role-bot.md
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json

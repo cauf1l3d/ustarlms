@@ -98,7 +98,8 @@ current_work:
   activity: Owner31Oct logs show shared Telegram egress reset after CONNECT200; four
     services active, pointer5cc and cb7128 visual journal rolled_back. Owner recovery
     commands provided, fresh result pending. New worker-only successor preserves terminal
-    journal and integrates corrected external graphics; qualification in progress.
+    journal and integrates corrected external graphics; archive267e5587 qualified;
+    owner recovery/deploy pending.
   next_task: INTEGRATIONS-01
   ready_tasks: []
   task_statuses:

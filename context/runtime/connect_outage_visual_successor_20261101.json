@@ -56,8 +56,8 @@
     "result": "pass",
     "skipped": 4,
     "scope": "real PNG, transport uncertainty, callbacks, receiver, legacy terminal journal, filesystem/locks/SQLite preservation and process loss; systemd/provider modeled",
-    "CI": "recovery follow-up pending; previous a1 source/infra/context/console qualified",
-    "artifact": "recovery follow-up pending exact source package",
+    "CI": "final successor job128tests SUCCESS; all4CI on a1 PASS; final broader automatic repeat in progress",
+    "artifact": "267e5587 exact-source isolated smoke PASS; downloaded CI and saved archive byte-identical",
     "broad_suite": "interrupted: legacy --shared clones cannot read missing historical Git blobs in local partial clone; no full PASS claimed; complete suite runs in CI"
   },
   "production_recovery": "owner_commands_provided_fresh_result_pending",
@@ -101,21 +101,48 @@
       },
       "review": {
         "run": 41243001245,
-        "result": "in_progress",
+        "result": "success",
         "source_jobs": {
           "PHP8.2": 124660576811,
           "PHP8.3": 124660576591,
           "result": "success"
         },
-        "native_connect_job": 124662733899
+        "native_connect_job": 124662733899,
+        "native_tests": 172,
+        "native_assertions": 875
       }
     },
-    "superseded_reason": "final review found baseline recovery unnecessarily required external TLS; successor restores verified baseline services without mandatory provider probe"
+    "superseded_reason": "final review found baseline recovery unnecessarily required external TLS; successor restores verified baseline services without mandatory provider probe",
+    "archive_library_version": 0,
+    "archive_file_id": "file_000000000d4c820cac3de26c93dbfec8"
   },
   "publication": {
     "PR": 111,
-    "status": "recovery_followup_in_progress",
+    "source_commit": "267e55874eb8f6c36259d748f28a2c636adc9810",
+    "archive": "ustar-connect-visual-successor-267e5587.tar.gz",
+    "archive_bytes": 21393447,
+    "archive_sha256": "b0fc8fbd5c72ce9560952ef778a32658bcd32c54f297621909b5d692036b3176",
+    "CI_run": 41244604678,
+    "CI_job": 124665313791,
+    "CI_artifact": 13058551672,
+    "CI_zip_sha256": "1854cf31a1b71849ff328b1e2a06cb7e082e81bdda2293516d8f2bb897966f0e",
+    "CI_artifact_byte_identity": true,
+    "saved_archive_download_byte_identity": true,
+    "saved_archive": "libfile_9e4e6afff4a0819183cedf4adbadb395",
+    "saved_archive_file_id": "file_0000000020b081f693c7118ae9ad549b",
+    "saved_archive_version": 1,
+    "saved_sha256": "libfile_eaa0cdd548708191ac8048c7ef4f6caf",
+    "saved_instruction": "libfile_43411a0787b081918fe370d34ffec4fd",
+    "status": "qualified_worker_and_recovery_operator_archive_ready",
+    "broader_automatic_repeat": "in_progress_not_claimed_PASS",
     "agent_merge": false,
     "owner_deploy_pending": true
+  },
+  "qualification_reuse": {
+    "qualified_source": "a1bc5ddab211104ec279ca40cf3af91c9ea683a3",
+    "all_four_gates": "success",
+    "native_connect": "172 tests / 875 assertions PASS",
+    "worker_archive_payload": "all files byte-identical except manifest.json and SOURCE_COMMIT",
+    "followup_changes": "successor recovery removes mandatory provider probe; two persistent-outage regressions RED→GREEN; worker/Moodle/console source unchanged"
   }
 }

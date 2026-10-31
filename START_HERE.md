@@ -29,7 +29,7 @@ Owner30Oct принял кнопки и обмен задачами между2�
 Свежие логи31Oct: общий Telegram egress reset при active-службах; pointer5cc и
 cb7128/rolled_back. [Диагностика и новый successor](context/runtime/connect_outage_visual_successor_20261101.json),
 [инструкция](docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md). Восстановление сети/owner deploy
-ещё не приняты. Frozen5646 имеет all4CI, но не принимает чужой visual journal. App2900 прежний.
+ещё не приняты. Successor267e5587 проверен; all4CI a1 + финальный package CI128 PASS. App2900 прежний.
 
 Owner29Oct возобновил полный рабочий Telegram-бот по ролям: русские кнопки,
 пошаговые формы, короткие пояснения, визуальные сводки/таблицы/графики. Мини App

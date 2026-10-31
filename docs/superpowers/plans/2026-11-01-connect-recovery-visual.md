@@ -46,3 +46,11 @@ Final review follow-up: mandatory TLS in inherited recovery could leave workers
 stopped during a continuing outage. Fixed in successor.restore only; frozen v1
 unchanged. Two persistent-outage tests RED→GREEN, focused suite128/128 (4local skips).
 Previous a1 archive superseded; final follow-up package qualification pending.
+
+Final follow-up complete: source267e5587,128tests/CI124665313791 PASS,
+exact tar b0fc8fbd matches CI13058551672 and saved download. All4CI a1 including
+Moodle/PG172/875 PASS; actual worker files unchanged except source metadata.
+Final broader automatic repeat continues; no PASS claimed for unfinished runs.
+Final self-review: persistent outage recovery fixed RED→GREEN; no remaining
+critical/important findings in reviewed scope; no deferred minors. Owner server
+recovery/new delivery still needs live result.

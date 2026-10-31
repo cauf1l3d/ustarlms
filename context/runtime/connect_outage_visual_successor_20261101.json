@@ -47,16 +47,18 @@
       "footer included in palette retry",
       "status comes from canonical row status rather than request title",
       "negative status before success matching",
-      "long metric values and labels use separate lines"
+      "long metric values and labels use separate lines",
+      "network loss during switch or recover restores trusted baseline services without mandatory external probe"
     ]
   },
   "local_verification": {
-    "focused_tests": 126,
+    "focused_tests": 128,
     "result": "pass",
     "skipped": 4,
     "scope": "real PNG, transport uncertainty, callbacks, receiver, legacy terminal journal, filesystem/locks/SQLite preservation and process loss; systemd/provider modeled",
-    "CI": "pending_on_new_source",
-    "artifact": "pending_exact_commit"
+    "CI": "recovery follow-up pending; previous a1 source/infra/context/console qualified",
+    "artifact": "recovery follow-up pending exact source package",
+    "broad_suite": "interrupted: legacy --shared clones cannot read missing historical Git blobs in local partial clone; no full PASS claimed; complete suite runs in CI"
   },
   "production_recovery": "owner_commands_provided_fresh_result_pending",
   "runbook": "docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md",
@@ -64,5 +66,56 @@
     "No agent SSH, provider sends or merge",
     "CI/model tests are not live Telegram acceptance",
     "Old input history gap possible; send fresh Menu after route recovery"
-  ]
+  ],
+  "previous_candidate": {
+    "PR": 111,
+    "source_commit": "a1bc5ddab211104ec279ca40cf3af91c9ea683a3",
+    "archive": "ustar-connect-visual-successor-a1bc5dda.tar.gz",
+    "archive_bytes": 21393151,
+    "archive_sha256": "2d143bef834bf2e7cbc5e17813be8f4e631bed189826b04375a366943acea735",
+    "CI_run": 41243001259,
+    "CI_job": 124660577099,
+    "CI_artifact": 13057938455,
+    "CI_zip_sha256": "50010dea9b40459b4ce41222bde12f84d4bbde10430c0531808d705fe56f3de5",
+    "CI_artifact_byte_identity": true,
+    "saved_archive_download_byte_identity": true,
+    "saved_archive": "libfile_9e4e6afff4a0819183cedf4adbadb395",
+    "saved_sha256": "libfile_eaa0cdd548708191ac8048c7ef4f6caf",
+    "saved_instruction": "libfile_43411a0787b081918fe370d34ffec4fd",
+    "agent_merge": false,
+    "owner_deploy_pending": true,
+    "gates_observed": {
+      "context": {
+        "run": 41243001273,
+        "result": "success",
+        "tests": 1486,
+        "skipped": 235
+      },
+      "infrastructure": {
+        "run": 41243001259,
+        "result": "success"
+      },
+      "console": {
+        "run": 41243001281,
+        "result": "success"
+      },
+      "review": {
+        "run": 41243001245,
+        "result": "in_progress",
+        "source_jobs": {
+          "PHP8.2": 124660576811,
+          "PHP8.3": 124660576591,
+          "result": "success"
+        },
+        "native_connect_job": 124662733899
+      }
+    },
+    "superseded_reason": "final review found baseline recovery unnecessarily required external TLS; successor restores verified baseline services without mandatory provider probe"
+  },
+  "publication": {
+    "PR": 111,
+    "status": "recovery_followup_in_progress",
+    "agent_merge": false,
+    "owner_deploy_pending": true
+  }
 }

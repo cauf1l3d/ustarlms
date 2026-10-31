@@ -157,5 +157,7 @@ sudo systemd-run --unit="ustar-visual-recover-$(date +%s)" --collect --wait --pi
 Expected rolled_back; pointer снова5cc, приложение/бизнес-данные сохранены. Новый
 журнал находится по пути из INSTALL.json, старый cb journal сохранён побайтно, его
 копия legacy-state.before.json хранится рядом с новым state.json. Сеть откат не
-чинит. Если recovery_required сохраняется — прислать короткий reason/состояния служб,
+чинит. Проверенный baseline запускается при откате без обязательного внешнего TLS:
+обработчики сами повторяют соединение после восстановления сети. Если
+recovery_required сохраняется — прислать короткий reason/состояния служб,
 не удалять журнал и не менять symlink вручную.

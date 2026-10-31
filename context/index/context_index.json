@@ -1494,8 +1494,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 19101,
-      "sha256": "a47a20d3f048baf04883c26b5da5bde7fddab42b257c864809cbbb22c4412cf3"
+      "size": 19181,
+      "sha256": "21449d1e9896ff1181bb36ebf0186b55a0f3827a8485424f2b4809cfc3839c8a"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1956,8 +1956,8 @@
     {
       "path": "context/runtime/connect_outage_visual_successor_20261101.json",
       "domain": "runtime",
-      "size": 3057,
-      "sha256": "27fe8c3dd7a28607c3740d94d6560d1ed6dc8c552723c2246682b6a71d522f29"
+      "size": 5173,
+      "sha256": "12a2eaeb0bae00da4c191d8e602e2590df340132a35641c4af81d908c031c72e"
     },
     {
       "path": "context/runtime/connect_owner_priority_20261019.json",

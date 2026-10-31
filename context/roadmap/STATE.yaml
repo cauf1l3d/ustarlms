@@ -355,7 +355,8 @@ connect_role_bot_delivery:
 connect_visual_candidate:
   previous_source_commit: 5646e2de78b798056168169249c2ed764062d756
   previous_qualification: context/runtime/connect_bot_visual_publication_20261031.json
-  status: successor_local_qualified_exact_archive_and_CI_pending
+  previous_successor_source: a1bc5ddab211104ec279ca40cf3af91c9ea683a3
+  status: successor_recovery_followup_qualification_owner_recovery_pending
   deployed: false
   qualification: context/runtime/connect_outage_visual_successor_20261101.json
   runbook: docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md

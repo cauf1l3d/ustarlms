@@ -89,6 +89,25 @@ class VisualSuccessor(VisualBase):
             self.check();self.host.probe('v2')
         return super().run(recover=recover)
 
+    def restore(self,state):
+        from connect_con02_application import stop_workers,SERVICES
+        from connect_con02_contract import require
+        # Restore only the hash-verified accepted baseline and unchanged controls.
+        # Its normal startup checks identity and retries transport failures itself.
+        # Recovery must not leave both consumers stopped behind a failed TLS probe.
+        self.verify(state,application=False);stop_workers(self.host)
+        self.switch(candidate=False)
+        for unit in reversed(SERVICES):
+            previous=state['services'][unit]
+            if self.host.service_enabled(unit)!=previous['enabled']:
+                self.host.service('enable' if previous['enabled'] else 'disable',unit)
+            if previous['active']:self.host.service('start',unit)
+            elif self.host.service_active(unit):self.host.service('stop',unit)
+            require(self.host.service_active(unit)==previous['active']
+                and self.host.service_enabled(unit)==previous['enabled'],'worker_restore_not_confirmed')
+        self.verify(state,application=False)
+        return self.save(state,'rolled_back')
+
 
 def main(argv=None):
     if not any(a in ('--check','--upgrade','--recover') for a in (sys.argv[1:] if argv is None else argv)):

@@ -79,4 +79,24 @@ class Successor(fixture.WorkerUpdate):
         with self.assertRaises(fixture.c.Refusal):self.op.check()
         self.assertFalse(self.op.base.exists());self.assert_preserved()
 
+    def test_network_lost_after_switch_restores_baseline_workers_without_provider(self):
+        raw=self.rolled_back_legacy();calls=[]
+        def probe(profile):
+            calls.append(profile)
+            if len(calls)>1:raise fixture.c.Refusal('synthetic_network_outage')
+        self.host.probe=probe
+        result=self.op.run()
+        self.assertEqual('rolled_back',result['phase']);self.assertFalse(result['update_succeeded'])
+        self.assertEqual('5'*40,self.paths['pointer'].resolve().name)
+        self.assertEqual(2,len(calls))
+        self.assertEqual(raw,self.legacy.path.read_bytes());self.assert_preserved()
+
+    def test_explicit_recovery_during_outage_restores_retrying_baseline_services(self):
+        raw=self.rolled_back_legacy();self.op.run()
+        with patch.object(self.host,'probe',side_effect=fixture.c.Refusal('synthetic_network_outage')) as probe:
+            self.assertEqual('rolled_back',self.op.run(recover=True)['phase'])
+            probe.assert_not_called()
+        self.assertEqual('5'*40,self.paths['pointer'].resolve().name)
+        self.assertEqual(raw,self.legacy.path.read_bytes());self.assert_preserved()
+
 if __name__=='__main__':unittest.main()

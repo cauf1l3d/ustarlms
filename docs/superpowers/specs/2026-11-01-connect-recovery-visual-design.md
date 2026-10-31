@@ -18,6 +18,8 @@ receiver transport_unavailable, console warning/no_data. Общая egress-це�
 его штатного recover. Frozen9a и visual-v1 остаются побайтно прежними.
 Перед upgrade — readonly role probe; отказ сети не останавливает workers.
 Повтор/recover сохраняют configs, cursor, uncertain receipts, app2900 и БД.
+Recover проверенного baseline не зависит от внешнего TLS; trusted retrying workers
+должны запускаться и при продолжающемся обрыве egress.
 
 Renderer: проверенный исходник из files.zip, а не подмена receiver.pyz на сервере.
 Принять палитру поверхностей, метрики/статусы, компактность и явное число строк.

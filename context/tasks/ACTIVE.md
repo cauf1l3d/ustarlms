@@ -7,12 +7,10 @@ Owner29Oct установил2900/theme2700 и включил worker5cc чере
 ACK true и role_bot_ready. [Квитанция](../runtime/connect_role_bot_owner_deploy_20261029.json).
 All4CI наfe2f05d PASS. Owner30Oct принял кнопки и задачи между2учётками/синхронизацию.
 [Запрос графики](../runtime/connect_role_bot_visual_owner_order_20261030.json).
-Свежий31Oct log: egress CONNECT200→reset/HTTP000, receiver transport_unavailable,
-console warning/no_data. Pointer5cc, cb7128/rolled_back. [Диагностика/successor](../runtime/connect_outage_visual_successor_20261101.json).
-Owner восстанавливает сеть через прежний pinned refresh; свежий результат ожидается.
-Новый worker-only successor сохраняет terminal journal, отдельный state на commit,
-probe перед остановкой. Архив267e5587 проверен. [Команды](../../docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md).
-App2900 прежний; HRD/review впереди.
+Owner1Nov восстановил egress: CONNECT200/HTTP302/TLS0, оба бота отвечают.
+Повтор установки267e5587 после busy успешен: visuals_active, затем visuals_ready,
+recovery_required:false. [Квитанция](../runtime/connect_visual_owner_deploy_20261101.json).
+All4CI18c83925 PASS; живые PNG/кнопки ждут нового Меню. App2900 прежний; HRD/review впереди.
 [История5646/CI](../runtime/connect_bot_visual_publication_20261031.json).
 [Квалификация9a](../runtime/connect_role_bot_cron_preflight_fix_20261029.json): CI/архив0860a867 проверены.
 [4CI/FullRC](../runtime/connect_role_bot_qualification_20261029.json), [команды](../../docs/CONNECT_BOT_2900_INSTALL_RU.md).
@@ -20,7 +18,7 @@ App2900 прежний; HRD/review впереди.
 Русские кнопки, пояснения, графические сводки. Существующие Academy identities, writers,
 права и история; самостоятельная работа без субагентов, рациональные проверки.
 Mini App и публичный HTTPS Академии отложены до конца; Bitrix/WhatsApp не включаются
-автоматически. Свежий pointer5cc02944 подтверждён; successor ещё не установлен. Затем приёмка ролей и Mini App/HTTPS.
+автоматически. Worker267e5587 установлен; графическая приёмка ожидается. Затем приёмка ролей и Mini App/HTTPS.
 Нового автоматического merge/agent SSH/provider sends нет.
 
 ## RSS-01 завершён owner acceptance; PERF-01 report ожидается

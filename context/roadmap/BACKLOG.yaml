@@ -514,7 +514,7 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: telegram_egress_recovery_visual_successor
+  phase: owner_installed_visual267_graphical_role_acceptance
   owner_priority: complete_Telegram_role_bot_before_MiniApp_public_HTTPS
   current_summary: >-
     Owner29Oct installed app2900/theme2700 and directly enabled worker5cc02944
@@ -524,12 +524,13 @@ tasks:
     rejected the legitimate second probe; unchanged original controller enabled successfully.
     App/worker retain prior FullRC evidence; archive0860a867/21082058bytes verified.
     Owner30Oct accepted buttons, task exchange between2accounts and Academy synchronization.
-    Frozen graphics5646 qualified but rejects foreign visual journal. Owner31Oct logs show
-    shared Telegram egress reset; pointer5cc, cb7128/rolled_back. Recovery commands given,
-    fresh owner result pending. Corrected graphics and recovery successor267e5587 qualified;
-    all4CI a1 and final128-test package job PASS; worker/Moodle/console source byte-identical.
+    Owner1Nov restored Telegram egress (CONNECT200/HTTP302/TLS0), both bots answered.
+    Worker267e5587 then installed after transient busy refusal: visuals_active,
+    visuals_ready/recovery_required false. All4CI18c83925 PASS. Fresh graphical UI
+    acceptance remains pending. Owner instructions must be directly in chat.
     Report review/HRD, fresh scheduled cron and workday report pending.
     Native LAN confirmation/first password remain explicit; Mini App/public HTTPS follow.
+  visual_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   visual_order: context/runtime/connect_role_bot_visual_owner_order_20261030.json
   role_bot_owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
   role_bot_qualification: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json

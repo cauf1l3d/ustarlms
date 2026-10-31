@@ -33,7 +33,9 @@ production:
   previous_scheduled_cron_receipt: context/runtime/perf2802_owner_deploy_20261029.json
   latest_addon_preflight: context/runtime/connect_role_bot_owner_deploy_20261029.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
-  latest_Telegram_owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
+  latest_Telegram_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+  latest_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
+  latest_worker_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   effective_addon_deployment:
     receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
     reported_date_msk: '2026-10-29'
@@ -95,11 +97,10 @@ production:
   post2900_cron_run_receipt: pending; last supplied scheduled cron remains pre2900
   current_worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 current_work:
-  activity: Owner31Oct logs show shared Telegram egress reset after CONNECT200; four
-    services active, pointer5cc and cb7128 visual journal rolled_back. Owner recovery
-    commands provided, fresh result pending. New worker-only successor preserves terminal
-    journal and integrates corrected external graphics; archive267e5587 qualified;
-    owner recovery/deploy pending.
+  activity: Owner1Nov restored Telegram TLS through pinned egress refresh; both bots
+    answered again. Worker267e5587 installed successfully after a transient busy refusal;
+    visuals_ready and recovery_required false. All4CI18c83925 PASS. Fresh PNG/button
+    and broader role/HRD acceptance remain pending; Mini App/HTTPS last.
   next_task: INTEGRATIONS-01
   ready_tasks: []
   task_statuses:

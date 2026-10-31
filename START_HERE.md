@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально31.10.2026. Канонический код — main; PR110 source2803 не слит.
+Актуально01.11.2026. Канонический код — main; PR110 source2803 не слит.
 
 1. [STATE](context/roadmap/STATE.yaml), [ACTIVE](context/tasks/ACTIVE.md), [BACKLOG](context/roadmap/BACKLOG.yaml).
 2. [Поручение Connect29Oct](context/runtime/connect_bot_owner_order_20261029.json).
@@ -26,10 +26,10 @@ Payload606/103 не является новой whole-host инвентариз�
 копией. App/worker не менялись и сохраняют предыдущую FullRC квалификацию.
 Owner30Oct принял кнопки и обмен задачами между2учётками/синхронизацию с Академией.
 [Запрошены цветные кнопки и PNG](context/runtime/connect_role_bot_visual_owner_order_20261030.json).
-Свежие логи31Oct: общий Telegram egress reset при active-службах; pointer5cc и
-cb7128/rolled_back. [Диагностика и новый successor](context/runtime/connect_outage_visual_successor_20261101.json),
-[инструкция](docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md). Восстановление сети/owner deploy
-ещё не приняты. Successor267e5587 проверен; all4CI a1 + финальный package CI128 PASS. App2900 прежний.
+Owner1Nov восстановил общий Telegram egress, оба бота отвечают; установил267e5587:
+visuals_active, затем visuals_ready/recovery_required:false. [Квитанция](context/runtime/connect_visual_owner_deploy_20261101.json).
+All4CI18c83925 PASS. Живые PNG/кнопки ещё проверить новым Меню. App2900 прежний.
+Инструкции владельцу — прямо в чат, коротко.
 
 Owner29Oct возобновил полный рабочий Telegram-бот по ролям: русские кнопки,
 пошаговые формы, короткие пояснения, визуальные сводки/таблицы/графики. Мини App

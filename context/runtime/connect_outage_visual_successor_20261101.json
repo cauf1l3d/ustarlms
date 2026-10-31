@@ -56,11 +56,11 @@
     "result": "pass",
     "skipped": 4,
     "scope": "real PNG, transport uncertainty, callbacks, receiver, legacy terminal journal, filesystem/locks/SQLite preservation and process loss; systemd/provider modeled",
-    "CI": "final successor job128tests SUCCESS; all4CI on a1 PASS; final broader automatic repeat in progress",
+    "CI": "128-test package job PASS; all four gates on18c83925 SUCCESS",
     "artifact": "267e5587 exact-source isolated smoke PASS; downloaded CI and saved archive byte-identical",
     "broad_suite": "interrupted: legacy --shared clones cannot read missing historical Git blobs in local partial clone; no full PASS claimed; complete suite runs in CI"
   },
-  "production_recovery": "owner_commands_provided_fresh_result_pending",
+  "production_recovery": "owner_verified_egress_refreshed_both_bots_responding",
   "runbook": "docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md",
   "limitations": [
     "No agent SSH, provider sends or merge",
@@ -133,10 +133,11 @@
     "saved_archive_version": 1,
     "saved_sha256": "libfile_eaa0cdd548708191ac8048c7ef4f6caf",
     "saved_instruction": "libfile_43411a0787b081918fe370d34ffec4fd",
-    "status": "qualified_worker_and_recovery_operator_archive_ready",
-    "broader_automatic_repeat": "in_progress_not_claimed_PASS",
+    "status": "owner_installed_visuals_ready_UI_acceptance_pending",
+    "broader_automatic_repeat": "all_four_success_on18c83925",
     "agent_merge": false,
-    "owner_deploy_pending": true
+    "owner_deploy_pending": false,
+    "owner_receipt": "context/runtime/connect_visual_owner_deploy_20261101.json"
   },
   "qualification_reuse": {
     "qualified_source": "a1bc5ddab211104ec279ca40cf3af91c9ea683a3",
@@ -144,5 +145,6 @@
     "native_connect": "172 tests / 875 assertions PASS",
     "worker_archive_payload": "all files byte-identical except manifest.json and SOURCE_COMMIT",
     "followup_changes": "successor recovery removes mandatory provider probe; two persistent-outage regressions RED→GREEN; worker/Moodle/console source unchanged"
-  }
+  },
+  "resolution": "context/runtime/connect_visual_owner_deploy_20261101.json"
 }

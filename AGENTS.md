@@ -5,10 +5,10 @@
 app2900/theme2700 и включил worker5cc02944 штатным tool9a68246b:
 [owner receipt](context/runtime/connect_role_bot_owner_deploy_20261029.json).
 Runtime_active/ACK true, role_bot_ready; all4CI fe2f05d PASS.
-Owner30Oct принял кнопки/обмен задачами2учёток. Log31Oct: pointer5cc, cb rolled_back; egress reset.
-[Диагностика/successor](context/runtime/connect_outage_visual_successor_20261101.json),
-[новые команды](docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md). Восстановление сети владельцем
-не подтверждено. Successor267e5587 проверен; старый journal сохранён.
+Owner1Nov восстановил egress (CONNECT200/HTTP302/TLS0), оба бота отвечают.
+Worker267e5587 установлен: visuals_active/visuals_ready, recovery_required:false.
+[Owner receipt](context/runtime/connect_visual_owner_deploy_20261101.json); PNG/кнопки ещё не приняты.
+Инструкции владельцу — прямо в чат короткими блоками команд.
 [Квалификация](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
 [команды](docs/CONNECT_BOT_2900_INSTALL_RU.md).
 

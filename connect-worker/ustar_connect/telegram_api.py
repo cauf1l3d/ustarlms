@@ -1,6 +1,7 @@
 """Narrow Bot API transport. Credentials stay private, upstream errors stay fixed."""
 import json
 import re
+import secrets
 import ssl
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
@@ -44,6 +45,23 @@ def _error(code, parameters, sending):
     return TelegramError(reason, retry_after=retry, uncertain=sending and (code >= 500 or reason == 'invalid_response'))
 
 
+def _multipart(payload):
+    payload=dict(payload);photo=payload.pop('photo')
+    if not isinstance(photo,bytes) or not photo.startswith(b'\x89PNG\r\n\x1a\n') or not 0<len(photo)<=262144:
+        raise ValueError('invalid_bot_photo')
+    boundary='ustar-'+secrets.token_hex(24)
+    parts=[]
+    for key,value in payload.items():
+        if not re.fullmatch(r'[a-z_]{1,40}',key):raise ValueError('invalid_photo_field')
+        text=value if isinstance(value,str) else json.dumps(value,ensure_ascii=False,separators=(',',':'),allow_nan=False)
+        parts.append(('--'+boundary+'\r\nContent-Disposition: form-data; name="'+key+'"\r\n\r\n'+text+'\r\n').encode())
+    parts.append(('--'+boundary+'\r\nContent-Disposition: form-data; name="photo"; filename="ustar-card.png"\r\n'
+        'Content-Type: image/png\r\n\r\n').encode()+photo+b'\r\n')
+    body=b''.join(parts)+('--'+boundary+'--\r\n').encode()
+    if len(body)>300000:raise ValueError('api_payload_too_large')
+    return body,'multipart/form-data; boundary='+boundary
+
+
 class TelegramClient:
     def __init__(self, token, *, proxy=None,role_navigation=False):
         if not isinstance(token, str) or not re.fullmatch(r'[1-9][0-9]{0,19}:[A-Za-z0-9_-]{20,256}', token):
@@ -63,14 +81,17 @@ class TelegramClient:
 
     def _call(self, method, payload):
         if method not in ('getMe', 'getWebhookInfo', 'getUpdates', 'sendMessage',
-                          'answerCallbackQuery', 'editMessageReplyMarkup', 'editMessageText', 'getFile', 'sendPhoto'):
+                          'answerCallbackQuery', 'editMessageReplyMarkup', 'editMessageText', 'getFile', 'sendPhoto', 'editMessageMedia'):
             raise ValueError('invalid_api_method')
-        sending = method in ('sendMessage','editMessageText','sendPhoto')
-        body = json.dumps(payload, separators=(',', ':'), allow_nan=False,ensure_ascii=False).encode()
-        if len(body) > 16384:
-            raise ValueError('api_payload_too_large')
+        sending = method in ('sendMessage','editMessageText','sendPhoto','editMessageMedia')
+        if method in ('sendPhoto','editMessageMedia') and isinstance(payload.get('photo'),bytes):
+            body,content_type=_multipart(payload)
+        else:
+            body = json.dumps(payload, separators=(',', ':'), allow_nan=False,ensure_ascii=False).encode()
+            content_type='application/json'
+            if len(body) > 16384:raise ValueError('api_payload_too_large')
         request = Request('https://api.telegram.org/bot'+self._token+'/'+method, data=body,
-                          headers={'Content-Type': 'application/json'}, method='POST')
+                          headers={'Content-Type': content_type}, method='POST')
         try:
             timeout = 35 if method == 'getUpdates' else (3 if method in ('answerCallbackQuery', 'editMessageReplyMarkup') else 10)
             with self._opener.open(request, timeout=timeout) as response:
@@ -112,17 +133,41 @@ class TelegramClient:
         return self._call('getMe', {})
 
     def send_bot_view(self,subject,payload):
-        return self._send(subject,payload)
+        return self._deliver_bot_view(subject,payload)
+
+    def _deliver_bot_view(self,subject,payload,*,message_id=None,media_message=False):
+        if type(subject) is not int or not 0<subject<2**52:raise ValueError('invalid_subject')
+        if message_id is not None and (type(message_id) is not int or not 0<message_id<2**52):
+            raise ValueError('invalid_message_reference')
+        if 'photo' not in payload:
+            if message_id is not None and not media_message:
+                return self._call('editMessageText',{'chat_id':subject,'message_id':message_id,**payload})
+            return self._send(subject,payload)
+        photo=payload['photo']
+        if not isinstance(photo,bytes) or not photo.startswith(b'\x89PNG\r\n\x1a\n') or len(photo)>262144:
+            raise ValueError('invalid_bot_photo')
+        caption=payload['caption'];keyboard=payload['reply_markup']
+        if message_id is None:
+            method='sendPhoto';data={'chat_id':subject,'photo':photo,'caption':caption,
+                'reply_markup':keyboard,'protect_content':True}
+        else:
+            method='editMessageMedia';data={'chat_id':subject,'message_id':message_id,'photo':photo,
+                'media':{'type':'photo','media':'attach://photo','caption':caption},'reply_markup':keyboard}
+        try:return self._call(method,data)
+        except TelegramError as error:
+            # Only a definitive 400 can fall back. Timeout/5xx/invalid success are
+            # uncertain and must not silently create a second provider message.
+            if error.reason!='api_rejected' or error.uncertain:raise
+            return self._deliver_bot_view(subject,payload['_fallback'],message_id=message_id,media_message=media_message)
+
 
     def send_bot_photo(self,subject,file_id):
         if type(subject) is not int or not 0<subject<2**52 or not isinstance(file_id,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,256}',file_id):
             raise ValueError('invalid_bot_photo')
         return self._call('sendPhoto',{'chat_id':subject,'photo':file_id,'protect_content':True,'caption':'Фото отчёта · Академия'})
 
-    def edit_bot_view(self,subject,message_id,payload):
-        if type(subject) is not int or not 0<subject<2**52 or type(message_id) is not int or not 0<message_id<2**52:
-            raise ValueError('invalid_message_reference')
-        return self._call('editMessageText',{'chat_id':subject,'message_id':message_id,**payload})
+    def edit_bot_view(self,subject,message_id,payload,*,media_message=False):
+        return self._deliver_bot_view(subject,payload,message_id=message_id,media_message=media_message)
 
     def answer_bot_callback(self,query_id):
         if not isinstance(query_id,str) or not re.fullmatch(r'[!-~]{1,256}',query_id):

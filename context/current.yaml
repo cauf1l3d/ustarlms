@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-10-29'
+updated_at: '2026-10-30'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -56,7 +56,9 @@ production:
     role_bot_enabled: true
     runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
     post_check: role_bot_ready
-    live_role_acceptance: pending
+    live_role_acceptance: 'partial: visible buttons, task exchange between two accounts,
+      Academy synchronization; owner30Oct'
+    latest_functional_receipt: context/runtime/connect_role_bot_visual_owner_order_20261030.json
   status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
   observed_at: '2026-10-29'
   source: context/runtime/evidence_connect2900_20261029.yaml
@@ -93,10 +95,10 @@ production:
   post2900_cron_run_receipt: pending; last supplied scheduled cron remains pre2900
   current_worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 current_work:
-  activity: Owner29Oct directly enabled pinned9a controller and worker5cc; runtime_active/ACK
-    true and role_bot_ready confirmed on local2900/theme2700. All4CI onfe2f05d passed.
-    Live role scenarios, fresh scheduled cron and workday report remain pending; Mini
-    App/public HTTPS follow role acceptance.
+  activity: Owner30Oct accepted visible buttons, task exchange between two accounts
+    and Academy sync. Preparing worker-only graphical cards and readable colored buttons.
+    Production remains app2900/worker5cc02944. HRD/report-review, scheduled cron and
+    workday acceptance pending; Mini App/HTTPS last.
   next_task: INTEGRATIONS-01
   ready_tasks: []
   task_statuses:

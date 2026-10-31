@@ -32,6 +32,17 @@ def _confirmation_url(value, origin):
     return value
 
 
+def button_style(label):
+    plain=''.join(c for c in label.casefold() if c.isalpha() or c.isspace()).strip()
+    if plain.startswith(('отклонить','вернуть','отключить','уволить','удалить','не выполнено')):
+        return 'danger'
+    if plain.startswith(('одобрить','принять','подтвердить','сохранить','отправить','выполнено','прочитано','включить')):
+        return 'success'
+    if plain.startswith(('главное меню','назад','далее','отмена','предыдущ','следующ')):
+        return None
+    return 'primary'
+
+
 def render_view(view, *, academy_origin=None):
     if (not isinstance(view,dict) or set(view) not in ({'title','text','buttons','metrics','rows'}, {'title','text','buttons','metrics','rows','photos'})
             or not all(isinstance(view[k],list) for k in ('buttons','metrics','rows'))
@@ -68,6 +79,8 @@ def render_view(view, *, academy_origin=None):
         if not isinstance(button,dict) or set(button) not in ({'label','callback'},{'label','url'}):
             raise ValueError('invalid_bot_button')
         item={'text':_text(button['label'],52)}
+        style=button_style(button['label'])
+        if style:item['style']=style
         if 'callback' in button:item['callback_data']=_token(button['callback'],'cb4')
         else:item['url']=_confirmation_url(button['url'],academy_origin)
         # One short action per row also accommodates long Russian labels on narrow phones.

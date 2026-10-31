@@ -514,7 +514,7 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: role_bot2900_owner_installed_live_role_acceptance_pending
+  phase: partial_tasks_accepted_worker_visual_successor
   owner_priority: complete_Telegram_role_bot_before_MiniApp_public_HTTPS
   current_summary: >-
     Owner29Oct installed app2900/theme2700 and directly enabled worker5cc02944
@@ -523,8 +523,11 @@ tasks:
     Six private scope denial checks passed in preceding trace. Its diagnostic wrapper
     rejected the legitimate second probe; unchanged original controller enabled successfully.
     App/worker retain prior FullRC evidence; archive0860a867/21082058bytes verified.
-    Live employee/manager/HRD scenarios, fresh scheduled cron and workday report pending.
+    Owner30Oct accepted buttons, task exchange between2accounts and Academy synchronization.
+    Worker-only graphics locally qualified; sourcecb7128fa, not deployed; push auto-review blocked, CI not run.
+    Report review/HRD, fresh scheduled cron and workday report pending.
     Native LAN confirmation/first password remain explicit; Mini App/public HTTPS follow.
+  visual_order: context/runtime/connect_role_bot_visual_owner_order_20261030.json
   role_bot_owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
   role_bot_qualification: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json
   role_bot_runbook: docs/CONNECT_BOT_2900_INSTALL_RU.md

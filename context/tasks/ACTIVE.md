@@ -1,11 +1,14 @@
-# Активная работа —29.10.2026
+# Активная работа —30.10.2026
 
 ## INTEGRATIONS-01: полный рабочий Telegram-бот; Mini App в конце
 
 [Owner поручение](../runtime/connect_bot_owner_order_20261029.json) возобновляет Connect.
 Owner29Oct установил2900/theme2700 и включил worker5cc через tool9a: runtime_active,
 ACK true и role_bot_ready. [Квитанция](../runtime/connect_role_bot_owner_deploy_20261029.json).
-All4CI наfe2f05d PASS; следующий шаг — реальная приёмка ролей. Owner99 preflight — история.
+All4CI наfe2f05d PASS. Owner30Oct принял кнопки и задачи между2учётками/синхронизацию.
+[Новая приёмка/запрос](../runtime/connect_role_bot_visual_owner_order_20261030.json): цветные кнопки, PNG-карточки как в пульте.
+Worker-only кандидат локально проверен; app2900 и профили прежние. HRD/review впереди.
+[Квалификация/блокировка push](../runtime/connect_bot_visual_local_qualification_20261030.json); CI ещё не запускался.
 [Исправленный9a установщик](../runtime/connect_role_bot_cron_preflight_fix_20261029.json) прошёл
 cron guard/systemd/UID33/TLS/recovery CI; архив0860a867 совпал с CI и скачанной копией.
 [4CI/FullRC](../runtime/connect_role_bot_qualification_20261029.json), [команды](../../docs/CONNECT_BOT_2900_INSTALL_RU.md).
@@ -14,7 +17,7 @@ cron guard/systemd/UID33/TLS/recovery CI; архив0860a867 совпал с CI 
 сводки/прогресс/компактные таблицы и графики. Существующие Academy identities, writers,
 права и история; самостоятельная работа без субагентов, рациональные проверки.
 Mini App и публичный HTTPS Академии отложены до конца; Bitrix/WhatsApp не включаются
-автоматически. Worker5cc02944 включён. Следом — приёмка ролей, затем Mini App/публичный HTTPS.
+автоматически. Worker5cc02944 включён; графический successor пока не установлен. Затем приёмка ролей и Mini App/HTTPS.
 Нового автоматического merge/agent SSH/provider sends нет.
 
 ## RSS-01 завершён owner acceptance; PERF-01 report ожидается

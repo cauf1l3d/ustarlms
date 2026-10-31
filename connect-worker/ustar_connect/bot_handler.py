@@ -7,7 +7,7 @@ from .bridge import _token, BridgeRejected
 from .identity import ProviderIdentity
 from .notification_callback import ORIGINS
 from .telegram_api import TelegramError
-from .bot_cards import render_view
+from .bot_graphics import presentation
 
 
 @dataclass(frozen=True,repr=False)
@@ -18,6 +18,7 @@ class BotUpdate:
     query_id:str
     payload:dict
     photo:tuple=()
+    media_message:bool=False
 
 
 def _positive(value):
@@ -75,7 +76,7 @@ def parse_update(update, *, bot_id, username, now):
             or chat['id']!=sender['id'] or not _positive(message.get('message_id'))):return None
     payload={'auth_date':stamp,'callback':callback,'event':str(update['update_id']),'media':'',
         'message':str(message['message_id']),'provider':'telegram','subject':str(sender['id']),'tenant':bot_id,'text':text}
-    return BotUpdate(update['update_id'],sender['id'],message['message_id'],query_id,payload,photo)
+    return BotUpdate(update['update_id'],sender['id'],message['message_id'],query_id,payload,photo,bool(query_id and message.get('photo')))
 
 
 class BotHandler:
@@ -98,11 +99,11 @@ class BotHandler:
             value=self.bridge.request('bot.update',payload)
             if not isinstance(value,dict) or set(value)!={'ok','result'} or value['ok'] is not True:
                 raise ValueError('invalid_bot_response')
-            rendered=render_view(value['result'],academy_origin=self.origin)
+            rendered=presentation(value['result'],academy_origin=self.origin,now=self.clock())
             self.journal.phase(event.update_id,'sending')
             for photo in value['result'].get('photos',[]):
                 self.api.send_bot_photo(event.subject,photo)
-            result=(self.api.edit_bot_view(event.subject,event.message_id,rendered) if event.query_id
+            result=(self.api.edit_bot_view(event.subject,event.message_id,rendered,media_message=event.media_message) if event.query_id
                     else self.api.send_bot_view(event.subject,rendered))
             chat=result.get('chat') if isinstance(result,dict) else None
             mid=result.get('message_id') if isinstance(result,dict) else None

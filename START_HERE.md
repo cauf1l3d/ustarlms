@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально29.10.2026. Канонический код — main; PR110 source2803 не слит.
+Актуально30.10.2026. Канонический код — main; PR110 source2803 не слит.
 
 1. [STATE](context/roadmap/STATE.yaml), [ACTIVE](context/tasks/ACTIVE.md), [BACKLOG](context/roadmap/BACKLOG.yaml).
 2. [Поручение Connect29Oct](context/runtime/connect_bot_owner_order_20261029.json).
@@ -15,6 +15,8 @@ Payload606/103 не является новой whole-host инвентариз�
 и свежий scheduled cron после2900 ещё не получены. Предыдущие RSS acceptance и cron
 03:37MSK exit0/1.282s сохраняются как история; adhoc1/overdue56/failed2 не сброшены.
 
+[Кандидат/блокировка публикации](context/runtime/connect_bot_visual_local_qualification_20261030.json).
+
 ## Текущая работа
 
 Исправленный комплект2900: app/worker5cc02944 + tool9a68246b. Ошибка owner preflight99
@@ -22,7 +24,9 @@ Payload606/103 не является новой whole-host инвентариз�
 [Квитанция](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
 [установка](docs/CONNECT_BOT_2900_INSTALL_RU.md). Архив0860a867 совпал с CI и скачанной
 копией. App/worker не менялись и сохраняют предыдущую FullRC квалификацию.
-Owner установка/активация подтверждены; далее живая приёмка ролей. All4CI наfe2f05d PASS.
+Owner30Oct принял кнопки и обмен задачами между2учётками/синхронизацию с Академией.
+[Запрошены цветные кнопки и PNG](context/runtime/connect_role_bot_visual_owner_order_20261030.json).
+Worker-only successor локально проверен; push заблокирован auto-review; CI не запускался. App2900 прежний. HRD/review ещё не приняты. All4CI наfe2f05d PASS.
 
 Owner29Oct возобновил полный рабочий Telegram-бот по ролям: русские кнопки,
 пошаговые формы, короткие пояснения, визуальные сводки/таблицы/графики. Мини App

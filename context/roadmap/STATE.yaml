@@ -1,9 +1,11 @@
 schema_version: 2
-updated_at: '2026-10-29'
+updated_at: '2026-10-30'
 project: USTAR Academy
 stage: connect_role_bot_owner_installed_role_acceptance
 stage_label: Owner installed2900 and enabled role bot; live role acceptance next; Mini App last
-current_activity: Owner29Oct directly enabled pinned9a controller and worker5cc; runtime_active/ACK true and role_bot_ready confirmed on local2900/theme2700. All4CI onfe2f05d passed. Live role scenarios, fresh scheduled cron and workday report remain pending; Mini App/public HTTPS follow role acceptance.
+current_activity: Owner30Oct accepted visible buttons, task exchange between two accounts and Academy sync. Preparing
+  worker-only graphical cards and readable colored buttons. Production remains app2900/worker5cc02944. HRD/report-review,
+  scheduled cron and workday acceptance pending; Mini App/HTTPS last.
 entrypoint: START_HERE.md
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -21,7 +23,8 @@ code_baseline:
     full_RC_run: 40761497871
     merge: 01904edaf01dc6e340018eae8bf351dcc692b0c2
     receipt: context/runtime/perf2802_qualification_20261028.json
-  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source integration is separate from owner server acceptance.
+  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source integration is separate from
+    owner server acceptance.
 production:
   latest_owner_browser_acceptance: context/runtime/feed2803_owner_deploy_20261029.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
@@ -53,7 +56,9 @@ production:
     role_bot_enabled: true
     runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
     post_check: role_bot_ready
-    live_role_acceptance: pending
+    live_role_acceptance: 'partial: visible buttons, task exchange between two accounts, Academy synchronization;
+      owner30Oct'
+    latest_functional_receipt: context/runtime/connect_role_bot_visual_owner_order_20261030.json
   status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
   observed_at: '2026-10-29'
   source: context/runtime/evidence_connect2900_20261029.yaml
@@ -147,10 +152,13 @@ server_facts:
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
   - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still separate
-  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live overrides remain unverified
-  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle acceptance not checked
+  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test failed. Other external
+    sources/IPv6/NAT/API identity and full SSH admission/live overrides remain unverified
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle acceptance
+    not checked
   - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not confirmed
-  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance remain separate; native restore/RTO awaited
+  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance remain
+    separate; native restore/RTO awaited
   additional_observations:
     provenance: context/runtime/core_extra_received_20261017.json
     review: context/reviews/20261017/core_extra_reconciliation.md
@@ -274,8 +282,8 @@ perf_query_deployment:
 development_candidate:
   manifest: context/code_map/connect_role_bot_development_source.json
   status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
-  scope: Owner installed fixed606-file/103-table payload and worker; live role acceptance pending; Git
-    source still unmerged
+  scope: Owner installed fixed606-file/103-table payload and worker; live role acceptance pending; Git source still
+    unmerged
   branch: feat/connect-role-bot-20261029
   deployed: true
   progress: context/runtime/connect_role_bot_progress_20261029.md
@@ -342,3 +350,10 @@ connect_role_bot_delivery:
   ack_enabled: true
   coordinated_worker_rollout_completed: true
   post_check: role_bot_ready
+
+connect_visual_candidate:
+  source_commit: cb7128faa07629182aa5f1ada3a11299ac36cf24
+  status: local_qualified_publication_blocked
+  deployed: false
+  qualification: context/runtime/connect_bot_visual_local_qualification_20261030.json
+  runbook: docs/CONNECT_VISUAL_20261030_INSTALL_RU.md

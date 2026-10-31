@@ -8,7 +8,7 @@ ACK true и role_bot_ready. [Квитанция](../runtime/connect_role_bot_own
 All4CI наfe2f05d PASS. Owner30Oct принял кнопки и задачи между2учётками/синхронизацию.
 [Новая приёмка/запрос](../runtime/connect_role_bot_visual_owner_order_20261030.json): цветные кнопки, PNG-карточки как в пульте.
 Worker-only кандидат локально проверен; app2900 и профили прежние. HRD/review впереди.
-[Квалификация/блокировка push](../runtime/connect_bot_visual_local_qualification_20261030.json); CI ещё не запускался.
+[Публикация/CI](../runtime/connect_bot_visual_publication_20261031.json): графика и пакет PASS, остальные gates выполняются.
 [Исправленный9a установщик](../runtime/connect_role_bot_cron_preflight_fix_20261029.json) прошёл
 cron guard/systemd/UID33/TLS/recovery CI; архив0860a867 совпал с CI и скачанной копией.
 [4CI/FullRC](../runtime/connect_role_bot_qualification_20261029.json), [команды](../../docs/CONNECT_BOT_2900_INSTALL_RU.md).

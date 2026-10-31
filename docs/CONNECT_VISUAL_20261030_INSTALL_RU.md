@@ -1,11 +1,11 @@
 # USTAR Connect: графические карточки и цветные кнопки
 
-Подготовлено 30.10.2026 (МСК). Это worker-only обновление оформления; версия приложения
+Обновлено 31.10.2026 (МСК). Это worker-only обновление оформления; версия приложения
 остаётся `local_ustar=2026102900`, `theme_ustar=2026102700`. Это отдельная поставка оформления, не обновление Moodle-плагина.
 
-**Статус: локально проверенный кандидат. CI нового оформления ещё не запускался:**
-автоматическая проверка отклонила push в GitHub. Перед production-установкой требуется
-публикация ветки и проверка CI согласно AGENTS.md. Production не изменён агентом.
+**Статус: исходники опубликованы в PR111. Графика и пакет прошли CI; архив побайтно
+совпал с артефактом GitHub. Остальные обязательные gates ещё выполняются.**
+Перед production-установкой дождаться итоговой квалификации. Агент сервер не менял.
 
 ## Что меняется
 
@@ -21,16 +21,19 @@
 Привязки, права, кадровые решения, уведомления, ACK, курсор SQLite и бизнес-история
 остаются прежними. Mini App и внешний HTTPS не включаются.
 
-Исходник worker/оператора: `cb7128faa07629182aa5f1ada3a11299ac36cf24`.
-Архив: `ustar-connect-visual-install-cb7128fa.tar.gz`, 21 382 136 байт.
-SHA256: `d10b39e36fbf8ff79e56cf0ddb4f344cd9ce7f7bac39b521098f1dd867ce3cb4`.
+Исходник worker/оператора: `5646e2de78b798056168169249c2ed764062d756`.
+Архив: `ustar-connect-visual-install-5646e2de.tar.gz`, 21 382 136 байт.
+SHA256: `9c9ac15c1867b56baba40e5c737755ff1982f641f7260751791ba6019ea354c1`.
+Старый локальный архивcb7128fa заменён этим комплектом: используется опубликованный SHA.
 Прежний контроллер9a в архиве побайтно взят из ранее проверенного комплекта
 `0860a86786a6db2c3b88cc940203a4ed756b8ac372d9b21c69db53c4e03cfd4e`;
 проверены его внутренние SHA256. Новые профили/ключи не генерируются.
 
-## Проверено локально
+## Проверка поставки
 
-87 тестов: 83 прошли, 4 PHP-проверки пропущены из-за отсутствия PHP в среде.
+Локально87 тестов: 83 прошли, 4 PHP-проверки пропущены из-за отсутствия PHP в среде.
+CI графики/доставки/возврата и package acceptance: PASS, job124644249261/run41237501077.
+Артефакт13055504167 скачан, ZIP CRC и побайтное совпадение архива подтверждены.
 PHP и код Академии в этом изменении не меняются. Проверены PNG, короткие кнопки,
 цветовые стили, multipart, переходы текст/медиа, отказ/неоднозначность Telegram,
 replay, read-only preflight, неизвестный drift, восстановление и process-loss.
@@ -48,13 +51,13 @@ sudo -v
 sudo bash <<'ROOT'
 set -euo pipefail
 umask 077
-install -d -o root -g root -m 700 /root/ustar-connect-visual-cb7128fa
+install -d -o root -g root -m 700 /root/ustar-connect-visual-5646e2de
 install -o root -g root -m 600 \
-  /home/aduk/ustar-connect-visual-install-cb7128fa.tar.gz \
-  /root/ustar-connect-visual-cb7128fa/package.tar.gz
-cd /root/ustar-connect-visual-cb7128fa
+  /home/aduk/ustar-connect-visual-install-5646e2de.tar.gz \
+  /root/ustar-connect-visual-5646e2de/package.tar.gz
+cd /root/ustar-connect-visual-5646e2de
 printf '%s  %s\n' \
-  d10b39e36fbf8ff79e56cf0ddb4f344cd9ce7f7bac39b521098f1dd867ce3cb4 \
+  9c9ac15c1867b56baba40e5c737755ff1982f641f7260751791ba6019ea354c1 \
   package.tar.gz | sha256sum --check --strict -
 tar --extract --gzip --file package.tar.gz --no-same-owner --no-same-permissions
 sha256sum --check --strict SHA256SUMS
@@ -72,21 +75,21 @@ ROOT
 
 ```bash
 sudo systemd-run --no-block \
-  --unit=ustar-connect-visual-cb7128fa \
+  --unit=ustar-connect-visual-5646e2de \
   --property=Type=oneshot --property=TimeoutStartSec=180 \
   /usr/bin/python3 -I -B -u \
-  /root/ustar-connect-visual-cb7128fa/update.py --upgrade
+  /root/ustar-connect-visual-5646e2de/update.py --upgrade
 ```
 
 ```bash
-sudo journalctl -fu ustar-connect-visual-cb7128fa.service -o cat
+sudo journalctl -fu ustar-connect-visual-5646e2de.service -o cat
 ```
 
 Дождаться `visuals_active` и штатного завершения службы; затем Ctrl+C прекращает только просмотр.
 
 ```bash
 sudo /usr/bin/python3 -I -B \
-  /root/ustar-connect-visual-cb7128fa/update.py --check
+  /root/ustar-connect-visual-5646e2de/update.py --check
 ```
 
 Ожидается `visuals_ready`, `recovery_required:false`. В боте нажать «Меню», открыть
@@ -97,10 +100,10 @@ sudo /usr/bin/python3 -I -B \
 
 ```bash
 sudo systemd-run --no-block \
-  --unit=ustar-connect-visual-recover-cb7128fa \
+  --unit=ustar-connect-visual-recover-5646e2de \
   --property=Type=oneshot --property=TimeoutStartSec=180 \
   /usr/bin/python3 -I -B -u \
-  /root/ustar-connect-visual-cb7128fa/update.py --recover
+  /root/ustar-connect-visual-5646e2de/update.py --recover
 ```
 
 Ожидается `rolled_back`: возвращается worker5cc02944 с действующим ролевым ботом.

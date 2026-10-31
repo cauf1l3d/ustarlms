@@ -26,7 +26,7 @@ Payload606/103 не является новой whole-host инвентариз�
 копией. App/worker не менялись и сохраняют предыдущую FullRC квалификацию.
 Owner30Oct принял кнопки и обмен задачами между2учётками/синхронизацию с Академией.
 [Запрошены цветные кнопки и PNG](context/runtime/connect_role_bot_visual_owner_order_20261030.json).
-Worker-only successor локально проверен; push заблокирован auto-review; CI не запускался. App2900 прежний. HRD/review ещё не приняты. All4CI наfe2f05d PASS.
+Worker-only successor локально проверен; source5646e2de опубликован; графика/пакет CI PASS, остальные gates выполняются. App2900 прежний. HRD/review ещё не приняты. All4CI наfe2f05d PASS.
 
 Owner29Oct возобновил полный рабочий Telegram-бот по ролям: русские кнопки,
 пошаговые формы, короткие пояснения, визуальные сводки/таблицы/графики. Мини App

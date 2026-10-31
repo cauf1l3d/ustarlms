@@ -330,7 +330,8 @@ class Package(unittest.TestCase):
     def setUpClass(cls):
         import build_connect_role_bot_update as b
         cls.temp=tempfile.TemporaryDirectory();cls.addClassCleanup(cls.temp.cleanup);cls.root=Path(cls.temp.name)
-        cls.commit=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD'],text=True).strip()
+        # Historical2900 package stays pinned; the current visual worker has its own gate.
+        cls.commit=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','9a68246b170dd6a08dc6a8e2118e69f32e16bea9^{commit}'],text=True).strip()
         with contextlib.redirect_stdout(io.StringIO()):cls.artifact=b.build(cls.commit,cls.root/'one')
     def test_archive_is_deterministic_private_crc_complete_and_default_offline_isolated(self):
         import build_connect_role_bot_update as b

@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-10-30'
+updated_at: '2026-10-31'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main

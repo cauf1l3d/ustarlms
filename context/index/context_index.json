@@ -655,7 +655,7 @@
       "path": "context/current.yaml",
       "domain": "root",
       "size": 9379,
-      "sha256": "823c13777f3383fc4680ea4e1b45acb80fd918841c74a5401f0174e83670e3d7"
+      "sha256": "8e2852a14c52dd400e8d45f295cdddcfe2df5283aea37c904bd1cc334a7518a0"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -877,7 +877,7 @@
       "path": "context/project.yaml",
       "domain": "root",
       "size": 2686,
-      "sha256": "ba64989011119555e079aace5c8ca4db4f0981d15970bc2d719a79b95e6054a2"
+      "sha256": "c4f29889577e8113bdfabda4f4b4545ccf3571025484514478374bcc394054b1"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1440,8 +1440,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 37573,
-      "sha256": "24f36791db2fad0711190176910e3eaba86ce2212f7bd0003002feae630da464"
+      "size": 37579,
+      "sha256": "140a0eafb9ba70874813ce3d7079d613987f19f5888f18749e36003af29e6ad3"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1494,8 +1494,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 18954,
-      "sha256": "1ccb6874ad71713e91ad14b63274f1c2e56a2285cbef52323d61b51f427d164b"
+      "size": 18963,
+      "sha256": "fc2ad6306f02e754d4ca8e2df76db230a485bddc86affc61530fc0536936b341"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1754,6 +1754,12 @@
       "domain": "runtime",
       "size": 2222,
       "sha256": "aa740d5674de8960e73cd34e8c302cc77a03e5a425e7eaedbaab257e8b08248b"
+    },
+    {
+      "path": "context/runtime/connect_bot_visual_publication_20261031.json",
+      "domain": "runtime",
+      "size": 2245,
+      "sha256": "adbd42ffda22234f8cb5027f1f6e2551002b2140c2d20ed2a8db73c95acc84e5"
     },
     {
       "path": "context/runtime/connect_chat_link_ci_20261020.json",
@@ -3660,8 +3666,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3936,
-      "sha256": "24b539658ae8ff3de6033638cac9fa375654ae50ea12367514e1a4e8c610d8b2"
+      "size": 3948,
+      "sha256": "e9a5ed897d7bc4a94814099aaaaab9977edcfa2ff26dba8bda10862a627067fc"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

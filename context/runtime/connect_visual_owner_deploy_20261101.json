@@ -74,9 +74,11 @@
   "acceptance": {
     "installation": "accepted_owner_terminal",
     "network_recovery": "accepted_owner_terminal_and_new_replies",
-    "fresh_PNG_and_button_UI": "pending_owner_new_Menu",
+    "fresh_PNG_and_button_UI": "accepted_owner_report_2026-11-01",
     "review_HRD_full_roles": "pending",
-    "scheduled_cron_and_workday": "separate_pending"
+    "scheduled_cron_and_workday": "separate_pending",
+    "owner_visual_quote": "да в боте тоже все работает и читаемость ок",
+    "owner_visual_scope": "Live bot responses and readable graphical/button presentation; broader report/review/checklist/HRD end-to-end acceptance remains separate."
   },
   "owner_instruction_preference": "Give clear short commands directly in chat, not separate instruction documents.",
   "limits": [

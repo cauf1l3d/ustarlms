@@ -28,7 +28,7 @@ Owner30Oct принял кнопки и обмен задачами между2�
 [Запрошены цветные кнопки и PNG](context/runtime/connect_role_bot_visual_owner_order_20261030.json).
 Owner1Nov восстановил общий Telegram egress, оба бота отвечают; установил267e5587:
 visuals_active, затем visuals_ready/recovery_required:false. [Квитанция](context/runtime/connect_visual_owner_deploy_20261101.json).
-All4CI18c83925 PASS. Живые PNG/кнопки ещё проверить новым Меню. App2900 прежний.
+All4CI18c83925 PASS. Owner принял PNG/кнопки и читаемость; далее роли. App2900 прежний.
 Инструкции владельцу — прямо в чат, коротко.
 
 Owner29Oct возобновил полный рабочий Telegram-бот по ролям: русские кнопки,

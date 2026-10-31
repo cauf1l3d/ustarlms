@@ -10,7 +10,7 @@ All4CI наfe2f05d PASS. Owner30Oct принял кнопки и задачи м
 Owner1Nov восстановил egress: CONNECT200/HTTP302/TLS0, оба бота отвечают.
 Повтор установки267e5587 после busy успешен: visuals_active, затем visuals_ready,
 recovery_required:false. [Квитанция](../runtime/connect_visual_owner_deploy_20261101.json).
-All4CI18c83925 PASS; живые PNG/кнопки ждут нового Меню. App2900 прежний; HRD/review впереди.
+All4CI18c83925 PASS; owner принял PNG/кнопки и читаемость. App2900 прежний; HRD/review впереди.
 [История5646/CI](../runtime/connect_bot_visual_publication_20261031.json).
 [Квалификация9a](../runtime/connect_role_bot_cron_preflight_fix_20261029.json): CI/архив0860a867 проверены.
 [4CI/FullRC](../runtime/connect_role_bot_qualification_20261029.json), [команды](../../docs/CONNECT_BOT_2900_INSTALL_RU.md).
@@ -18,7 +18,7 @@ All4CI18c83925 PASS; живые PNG/кнопки ждут нового Меню.
 Русские кнопки, пояснения, графические сводки. Существующие Academy identities, writers,
 права и история; самостоятельная работа без субагентов, рациональные проверки.
 Mini App и публичный HTTPS Академии отложены до конца; Bitrix/WhatsApp не включаются
-автоматически. Worker267e5587 установлен; графическая приёмка ожидается. Затем приёмка ролей и Mini App/HTTPS.
+автоматически. Worker267e5587 и оформление приняты. Далее report/review/checklist/HRD; Mini App/HTTPS в конце.
 Нового автоматического merge/agent SSH/provider sends нет.
 
 ## RSS-01 завершён owner acceptance; PERF-01 report ожидается

@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-11-01'
 project: USTAR Academy
-stage: connect_visual_owner_installed_UI_acceptance
-stage_label: Owner restored both Telegram bots and installed267; fresh graphical acceptance next
+stage: connect_visual_UI_accepted_remaining_role_acceptance
+stage_label: Owner accepted live visual267/readability; remaining role scenarios before Mini App
 current_activity: Owner1Nov restored Telegram TLS through pinned egress refresh; both bots
   answered again. Worker267e5587 installed successfully after a transient busy refusal;
-  visuals_ready and recovery_required false. All4CI18c83925 PASS. Fresh PNG/button and
-  broader role/HRD acceptance remain pending; Mini App/HTTPS last.
+  visuals_ready and recovery_required false. All4CI18c83925 PASS. Owner accepted live PNG/buttons/readability. Broader
+  report/review/checklist/HRD acceptance remains pending; Mini App/HTTPS last.
 entrypoint: START_HERE.md
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -359,7 +359,7 @@ connect_visual_candidate:
   previous_qualification: context/runtime/connect_bot_visual_publication_20261031.json
   source_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
   previous_successor_source: a1bc5ddab211104ec279ca40cf3af91c9ea683a3
-  status: owner_installed_visuals_ready_UI_acceptance_pending
+  status: owner_installed_visual_UI_accepted
   deployed: true
   owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   qualification: context/runtime/connect_outage_visual_successor_20261101.json

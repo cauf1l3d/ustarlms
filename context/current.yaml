@@ -99,8 +99,9 @@ production:
 current_work:
   activity: Owner1Nov restored Telegram TLS through pinned egress refresh; both bots
     answered again. Worker267e5587 installed successfully after a transient busy refusal;
-    visuals_ready and recovery_required false. All4CI18c83925 PASS. Fresh PNG/button
-    and broader role/HRD acceptance remain pending; Mini App/HTTPS last.
+    visuals_ready and recovery_required false. All4CI18c83925 PASS. Owner accepted
+    live PNG/buttons/readability. Broader report/review/checklist/HRD acceptance remains
+    pending; Mini App/HTTPS last.
   next_task: INTEGRATIONS-01
   ready_tasks: []
   task_statuses:

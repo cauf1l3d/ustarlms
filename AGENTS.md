@@ -7,7 +7,7 @@ app2900/theme2700 и включил worker5cc02944 штатным tool9a68246b:
 Runtime_active/ACK true, role_bot_ready; all4CI fe2f05d PASS.
 Owner1Nov восстановил egress (CONNECT200/HTTP302/TLS0), оба бота отвечают.
 Worker267e5587 установлен: visuals_active/visuals_ready, recovery_required:false.
-[Owner receipt](context/runtime/connect_visual_owner_deploy_20261101.json); PNG/кнопки ещё не приняты.
+[Owner receipt](context/runtime/connect_visual_owner_deploy_20261101.json); PNG/кнопки и читаемость приняты; HRD/review впереди.
 Инструкции владельцу — прямо в чат короткими блоками команд.
 [Квалификация](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
 [команды](docs/CONNECT_BOT_2900_INSTALL_RU.md).

@@ -26,7 +26,10 @@ Payload606/103 не является новой whole-host инвентариз�
 копией. App/worker не менялись и сохраняют предыдущую FullRC квалификацию.
 Owner30Oct принял кнопки и обмен задачами между2учётками/синхронизацию с Академией.
 [Запрошены цветные кнопки и PNG](context/runtime/connect_role_bot_visual_owner_order_20261030.json).
-Worker-only successor локально проверен; source5646e2de готов к owner-установке, all4CI598140d7 PASS; архив равен CI. App2900 прежний. HRD/review ещё не приняты. All4CI наfe2f05d PASS.
+Свежие логи31Oct: общий Telegram egress reset при active-службах; pointer5cc и
+cb7128/rolled_back. [Диагностика и новый successor](context/runtime/connect_outage_visual_successor_20261101.json),
+[инструкция](docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md). Восстановление сети/owner deploy
+ещё не приняты. Frozen5646 имеет all4CI, но не принимает чужой visual journal. App2900 прежний.
 
 Owner29Oct возобновил полный рабочий Telegram-бот по ролям: русские кнопки,
 пошаговые формы, короткие пояснения, визуальные сводки/таблицы/графики. Мини App

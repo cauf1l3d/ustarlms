@@ -1,4 +1,4 @@
-# Активная работа —31.10.2026
+# Активная работа —01.11.2026
 
 ## INTEGRATIONS-01: полный рабочий Telegram-бот; Mini App в конце
 
@@ -6,18 +6,21 @@
 Owner29Oct установил2900/theme2700 и включил worker5cc через tool9a: runtime_active,
 ACK true и role_bot_ready. [Квитанция](../runtime/connect_role_bot_owner_deploy_20261029.json).
 All4CI наfe2f05d PASS. Owner30Oct принял кнопки и задачи между2учётками/синхронизацию.
-[Новая приёмка/запрос](../runtime/connect_role_bot_visual_owner_order_20261030.json): цветные кнопки, PNG-карточки как в пульте.
-Worker-only5646e2de готов к owner-установке; app2900 прежний. HRD/review приёмка впереди.
-[Публикация/CI](../runtime/connect_bot_visual_publication_20261031.json): all4CI598140d7 PASS; архив равен CI.
-[Исправленный9a установщик](../runtime/connect_role_bot_cron_preflight_fix_20261029.json) прошёл
-cron guard/systemd/UID33/TLS/recovery CI; архив0860a867 совпал с CI и скачанной копией.
+[Запрос графики](../runtime/connect_role_bot_visual_owner_order_20261030.json).
+Свежий31Oct log: egress CONNECT200→reset/HTTP000, receiver transport_unavailable,
+console warning/no_data. Pointer5cc, cb7128/rolled_back. [Диагностика/successor](../runtime/connect_outage_visual_successor_20261101.json).
+Owner восстанавливает сеть через прежний pinned refresh; свежий результат ожидается.
+Новый worker-only successor сохраняет terminal journal, отдельный state на commit,
+probe перед остановкой. Внешний renderer проверен/исправлен. [Команды](../../docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md).
+App2900 прежний; HRD/review впереди.
+[История5646/CI](../runtime/connect_bot_visual_publication_20261031.json).
+[Квалификация9a](../runtime/connect_role_bot_cron_preflight_fix_20261029.json): CI/архив0860a867 проверены.
 [4CI/FullRC](../runtime/connect_role_bot_qualification_20261029.json), [команды](../../docs/CONNECT_BOT_2900_INSTALL_RU.md).
 [План](../../docs/superpowers/plans/2026-10-29-connect-role-bot.md), [прогресс](../runtime/connect_role_bot_progress_20261029.md).
-Русские кнопки вместо необходимости знать команды, короткие объяснения, визуальные
-сводки/прогресс/компактные таблицы и графики. Существующие Academy identities, writers,
+Русские кнопки, пояснения, графические сводки. Существующие Academy identities, writers,
 права и история; самостоятельная работа без субагентов, рациональные проверки.
 Mini App и публичный HTTPS Академии отложены до конца; Bitrix/WhatsApp не включаются
-автоматически. Worker5cc02944 включён; графический5646e2de пока не установлен. Затем приёмка ролей и Mini App/HTTPS.
+автоматически. Свежий pointer5cc02944 подтверждён; successor ещё не установлен. Затем приёмка ролей и Mini App/HTTPS.
 Нового автоматического merge/agent SSH/provider sends нет.
 
 ## RSS-01 завершён owner acceptance; PERF-01 report ожидается

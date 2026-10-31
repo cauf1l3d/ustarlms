@@ -282,10 +282,36 @@ jobs:
           tests.r16.test_connect_receiver tests.r16.test_connect_callback_transport -q
       - name: Build exact presentation source and verify without site packages
         run: |
-          VISUAL_SOURCE=$(git log -1 --format=%H -- connect-worker scripts/infra/connect_bot_visual_update.py scripts/infra/build_connect_bot_visual_update.py)
+          VISUAL_SOURCE=5646e2de78b798056168169249c2ed764062d756
           python3 scripts/infra/build_connect_bot_visual_update.py --commit "$VISUAL_SOURCE" --output-dir artifacts/connect-visual
           python3 -I -S tests/stage/connect_visual_package.py artifacts/connect-visual/ustar-connect-visual-install-*.tar.gz
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: connect-visual-verified
           path: artifacts/connect-visual/
+
+  connect-visual-successor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Brand graphics, legacy journal transition, no-stop outage and recovery
+        run: >-
+          env PYTHONPATH=tests/r16 python3 -m unittest
+          tests.r16.test_connect_bot_graphics tests.r16.test_connect_bot_graphics_brand
+          tests.r16.test_connect_bot_graphics_regressions tests.r16.test_connect_bot_visual_update
+          tests.r16.test_connect_bot_visual_successor tests.r16.test_connect_egress_refresh
+          tests.r16.test_connect_role_bot tests.r16.test_connect_telegram_presentation
+          tests.r16.test_connect_receiver tests.r16.test_connect_callback_transport -q
+      - name: Build exact successor source and verify without site packages
+        run: |
+          SUCCESSOR_SOURCE=$(git log -1 --format=%H -- connect-worker scripts/infra/connect_bot_visual_successor.py scripts/infra/build_connect_bot_visual_successor.py docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md)
+          python3 scripts/infra/build_connect_bot_visual_successor.py --commit "$SUCCESSOR_SOURCE" --output-dir artifacts/connect-visual-successor
+          python3 -I -S tests/stage/connect_visual_successor_package.py artifacts/connect-visual-successor/ustar-connect-visual-successor-*.tar.gz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-visual-successor-verified
+          path: artifacts/connect-visual-successor/

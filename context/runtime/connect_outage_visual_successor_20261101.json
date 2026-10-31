@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "observed_at": "2026-10-31T20:51:57+00:00",
+  "recorded_at": "2026-11-01",
+  "kind": "owner_log_review_not_agent_production_access",
+  "owner_order": "Restore both Telegram bots first; review attached renderer; update existing PR111 and deliver tested successor archive with commands.",
+  "input_sha256": {
+    "fresh_log": "c721b6f55b5ad570cc63741c42f07f5330d670833c8c78bec95e15754d814009",
+    "graphics_zip": "5cea52502fd65bbf981b20c43b9e2f57a99ee5a3e9bb3a6b6dbbb6fa940e3d44"
+  },
+  "observed": {
+    "services_active": [
+      "ustar-connect-receiver",
+      "ustar-connect-notify",
+      "ustar-console-notify",
+      "ustar-telegram-egress"
+    ],
+    "current_worker": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+    "visual_journal": {
+      "worker_commit": "cb7128faa07629182aa5f1ada3a11299ac36cf24",
+      "phase": "rolled_back"
+    },
+    "proxy_listening": "127.0.0.1:18081",
+    "curl": {
+      "CONNECT": 200,
+      "HTTP": 0,
+      "error": "connection_reset_after_CONNECT"
+    },
+    "receiver_reason": "transport_unavailable",
+    "receiver_failures": 349,
+    "history_gap_possible": true,
+    "console_status": "warning",
+    "console_polling": "no_data",
+    "console_pending": 1,
+    "console_delivery_failures": 1
+  },
+  "conclusion": "Shared Telegram egress path fails before HTTP response. Local services active is not network health. Exact failing remote hop unknown.",
+  "installer_defect": "Frozen visual v1 compares worker_commit even in rolled_back; later candidate refuses visual_journal_identity. New controller preserves old terminal journal and uses commit-scoped journal.",
+  "external_review": {
+    "receiver_pyz_sha256": "7a6aebaa0bdf4b0ccb4b154d913b0e61125e7f1335a8ffbb5ec41acea4daa221",
+    "only_module_delta": "ustar_connect/bot_graphics.py",
+    "accepted": "brand surfaces/text, metric/status layout, numbered badges, compact list with explicit count, caption count",
+    "corrected": [
+      "reduced alpha palette mapped 0..15 without losing opaque glyphs",
+      "HR create actions skip actual найм spelling",
+      "hidden rows keep descriptive buttons; count in caption",
+      "footer included in palette retry",
+      "status comes from canonical row status rather than request title",
+      "negative status before success matching",
+      "long metric values and labels use separate lines"
+    ]
+  },
+  "local_verification": {
+    "focused_tests": 126,
+    "result": "pass",
+    "skipped": 4,
+    "scope": "real PNG, transport uncertainty, callbacks, receiver, legacy terminal journal, filesystem/locks/SQLite preservation and process loss; systemd/provider modeled",
+    "CI": "pending_on_new_source",
+    "artifact": "pending_exact_commit"
+  },
+  "production_recovery": "owner_commands_provided_fresh_result_pending",
+  "runbook": "docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md",
+  "limitations": [
+    "No agent SSH, provider sends or merge",
+    "CI/model tests are not live Telegram acceptance",
+    "Old input history gap possible; send fresh Menu after route recovery"
+  ]
+}

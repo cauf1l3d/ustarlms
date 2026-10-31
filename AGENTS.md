@@ -1,11 +1,14 @@
 # USTAR — инструкции агентам
 
-Актуально31.10.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
+Актуально01.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
 Канонический baseline — main2802; PR110/111 ещё не слиты. Owner29Oct установил
 app2900/theme2700 и включил worker5cc02944 штатным tool9a68246b:
 [owner receipt](context/runtime/connect_role_bot_owner_deploy_20261029.json).
-Runtime_active/ACK true, role_bot_ready/role_bot_enabled true; all4CI наfe2f05d PASS.
-Owner30Oct принял кнопки/обмен задачами2учёток/синхронизацию. Графика5646e2de готова, all4CI598140d7 PASS. HRD/review/cron впереди. Mini App/внешний HTTPS позже.
+Runtime_active/ACK true, role_bot_ready; all4CI fe2f05d PASS.
+Owner30Oct принял кнопки/обмен задачами2учёток. Log31Oct: pointer5cc, cb rolled_back; egress reset.
+[Диагностика/successor](context/runtime/connect_outage_visual_successor_20261101.json),
+[новые команды](docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md). Восстановление сети владельцем
+не подтверждено. Frozen5646 не принимает чужой journal; нужен successor.
 [Квалификация](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
 [команды](docs/CONNECT_BOT_2900_INSTALL_RU.md).
 
@@ -30,7 +33,7 @@ Owner29Oct возобновил полный Connect: кнопки/коротк�
 Новые слияния автоматически не делать. Старые операторы не переписывать.
 Субагенты запрещены. Агент не подключается по SSH к production, не отправляет
 сообщения/письма/архивы через провайдеров и не меняет сервер в рамках Git-работ.
-Production worker5cc02944 включён владельцем через tool9a; приёмка ролей ожидается. Docker rotation/health/recreate отложены до
+Docker rotation/health/recreate отложены до
 планового Moodle/PHP upgrade; эксперимент infra/docker-successor-frozen не поставлен.
 
 ## Источники истины

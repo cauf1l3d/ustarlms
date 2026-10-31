@@ -876,8 +876,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2686,
-      "sha256": "c4f29889577e8113bdfabda4f4b4545ccf3571025484514478374bcc394054b1"
+      "size": 2687,
+      "sha256": "30e3dce8ace909371e8dd96706a02946706f9634d8acf02cee525b86585618da"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1440,8 +1440,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 37579,
-      "sha256": "140a0eafb9ba70874813ce3d7079d613987f19f5888f18749e36003af29e6ad3"
+      "size": 37578,
+      "sha256": "6b56804730d2cd8aa4c125f72af126d093c9067a55d42fed13a60c4b7bc80d42"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1494,8 +1494,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 18963,
-      "sha256": "fc2ad6306f02e754d4ca8e2df76db230a485bddc86affc61530fc0536936b341"
+      "size": 18961,
+      "sha256": "11f2b73c8a5d7145f27bd994849c0ce2fbf2043b9542a46761c4bd5e3003e71e"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1758,8 +1758,8 @@
     {
       "path": "context/runtime/connect_bot_visual_publication_20261031.json",
       "domain": "runtime",
-      "size": 2245,
-      "sha256": "adbd42ffda22234f8cb5027f1f6e2551002b2140c2d20ed2a8db73c95acc84e5"
+      "size": 3122,
+      "sha256": "449f90241a2c7d68b156534e654ae0beb3f405046ea9a058d92e42f87328c9f6"
     },
     {
       "path": "context/runtime/connect_chat_link_ci_20261020.json",
@@ -3666,8 +3666,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3948,
-      "sha256": "e9a5ed897d7bc4a94814099aaaaab9977edcfa2ff26dba8bda10862a627067fc"
+      "size": 3902,
+      "sha256": "bbd0d6389d66528456067d959ba97a2634c7043b2482bb7fcd09c74ba7b512a9"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

@@ -37,7 +37,7 @@ current_operator_handoff:
 current_work:
   task: INTEGRATIONS-01
   related_task: PERF-01
-  status: partial_tasks_accepted_visual_published_qualification_in_progress
+  status: partial_tasks_accepted_visual_qualified_owner_installation_pending
   spec: docs/superpowers/specs/2026-10-29-connect-role-bot-design.md
   plan: docs/superpowers/plans/2026-10-29-connect-role-bot.md
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json

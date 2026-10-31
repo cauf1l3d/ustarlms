@@ -353,7 +353,7 @@ connect_role_bot_delivery:
 
 connect_visual_candidate:
   source_commit: 5646e2de78b798056168169249c2ed764062d756
-  status: published_visual_CI_pass_remaining_gates_in_progress
+  status: qualified_archive_ready_owner_installation_pending
   deployed: false
   qualification: context/runtime/connect_bot_visual_publication_20261031.json
   runbook: docs/CONNECT_VISUAL_20261030_INSTALL_RU.md

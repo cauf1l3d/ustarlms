@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально30.10.2026. Канонический код — main; PR110 source2803 не слит.
+Актуально31.10.2026. Канонический код — main; PR110 source2803 не слит.
 
 1. [STATE](context/roadmap/STATE.yaml), [ACTIVE](context/tasks/ACTIVE.md), [BACKLOG](context/roadmap/BACKLOG.yaml).
 2. [Поручение Connect29Oct](context/runtime/connect_bot_owner_order_20261029.json).
@@ -26,7 +26,7 @@ Payload606/103 не является новой whole-host инвентариз�
 копией. App/worker не менялись и сохраняют предыдущую FullRC квалификацию.
 Owner30Oct принял кнопки и обмен задачами между2учётками/синхронизацию с Академией.
 [Запрошены цветные кнопки и PNG](context/runtime/connect_role_bot_visual_owner_order_20261030.json).
-Worker-only successor локально проверен; source5646e2de опубликован; графика/пакет CI PASS, остальные gates выполняются. App2900 прежний. HRD/review ещё не приняты. All4CI наfe2f05d PASS.
+Worker-only successor локально проверен; source5646e2de готов к owner-установке, all4CI598140d7 PASS; архив равен CI. App2900 прежний. HRD/review ещё не приняты. All4CI наfe2f05d PASS.
 
 Owner29Oct возобновил полный рабочий Telegram-бот по ролям: русские кнопки,
 пошаговые формы, короткие пояснения, визуальные сводки/таблицы/графики. Мини App

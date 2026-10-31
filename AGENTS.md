@@ -1,11 +1,11 @@
 # USTAR — инструкции агентам
 
-Актуально30.10.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
+Актуально31.10.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
 Канонический baseline — main2802; PR110/111 ещё не слиты. Owner29Oct установил
 app2900/theme2700 и включил worker5cc02944 штатным tool9a68246b:
 [owner receipt](context/runtime/connect_role_bot_owner_deploy_20261029.json).
 Runtime_active/ACK true, role_bot_ready/role_bot_enabled true; all4CI наfe2f05d PASS.
-Owner30Oct принял кнопки/обмен задачами2учёток/синхронизацию. Графика5646e2de опубликована; CI выполняется. HRD/review/cron впереди. Mini App/внешний HTTPS позже.
+Owner30Oct принял кнопки/обмен задачами2учёток/синхронизацию. Графика5646e2de готова, all4CI598140d7 PASS. HRD/review/cron впереди. Mini App/внешний HTTPS позже.
 [Квалификация](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
 [команды](docs/CONNECT_BOT_2900_INSTALL_RU.md).
 

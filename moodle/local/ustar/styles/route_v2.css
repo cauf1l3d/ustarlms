@@ -126,3 +126,6 @@
 .u-route-grade-card__body{min-width:0}.u-route-grade-card__body h2{margin:3px 0 6px;font-size:22px}.u-route-grade-card__status{margin:0;color:var(--u-text-secondary,#667085);line-height:1.5}.u-route-grade-card__body small{display:block;margin-top:6px;color:var(--u-text-muted,#98a2b3)}
 .u-route-grade-card__actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;flex:none}.u-route-grade-card__actions form{margin:0}
 @media(max-width:700px){.u-route-grade-card{align-items:flex-start;flex-direction:column}.u-route-grade-card__actions{justify-content:flex-start;width:100%}.u-route-grade-card__actions .u-btn{width:100%;justify-content:center}}
+
+.u-route2-review{margin-top:16px;padding:16px;border:1px solid var(--u-brand,#ebc500);border-radius:12px;background:var(--u-surface,transparent)}
+.u-route2-review p{margin:0 0 10px}.u-route2-review form{margin-top:14px}.u-route2-review a{margin-right:12px}

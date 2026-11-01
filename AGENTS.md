@@ -15,8 +15,8 @@ Worker267e5587 установлен: visuals_active/visuals_ready, recovery_requ
 Owner1Nov разрешил merge110/111; объединены после FullRC.
 [Основание/проверки](context/runtime/connect_feed_integration_order_20261101.json).
 App2900/theme2700 и worker267e5587 уже установлены владельцем; merge не deploy.
-Задачи/возврат/фото/читаемость приняты. Текущий bugfix — PR112: прямой запуск
-SCORM из маршрута; кандидат/проверки в ACTIVE и STATE, owner apply ещё нет.
+Задачи/возврат/фото/читаемость приняты. Owner принял прямой SCORM запуск51332a21;
+точного apply receipt нет. Теперь LEARN-SCORM-02: завершение и доступ, проект в ACTIVE.
 После него PERF-01: пассивный рабочий день. Остальные процессы с руководством
 с2Nov; HTTPS/Mini App ждут согласования. Старые cron19/failed2 не сбрасывать.
 

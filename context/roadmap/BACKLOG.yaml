@@ -730,7 +730,19 @@ tasks:
   - Existing packages, published route versions and result history unchanged
   - Guarded owner source overlay qualified; actual production apply recorded separately
   progress: context/runtime/route_scorm_launch_20261101.json
-  current_summary: Qualified source overlay51332a21, all4CI and both Moodle374/1762 PASS; archive and saved readback byte-verified. Owner apply pending; source/production2900 and worker267 retained.
+  current_summary: Qualified51332a21 passed all4CI and native374/1762; owner now accepts direct launch. Exact server apply output absent; continuation issue tracked separately in LEARN-SCORM-02.
+- id: LEARN-SCORM-02
+  title: Завершение SCORM и настройки доступа/перехода точки
+  status: in_progress
+  depends_on: [LEARN-SCORM-01]
+  progress: context/runtime/route_scorm_access_owner_order_20261101.json
+  design: context/tasks/route_scorm_access_20261101.md
+  acceptance:
+  - Imported course and CM completion reaches the next eligible route point
+  - Repeat access preserves one verified learning credit and reward
+  - Per-point manual/timed advancement and finish destination are versioned
+  - Deadline and stale URLs are enforced server-side; assessments keep real results
+  current_summary: Source reviewed; design proposed for owner approval. No runtime change or new delivery yet.
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

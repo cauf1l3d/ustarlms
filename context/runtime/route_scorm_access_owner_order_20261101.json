@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-01",
+  "source": "owner_message_in_current_dialogue",
+  "direct_launch_acceptance": "скорм открывается все ок",
+  "previous_delivery": "context/runtime/route_scorm_launch_20261101.json",
+  "exact_server_apply_output_received": false,
+  "independent_host_probe": false,
+  "completion_and_continuation_accepted": false,
+  "new_request": [
+    "Repair continuation after imported SCORM completion",
+    "Per-point Route Studio access and advancement settings",
+    "Repeated review with one learning credit",
+    "Manual Next with warning when closing repeat access",
+    "Timed automatic advancement",
+    "Configurable SCORM finish destination"
+  ],
+  "source_review": "7ee2e45fe01d2587178849f14d198c1370898e92",
+  "design": "context/tasks/route_scorm_access_20261101.md",
+  "design_status": "proposed_pending_owner_approval",
+  "timer_origin_question": "asked_no_answer_received",
+  "agent_proposed_timer_origin": "first_verified_study_completion",
+  "proposal_is_owner_decision": false,
+  "implementation_changed": false,
+  "merge_authorized": false,
+  "server_access_authorized": false,
+  "owner_instructions": "inline_chat_only"
+}

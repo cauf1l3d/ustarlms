@@ -1,14 +1,14 @@
 schema_version: 2
 updated_at: '2026-11-01'
 project: USTAR Academy
-stage: route_scorm_launch_fix
-stage_label: Direct SCORM route launch fix; owner overlay pending
-current_activity: PR112 fixes course menu detours with native Moodle SCORM player and
-  existing-cache support. Source-only overlay passed all4CI/FullRC; owner apply pending.
-  Accepted production2900/worker267 unchanged. After this fix, PERF-01 ordinary-workday
-  report remains next; leadership process acceptance and HTTPS/Mini App gates remain.
+stage: route_scorm_access_design
+stage_label: Owner accepted direct launch; completion and access policy design pending
+current_activity: Owner accepted SCORM direct launch after51332a21, but continuation
+  remains broken. Per-point review access, manual/timed advancement and configurable
+  finish destination requested. Design proposed, implementation not changed; exact
+  server apply output absent. PERF-01 follows; leadership and HTTPS/Mini App gates remain.
 entrypoint: START_HERE.md
-next_task: LEARN-SCORM-01
+next_task: LEARN-SCORM-02
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -24,6 +24,7 @@ code_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
+  latest_SCORM_functional_acceptance: context/runtime/route_scorm_access_owner_order_20261101.json
   latest_owner_browser_acceptance: context/runtime/feed2803_owner_deploy_20261029.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json

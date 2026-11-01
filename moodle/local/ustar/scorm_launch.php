@@ -53,6 +53,11 @@ $route =
 
 $current =
     $route['currentpoint'] ?? null;
+if (!$current || (int)$current['id'] !== $pointid) {
+    foreach ($route['points'] ?? [] as $candidate) {
+        if ((int)$candidate['id'] === $pointid && !empty($candidate['done']) && !empty($candidate['canlaunch'])) { $current = $candidate; break; }
+    }
+}
 
 if (
     !$current

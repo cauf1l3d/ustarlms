@@ -25,6 +25,11 @@ if ($positionid === '' || !empty(\local_ustar\adaptation_service::route_card($us
 // course access. The route page itself reads only persisted progress.
 $route = \local_ustar\route_model::for_user($positionid, $userid);
 $current = $route['currentpoint'] ?? null;
+if (!$current || (int)$current['id'] !== $pointid) {
+    foreach ($route['points'] ?? [] as $candidate) {
+        if ((int)$candidate['id'] === $pointid && !empty($candidate['done']) && !empty($candidate['canlaunch'])) { $current = $candidate; break; }
+    }
+}
 if (!$current || (int)$current['id'] !== $pointid || empty($current['canlaunch'])) {
     redirect(new moodle_url('/local/ustar/route.php'));
 }

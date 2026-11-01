@@ -5,6 +5,31 @@ defined('MOODLE_INTERNAL') || die();
 
 /** Direct entry into Moodle's SCORM runtime after the route has authorised the launch. */
 final class scorm_route_launch {
+    /** Old Studio imports contain one SCORM but did not configure whole-course completion. */
+    public static function managed_course_completedat(int $courseid, int $userid): int {
+        global $DB;
+        $modules = $DB->get_records_sql('SELECT cm.id,cm.instance,m.name AS modname
+            FROM {course_modules} cm JOIN {modules} m ON m.id=cm.module
+            WHERE cm.course=:course AND cm.deletioninprogress=0',['course'=>$courseid]);
+        if (count($modules) !== 1) { return 0; }
+        $cm = reset($modules);
+        if ($cm->modname !== 'scorm') { return 0; }
+        $events = $DB->get_records_select('local_ustar_workflow_events',
+            'entitytype=:kind AND eventtype=:event AND ' . $DB->sql_like('detailsjson', ':coursejson'),
+            ['kind'=>'studio_scorm_runtime','event'=>'scorm_runtime_created',
+                'coursejson'=>'%"courseid":'.$courseid.',%']);
+        $proven = false;
+        foreach ($events as $event) {
+            $data = json_decode($event->detailsjson,true);
+            if ((int)($data['courseid'] ?? 0) === $courseid && (int)($data['cmid'] ?? 0) === (int)$cm->id) { $proven = true; }
+        }
+        if (!$proven) { return 0; }
+        $completion = $DB->get_record('course_modules_completion',[
+            'coursemoduleid'=>$cm->id,'userid'=>$userid],'completionstate,timemodified');
+        if (!$completion || !in_array((int)$completion->completionstate,[1,2],true)) { return 0; }
+        return (int)$completion->timemodified;
+    }
+
     /** Resume the first unfinished visible SCORM in course order; completed courses can be reviewed. */
     public static function course_cmid(int $courseid, int $userid): int {
         global $CFG;

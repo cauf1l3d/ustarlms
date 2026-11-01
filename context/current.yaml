@@ -25,6 +25,7 @@ application_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
+  latest_SCORM_functional_acceptance: context/runtime/route_scorm_access_owner_order_20261101.json
   latest_owner_browser_acceptance: context/runtime/feed2803_owner_deploy_20261029.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
@@ -99,11 +100,11 @@ production:
   current_worker_observed_at: '2026-11-01'
   current_worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
 current_work:
-  activity: PR112 fixes course menu detours with native Moodle SCORM player and existing-cache
-    support. Source-only overlay passed all4CI/FullRC; owner apply pending. Accepted
-    production2900/worker267 unchanged. After this fix, PERF-01 ordinary-workday report
-    remains next; leadership process acceptance and HTTPS/Mini App gates remain.
-  next_task: LEARN-SCORM-01
+  activity: Owner accepted SCORM direct launch after51332a21, but continuation remains
+    broken. Per-point review access, manual/timed advancement and configurable finish
+    destination requested. Design proposed, implementation not changed; exact server
+    apply output absent. PERF-01 follows; leadership and HTTPS/Mini App gates remain.
+  next_task: LEARN-SCORM-02
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -130,6 +131,7 @@ current_work:
     INF-14: in_progress
     INTEGRATIONS-01: in_progress
     LEARN-SCORM-01: in_progress
+    LEARN-SCORM-02: in_progress
     MOB-01: planned
     MOB-02: planned
     MOB-03: planned

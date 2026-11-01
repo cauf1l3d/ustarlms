@@ -450,6 +450,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
         }
 
+        $accesspolicy = null;
+        if (optional_param('advancepolicy', '', PARAM_ALPHA) !== '') {
+            $unit = optional_param('reviewunit', 'hours', PARAM_ALPHA);
+            if (!in_array($unit, ['hours','days'], true)) { throw new invalid_parameter_exception('Неизвестная единица срока.'); }
+            $accesspolicy = \local_ustar\route_point_access::normalize([
+                'advance'=>required_param('advancepolicy',PARAM_ALPHA),
+                'repeat'=>required_param('repeataccess',PARAM_ALPHA),
+                'finish'=>required_param('finishaction',PARAM_ALPHA),
+                'seconds'=>(int)round(optional_param('reviewduration',24,PARAM_FLOAT) * ($unit === 'days' ? DAYSECS : HOURSECS))]);
+        }
+
         $versiondata = [
             'title' =>
                 $title,
@@ -487,6 +498,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ? time()
                 : 0,
         ];
+
+        if ($accesspolicy !== null) { $versiondata['accesspolicy'] = $accesspolicy; }
 
         if ($action === 'add_point') {
             $sort = 10;
@@ -1099,6 +1112,12 @@ if ($routeexists) {
         $point['formtitle'] = $latest ? (string)$latest->title : '';
         $point['formsummary'] = $latest ? (string)$latest->summary : '';
         $point['formvaliddays'] = $latest ? (int)$latest->validdays : 0;
+        $accesspolicy = $latest ? \local_ustar\route_point_access::policy($latest) : \local_ustar\route_point_access::normalize([]);
+        foreach (['auto','manual','timed'] as $choice) { $point['access'.$choice] = $accesspolicy['advance'] === $choice; }
+        foreach (['close','keep'] as $choice) { $point['access'.$choice] = $accesspolicy['repeat'] === $choice; }
+        foreach (['route','next','stay'] as $choice) { $point['finish'.$choice] = $accesspolicy['finish'] === $choice; }
+        $point['reviewduration'] = $accesspolicy['seconds'] > 0 ? $accesspolicy['seconds'] / HOURSECS : 24;
+
         $point['hasversiondiff'] = !empty($versiondiff['haschanges']);
         $point['versiondiffrows'] = $versiondiff['rows'];
         $point['versiondiffadded'] = array_map(

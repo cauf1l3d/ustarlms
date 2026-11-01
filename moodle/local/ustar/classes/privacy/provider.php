@@ -18,6 +18,9 @@ final class provider implements
     \core_privacy\local\request\user_preference_provider {
 
     public static function get_metadata(collection $collection): collection {
+        $collection->add_database_table('local_ustar_route_access', array_fill_keys(
+            ['userid','pointid','versionid','studyat','openedat','deadline','closedat','closereason'],
+            'privacy:metadata:route_access'), 'privacy:metadata:route_access');
         foreach (['local_ustar_conn_dialogs'=>['userid','identityhash','linkid','linkrevision','revision','phase','payload','expiresat','ratewindow','ratecount','timemodified','authority'],
                 'local_ustar_conn_actions'=>['userid','dialogid','revision','intent','payload','summary','status','resultjson','expiresat','timecreated','tokenhash','authority'],
                 'local_ustar_conn_updates'=>['userid','identityhash','linkrevision','payloadhash','responsejson','timecreated','eventhash','authority']] as $table=>$fields) {
@@ -120,6 +123,9 @@ final class provider implements
             ['level' => CONTEXT_SYSTEM, 'linkuser' => $userid, 'challengeuser' => $userid,
                 'launchuser' => $userid, 'sessionuser' => $userid, 'signupuser' => $userid,
                 'actionuser' => $userid, 'prefuser' => $userid, 'prefname' => \local_ustar\connect\notification_preferences::NAME, 'deliveryuser' => $userid]);
+        $contexts->add_from_sql('SELECT c.id FROM {context} c WHERE c.contextlevel=:level AND EXISTS
+            (SELECT a.id FROM {local_ustar_route_access} a WHERE a.userid=:userid)',
+            ['level'=>CONTEXT_SYSTEM,'userid'=>$userid]);
         return $contexts;
     }
 
@@ -132,7 +138,7 @@ final class provider implements
         if ($userlist->get_context()->contextlevel !== CONTEXT_SYSTEM) { return; }
         foreach (['local_ustar_conn_links', 'local_ustar_conn_challenges',
                 'local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups', 'local_ustar_conn_acktokens',
-                'local_ustar_conn_dialogs','local_ustar_conn_actions','local_ustar_conn_updates'] as $table) {
+                'local_ustar_conn_dialogs','local_ustar_conn_actions','local_ustar_conn_updates','local_ustar_route_access'] as $table) {
             $userlist->add_from_sql('userid', 'SELECT DISTINCT userid FROM {' . $table . '} WHERE userid > 0', []);
         }
         $userlist->add_from_sql('userid', 'SELECT userid FROM {user_preferences} WHERE name = :name',
@@ -162,6 +168,8 @@ final class provider implements
         }
         if (!in_array(\context_system::instance()->id, $contextlist->get_contextids())) { return; }
         $userid = (int)$contextlist->get_user()->id;
+        writer::with_context(\context_system::instance())->export_data(['Route review access'], (object)[
+            'windows'=>array_values($DB->get_records('local_ustar_route_access',['userid'=>$userid]))]);
         $links = $DB->get_records('local_ustar_conn_links', ['userid' => $userid], 'id',
             'id,provider,tenant,subject,state,revision,timecreated,timemodified');
         $challenges = $DB->get_records('local_ustar_conn_challenges', ['userid' => $userid], 'id',
@@ -220,6 +228,17 @@ final class provider implements
             $transaction = $DB->start_delegated_transaction();
             try {
                 self::erase_bot($userids);
+                if ($userids === null) {
+                    $DB->delete_records('local_ustar_workflow_events',['entitytype'=>'route_review_access']);
+                    $DB->delete_records('local_ustar_route_access');
+                } else {
+                    [$accesssql,$accessparams] = $DB->get_in_or_equal($userids,SQL_PARAMS_NAMED,'reviewuser');
+                    $DB->delete_records_select('local_ustar_workflow_events','entitytype=:accesskind AND entityid IN
+                        (SELECT id FROM {local_ustar_route_access} WHERE userid '.$accesssql.')',
+                        $accessparams+['accesskind'=>'route_review_access']);
+                    $DB->delete_records_select('local_ustar_route_access','userid '.$accesssql,$accessparams);
+                }
+
                 if ($userids === null) {
                     $DB->delete_records('local_ustar_conn_acktokens');
                     $DB->delete_records('local_ustar_notify_delivery', ['connectversion' => 1]);

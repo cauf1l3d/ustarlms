@@ -35,9 +35,9 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: LEARN-SCORM-01
+  task: LEARN-SCORM-02
   related_task: PERF-01
-  status: qualified_source_overlay_owner_apply_pending
+  status: direct_launch_owner_accepted_access_design_pending
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py

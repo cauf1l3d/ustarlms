@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 9708,
-      "sha256": "977e5d4822a01c42de331834adb4ca8e72fee905b4e57b946ee183d6472dd889"
+      "size": 9834,
+      "sha256": "def0a1db003969b73441fce6c52f2e4209a13b620c946c50e2407ea4cd109e91"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -882,8 +882,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 3117,
-      "sha256": "5187a69d2c4c2e03b2008b0bc8cde69e85787f33cbc381a328e6b4dc73e1a250"
+      "size": 3123,
+      "sha256": "22946aa5bb68ab3b6682170a26864e54a61e486127692842400742aba254735a"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1446,8 +1446,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 39068,
-      "sha256": "d534a1f0a80b17be708bb28ca156b2e3e56f7f3e97c498c062cdab6197cb2c86"
+      "size": 39796,
+      "sha256": "1b422ed82e9b6e19fe0a7ace2df7490c2b60f19d0f3ab164dda7720c6b5b8e7a"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1500,8 +1500,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 19450,
-      "sha256": "ec9b1729c519d86810fcf1e4d947ee42145c27c37d6cc261068a93b5adf03f58"
+      "size": 19568,
+      "sha256": "12654ce6207611cf0041299942a3daf1f93969dde9e8554fd89b6ae833ba2c30"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3298,6 +3298,12 @@
       "sha256": "81bac639785b4f69294067d8f8ffd959f4982ef4eb16de0038b9b93ee5968e8c"
     },
     {
+      "path": "context/runtime/route_scorm_access_owner_order_20261101.json",
+      "domain": "runtime",
+      "size": 1195,
+      "sha256": "4d949ff387c060be77745894216caa9dc362269469d5fc0b58ab8a7117daa674"
+    },
+    {
       "path": "context/runtime/route_scorm_launch_20261101.json",
       "domain": "runtime",
       "size": 7175,
@@ -3696,8 +3702,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3842,
-      "sha256": "28b6e94794a7bb7063cad6bbe0da99c388bb5ba9249f3d48bd05acccaf9ce5f9"
+      "size": 3977,
+      "sha256": "310dccfec36988ed53aa43253c3c605622584e95725e045c01b1055a4ea9acb1"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",
@@ -3710,6 +3716,12 @@
       "domain": "tasks",
       "size": 133,
       "sha256": "08efe768ed1cea63da4f638d08e5ee84357a58316cfbea1c14f0b0c4a4707045"
+    },
+    {
+      "path": "context/tasks/route_scorm_access_20261101.md",
+      "domain": "tasks",
+      "size": 8755,
+      "sha256": "d25c2dd34c7678d99d5a5ace8aee85ed74fa891372f377db9a32d9fe82b8f0ee"
     }
   ]
 }

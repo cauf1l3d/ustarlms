@@ -542,3 +542,25 @@ function local_ustar_before_footer_original(): string {
 function local_ustar_before_footer(): string {
     return local_ustar_before_footer_original() . \local_ustar\route_continue::footer_button();
 }
+
+/** Enforce configured route review access in native SCORM player and pluginfile requests. */
+function local_ustar_after_require_login($courseorid, $autologinguest, $cm, $setwantsurltome, $preventredirect): void {
+    global $USER, $SESSION;
+    static $checking = false;
+    if ($checking || !$cm || empty($cm->id) || empty($USER->id) || is_siteadmin()
+            || (defined('CLI_SCRIPT') && CLI_SCRIPT)) { return; }
+    $checking = true;
+    try {
+        $modname = $cm->modname ?? get_coursemodule_from_id(null, (int)$cm->id)->modname;
+        if ($modname !== 'scorm') { return; }
+        // Remediation has its own independently authorised lifecycle window.
+        $launch = $SESSION->ustar_scorm_route ?? [];
+        if (($launch['mode'] ?? '') === 'assessment_remediation' && (int)($launch['cmid'] ?? 0) === (int)$cm->id) {
+            \local_ustar\assessment_lifecycle::validate_remediation_context((int)$USER->id,$launch);
+            return;
+        }
+        if (\local_ustar\route_point_access::allowed_cmid((int)$USER->id,(int)$cm->id) === false) {
+            throw new moodle_exception('Повторный доступ к материалу закрыт. Продолжите обучение в своём маршруте.');
+        }
+    } finally { $checking = false; }
+}

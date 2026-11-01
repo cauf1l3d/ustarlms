@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026102200" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026110100" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -774,6 +774,7 @@
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="summary" TYPE="text" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="requirementsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="accesspolicyjson" TYPE="text" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="renewalpolicy" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="keep" SEQUENCE="false" />
         <FIELD NAME="validdays" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
         <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" />
@@ -811,6 +812,29 @@
         <INDEX NAME="user_point_version_uix" UNIQUE="true" FIELDS="userid, pointid, versionid" />
         <INDEX NAME="user_status_idx" UNIQUE="false" FIELDS="userid, status, completedat" />
         <INDEX NAME="point_version_idx" UNIQUE="false" FIELDS="pointid, versionid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_route_access" COMMENT="Review windows after verified learning; not a second completion ledger">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="pointid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="studyat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="openedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="deadline" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="closedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="closereason" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="versionid_fk" TYPE="foreign" FIELDS="versionid" REFTABLE="local_ustar_route_versions" REFFIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_version_study_uix" UNIQUE="true" FIELDS="userid,pointid,versionid,studyat" />
+        <INDEX NAME="open_deadline_idx" UNIQUE="false" FIELDS="closedat,deadline" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_assess_policy" COMMENT="Versioned assessment lifecycle policy for route checkpoint versions">

@@ -54,6 +54,8 @@ jobs:
         run: php tests/release_20260912/scorm_route_launch.php
       - name: Route review policy keeps completion and server access separate
         run: php tests/release_20260912/route_access_policy.php
+      - name: Removing an automatic point never revives its closed material URL
+        run: php tests/release_20260912/route_access_history.php
       - name: Imported SCORM completion preserves Moodle announcements and all other requirements
         run: php tests/release_20260912/scorm_import_completion.php
       - name: Determine whether Connect schema or service requires native DB verification

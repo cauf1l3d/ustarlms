@@ -57,7 +57,7 @@ Full Python run ended without final summary; not recorded as passing. New operat
 contract/transaction tests pass with actualUID33 fixture reserved for mandatory sudo CI.
 Ruling: old2900/100 validators run on explicit historical projections and frozen2900
 source; current104 schema gets its own real-PG contract and CLI upgrade/repeat checks.
-No source merge or production access. Current appc9361c09, operator still being qualified.
+No source merge or production access. Current appb9f170d8, operator still being qualified.
 
 First CI9ade: console/rollback/new installer with actualUID33 passed; source/context
 found root-required ownership fixtures in unprivileged discovery and an old frozen
@@ -70,3 +70,19 @@ finally handler replaced the intended15s idle polling with1.2s on every response
 Important fix: idle SCORM polling RED1200!=15000 -> GREEN15s; acknowledged finish
 keeps its short confirmation/retry interval. Run both browser suites and repeat
 exact-candidate source/native qualification; the previous8ad archive is superseded.
+
+Final important fix: an explicitly configured automatic point has no access window.
+Archiving it could therefore revive its saved native URL. Reproducer RED (null
+instead of denied); history now also reads its canonical progress, preserving
+legacy unconfigured access and independent grants/cancellation. Standalone
+history/policy and both SCORM browser suites GREEN; native archival case added.
+Wait for the existing native attempt before publishing the final combined fix,
+so any actual fixture or SQL errors are resolved in the same candidate.
+
+Native131: actualPG104 fresh/legacy parity, exact2900->1100 CLI/repeat and
+4 SQL denials PASS. Whole suite386/1798 reported one invalid fixture provider
+quiz (factory only supports moodle_quiz), one old103 count assertion and one
+XMLDB empty CHAR default notice. Use a real native Quiz in the independent
+assignment fixture, exact104 expectation in the current schema test, and no
+CHAR empty default. Frozen103/100 validators stay unchanged. No business data
+rollback or production access occurred; full native rerun must confirm GREEN.

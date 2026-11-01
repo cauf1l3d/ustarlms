@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "d3abcb7d195213376b1ec85d6db33fdfc0dcc827",
+    "moodle/local/ustar": "713b555a0522969094ea0b8b4a8d625fcbf98cdf",
     "moodle/theme/ustar": "c60e0657cb957288c914fa46444d2d692012cb7e"
   },
   "versions": {
@@ -829,7 +829,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/route_point_access.php",
-      "sha256": "6fb72b5019f46a7394d7119f08eff3d9579bacd0ea801a6a02e8e147d13a2ebd"
+      "sha256": "0342ae133c0fb35e56952ed0440364186008da69a808447dd5dc5cf65988c017"
     },
     {
       "path": "moodle/local/ustar/classes/route_point_evidence_provider.php",
@@ -1293,7 +1293,7 @@
     },
     {
       "path": "moodle/local/ustar/db/install.xml",
-      "sha256": "0d68d36b5bfb52105ff8d02e24f57d3d8e730e2b70703e70ad4dd2f6b46e37f4"
+      "sha256": "45ca560c135824d2cb721d2474c5d5e22a7f99300ec18b41be0e1c22a54153ad"
     },
     {
       "path": "moodle/local/ustar/db/services.php",
@@ -2069,7 +2069,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/connect_notification_action_test.php",
-      "sha256": "c00b44fcc7882d031387dc096779e32d0350bd8d54d3b9248ddf4b42aa62688e"
+      "sha256": "082cfa2020d13d9293df62092faa59fc6fe3cae93f2c8f715fc5dfcd3e53fb81"
     },
     {
       "path": "moodle/local/ustar/tests/connect_notification_test.php",
@@ -2185,7 +2185,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/route_point_access_test.php",
-      "sha256": "802ddc50baf085b1936233a582e8efb20afd9fec4b0deb962c529558bd49c34f"
+      "sha256": "191d0a93137846204550afa633666dbee10f35abfe18af1671f8888138b2296d"
     },
     {
       "path": "moodle/local/ustar/tests/route_studio_commands_test.php",

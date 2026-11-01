@@ -28,7 +28,7 @@
   "owner_approval": "да потверждаю",
   "approval_source": "owner_message_after_inline_design",
   "status": "implementation_under_qualification",
-  "application_commit": "c9361c09374c178375038555064edce90e00da29",
+  "application_commit": "b9f170d89cead30021b0acbfba6ee681cec024f8",
   "native_CI": "pending",
   "PR": "https://github.com/cauf1l3d/ustarlms/pull/113",
   "qualification_attempts": [
@@ -48,6 +48,32 @@
       "source_php83": "PASS",
       "context_console_infra": "PASS",
       "self_review_fix": "Unacknowledged SCORM poll was1200ms, now15000ms; browser regression RED -> GREEN, existing41 assertions PASS",
+      "archive_delivered": false
+    },
+    {
+      "tool_commit": "1312754a5a22331020daabdd278a7681c3d01a77",
+      "review_run": 41344042477,
+      "result": "native_failed",
+      "source_context_console_infra": "PASS",
+      "native_actual_SQL": "PASS104 tables fresh/legacy; actual2900 CLI upgrade/repeat;4 foreign mutations rejected",
+      "native_tests": {
+        "tests": 386,
+        "assertions": 1798,
+        "errors": 1,
+        "failures": 1,
+        "notices": 1
+      },
+      "root_causes": [
+        "independent-assignment fixture used unsupported provider quiz and invalid ref",
+        "current native schema test still expected103 tables",
+        "XMLDB does not accept CHAR NOTNULL default empty string"
+      ],
+      "corrections": [
+        "real native Quiz and supported moodle_quiz cm ref",
+        "exact104 expectation only in current native test; frozen validators remain103/100",
+        "omit invalid DEFAULT; the application explicitly supplies closereason"
+      ],
+      "review_fix": "automatic closure now remains enforced after point archival through existing progress history",
       "archive_delivered": false
     }
   ]

@@ -559,7 +559,7 @@
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
       "size": 98378,
-      "sha256": "8ef365a5ac653e77043cf5fd8e0aa4fa5a9c25d06197ed8b6b0c007c311b62cd"
+      "sha256": "29691fb048984d2f30e9a88fcfaac05e0af7640704acc3a4cac36a516361c363"
     },
     {
       "path": "context/code_map/feed_media_development_source.json",
@@ -1501,7 +1501,7 @@
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
       "size": 19379,
-      "sha256": "02bb502f1bc266c1322055c5354d11c63d14ed99cbaf8a8fd4990a5747970369"
+      "sha256": "fbb578ddb79f6c77c7be7fad45071918a47bdf1687ccb838981ae58f0a1c9e27"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3300,8 +3300,8 @@
     {
       "path": "context/runtime/route_scorm_access_owner_order_20261101.json",
       "domain": "runtime",
-      "size": 2469,
-      "sha256": "5657c25ad7c0462c17df2b9370fbb9da2825cebfcc8759c8931a39a5c86b9c5b"
+      "size": 3591,
+      "sha256": "689ba81648a4a3116ee310f461e063fde3493a2a581990cf990cb83c7eccf60c"
     },
     {
       "path": "context/runtime/route_scorm_launch_20261101.json",
@@ -3726,8 +3726,8 @@
     {
       "path": "context/tasks/route_scorm_access_plan_20261101.md",
       "domain": "tasks",
-      "size": 5799,
-      "sha256": "94021d4486375dd701bd6ca42d7d8202a5e9530601e3d65259a09ef8cad0b092"
+      "size": 6885,
+      "sha256": "3f3ea222ce648703186d42c179b69d73fae3f1a3b3f12cc348ee53019b42bf03"
     }
   ]
 }

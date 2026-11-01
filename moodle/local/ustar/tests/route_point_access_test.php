@@ -142,8 +142,11 @@ final class route_point_access_test extends \advanced_testcase {
         route_point_access::advance($u->id,$point->id,$version->id,$review['currentpoint']['accessid']);
         $this->assertFalse(route_point_access::allowed_cmid($u->id,$scorm->cmid));
         $nextversion=route_model::current_published_version((int)$next->id);
+        $this->setAdminUser();
+        $quiz=$this->getDataGenerator()->create_module('quiz',['course'=>$scorm->course]);
+        $this->setUser($u);
         $policyid=$DB->insert_record('local_ustar_assess_policy',(object)[
-            'pointid'=>$next->id,'versionid'=>$nextversion->id,'providerkind'=>'quiz','providerref'=>'fixture',
+            'pointid'=>$next->id,'versionid'=>$nextversion->id,'providerkind'=>'moodle_quiz','providerref'=>'cm:'.$quiz->cmid,
             'remediationpointid'=>$point->id]);
         $event=['entitytype'=>'forced_retraining','entityid'=>$u->id,'actorid'=>0,'timecreated'=>time(),'reason'=>'Fixture'];
         $id=$DB->insert_record('local_ustar_workflow_events',(object)($event+[
@@ -152,6 +155,17 @@ final class route_point_access_test extends \advanced_testcase {
         $this->assertTrue(route_point_access::allowed_cmid($u->id,$scorm->cmid));
         $DB->insert_record('local_ustar_workflow_events',(object)($event+[
             'eventtype'=>'forced_retraining_cancelled','detailsjson'=>json_encode(['assignmentid'=>$id])]));
+        $this->assertFalse(route_point_access::allowed_cmid($u->id,$scorm->cmid));
+    }
+
+    public function test_removing_an_auto_advanced_point_does_not_reopen_its_old_material_url(): void {
+        global $DB;
+        [$u,$position,$point,$version,$scorm,$next] = $this->fixture(['advance'=>'auto','repeat'=>'close']);
+        $this->complete($u,$scorm);
+        $this->assertSame((int)$next->id,route_model::for_user($position,$u->id)['currentpoint']['id']);
+        $this->assertSame(0,$DB->count_records('local_ustar_route_access'));
+        $this->assertFalse(route_point_access::allowed_cmid($u->id,$scorm->cmid));
+        $DB->set_field('local_ustar_route_points','active',0,['id'=>$point->id]);
         $this->assertFalse(route_point_access::allowed_cmid($u->id,$scorm->cmid));
     }
 

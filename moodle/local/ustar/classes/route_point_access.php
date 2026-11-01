@@ -257,8 +257,16 @@ final class route_point_access {
         }
         // A saved old URL cannot revive an access window from an obsolete publication.
         if (!$managed) {
+            $history = $DB->get_records_sql('SELECT DISTINCT v.* FROM {local_ustar_route_versions} v
+                JOIN {local_ustar_route_access} a ON a.versionid=v.id WHERE a.userid=:userid',['userid'=>$userid]);
+            // Automatic advancement has no review window. Its existing learning fact
+            // still identifies the configured closure after a point leaves the route.
             foreach ($DB->get_records_sql('SELECT DISTINCT v.* FROM {local_ustar_route_versions} v
-                JOIN {local_ustar_route_access} a ON a.versionid=v.id WHERE a.userid=:userid',['userid'=>$userid]) as $old) {
+                    JOIN {local_ustar_route_progress} p ON p.versionid=v.id WHERE p.userid=:userid',
+                    ['userid'=>$userid]) as $old) {
+                if (trim((string)($old->accesspolicyjson ?? '')) !== '') { $history[(int)$old->id] = $old; }
+            }
+            foreach ($history as $old) {
                 if (self::contains($old,$cmid,(int)$cm->course)) { $managed = true; break; }
             }
         }

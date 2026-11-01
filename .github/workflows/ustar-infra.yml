@@ -18,6 +18,29 @@ concurrency:
   group: ustar-infra-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  route-scorm-source-overlay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Exact source overlay preserves actual UID33, locks and crash recovery
+        run: |
+          python3 -m unittest tests.r16.test_route_scorm_patch.Package -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_route_scorm_patch.Transaction -v
+      - name: Build the fixed SCORM overlay and verify offline plan
+        run: |
+          python3 scripts/infra/build_route_scorm_patch.py --tool-commit "$(git rev-parse HEAD)" --output artifacts/route-scorm-fix
+          tar --no-same-owner -xzf artifacts/route-scorm-fix/ustar-scorm-direct-*.tar.gz -C artifacts/route-scorm-fix
+          cd artifacts/route-scorm-fix
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: route-scorm-source-overlay
+          path: artifacts/route-scorm-fix/
   connect-runtime:
     runs-on: ubuntu-24.04
     timeout-minutes: 20

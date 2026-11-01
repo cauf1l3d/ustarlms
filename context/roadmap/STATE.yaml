@@ -2,11 +2,11 @@ schema_version: 2
 updated_at: '2026-11-01'
 project: USTAR Academy
 stage: route_scorm_launch_fix
-stage_label: Feed and Connect integrated; next PERF-01; management gates remain explicit
-current_activity: PR110/111 integrated after one qualified combined FullRC. Owner accepted
-  bot graphics/readability and task execution/return/photo. Other processes are tested
-  with leadership from2Nov; public HTTPS and Mini App await approval. Next PERF-01 is
-  passive ordinary-workday latency/SQL/cron/host baseline; no new production change.
+stage_label: Direct SCORM route launch fix; owner overlay pending
+current_activity: PR112 fixes course menu detours with native Moodle SCORM player and
+  existing-cache support. Source-only overlay is under qualification, not deployed.
+  Accepted production2900/worker267 unchanged. After this fix, PERF-01 ordinary-workday
+  report remains next; leadership process acceptance and HTTPS/Mini App gates remain.
 entrypoint: START_HERE.md
 next_task: LEARN-SCORM-01
 ready_tasks: []
@@ -355,7 +355,7 @@ development_candidate:
   branch: fix/route-direct-scorm-20261101
   PR: 112
   deployed: false
-  application_commit: 7fb26f9bc36e8170a2c0dde25484f5220fbbc5b3
+  application_commit: 994bf23b0019e48428021884e744cda3cec4abc4
   local_ustar_version: 2026102900
   theme_ustar_version: 2026102700
   schema_changed: false

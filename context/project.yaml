@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: performance_workday_baseline
+  stage: route_scorm_launch_fix
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -37,7 +37,7 @@ current_operator_handoff:
 current_work:
   task: LEARN-SCORM-01
   related_task: PERF-01
-  status: passive_workday_baseline_report_pending
+  status: direct_scorm_source_overlay_qualification
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py

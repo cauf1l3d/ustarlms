@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "e8a1cd0cd28bfb781db446ea1803d721d8c4372d",
+    "moodle/local/ustar": "668dc961661cb45f9a272808feeba5d4c11e4ed5",
     "moodle/theme/ustar": "c60e0657cb957288c914fa46444d2d692012cb7e"
   },
   "versions": {
@@ -849,7 +849,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/scorm_route_launch.php",
-      "sha256": "165fa8fc7b10380e103bbe4a477b524c83fcaa8550f88ce08cc8d92408dd73c8"
+      "sha256": "738815b152db683d33c757b4c1aeb04919150cd4790edb603c99e1c1f433cc3c"
     },
     {
       "path": "moodle/local/ustar/classes/skill_assessment.php",
@@ -1169,7 +1169,7 @@
     },
     {
       "path": "moodle/local/ustar/course_launch.php",
-      "sha256": "8e41493e0df5df6ac1a2fce7b19126ecde00ffbf36e1c194733f09303a60eaf4"
+      "sha256": "da327a24b1c3e09db75c4cd46803b890d4d69ef001f4648c792e47fc4bf1c3a6"
     },
     {
       "path": "moodle/local/ustar/course_studio.php",
@@ -1645,7 +1645,7 @@
     },
     {
       "path": "moodle/local/ustar/scorm_launch.php",
-      "sha256": "c3185a6cb00ac0bd93f26560c94b2f4e14ce5486cb46a9e9fe94e7bbb2522d85"
+      "sha256": "eb3757915057592cbe613947af556440cbcbd844977c5fdc88341631486af2ee"
     },
     {
       "path": "moodle/local/ustar/scorm_route_return.js",
@@ -2169,7 +2169,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/scorm_route_launch_test.php",
-      "sha256": "a9cef9ec3f499418fb23689168f506551d806aa46cf0c194d338faf14e697307"
+      "sha256": "d65c05637ba79e3f20e03dce3273721d53d571466497d5a3edc5f305153e418e"
     },
     {
       "path": "moodle/local/ustar/tests/stage1_test.php",

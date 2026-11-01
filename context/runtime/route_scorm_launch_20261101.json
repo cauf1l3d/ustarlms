@@ -5,7 +5,7 @@
   "PR": 112,
   "branch": "fix/route-direct-scorm-20261101",
   "baseline_application": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
-  "application_commit": "7fb26f9bc36e8170a2c0dde25484f5220fbbc5b3",
+  "application_commit": "994bf23b0019e48428021884e744cda3cec4abc4",
   "status": "native_qualification_and_owner_overlay_preparation",
   "deployed": false,
   "versions_unchanged": {
@@ -29,11 +29,22 @@
     "red_CI": 41310761254,
     "red_job": 124860440112,
     "red_reason": "course: expected /local/ustar/scorm_launch.php, got /course/view.php",
-    "local_green": "SCORM_ROUTE_DIRECT_ENDPOINTS=PASS; route_flow31 PASS; PHP8.3 syntax PASS"
+    "local_green": "nine real-endpoint cases including stale component cache PASS; route_flow31 PASS; code overlay10 tests PASS with one actual-owner fixture delegated to sudo CI; exact-Git package deterministic/offline plan PASS",
+    "cached_component_map": "RED class not found with the existing map; explicit require_once in both launch endpoints GREEN without global cache purge"
   },
   "native_CI": "pending",
   "delivery": "bounded four-file overlay, baseline SHA guard, private file backup, common managed locks and web-only stop/start; no DB rollback or worker mutation",
   "owner_instructions": "inline_chat_only",
   "merge_authorized": false,
-  "next_stage_after_fix": "PERF-01 ordinary-workday passive report; leadership processes2Nov and HTTPS/Mini App approvals pending"
+  "next_stage_after_fix": "PERF-01 ordinary-workday passive report; leadership processes2Nov and HTTPS/Mini App approvals pending",
+  "native_first_attempt": {
+    "run": 41311553563,
+    "patch518_job": 124865175346,
+    "status": "failed_before_delivery",
+    "reason": "new adapter mistakenly required nonexistent mod/scorm:view; native entry contract restored",
+    "tests": 374,
+    "assertions": 1757,
+    "errors": 1
+  },
+  "decision": "Source-only overlay preserves2900 versions and existing cron/Connect guards. Four payload files and private file backups; web stop/start resets opcode cache. No DB restore, published point migration, package rebuild or worker/egress mutation."
 }

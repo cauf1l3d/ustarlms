@@ -8,9 +8,15 @@ final class scorm_route_launch {
     /** Old Studio imports contain one SCORM but did not configure whole-course completion. */
     public static function managed_course_completedat(int $courseid, int $userid): int {
         global $DB;
-        $modules = $DB->get_records_sql('SELECT cm.id,cm.instance,m.name AS modname
+        $modules = $DB->get_records_sql('SELECT cm.id,cm.instance,cm.completion,m.name AS modname
             FROM {course_modules} cm JOIN {modules} m ON m.id=cm.module
             WHERE cm.course=:course AND cm.deletioninprogress=0',['course'=>$courseid]);
+        // Moodle may create its administrative Announcements forum when the course menu is opened.
+        // It is not another learning requirement; every other extra activity remains significant.
+        foreach ($modules as $id=>$module) {
+            if ($module->modname === 'forum' && (int)$module->completion === 0
+                    && $DB->get_field('forum','type',['id'=>(int)$module->instance]) === 'news') { unset($modules[$id]); }
+        }
         if (count($modules) !== 1) { return 0; }
         $cm = reset($modules);
         if ($cm->modname !== 'scorm') { return 0; }

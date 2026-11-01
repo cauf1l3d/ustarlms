@@ -173,8 +173,35 @@ final class route_point_access_test extends \advanced_testcase {
         $this->assertTrue($managed['satisfied']);
         $this->assertEmpty($DB->get_field('course_completions','timecompleted',['course'=>$scorm->course,'userid'=>$u->id]));
         $this->setAdminUser();
+        $this->getDataGenerator()->create_module('forum',['course'=>$scorm->course,'type'=>'news','completion'=>0]);
+        $news=$method->invoke(null,$req,$u->id,$position,[],$version);
+        $this->assertTrue($news['satisfied']);
         $this->getDataGenerator()->create_module('page',['course'=>$scorm->course]);
         $extra=$method->invoke(null,$req,$u->id,$position,[],$version);
         $this->assertFalse($extra['satisfied']);
+    }
+
+    public function test_actual_studio_import_records_native_activity_and_course_criteria(): void {
+        global $CFG,$DB,$USER;
+        $actorid=(int)$USER->id;
+        $item=material_studio::save(0,['kind'=>'scorm','title'=>'Real imported SCORM fixture'],$actorid);
+        $zip=$CFG->dirroot.'/mod/scorm/tests/packages/singlescobasic.zip';
+        $this->assertFileExists($zip);
+        $runtime=studio_scorm_runtime::import((int)$item['id'],$actorid,$zip,'fixture.zip',(int)$item['sourceversion']);
+        $this->assertTrue($DB->record_exists('course_completion_criteria',[
+            'course'=>$runtime['courseid'],'criteriatype'=>COMPLETION_CRITERIA_TYPE_ACTIVITY,'moduleinstance'=>$runtime['cmid']]));
+        $learner=$this->getDataGenerator()->create_and_enrol(get_course($runtime['courseid']),'student');
+        $cm=get_coursemodule_from_id('scorm',$runtime['cmid']);
+        $sco=$DB->get_record_select('scorm_scoes','scorm=:scorm AND launch<>:empty',
+            ['scorm'=>$cm->instance,'empty'=>''],'*',MUST_EXIST);
+        $this->setUser($learner);
+        scorm_insert_track($learner->id,$cm->instance,$sco->id,1,'cmi.core.lesson_status','completed');
+        (new \completion_info(get_course($cm->course)))->update_state($cm,COMPLETION_UNKNOWN,$learner->id);
+        $this->assertGreaterThan(0,scorm_route_launch::managed_course_completedat((int)$cm->course,(int)$learner->id));
+        $this->assertSame(1,$DB->count_records('scorm_attempt',['userid'=>$learner->id,'scormid'=>$cm->instance]));
+        $this->setAdminUser();
+        $repeat=studio_scorm_runtime::import((int)$item['id'],$actorid,$zip,'fixture.zip',(int)$item['sourceversion']);
+        $this->assertSame($runtime,$repeat);
+        $this->assertSame(1,$DB->count_records('scorm_attempt',['userid'=>$learner->id,'scormid'=>$cm->instance]));
     }
 }

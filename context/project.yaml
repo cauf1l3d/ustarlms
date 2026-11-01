@@ -37,7 +37,7 @@ current_operator_handoff:
 current_work:
   task: INTEGRATIONS-01
   related_task: PERF-01
-  status: visual267_UI_accepted_remaining_role_acceptance
+  status: merge110_111_authorized_leadership_acceptance_deferred
   spec: docs/superpowers/specs/2026-10-29-connect-role-bot-design.md
   plan: docs/superpowers/plans/2026-10-29-connect-role-bot.md
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
@@ -51,3 +51,4 @@ current_work:
   visual_order: context/runtime/connect_role_bot_visual_owner_order_20261030.json
 latest_connect_outage_receipt: context/runtime/connect_outage_visual_successor_20261101.json
 latest_connect_visual_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+latest_connect_integration_order: context/runtime/connect_feed_integration_order_20261101.json

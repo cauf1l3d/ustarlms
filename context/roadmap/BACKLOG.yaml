@@ -514,7 +514,7 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: visual_UI_accepted_remaining_role_acceptance
+  phase: authorized_merge110_111_remaining_roles_with_leadership
   owner_priority: complete_Telegram_role_bot_before_MiniApp_public_HTTPS
   current_summary: >-
     Owner29Oct installed app2900/theme2700 and directly enabled worker5cc02944
@@ -527,7 +527,9 @@ tasks:
     Owner1Nov restored Telegram egress (CONNECT200/HTTP302/TLS0), both bots answered.
     Worker267e5587 then installed after transient busy refusal: visuals_active,
     visuals_ready/recovery_required false. All4CI18c83925 PASS. Owner1Nov accepted live graphical UI and readability.
-    Remaining live acceptance: report/review/photo/checklist/HRD scenarios. Owner instructions must be directly in chat.
+    Owner also accepted task execution/return/photo display. Remaining processes are
+    tested with leadership from2Nov; public HTTPS/Mini App await leadership approval.
+    Owner authorized merge110/111; next available work is PERF-01. Owner instructions must be directly in chat.
     Report review/HRD, fresh scheduled cron and workday report pending.
     Native LAN confirmation/first password remain explicit; Mini App/public HTTPS follow.
   visual_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json

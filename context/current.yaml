@@ -97,11 +97,10 @@ production:
   post2900_cron_run_receipt: pending; last supplied scheduled cron remains pre2900
   current_worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 current_work:
-  activity: Owner1Nov restored Telegram TLS through pinned egress refresh; both bots
-    answered again. Worker267e5587 installed successfully after a transient busy refusal;
-    visuals_ready and recovery_required false. All4CI18c83925 PASS. Owner accepted
-    live PNG/buttons/readability. Broader report/review/checklist/HRD acceptance remains
-    pending; Mini App/HTTPS last.
+  activity: Owner1Nov accepted tasks, return/execution and photo display, and authorized
+    merging PR110/111 into main. Other business processes will be tested with leadership
+    from2Nov; public HTTPS and Mini App await leadership approval. One combined FullRC
+    precedes the merges. Next unblocked stage is PERF-01 passive real-workday baseline.
   next_task: INTEGRATIONS-01
   ready_tasks: []
   task_statuses:

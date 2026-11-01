@@ -7,7 +7,7 @@ app2900/theme2700 и включил worker5cc02944 штатным tool9a68246b:
 Runtime_active/ACK true, role_bot_ready; all4CI fe2f05d PASS.
 Owner1Nov восстановил egress (CONNECT200/HTTP302/TLS0), оба бота отвечают.
 Worker267e5587 установлен: visuals_active/visuals_ready, recovery_required:false.
-[Owner receipt](context/runtime/connect_visual_owner_deploy_20261101.json); PNG/кнопки и читаемость приняты; HRD/review впереди.
+[Owner receipt](context/runtime/connect_visual_owner_deploy_20261101.json); PNG/читаемость и задачи/возврат/фото приняты.
 Инструкции владельцу — прямо в чат короткими блоками команд.
 [Квалификация](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
 [команды](docs/CONNECT_BOT_2900_INSTALL_RU.md).
@@ -21,7 +21,7 @@ Main source app22607c69/local2802; PR110 source2803 ещё не слит. Owner2
 [receipt](context/runtime/feed2803_owner_deploy_20261029.json). App_ready/DB available,
 receiver+notify active/enabled. Последний cron03:37MSK exit0/1.282s без новых ошибок;
 текущий adhoc1/overdue56/failed2 не выдавать за разгруженную очередь.
-Реальный рабочий день ожидается; напоминание30Oct11:00МСК создано.
+PERF-01: рабочий день ещё не измерен.
 
 Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,
 все роли через существующую Академию; Mini App и внешний HTTPS в конце.
@@ -30,7 +30,8 @@ Owner29Oct возобновил полный Connect: кнопки/коротк�
 [Квалификация2803](context/runtime/feed2803_qualification_20261029.json) сохраняет
 4CI/native357/1706/actualPG/UID33. Архив/старые операторы неизменны.
 
-Новые слияния автоматически не делать. Старые операторы не переписывать.
+Owner1Nov разрешил merge PR110/111; [поручение](context/runtime/connect_feed_integration_order_20261101.json).
+Остальные слияния не делать. Старые операторы неизменны.
 Субагенты запрещены. Агент не подключается по SSH к production, не отправляет
 сообщения/письма/архивы через провайдеров и не меняет сервер в рамках Git-работ.
 Docker rotation/health/recreate отложены до

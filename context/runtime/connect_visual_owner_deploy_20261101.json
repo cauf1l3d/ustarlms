@@ -75,10 +75,12 @@
     "installation": "accepted_owner_terminal",
     "network_recovery": "accepted_owner_terminal_and_new_replies",
     "fresh_PNG_and_button_UI": "accepted_owner_report_2026-11-01",
-    "review_HRD_full_roles": "pending",
+    "review_HRD_full_roles": "remaining_processes_with_leadership_from_2026-11-02",
     "scheduled_cron_and_workday": "separate_pending",
     "owner_visual_quote": "да в боте тоже все работает и читаемость ок",
-    "owner_visual_scope": "Live bot responses and readable graphical/button presentation; broader report/review/checklist/HRD end-to-end acceptance remains separate."
+    "owner_visual_scope": "Live bot responses and readable graphical/button presentation; broader report/review/checklist/HRD end-to-end acceptance remains separate.",
+    "task_execution_return_and_photo_display": "accepted_owner_report_2026-11-01",
+    "next_owner_order": "context/runtime/connect_feed_integration_order_20261101.json"
   },
   "owner_instruction_preference": "Give clear short commands directly in chat, not separate instruction documents.",
   "limits": [

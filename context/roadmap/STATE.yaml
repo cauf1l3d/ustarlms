@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-11-01'
 project: USTAR Academy
-stage: connect_visual_UI_accepted_remaining_role_acceptance
-stage_label: Owner accepted live visual267/readability; remaining role scenarios before Mini App
-current_activity: Owner1Nov restored Telegram TLS through pinned egress refresh; both bots
-  answered again. Worker267e5587 installed successfully after a transient busy refusal;
-  visuals_ready and recovery_required false. All4CI18c83925 PASS. Owner accepted live PNG/buttons/readability. Broader
-  report/review/checklist/HRD acceptance remains pending; Mini App/HTTPS last.
+stage: feed_connect_source_integration_authorized
+stage_label: Owner accepted tasks/return/photo and authorized merge110/111; leadership approvals pending
+current_activity: Owner1Nov accepted tasks, return/execution and photo display, and authorized
+  merging PR110/111 into main. Other business processes will be tested with leadership
+  from2Nov; public HTTPS and Mini App await leadership approval. One combined FullRC
+  precedes the merges. Next unblocked stage is PERF-01 passive real-workday baseline.
 entrypoint: START_HERE.md
 next_task: INTEGRATIONS-01
 ready_tasks: []

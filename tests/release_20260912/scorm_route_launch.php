@@ -3,7 +3,7 @@
 $root = dirname(__DIR__, 2);
 $mode = $argv[1] ?? '';
 if ($mode === '') {
-    foreach (['course', 'activity', 'course-activity', 'foreign', 'stale', 'future', 'preview'] as $case) {
+    foreach (['course', 'activity', 'course-activity', 'foreign', 'stale', 'future', 'preview', 'cached-course', 'cached-activity'] as $case) {
         passthru(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(__FILE__) . ' ' . escapeshellarg($case), $status);
         if ($status) { exit($status); }
     }
@@ -12,6 +12,8 @@ if ($mode === '') {
 }
 $tmp = sys_get_temp_dir() . '/ustar-scorm-launch-' . bin2hex(random_bytes(8));
 mkdir($tmp . '/local/ustar', 0700, true);
+mkdir($tmp . '/local/ustar/classes', 0700);
+copy($root . '/moodle/local/ustar/classes/scorm_route_launch.php', $tmp . '/local/ustar/classes/scorm_route_launch.php');
 mkdir($tmp . '/mod/scorm', 0700, true);
 file_put_contents($tmp . '/mod/scorm/locallib.php', '<?php');
 file_put_contents($tmp . '/mod/scorm/lib.php', '<?php');
@@ -65,6 +67,7 @@ $DB = new class {
     }
 };
 spl_autoload_register(function($name) {
+    if (str_starts_with(CASE_NAME, 'cached-') && $name === 'local_ustar\\scorm_route_launch') {return;}
     $prefix = 'local_ustar\\';
     if (str_starts_with($name, $prefix)) {
         $path = SOURCE_ROOT . '/moodle/local/ustar/classes/' . substr($name, strlen($prefix)) . '.php';
@@ -82,14 +85,15 @@ class route_model {
     static function for_user($positionid, $userid) {return ['currentpoint'=>['id'=>CASE_NAME === 'future' ? 71 : 70,'canlaunch'=>true]];}
     static function current_published_version($id) {return (object)['id'=>CASE_NAME === 'stale' ? 9 : 8];}
     static function requirements_for_version($version) {
-        return str_starts_with(CASE_NAME, 'course')
+        return str_contains(CASE_NAME, 'course')
             ? [['type'=>'course', 'sourceid'=>50]] : [['type'=>'cm', 'sourceid'=>CASE_NAME === 'foreign' ? 502 : 501]];
     }
 }
 }
 PHP;
 file_put_contents($tmp . '/config.php', $bootstrap);
-$endpoint = $mode === 'course' ? 'course_launch.php' : 'scorm_launch.php';
+$iscourse = in_array($mode, ['course', 'cached-course'], true);
+$endpoint = $iscourse ? 'course_launch.php' : 'scorm_launch.php';
 copy($root . '/moodle/local/ustar/' . $endpoint, $tmp . '/local/ustar/' . $endpoint);
 define('SOURCE_ROOT', $root); define('CASE_NAME', $mode);
 try {
@@ -99,7 +103,7 @@ try {
     } catch (Redirected $r) {
         if (in_array($mode, ['foreign', 'preview'], true)) {throw new Exception('Unauthorised launch');}
         $expected = in_array($mode, ['stale', 'future'], true) ? '/local/ustar/route.php'
-            : ($mode === 'course' ? '/local/ustar/scorm_launch.php' : '/mod/scorm/player.php');
+            : ($iscourse ? '/local/ustar/scorm_launch.php' : '/mod/scorm/player.php');
         if ($r->url->path !== $expected) {throw new Exception($mode . ': expected ' . $expected . ', got ' . $r->url->path);}
         if ($expected === '/mod/scorm/player.php') {
             if (($r->url->params['cm'] ?? 0) !== 501 || ($r->url->params['scoid'] ?? 0) !== 701
@@ -112,6 +116,6 @@ try {
         if (!in_array($mode, ['foreign', 'preview', 'stale'], true)) {throw $e;}
     }
 } finally {
-    foreach (['local/ustar/' . $endpoint, 'mod/scorm/locallib.php', 'mod/scorm/lib.php', 'completionlib.php', 'config.php'] as $file) {unlink($tmp . '/' . $file);}
-    foreach (['local/ustar','local','mod/scorm','mod',''] as $dir) {rmdir($tmp . '/' . $dir);}
+    foreach (['local/ustar/' . $endpoint, 'local/ustar/classes/scorm_route_launch.php', 'mod/scorm/locallib.php', 'mod/scorm/lib.php', 'completionlib.php', 'config.php'] as $file) {unlink($tmp . '/' . $file);}
+    foreach (['local/ustar/classes','local/ustar','local','mod/scorm','mod',''] as $dir) {rmdir($tmp . '/' . $dir);}
 }

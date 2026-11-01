@@ -1,5 +1,7 @@
 <?php
 require_once(__DIR__ . '/../../config.php');
+// Source-only hotfix: an existing component cache may not know this new class yet.
+require_once(__DIR__ . '/classes/scorm_route_launch.php');
 
 require_login();
 require_capability('local/ustar:use', context_system::instance());

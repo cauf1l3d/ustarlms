@@ -159,7 +159,7 @@
         } catch (e) {
             failures++;
             if (control) { control.title = 'Результат сохраняется. При восстановлении связи переход выполнится автоматически.'; }
-        } finally { busy = false; schedule(Math.min(15000, 1200 * Math.pow(2, Math.min(failures, 4)))); }
+        } finally { busy = false; schedule(acknowledged ? Math.min(15000, 1200 * Math.pow(2, Math.min(failures, 4))) : 15000); }
     }
     function stop() {
         finished = true; clearTimeout(timer);

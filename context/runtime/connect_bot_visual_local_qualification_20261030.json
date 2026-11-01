@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-30",
+  "status": "local_qualified_candidate_publication_blocked",
+  "worker_and_operator_commit": "cb7128faa07629182aa5f1ada3a11299ac36cf24",
+  "application_changed": false,
+  "local_tests": {
+    "tests": 87,
+    "passed": 83,
+    "skipped": 4,
+    "skip_reason": "PHP unavailable; Academy source unchanged"
+  },
+  "isolated_package": {
+    "result": "PASS",
+    "site_packages": false,
+    "width": 960,
+    "sample_png_bytes": 11425,
+    "hashes": true,
+    "worker_ZIP_CRC": true,
+    "predecessor_envelope": true,
+    "production_access": false
+  },
+  "archive": {
+    "filename": "ustar-connect-visual-install-cb7128fa.tar.gz",
+    "bytes": 21382136,
+    "sha256": "d10b39e36fbf8ff79e56cf0ddb4f344cd9ce7f7bac39b521098f1dd867ce3cb4",
+    "CI_byte_comparison": "not_run",
+    "library_file_id": "libfile_39e615d10e9081919b1f7aa5fd2fa81d",
+    "file_id": "file_00000000747481f5bb7f5f8017ef3b59",
+    "saved_copy_downloaded_and_byte_verified": true
+  },
+  "build_input": {
+    "accepted_archive_sha256": "0860a86786a6db2c3b88cc940203a4ed756b8ac372d9b21c69db53c4e03cfd4e",
+    "route": "reuse exact accepted9a controller after archive and inner SHA256 validation; candidate worker built from immutable Git objects; same deterministic builder"
+  },
+  "publication": {
+    "attempted": "git push origin HEAD:feat/connect-role-bot-20261029",
+    "result": "auto_review_rejected",
+    "reason": "Remote GitHub destination/publication considered unverified without explicit current-session permission",
+    "bypass_attempted": false,
+    "CI_new_source": "not_started"
+  },
+  "production": {
+    "changed_by_agent": false,
+    "visual_deployed": false,
+    "current_worker": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+    "application": "2026102900"
+  },
+  "runbook": "docs/CONNECT_VISUAL_20261030_INSTALL_RU.md",
+  "remaining": [
+    "owner explicit publication approval required by automatic reviewer",
+    "GitHub CI and byte comparison",
+    "owner installation and visual acceptance",
+    "HRD and report-review acceptance"
+  ],
+  "instruction_library_file_id": "libfile_8bb22eab7a988191890bcb77f71ec704",
+  "preview_library_file_id": "libfile_01840a7ac4ec8191a2aec8de34657570"
+}

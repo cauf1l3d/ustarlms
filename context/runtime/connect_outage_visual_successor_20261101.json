@@ -1,0 +1,150 @@
+{
+  "schema": 1,
+  "observed_at": "2026-10-31T20:51:57+00:00",
+  "recorded_at": "2026-11-01",
+  "kind": "owner_log_review_not_agent_production_access",
+  "owner_order": "Restore both Telegram bots first; review attached renderer; update existing PR111 and deliver tested successor archive with commands.",
+  "input_sha256": {
+    "fresh_log": "c721b6f55b5ad570cc63741c42f07f5330d670833c8c78bec95e15754d814009",
+    "graphics_zip": "5cea52502fd65bbf981b20c43b9e2f57a99ee5a3e9bb3a6b6dbbb6fa940e3d44"
+  },
+  "observed": {
+    "services_active": [
+      "ustar-connect-receiver",
+      "ustar-connect-notify",
+      "ustar-console-notify",
+      "ustar-telegram-egress"
+    ],
+    "current_worker": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+    "visual_journal": {
+      "worker_commit": "cb7128faa07629182aa5f1ada3a11299ac36cf24",
+      "phase": "rolled_back"
+    },
+    "proxy_listening": "127.0.0.1:18081",
+    "curl": {
+      "CONNECT": 200,
+      "HTTP": 0,
+      "error": "connection_reset_after_CONNECT"
+    },
+    "receiver_reason": "transport_unavailable",
+    "receiver_failures": 349,
+    "history_gap_possible": true,
+    "console_status": "warning",
+    "console_polling": "no_data",
+    "console_pending": 1,
+    "console_delivery_failures": 1
+  },
+  "conclusion": "Shared Telegram egress path fails before HTTP response. Local services active is not network health. Exact failing remote hop unknown.",
+  "installer_defect": "Frozen visual v1 compares worker_commit even in rolled_back; later candidate refuses visual_journal_identity. New controller preserves old terminal journal and uses commit-scoped journal.",
+  "external_review": {
+    "receiver_pyz_sha256": "7a6aebaa0bdf4b0ccb4b154d913b0e61125e7f1335a8ffbb5ec41acea4daa221",
+    "only_module_delta": "ustar_connect/bot_graphics.py",
+    "accepted": "brand surfaces/text, metric/status layout, numbered badges, compact list with explicit count, caption count",
+    "corrected": [
+      "reduced alpha palette mapped 0..15 without losing opaque glyphs",
+      "HR create actions skip actual найм spelling",
+      "hidden rows keep descriptive buttons; count in caption",
+      "footer included in palette retry",
+      "status comes from canonical row status rather than request title",
+      "negative status before success matching",
+      "long metric values and labels use separate lines",
+      "network loss during switch or recover restores trusted baseline services without mandatory external probe"
+    ]
+  },
+  "local_verification": {
+    "focused_tests": 128,
+    "result": "pass",
+    "skipped": 4,
+    "scope": "real PNG, transport uncertainty, callbacks, receiver, legacy terminal journal, filesystem/locks/SQLite preservation and process loss; systemd/provider modeled",
+    "CI": "128-test package job PASS; all four gates on18c83925 SUCCESS",
+    "artifact": "267e5587 exact-source isolated smoke PASS; downloaded CI and saved archive byte-identical",
+    "broad_suite": "interrupted: legacy --shared clones cannot read missing historical Git blobs in local partial clone; no full PASS claimed; complete suite runs in CI"
+  },
+  "production_recovery": "owner_verified_egress_refreshed_both_bots_responding",
+  "runbook": "docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md",
+  "limitations": [
+    "No agent SSH, provider sends or merge",
+    "CI/model tests are not live Telegram acceptance",
+    "Old input history gap possible; send fresh Menu after route recovery"
+  ],
+  "previous_candidate": {
+    "PR": 111,
+    "source_commit": "a1bc5ddab211104ec279ca40cf3af91c9ea683a3",
+    "archive": "ustar-connect-visual-successor-a1bc5dda.tar.gz",
+    "archive_bytes": 21393151,
+    "archive_sha256": "2d143bef834bf2e7cbc5e17813be8f4e631bed189826b04375a366943acea735",
+    "CI_run": 41243001259,
+    "CI_job": 124660577099,
+    "CI_artifact": 13057938455,
+    "CI_zip_sha256": "50010dea9b40459b4ce41222bde12f84d4bbde10430c0531808d705fe56f3de5",
+    "CI_artifact_byte_identity": true,
+    "saved_archive_download_byte_identity": true,
+    "saved_archive": "libfile_9e4e6afff4a0819183cedf4adbadb395",
+    "saved_sha256": "libfile_eaa0cdd548708191ac8048c7ef4f6caf",
+    "saved_instruction": "libfile_43411a0787b081918fe370d34ffec4fd",
+    "agent_merge": false,
+    "owner_deploy_pending": true,
+    "gates_observed": {
+      "context": {
+        "run": 41243001273,
+        "result": "success",
+        "tests": 1486,
+        "skipped": 235
+      },
+      "infrastructure": {
+        "run": 41243001259,
+        "result": "success"
+      },
+      "console": {
+        "run": 41243001281,
+        "result": "success"
+      },
+      "review": {
+        "run": 41243001245,
+        "result": "success",
+        "source_jobs": {
+          "PHP8.2": 124660576811,
+          "PHP8.3": 124660576591,
+          "result": "success"
+        },
+        "native_connect_job": 124662733899,
+        "native_tests": 172,
+        "native_assertions": 875
+      }
+    },
+    "superseded_reason": "final review found baseline recovery unnecessarily required external TLS; successor restores verified baseline services without mandatory provider probe",
+    "archive_library_version": 0,
+    "archive_file_id": "file_000000000d4c820cac3de26c93dbfec8"
+  },
+  "publication": {
+    "PR": 111,
+    "source_commit": "267e55874eb8f6c36259d748f28a2c636adc9810",
+    "archive": "ustar-connect-visual-successor-267e5587.tar.gz",
+    "archive_bytes": 21393447,
+    "archive_sha256": "b0fc8fbd5c72ce9560952ef778a32658bcd32c54f297621909b5d692036b3176",
+    "CI_run": 41244604678,
+    "CI_job": 124665313791,
+    "CI_artifact": 13058551672,
+    "CI_zip_sha256": "1854cf31a1b71849ff328b1e2a06cb7e082e81bdda2293516d8f2bb897966f0e",
+    "CI_artifact_byte_identity": true,
+    "saved_archive_download_byte_identity": true,
+    "saved_archive": "libfile_9e4e6afff4a0819183cedf4adbadb395",
+    "saved_archive_file_id": "file_0000000020b081f693c7118ae9ad549b",
+    "saved_archive_version": 1,
+    "saved_sha256": "libfile_eaa0cdd548708191ac8048c7ef4f6caf",
+    "saved_instruction": "libfile_43411a0787b081918fe370d34ffec4fd",
+    "status": "owner_installed_visual_UI_accepted_remaining_role_acceptance",
+    "broader_automatic_repeat": "all_four_success_on18c83925",
+    "agent_merge": false,
+    "owner_deploy_pending": false,
+    "owner_receipt": "context/runtime/connect_visual_owner_deploy_20261101.json"
+  },
+  "qualification_reuse": {
+    "qualified_source": "a1bc5ddab211104ec279ca40cf3af91c9ea683a3",
+    "all_four_gates": "success",
+    "native_connect": "172 tests / 875 assertions PASS",
+    "worker_archive_payload": "all files byte-identical except manifest.json and SOURCE_COMMIT",
+    "followup_changes": "successor recovery removes mandatory provider probe; two persistent-outage regressions RED→GREEN; worker/Moodle/console source unchanged"
+  },
+  "resolution": "context/runtime/connect_visual_owner_deploy_20261101.json"
+}

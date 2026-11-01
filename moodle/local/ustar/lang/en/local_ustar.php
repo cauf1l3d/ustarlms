@@ -48,3 +48,5 @@ $string['notification_acknowledged'] = 'Acknowledged';
 $string['notification_read'] = 'Read';
 
 $string['privacy:metadata:connect:acktokens'] = 'Hashed actions for personal notification acknowledgement; no raw action credentials.';
+
+$string['privacy:metadata:connect:bot'] = 'Short-lived Connect conversation drafts, action confirmations and authorized report photographs.';

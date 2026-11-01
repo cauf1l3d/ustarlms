@@ -24,7 +24,8 @@ CB_PAIR=/stage/con02-callback-pair
   cp config.php "$CB_PAIR/config.php"
   sha256sum "$CB_PAIR/"* > "$CB_PAIR/SHA256SUMS"
 )
-cb_sources /source/moodle
+# Frozen callback/presentation contract; the current103-table app has its own gate.
+cb_sources /source/.stage-input/telegram-presentation-target/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/con02-callback-upgrade.log 2>&1
 php /source/tests/stage/con02_callback_probe.php verify
 php /source/tests/stage/schema_snapshot.php > /artifacts/con02-callback-after-schema.json

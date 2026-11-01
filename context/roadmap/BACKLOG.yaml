@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-29'
+updated_at: '2026-11-01'
 canonical_branch: main
 source_baseline: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -514,13 +514,29 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: owner_resumed29Oct_complete_button_role_bot_MiniApp_last
+  phase: authorized_merge110_111_remaining_roles_with_leadership
   owner_priority: complete_Telegram_role_bot_before_MiniApp_public_HTTPS
-  current_summary: Owner29Oct resumes complete role-based Telegram bot after2803 receipt
-    and reminder. Russian buttons, concise guidance, visual summaries/charts/tables;
-    self implementation/no subagents, proportional verification, one coherent release.
-    Reuse current Academy actors/writers/history. Public Academy HTTPS/Mini App last;
-    existing6c56 notification/ACK runtime preserved until qualified coordinated rollout.
+  current_summary: >-
+    Owner29Oct installed app2900/theme2700 and directly enabled worker5cc02944
+    with fixed tool9a68246b. Successful systemd completion, runtime_active/ACK true,
+    role_bot_ready/role_bot_enabled true confirmed. All4CI onfe2f05d pass.
+    Six private scope denial checks passed in preceding trace. Its diagnostic wrapper
+    rejected the legitimate second probe; unchanged original controller enabled successfully.
+    App/worker retain prior FullRC evidence; archive0860a867/21082058bytes verified.
+    Owner30Oct accepted buttons, task exchange between2accounts and Academy synchronization.
+    Owner1Nov restored Telegram egress (CONNECT200/HTTP302/TLS0), both bots answered.
+    Worker267e5587 then installed after transient busy refusal: visuals_active,
+    visuals_ready/recovery_required false. All4CI18c83925 PASS. Owner1Nov accepted live graphical UI and readability.
+    Owner also accepted task execution/return/photo display. Remaining processes are
+    tested with leadership from2Nov; public HTTPS/Mini App await leadership approval.
+    Owner authorized merge110/111; next available work is PERF-01. Owner instructions must be directly in chat.
+    Report review/HRD, fresh scheduled cron and workday report pending.
+    Native LAN confirmation/first password remain explicit; Mini App/public HTTPS follow.
+  visual_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+  visual_order: context/runtime/connect_role_bot_visual_owner_order_20261030.json
+  role_bot_owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
+  role_bot_qualification: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json
+  role_bot_runbook: docs/CONNECT_BOT_2900_INSTALL_RU.md
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity
     remains separate

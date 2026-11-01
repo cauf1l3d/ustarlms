@@ -24,7 +24,7 @@ TG_PAIR=/stage/telegram-presentation-pair
   cp config.php "$TG_PAIR/config.php"
   sha256sum "$TG_PAIR/"* > "$TG_PAIR/SHA256SUMS"
 )
-tg_sources /source/moodle
+tg_sources /source/.stage-input/telegram-presentation-target/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/telegram-presentation-upgrade.log 2>&1
 php /source/tests/stage/telegram_presentation_probe.php target
 php /source/tests/stage/schema_snapshot.php > /artifacts/telegram-presentation-after-schema.json

@@ -22,7 +22,12 @@ final class notification_action {
 
     private static function recipient_allowed(int $userid): bool {
         global $CFG;
-        return property_exists($CFG, 'ustar_connect_notify_userids') && notification_delivery::recipient_enabled($userid);
+        $roleprofile=($CFG->ustar_connect_bot_enabled??false)===true
+            && ($CFG->ustar_connect_role_delivery_profile??'')==='academy_linked_opt_in';
+        // Missing pilot fencing still fails closed unless this explicit role profile
+        // was activated. ACK cutoff remains independent of the new-send cutoff.
+        return (property_exists($CFG,'ustar_connect_notify_userids') || $roleprofile)
+            && notification_delivery::recipient_enabled($userid);
     }
 
     /** Internal: begin owns the identity lock and commits sending + token in the same transaction. */

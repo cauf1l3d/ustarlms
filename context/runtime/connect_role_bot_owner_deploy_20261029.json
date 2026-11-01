@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-29",
+  "kind": "owner_terminal_install_and_runtime_acceptance",
+  "status": "owner_installed_runtime_active_preflight_ready_role_acceptance_pending",
+  "basis": "Owner supplied terminal output in this conversation; no independent agent server access.",
+  "exact_wall_clock_time": "not_printed",
+  "PR": 111,
+  "tool_commit": "9a68246b170dd6a08dc6a8e2118e69f32e16bea9",
+  "application": {
+    "payload_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+    "payload_files": 606,
+    "tables": 103,
+    "counts_basis": "fixed_controller_payload_not_a_new_whole_host_manifest",
+    "versions": {
+      "local_ustar": 2026102900,
+      "theme_ustar": 2026102700
+    },
+    "phase": "app_ready",
+    "generation": "80fe658f864445089f2710e603d009dd",
+    "generation_basis": "prior owner status output before the successful runtime-only activation; no new application upgrade in this run"
+  },
+  "runtime": {
+    "worker_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+    "unit": "ustar-role-bot-enable-20261029-03.service",
+    "mode": "--enable-bot",
+    "phase": "runtime_active",
+    "role_bot_enabled": true,
+    "ack_enabled": true,
+    "generation": "3372c69ec0ad49249b8af9994d85b0e8",
+    "successful_unit_completion": true,
+    "phases": [
+      "workers_stopped",
+      "private_files",
+      "include_handoff",
+      "pointer_switched",
+      "probed",
+      "runtime_active"
+    ],
+    "CPU_seconds": 3.884,
+    "memory_peak_MiB": 455.9,
+    "swap_peak_bytes": 0,
+    "service_restore_checked_by_controller": true,
+    "separate_post_enable_service_status_snapshot": "not_provided"
+  },
+  "post_check": {
+    "host_changes": false,
+    "local_ustar": "2026102900",
+    "phase": "role_bot_ready",
+    "provider_called": false,
+    "role_bot_enabled": true
+  },
+  "earlier_owner_preflight": {
+    "phase": "ready_for_role_bot_update",
+    "local_ustar": "2026102803",
+    "baseline_index_profile": "server1_legacy_indexes_20261023",
+    "archive_and_inner_SHA256": "OK; owner supplied before app upgrade"
+  },
+  "archive": {
+    "filename": "ustar-connect-role-bot-install-9a68246b.tar.gz",
+    "sha256": "0860a86786a6db2c3b88cc940203a4ed756b8ac372d9b21c69db53c4e03cfd4e",
+    "bytes": 21082058
+  },
+  "preceding_diagnosis": {
+    "original_enable": "Initial application upgrade completed; original runtime probe reported configuration_invalid and preserved application2900 while restoring v3 worker. Underlying initial probe error not independently isolated.",
+    "busy_trace": "First diagnostic wrapper attempt refused on a managed lock; later snapshot showed only normal receiver/SQLite locks.",
+    "trace02": "Six expected forbidden-operation403 scope checks verified true; original probe succeeded and checkpoint probed was reached. Wrapper then fell back.",
+    "wrapper_defect_inferred_from_source_and_trace": "observe_scopes required pointer_switched, but restore_workers invokes v2 probe again after checkpoint probed. This diagnostic-only guard rejects that second call before original probe.",
+    "wrapper_defect_exception_code": "unexpected_diagnostic_runtime_phase (source inference; the trace02 private log code was not supplied)",
+    "resolution": "Owner used the unchanged pinned controller directly with --enable-bot; runtime_active and role_bot_ready confirmed. No controller or worker code patched on server."
+  },
+  "scope_proof": {
+    "basis": "Earlier owner trace02, six private no-business denial checks",
+    "link-scope-v1": {
+      "registration.options": true
+    },
+    "ack-scope-v1": {
+      "link.claim": true,
+      "notification.lease": true
+    },
+    "bot-scope-v4": {
+      "link.claim": true,
+      "notification.lease": true,
+      "notification.ack": true
+    }
+  },
+  "qualification": {
+    "previous_application_full_RC": "context/runtime/connect_role_bot_qualification_20261029.json",
+    "installer_fix": "context/runtime/connect_role_bot_cron_preflight_fix_20261029.json",
+    "last_pre_owner_head": "fe2f05d23a87e3d6bc141a5e4c57bd6bc53f35c1",
+    "all_four_CI_success": {
+      "review": 40859144524,
+      "console": 40859144301,
+      "infrastructure": 40859144323,
+      "context": 40859144277
+    }
+  },
+  "limits": {
+    "live_role_scenarios": "pending owner acceptance",
+    "post_2900_scheduled_cron": "no new output supplied",
+    "workday_report": "pending",
+    "mini_app": "deferred until role bot acceptance",
+    "public_Academy_HTTPS": "deferred",
+    "whole_host_manifest": "not_recollected"
+  },
+  "owner_installed": true,
+  "owner_role_acceptance": "pending",
+  "agent_SSH": false,
+  "agent_provider_sends": false,
+  "automatic_merge": false,
+  "subagents": false
+}

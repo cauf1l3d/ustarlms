@@ -168,7 +168,7 @@ assert os.geteuid()!=0 and (os.geteuid()==33 if not sender else os.geteuid()!=33
 if kind=='receiver' and Path('/usr/local/lib/ustar-con02-controller-fixture/FAIL_RECEIVER').exists():sys.exit(77)
 c=load_config(profile,notification=sender)
 ack=getattr(c,'acknowledgements_enabled',False)
-for source in ('telegram.token','ack-bridge.key','notifications-bridge.key'):
+for source in ('telegram.token','ack-bridge.key','notifications-bridge.key','bot-bridge.key'):
  try:open('/etc/ustar-connect/'+source).read();raise AssertionError('root source readable')
  except (PermissionError,FileNotFoundError):pass
 foreign='/run/credentials/ustar-connect-receiver.service/ack-bridge.key' if sender else '/run/credentials/ustar-connect-notify.service/bridge.key'
@@ -185,6 +185,10 @@ class API:
   elif method=='getUpdates':
    assert p['allowed_updates']==(['message','callback_query'] if ack else ['message'])
    v=[{'update_id':p['offset'],'message':{'date':int(time.time()),'text':'ignored synthetic input','from':{'id':77777,'is_bot':False},'chat':{'id':77777,'type':'private'}}}]
+   if getattr(c,'role_bot_enabled',False):v[0]['message'].update(message_id=7,text='Меню')
+  elif method=='sendMessage' and getattr(c,'role_bot_enabled',False):
+   assert p['chat_id']==77777 and p['parse_mode']=='HTML' and 'Role fixture' in p['text']
+   v={'message_id':9,'chat':{'id':77777,'type':'private'}}
   else:raise AssertionError('provider_send_or_unexpected_operation')
   return Response(json.dumps({'ok':True,'result':v}).encode())
 c.api._opener=API();verify_bot(c.api,c.bot_id,c.bot_username)
@@ -198,11 +202,16 @@ else:
   bad=BridgeClient(c.ack_bridge._endpoint,'tg_ack_v1',Path('/run/credentials/ustar-connect-'+kind+'.service/ack-bridge.key').read_text().strip(),ca_file='/usr/local/lib/ustar-con02-controller-fixture/wrong.crt')
   try:bad.probe_ack_scope();raise AssertionError('wrong CA accepted')
   except ValueError:pass
+ if getattr(c,'role_bot_enabled',False):
+  c.bot_bridge.probe_bot_scope()
+  assert c.bot_bridge._key_id not in (c.bridge._key_id,c.ack_bridge._key_id)
 if kind=='receiver':
  j=Journal(c.directory,c.bot_id)
  try:other=Journal(c.directory,c.bot_id);other.close();raise AssertionError('second consumer accepted')
  except JournalError as e:assert str(e)=='journal_busy'
- receiver=TelegramReceiver(c.api,c.bridge,j,bot_id=c.bot_id,bot_username=c.bot_username,linking_enabled=c.linking_enabled,**({'acknowledgements_enabled':True,'ack_bridge':c.ack_bridge} if ack else {}))
+ extra={'acknowledgements_enabled':True,'ack_bridge':c.ack_bridge} if ack else {}
+ if getattr(c,'role_bot_enabled',False):extra.update(role_bot_enabled=True,bot_bridge=c.bot_bridge,bot_academy_origin=c.bot_academy_origin)
+ receiver=TelegramReceiver(c.api,c.bridge,j,bot_id=c.bot_id,bot_username=c.bot_username,linking_enabled=c.linking_enabled,**extra)
  assert receiver.step()['status']=='polled'
 print('CON02_CONTROLLER_SERVICE_READY',kind,'ACK' if ack else 'v1',flush=True)
 if kind!='probe':signal.pause()
@@ -246,7 +255,7 @@ def main():
             or PREFIX.exists() or c.BASE.exists() or Path('/var/lib/ustar-connect-telegram-update').exists()
             or Path('/var/lib/ustar-connect-bridge').exists()
             or Path('/var/lib/ustar-connect-notify-pilot').exists()):raise RuntimeError('disposable_ci_only')
-    if len(sys.argv) not in (5,6):raise RuntimeError('plain_artifact_old_archive_pilot_and_link_bundles_required')
+    if len(sys.argv) not in (5,6,7):raise RuntimeError('plain_artifact_old_archive_pilot_and_link_bundles_required')
     bundle=artifact_bundle(sys.argv[1]);legacy=c.frozen_legacy(bundle)
     old_archive=Path(sys.argv[2]);old_commit,old_values=legacy['connect_install'].validate_archive(old_archive,c.sha(old_archive.read_bytes()))
     assert old_commit==c.LEGACY_COMMIT
@@ -280,12 +289,18 @@ def main():
                     names={'tg_link_v1':('link_key',{'link.claim'}),'tg_notify_pilot_v1':(None,{'notification.lease','notification.begin','notification.finish'}),
                            'tg_notify_v2':('notify_key',{'notification.lease','notification.begin_v2','notification.finish'}),
                            'tg_notify_v3':('notify_key',{'notification.lease','notification.begin_v3','notification.finish'}),
-                           'tg_ack_v1':('ack_key',{'notification.ack'})}
-                    name,ops=names[kid];key=paths[name].read_text().strip() if name else '22'*32
+                           'tg_ack_v1':('ack_key',{'notification.ack'}),'tg_role_bot_v4':('bot_key',{'bot.update','bot.upload'})}
+                    name,ops=names[kid]
+                    key=(Path('/etc/ustar-connect/bot-bridge.key').read_text().strip() if name=='bot_key'
+                         else paths[name].read_text().strip() if name else '22'*32)
                     msg='\n'.join(['USTAR-CONNECT-BRIDGE-v1','POST',self.path,kid,stamp,nonce,hashlib.sha256(raw).hexdigest()]).encode()
                     assert abs(int(stamp)-int(time.time()))<=30 and hmac.compare_digest(hmac.new(bytes.fromhex(key),msg,hashlib.sha256).hexdigest(),self.headers['X-Ustar-Signature'])
                     op=json.loads(raw)['operation'];value={'ok':False,'reason':'forbidden_operation' if op not in ops else 'invalid_payload'}
                     code=403 if op not in ops else 422
+                    if kid=='tg_role_bot_v4' and op=='bot.update':
+                        p=json.loads(raw)['payload']
+                        assert p['subject']=='77777' and p['tenant']=='123456' and p['text']=='Меню' and 'userid' not in p
+                        value={'ok':True,'result':{'title':'Role fixture','text':'Synthetic current menu','buttons':[],'metrics':[],'rows':[]}};code=200
                 except (KeyError,ValueError,AssertionError,OSError):pass
                 body=json.dumps(value,separators=(',',':')).encode();self.send_response(code);self.send_header('Content-Length',str(len(body)));self.end_headers();self.wfile.write(body)
         server=ThreadingHTTPServer(('127.0.0.1',18443),Handler)
@@ -342,9 +357,13 @@ def main():
             'application_source':c.APP_COMMIT,'application_SQL':'modeled here; actual native lifecycle in separate Task7 gate',
             'provider_and_bridge_store':'synthetic only; no external API request'}
         out=ROOT/'artifacts/con02-update-runtime.json';out.write_text(json.dumps(evidence,indent=2)+'\n');print('CON02_UPDATE_RUNTIME=PASS')
-        if len(sys.argv)==6:
+        if len(sys.argv)>=6:
             from telegram_update_runtime import artifact_bundle as successor_bundle, verify as verify_successor
-            verify_successor(successor_bundle(sys.argv[5]),ctx,journal,locks,host,cursor=cursor,actual_services=True)
+            role_bundle=None
+            if len(sys.argv)==7:
+                from connect_role_bot_systemd import artifact_bundle as role_artifact
+                role_bundle=role_artifact(sys.argv[6])
+            verify_successor(successor_bundle(sys.argv[5]),ctx,journal,locks,host,cursor=cursor,actual_services=True,role_bundle=role_bundle)
     except BaseException:
         import re
         logs=[]
@@ -385,7 +404,7 @@ def main():
         for n,enabled in previous_enabled.items():run(['systemctl','enable' if enabled else 'disable',n],check=False)
         run(['systemctl','daemon-reload'],check=False)
         if server:server.shutdown();server.server_close()
-        for p in (PREFIX,c.BASE,Path('/var/lib/ustar-connect-telegram-update'),Path('/opt/ustar'),Path('/var/lib/ustar-connect-bridge'),Path('/var/lib/ustar-connect-notify-pilot')):
+        for p in (PREFIX,c.BASE,Path('/var/lib/ustar-connect-telegram-update'),Path('/var/lib/ustar-connect-role-bot-update'),Path('/opt/ustar'),Path('/var/lib/ustar-connect-bridge'),Path('/var/lib/ustar-connect-notify-pilot')):
             shutil.rmtree(p,ignore_errors=True)
         for folder,mode in getattr(host,'fixture_parent_modes',{}).items():
             if folder.exists():folder.chmod(mode)

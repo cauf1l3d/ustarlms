@@ -131,6 +131,8 @@ final class forced_retraining {
         }
 
         try {
+            $transaction = $DB->start_delegated_transaction();
+            $DB->get_record_sql('SELECT id FROM {user} WHERE id=:id FOR UPDATE',['id'=>$userid],MUST_EXIST);
             $blockedpolicyids = [];
             foreach (self::active_assignments($userid, false) as $assignment) {
                 $blockedpolicyids[(int)$assignment['policyid']] = true;
@@ -141,7 +143,6 @@ final class forced_retraining {
 
             $now = time();
             $ids = [];
-            $transaction = $DB->start_delegated_transaction();
             foreach ($policyids as $policyid) {
                 if (isset($blockedpolicyids[$policyid])) {
                     continue;
@@ -181,11 +182,14 @@ final class forced_retraining {
                 ]);
                 $blockedpolicyids[$policyid] = true;
             }
-            $transaction->allow_commit();
             if (!$ids) {
                 throw new \moodle_exception('Выбранные темы уже находятся в ручном или автоматическом переобучении.');
             }
+            $transaction->allow_commit();
             return $ids;
+        } catch(\Throwable $e) {
+            if(isset($transaction) && !$transaction->is_disposed()){$transaction->rollback($e);}
+            throw $e;
         } finally {
             $lock->release();
         }

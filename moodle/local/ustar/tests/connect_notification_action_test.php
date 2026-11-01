@@ -51,7 +51,7 @@ final class connect_notification_action_test extends \advanced_testcase {
     public function test_schema_and_metadata_lifecycle(): void {
         global $DB;
         $this->table();
-        $this->assertCount(100, array_filter($DB->get_tables(), fn($t) => str_starts_with($t, 'local_ustar_')));
+        $this->assertCount(103, array_filter($DB->get_tables(), fn($t) => str_starts_with($t, 'local_ustar_')));
         $f = $this->delivery_fixture(); $other = $this->delivery_fixture();
         $this->token_row($f, time()+3600); $this->token_row($other, time()+3600);
         $provider = \local_ustar\privacy\provider::class;
@@ -217,6 +217,19 @@ final class connect_notification_action_test extends \advanced_testcase {
         $CFG->ustar_connect_ack_since=time()-60;
         employment::register_pending($f['uid']);
         $this->assertNull(identity_service::atomic(fn()=>$class::issue($f['notice'],$f['delivery'],$f['link'],time())));
+    }
+
+    public function test_explicit_role_profile_preserves_old_ack_and_issues_new_recipient_button(): void {
+        global $CFG;
+        $f=$this->delivery_fixture();$old=$this->action($f);
+        $CFG->ustar_connect_bot_enabled=true;$CFG->ustar_connect_role_delivery_profile='academy_linked_opt_in';
+        $CFG->ustar_connect_notify_since=time()+60;unset($CFG->ustar_connect_notify_userids);
+        $first=$this->ack($f,$old['action']);
+        $this->assertSame($first,$this->ack($f,$old['action']));
+        $this->assertSame('acknowledged',$first['status']);
+        $other=$this->delivery_fixture();unset($CFG->ustar_connect_notify_userids);
+        $new=$this->action($other);$this->assertNotEmpty($new['action']);
+        $this->assertSame('acknowledged',$this->ack($other,$new['action'])['status']);
     }
 
     private function dispatch(string $op, array $payload, string $kid = 'tg_ack'): array {

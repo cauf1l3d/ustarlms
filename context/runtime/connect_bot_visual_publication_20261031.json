@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-31",
+  "status": "qualified_archive_ready_owner_installation_pending",
+  "owner_authorization": {
+    "explicit_approval": "да",
+    "scope": "publish prepared changes to cauf1l3d/ustarlms feat/connect-role-bot-20261029 / PR111 and run CI",
+    "automatic_merge": false,
+    "SSH": false,
+    "subagents": false
+  },
+  "publication": {
+    "commit": "5646e2de78b798056168169249c2ed764062d756",
+    "tree": "2838f6a7e595a3ce2751bb87111e52cb2d36cba9",
+    "local_tree_byte_identity": true,
+    "local_original_head": "adbb8567d525ee616246a0be6a4b3064be4d6d5b",
+    "transport": "connected_GitHub_API_with_expected_head_lease",
+    "CLI_push": "no credential helper; no token requested or injected",
+    "branch": "feat/connect-role-bot-20261029",
+    "PR": 111
+  },
+  "candidate": {
+    "worker_commit": "5646e2de78b798056168169249c2ed764062d756",
+    "application_changed": false,
+    "local_ustar": "2026102900",
+    "theme_ustar": "2026102700",
+    "production_visual_deploy": false
+  },
+  "CI": {
+    "source_commit": "5646e2de78b798056168169249c2ed764062d756",
+    "infra_run": 41237501077,
+    "visual_job": 124644249261,
+    "visual_job_conclusion": "success",
+    "artifact_id": 13055504167,
+    "artifact_zip_sha256": "48698ef131950e0a31f6b168b85b91f699976c0c14fc54999a5814f84695d21a",
+    "artifact_ZIP_CRC": true,
+    "archive_byte_identity": true,
+    "remaining_gates": "none for qualified598140d7; final documentation-only commit may trigger automatic recheck",
+    "qualification_commit": "598140d74b11344e094a07cad290ce276538dc25",
+    "all_four_conclusions": "success",
+    "runs": {
+      "context": 41237849162,
+      "review": 41237849184,
+      "console": 41237849303,
+      "infrastructure": 41237849395
+    },
+    "source_PHP82_tests": 1454,
+    "source_PHP83_tests": 1454,
+    "native_connect_job": 124647211753,
+    "native_connect_tests": 172,
+    "native_connect_assertions": 875,
+    "native_Moodle": "5.1.8",
+    "native_PostgreSQL": "16",
+    "native_actual_2803_to_2900_repeat": true,
+    "native_cookie_POST_CSRF_replay": true
+  },
+  "archive": {
+    "filename": "ustar-connect-visual-install-5646e2de.tar.gz",
+    "bytes": 21382136,
+    "sha256": "9c9ac15c1867b56baba40e5c737755ff1982f641f7260751791ba6019ea354c1",
+    "library_file_id": "libfile_bdb44974157c8191aab2689466d75651",
+    "file_id": "file_00000000de0881f6bd7300550356e913",
+    "saved_copy_downloaded_and_byte_verified": true
+  },
+  "supersedes_local_candidate": {
+    "filename": "ustar-connect-visual-install-cb7128fa.tar.gz",
+    "reason": "Published commit metadata differs; same component tree, package now reproducible from remote5646e2de."
+  },
+  "runbook": "docs/CONNECT_VISUAL_20261030_INSTALL_RU.md",
+  "production_scope": "Owner29Oct installed2900/worker5cc; owner30Oct accepted buttons/tasks between two accounts/Academy sync. New graphical worker not installed; HRD/report-review scenarios still pending.",
+  "instruction": {
+    "library_file_id": "libfile_8bb22eab7a988191890bcb77f71ec704",
+    "file_id": "file_00000000ea9c81f69bc4cd1acf3cbd3a",
+    "version": 1
+  }
+}

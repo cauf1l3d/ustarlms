@@ -1,5 +1,12 @@
 # Реестр кода, проверок и deployment evidence
 
+29.10.2026 — Owner подтвердил app2900/theme2700 и успешное штатное --enable-bot
+через9a68246b: worker5cc02944, runtime_active, ACK true, generation3372c69e; --check
+role_bot_ready/role_bot_enabled true. Шесть scope-проверок прошли; диагностическая
+обёртка отвергала законный второй probe, штатный контроллер включился без правок.
+All4CI наfe2f05d PASS. Живая приёмка ролей, post2900 cron и workday report ожидаются.
+[Owner receipt](connect_role_bot_owner_deploy_20261029.json). Main/PR автоматически не слиты.
+
 29.10.2026 — Owner установил2803 оператором36be3f10: hashes/check/upgrade/status OK,
 local2803/theme2700, app_ready/DB available, receiver+notify active/enabled. RSS принят.
 Последний scheduled cron03:37MSK exit0/1.282s без новых ошибок; current adhoc1/overdue56/

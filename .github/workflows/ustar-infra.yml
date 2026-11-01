@@ -195,6 +195,16 @@ jobs:
         run: |
           sudo -n env USTAR_REQUIRE_FEED_UID33=1 python3 -m unittest tests.r16.test_feed_media_update.ActualCodePermissions -v
           sudo -n python3 -m unittest tests.r16.test_workday_observer -v
+      - name: Build coordinated role bot app and worker from exact qualified Git trees
+        run: |
+          python3 -m unittest tests.r16.test_connect_role_bot_update.Predecessor tests.r16.test_connect_role_bot_update.Contract -v
+          python3 scripts/infra/build_connect_role_bot_update.py --commit 9a68246b170dd6a08dc6a8e2118e69f32e16bea9 --output-dir artifacts/connect-role-bot-production-deploy
+          python3 -I -B artifacts/connect-role-bot-production-deploy/ustar-connect-role-bot-update-*.py
+          sudo -n env USTAR_REQUIRE_ROLE_BOT_UID33=1 python3 -m unittest tests.r16.test_connect_role_bot_update.ActualCodePermissions -v
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-role-bot-production-deploy
+          path: artifacts/connect-role-bot-production-deploy/
       - name: PostgreSQL handoff config is readable but cannot be overwritten by actual UID33
         run: sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_postgres_app_handoff.ActualUnixPermissions -v
       - name: Code hardening archive and actual UID33 isolation
@@ -216,6 +226,7 @@ jobs:
           artifacts/con02-update-legacy/ustar-notify-pilot-*.pyz
           artifacts/con02-update-legacy/ustar-bridge-activate-*.pyz
           artifacts/telegram-update-command/ustar-telegram-update-*.py
+          artifacts/connect-role-bot-production-deploy/ustar-connect-role-bot-update-*.py
       - name: CON02 controller respects actual HTTPS owner renewal and recovery
         run: >-
           sudo -n env GITHUB_ACTIONS=true USTAR_CONNECT_CON02_FIXTURE=1
@@ -223,6 +234,7 @@ jobs:
           artifacts/con02-update-command/ustar-con02-update-*.py
           artifacts/con02-callback-old-worker/ustar-connect-receiver-*.tar.gz
           artifacts/telegram-update-command/ustar-telegram-update-*.py
+          artifacts/connect-role-bot-production-deploy/ustar-connect-role-bot-update-*.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -235,6 +247,8 @@ jobs:
             artifacts/telegram-update-command/
             artifacts/telegram-update-runtime.json
             artifacts/telegram-update-https-owner.json
+            artifacts/connect-role-bot-systemd.json
+            artifacts/connect-role-bot-https-owner.json
       - name: Native additive Academy TLS probe and graceful recovery on isolated high ports
         run: |
           sudo -n env USTAR_ACADEMY_TLS_FIXTURE=1 python3 tests/stage/academy_tls_probe_native.py
@@ -252,3 +266,52 @@ jobs:
           name: connect-receiver-runtime
           path: artifacts/connect-runtime/
 
+  connect-visual-cards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Card rendering, multipart delivery, uncertainty and reversible worker switch
+        run: >-
+          env PYTHONPATH=tests/r16 python3 -m unittest
+          tests.r16.test_connect_bot_graphics tests.r16.test_connect_bot_visual_update
+          tests.r16.test_connect_role_bot tests.r16.test_connect_telegram_presentation
+          tests.r16.test_connect_receiver tests.r16.test_connect_callback_transport -q
+      - name: Build exact presentation source and verify without site packages
+        run: |
+          VISUAL_SOURCE=5646e2de78b798056168169249c2ed764062d756
+          python3 scripts/infra/build_connect_bot_visual_update.py --commit "$VISUAL_SOURCE" --output-dir artifacts/connect-visual
+          python3 -I -S tests/stage/connect_visual_package.py artifacts/connect-visual/ustar-connect-visual-install-*.tar.gz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-visual-verified
+          path: artifacts/connect-visual/
+
+  connect-visual-successor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Brand graphics, legacy journal transition, no-stop outage and recovery
+        run: >-
+          env PYTHONPATH=tests/r16 python3 -m unittest
+          tests.r16.test_connect_bot_graphics tests.r16.test_connect_bot_graphics_brand
+          tests.r16.test_connect_bot_graphics_regressions tests.r16.test_connect_bot_visual_update
+          tests.r16.test_connect_bot_visual_successor tests.r16.test_connect_egress_refresh
+          tests.r16.test_connect_role_bot tests.r16.test_connect_telegram_presentation
+          tests.r16.test_connect_receiver tests.r16.test_connect_callback_transport -q
+      - name: Build exact successor source and verify without site packages
+        run: |
+          SUCCESSOR_SOURCE=$(git log -1 --format=%H -- connect-worker scripts/infra/connect_bot_visual_successor.py scripts/infra/build_connect_bot_visual_successor.py docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md)
+          python3 scripts/infra/build_connect_bot_visual_successor.py --commit "$SUCCESSOR_SOURCE" --output-dir artifacts/connect-visual-successor
+          python3 -I -S tests/stage/connect_visual_successor_package.py artifacts/connect-visual-successor/ustar-connect-visual-successor-*.tar.gz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-visual-successor-verified
+          path: artifacts/connect-visual-successor/

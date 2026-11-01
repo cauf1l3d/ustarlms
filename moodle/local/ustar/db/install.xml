@@ -2061,5 +2061,68 @@
         <INDEX NAME="expires_idx" UNIQUE="false" FIELDS="expires"/>
       </INDEXES>
     </TABLE>
+    <TABLE NAME="local_ustar_conn_dialogs" COMMENT="Short lived Connect bot metadata, not business records">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="identityhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="linkid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="linkrevision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="revision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="phase" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="payload" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="ratewindow" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="ratecount" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="authority" TYPE="char" LENGTH="64" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
+      <INDEXES>
+        <INDEX NAME="identity_uix" UNIQUE="true" FIELDS="identityhash"/>
+        <INDEX NAME="expiry_idx" UNIQUE="false" FIELDS="expiresat"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_conn_actions" COMMENT="Short lived Connect bot metadata, not business records">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="tokenhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="dialogid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="revision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="intent" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="payload" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="summary" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true"/>
+        <FIELD NAME="resultjson" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="authority" TYPE="char" LENGTH="64" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
+      <INDEXES>
+        <INDEX NAME="token_uix" UNIQUE="true" FIELDS="tokenhash"/>
+        <INDEX NAME="owner_idx" UNIQUE="false" FIELDS="userid,status"/>
+        <INDEX NAME="expiry_idx" UNIQUE="false" FIELDS="expiresat"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_conn_updates" COMMENT="Short lived Connect bot metadata, not business records">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="eventhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="identityhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="linkrevision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="payloadhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="responsejson" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="authority" TYPE="char" LENGTH="64" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
+      <INDEXES>
+        <INDEX NAME="event_uix" UNIQUE="true" FIELDS="eventhash"/>
+        <INDEX NAME="created_idx" UNIQUE="false" FIELDS="timecreated"/>
+      </INDEXES>
+    </TABLE>
 </TABLES>
 </XMLDB>

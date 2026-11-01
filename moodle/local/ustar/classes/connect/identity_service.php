@@ -130,25 +130,29 @@ final class identity_service {
     }
 
     public static function revoke(int $linkid): void {
+        self::actor();
+        self::mutate(static fn() => self::revoke_current_in_transaction($linkid));
+    }
+
+    /** INTERNAL: caller already holds the identity lock and owns its transaction. */
+    public static function revoke_current_in_transaction(int $linkid): void {
+        global $DB;
+        if (!$DB->is_transaction_started()) { throw new \coding_exception('Owned transaction required'); }
         $userid = self::actor();
-        self::mutate(function() use ($userid, $linkid): void {
-            global $DB;
-            self::actor();
-            $link = $DB->get_record('local_ustar_conn_links', ['id' => $linkid, 'userid' => $userid]);
-            if (!$link) {
-                throw new \InvalidArgumentException('unknown_link');
-            }
-            if ($link->state !== 'revoked') {
-                $link->state = 'revoked';
-                $link->revision = (int)$link->revision + 1;
-                $link->timemodified = time();
-                $DB->update_record('local_ustar_conn_links', $link);
-            }
-            // Invalidate all still-open codes for this channel. A new issue+claim
-            // is needed: a pre-revocation code cannot resurrect the link.
-            $DB->set_field('local_ustar_conn_challenges', 'expiresat', 0,
-                ['userid' => $userid, 'provider' => $link->provider, 'confirmedlinkid' => 0]);
-        });
+    $link = $DB->get_record('local_ustar_conn_links', ['id' => $linkid, 'userid' => $userid]);
+        if (!$link) {
+            throw new \InvalidArgumentException('unknown_link');
+        }
+        if ($link->state !== 'revoked') {
+            $link->state = 'revoked';
+            $link->revision = (int)$link->revision + 1;
+            $link->timemodified = time();
+            $DB->update_record('local_ustar_conn_links', $link);
+        }
+        // Invalidate all still-open codes for this channel. A new issue+claim
+        // is needed: a pre-revocation code cannot resurrect the link.
+        $DB->set_field('local_ustar_conn_challenges', 'expiresat', 0,
+            ['userid' => $userid, 'provider' => $link->provider, 'confirmedlinkid' => 0]);
     }
 
     /** Resolution is read-only, not a replacement for per-command capability/scope checks. */

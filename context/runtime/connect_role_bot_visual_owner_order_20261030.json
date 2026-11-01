@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-30",
+  "kind": "owner_partial_functional_acceptance_and_visual_order",
+  "basis": "User statement and two Telegram screenshots in this conversation; no independent production access.",
+  "owner_quote": "Кнопки отображаются, задачи между двумя учеткам отправляются и синхронизируются в академии, единственное что кнопки было бы хорошо сделать цветными с читаемым текстом на самих кнопках и сам вывод текстом сделать в виде картинок как в устар пульте например",
+  "accepted": {"buttons_visible": true, "tasks_between_two_accounts": true, "Academy_synchronization": true},
+  "not_demonstrated": ["photo_report_return_and_approval", "HRD_independent_confirmation", "all_role_and_scope_combinations", "post2900_scheduled_cron", "workday_performance"],
+  "requested": ["colored_readable_buttons", "graphical_cards_similar_to_server_console"],
+  "implementation_scope": "worker presentation only; same Academy2900 view/auth/writers/opaque callbacks; no schema/profile/key change",
+  "visual_deployment_status": "not_deployed",
+  "constraints": {"subagents": false, "agent_SSH": false, "provider_sends": false, "automatic_merge": false},
+  "design": "docs/superpowers/specs/2026-10-30-connect-visual-cards-design.md"
+}

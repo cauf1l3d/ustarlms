@@ -1,15 +1,26 @@
-# Активная работа —29.10.2026
+# Активная работа —01.11.2026
 
 ## INTEGRATIONS-01: полный рабочий Telegram-бот; Mini App в конце
 
 [Owner поручение](../runtime/connect_bot_owner_order_20261029.json) возобновляет Connect.
-Сначала зафиксировать2803 и создать напоминание, затем реализовать целый контур по ролям.
-Русские кнопки вместо необходимости знать команды, короткие объяснения, визуальные
-сводки/прогресс/компактные таблицы и графики. Существующие Academy identities, writers,
+Owner29Oct установил2900/theme2700 и включил worker5cc через tool9a: runtime_active,
+ACK true и role_bot_ready. [Квитанция](../runtime/connect_role_bot_owner_deploy_20261029.json).
+All4CI наfe2f05d PASS. Owner30Oct принял кнопки и задачи между2учётками/синхронизацию.
+[Запрос графики](../runtime/connect_role_bot_visual_owner_order_20261030.json).
+Owner1Nov восстановил egress: CONNECT200/HTTP302/TLS0, оба бота отвечают.
+Повтор установки267e5587 после busy успешен: visuals_active, затем visuals_ready,
+recovery_required:false. [Квитанция](../runtime/connect_visual_owner_deploy_20261101.json).
+All4CI18c83925 PASS; owner принял PNG/кнопки и читаемость. App2900 прежний; задачи/возврат/фото приняты.
+[История5646/CI](../runtime/connect_bot_visual_publication_20261031.json).
+[Квалификация9a](../runtime/connect_role_bot_cron_preflight_fix_20261029.json): CI/архив0860a867 проверены.
+[4CI/FullRC](../runtime/connect_role_bot_qualification_20261029.json), [команды](../../docs/CONNECT_BOT_2900_INSTALL_RU.md).
+[План](../../docs/superpowers/plans/2026-10-29-connect-role-bot.md), [прогресс](../runtime/connect_role_bot_progress_20261029.md).
+Русские кнопки, пояснения, графические сводки. Существующие Academy identities, writers,
 права и история; самостоятельная работа без субагентов, рациональные проверки.
 Mini App и публичный HTTPS Академии отложены до конца; Bitrix/WhatsApp не включаются
-автоматически. Текущий worker6c56 сохраняется до отдельной квалифицированной поставки.
-Нового автоматического merge/agent SSH/provider sends нет.
+автоматически. Worker267e5587 и оформление приняты. Остальные процессы с руководством с2Nov; HTTPS/Mini App ждут согласования.
+[Owner1Nov](../runtime/connect_feed_integration_order_20261101.json) разрешил merge110/111; идёт единая FullRC-интеграция.
+Следующий доступный этап — PERF-01. Agent SSH/provider sends нет.
 
 ## RSS-01 завершён owner acceptance; PERF-01 report ожидается
 
@@ -25,5 +36,5 @@ wrapper20Oct и не доказательство разгруженной оч�
 
 Напоминание владельцу30Oct11:00Europe/Moscow создано: запустить observe.py на8h
 обычной работы, затем прислать отчёт. Фактический запуск/отчёт ещё не подтверждены.
-[Команды](../../docs/FEED_2803_INSTALL_RU.md). SQL/page, Web-SAPI OPcache и SLO не
+[Сборщик2803/2900](../../docs/CONNECT_BOT_2900_INSTALL_RU.md); для2900 использовать новый observe.py. SQL/page, Web-SAPI OPcache и SLO не
 выводить из Apache aggregate. Работа Connect не закрывает PERF-01 автоматически.

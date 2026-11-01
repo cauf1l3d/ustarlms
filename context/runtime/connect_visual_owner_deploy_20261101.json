@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "recorded_date_msk": "2026-11-01",
+  "kind": "owner_terminal_log_and_owner_report_not_agent_production_access",
+  "egress": {
+    "tool_sha256": "4d922d295a38fd5a1ed7304388684801c1b8553dcf4508d769b0242b3a32ac6d",
+    "phase": "egress_refreshed",
+    "candidates": 11,
+    "selected_candidate": 1,
+    "telegram_https": "verified",
+    "curl": {
+      "CONNECT": 200,
+      "HTTP": 302,
+      "TLS_verify_result": 0
+    },
+    "owner_both_bots_responding": true,
+    "bot_reply_report_scope": "after egress recovery, before visual upgrade"
+  },
+  "previous_visual_attempt": {
+    "unit": "ustar-visual-successor-1793483819.service",
+    "phase": "refused",
+    "reason": "managed_operation_busy_retry_later",
+    "pointer_remained": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+    "lock_holder": "not_measured; cron collision only a hypothesis"
+  },
+  "visual_upgrade": {
+    "unit": "ustar-visual-1793485005.service",
+    "runtime_seconds": 28.209,
+    "result": "success",
+    "exit_status": 0,
+    "phases": [
+      "prepared",
+      "workers_stopped",
+      "pointer_switched",
+      "visuals_active"
+    ],
+    "worker_commit": "267e55874eb8f6c36259d748f28a2c636adc9810",
+    "local_ustar": "2026102900",
+    "app_changed": false
+  },
+  "post_check": {
+    "phase": "visuals_ready",
+    "recovery_required": false,
+    "host_changes": false,
+    "provider_called": false,
+    "worker_commit": "267e55874eb8f6c36259d748f28a2c636adc9810"
+  },
+  "qualification": {
+    "head": "18c8392571a59385907e44b3b525b16c2620b7e1",
+    "code_source": "267e55874eb8f6c36259d748f28a2c636adc9810",
+    "gates": [
+      {
+        "run": 41244881371,
+        "name": "console",
+        "result": "success"
+      },
+      {
+        "run": 41244881212,
+        "name": "infrastructure",
+        "result": "success"
+      },
+      {
+        "run": 41244881423,
+        "name": "context",
+        "result": "success"
+      },
+      {
+        "run": 41244881224,
+        "name": "review",
+        "result": "success"
+      }
+    ]
+  },
+  "acceptance": {
+    "installation": "accepted_owner_terminal",
+    "network_recovery": "accepted_owner_terminal_and_new_replies",
+    "fresh_PNG_and_button_UI": "accepted_owner_report_2026-11-01",
+    "review_HRD_full_roles": "remaining_processes_with_leadership_from_2026-11-02",
+    "scheduled_cron_and_workday": "separate_pending",
+    "owner_visual_quote": "да в боте тоже все работает и читаемость ок",
+    "owner_visual_scope": "Live bot responses and readable graphical/button presentation; broader report/review/checklist/HRD end-to-end acceptance remains separate.",
+    "task_execution_return_and_photo_display": "accepted_owner_report_2026-11-01",
+    "next_owner_order": "context/runtime/connect_feed_integration_order_20261101.json"
+  },
+  "owner_instruction_preference": "Give clear short commands directly in chat, not separate instruction documents.",
+  "limits": [
+    "No agent SSH or independent production measurement",
+    "Do not infer all roles or image rendering from installer readiness",
+    "Existing 29Oct application receipt and 31Oct outage observations remain historical"
+  ]
+}

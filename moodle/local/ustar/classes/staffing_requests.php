@@ -245,7 +245,9 @@ final class staffing_requests {
         }
         $transaction = $DB->start_delegated_transaction();
         try {
-        $request = $DB->get_record('local_ustar_staff_requests', ['id' => $requestid], '*', MUST_EXIST);
+        // Keep serialization through a possible outer channel receipt transaction.
+        $request = $DB->get_record_sql('SELECT * FROM {local_ustar_staff_requests} WHERE id=:id FOR UPDATE',
+            ['id' => $requestid], MUST_EXIST);
         if ((string)$request->requesttype === self::TYPE_REGISTRATION) {
             require_capability('local/ustar:approveregistration', \context_system::instance());
             require_capability('local/ustar:hrmanage', \context_system::instance());

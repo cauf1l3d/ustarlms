@@ -38,3 +38,5 @@ $string['notification_acknowledged'] = 'Подтверждено';
 $string['notification_read'] = 'Прочитано';
 
 $string['privacy:metadata:connect:acktokens'] = 'Хеши персональных кнопок подтверждения уведомлений; без исходных токенов действий.';
+
+$string['privacy:metadata:connect:bot'] = 'Краткоживущие черновики диалогов, подтверждения действий и разрешённые фотографии отчётов Connect.';

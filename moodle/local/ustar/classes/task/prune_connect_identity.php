@@ -11,5 +11,7 @@ final class prune_connect_identity extends \core\task\scheduled_task {
 
     public function execute(): void {
         \local_ustar\connect\identity_service::prune_expired(500);
+        \local_ustar\connect\bot_store::prune(500);
+        \local_ustar\connect\bot_upload::prune();
     }
 }

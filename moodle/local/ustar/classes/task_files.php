@@ -63,6 +63,16 @@ final class task_files {
         $path = $area === self::RESULT ? '/v' . $version . '/' : '/';
         $storage = get_file_storage();
         foreach ($uploads as $upload) {
+            if (is_array($upload) && ($upload['received']??null) instanceof \local_ustar\task_workspace\received_photo) {
+                $file=$upload['received']->file();
+                $record=['contextid'=>$contextid,'component'=>'local_ustar','filearea'=>$area,'itemid'=>$taskid,
+                    'filepath'=>$path,'filename'=>$file->get_filename(),'source'=>$file->get_source()];
+                if ($storage->get_file($contextid,'local_ustar',$area,$taskid,$path,$file->get_filename())) {
+                    throw new \invalid_parameter_exception('Фотография уже приложена.');
+                }
+                $storage->create_file_from_storedfile($record,$file);
+                continue;
+            }
             if (!is_array($upload) || empty($upload['tmp']) || !is_uploaded_file($upload['tmp'])
                     || empty($upload['filename']) || $upload['filename'] !== clean_param($upload['filename'], PARAM_FILE)
                     || (int)($upload['size'] ?? 0) > self::max_file_bytes()) {

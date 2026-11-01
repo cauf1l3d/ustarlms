@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "date_msk": "2026-11-01",
+  "owner_quote": "Проверка уже проводилась задачи возврат исполнения и отображение фото работает, остальные процессы будут проверяться с понедельника с руководством. Да сделай это объедениение. 3. и 4. так же ожидают согласования руководства.",
+  "authorization": {
+    "merge_PRs": [
+      110,
+      111
+    ],
+    "target_branch": "main",
+    "scope": "merge the accepted Feed2803 and Connect2900/visual267 source; reconcile canonical context",
+    "new_server_changes": false,
+    "agent_SSH": false,
+    "subagents": false
+  },
+  "owner_acceptance": {
+    "task_execution_return_and_photo_display": "accepted_owner_report",
+    "visual_bot_and_readability": "accepted_previous_owner_report",
+    "other_role_processes": "leadership_live_acceptance_from2026-11-02",
+    "public_Academy_HTTPS": "awaiting_leadership_approval",
+    "Mini_App": "awaiting_leadership_approval"
+  },
+  "merge_preflight": {
+    "main": "b47bf8dcb32f76880852d4f1ed7d4397e25a4a64",
+    "PR110_head": "9d10d4413a2f61d42dfe83b227d109a56497c35a",
+    "PR111_head_before_order_receipt": "92a272f74abdb2f94d0c0430fb23aa5e1c6bb159",
+    "main_is_ancestor_of_both": true,
+    "PR110_is_ancestor_of_PR111": true,
+    "merge_trees_equal_branch_trees": true,
+    "PR110_all4CI": "success",
+    "PR111_all4CI": "success"
+  },
+  "execution": "one FullRC on the final combined PR111 tree, then expected-head merge110 and111; canonical main metadata follow-up; no automatic production deploy",
+  "status": "integration_preparation",
+  "next_unblocked_stage": "PERF-01 real-workday latency/SQL/cron/host baseline; deployed passive observer already prepared; no speculative tuning"
+}

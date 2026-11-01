@@ -1,14 +1,12 @@
 schema_version: 2
-updated_at: '2026-10-29'
+updated_at: '2026-11-01'
 project: USTAR Academy
-stage: connect_role_bot_implementation_after_owner2803_acceptance
-stage_label: Owner installed2803 and accepted RSS; full role Telegram bot authorized,
-  Mini App last
-current_activity: Owner29Oct verified2803 archive/check/upgrade/status and RSS attachments.
-  Last completed cron03:37MSK exit0/1.282s; current adhoc1/overdue56/failed2 retained,
-  no drain claim. Workday report pending; reminder30Oct11:00Europe/Moscow created.
-  Next implement one coherent button-driven role Connect bot, self/no subagents; no
-  SSH/provider sends/automatic merge.
+stage: feed_connect_source_integration_authorized
+stage_label: Owner accepted tasks/return/photo and authorized merge110/111; leadership approvals pending
+current_activity: Owner1Nov accepted tasks, return/execution and photo display, and authorized
+  merging PR110/111 into main. Other business processes will be tested with leadership
+  from2Nov; public HTTPS and Mini App await leadership approval. One combined FullRC
+  precedes the merges. Next unblocked stage is PERF-01 passive real-workday baseline.
 entrypoint: START_HERE.md
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -26,52 +24,59 @@ code_baseline:
     full_RC_run: 40761497871
     merge: 01904edaf01dc6e340018eae8bf351dcc692b0c2
     receipt: context/runtime/perf2802_qualification_20261028.json
-  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source
-    integration is separate from owner server acceptance.
+  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source integration is separate from
+    owner server acceptance.
 production:
   latest_owner_browser_acceptance: context/runtime/feed2803_owner_deploy_20261029.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
   latest_cron_contract: context/runtime/feed2803_owner_deploy_20261029.json
   previous_scheduled_cron_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  latest_addon_preflight: context/runtime/feed2803_owner_deploy_20261029.json
+  latest_addon_preflight: context/runtime/connect_role_bot_owner_deploy_20261029.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
-  latest_Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  latest_Telegram_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+  latest_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
+  latest_worker_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   effective_addon_deployment:
-    receipt: context/runtime/feed2803_owner_deploy_20261029.json
+    receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
     reported_date_msk: '2026-10-29'
-    status: owner2803_installed_status_and_RSS_accepted
-    installer_commit: 36be3f108f2eac6a3db728f93b4456a729b97a3e
-    payload_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
+    status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
+    installer_commit: 9a68246b170dd6a08dc6a8e2118e69f32e16bea9
+    payload_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
     versions:
-      local_ustar: 2026102803
+      local_ustar: 2026102900
       theme_ustar: 2026102700
-    files: 590
-    tables: 100
+    files: 606
+    tables: 103
     counts_basis: fixed_controller_payload_not_new_whole_host_manifest
     independent_probe: false
-    worker_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
-    worker_rollout: false
-    previous_exact_terminal_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+    worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+    worker_rollout: true
+    previous_exact_terminal_receipt: context/runtime/feed2803_owner_deploy_20261029.json
     previous_2801_preflight_in_same_receipt: false
-    post_deploy_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+    post_deploy_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
     browser_receipt: context/runtime/feed2803_owner_deploy_20261029.json
-  status: owner_feed2803_install_status_and_RSS_accepted
+    role_bot_enabled: true
+    runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
+    post_check: role_bot_ready
+    live_role_acceptance: 'partial: visible buttons, task exchange between two accounts, Academy synchronization;
+      owner30Oct'
+    latest_functional_receipt: context/runtime/connect_role_bot_visual_owner_order_20261030.json
+  status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
   observed_at: '2026-10-29'
-  source: context/runtime/evidence_20261029.yaml
+  source: context/runtime/evidence_connect2900_20261029.yaml
   independently_measured: false
-  current_source_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
-  current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh
-    host filesystem census
+  current_source_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+  current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh host filesystem census
   current_versions:
-    local_ustar: 2026102803
+    local_ustar: 2026102900
     theme_ustar: 2026102700
   last_exact_source_manifest:
-    commit: ef903b7d276f1d62c4879f8a943a435b48e89117
+    commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
     date: '2026-10-29'
-    matching_files: 590
+    matching_files: 606
     kind: owner_verified_controller_payload_not_fresh_manifest
-    evidence: context/runtime/feed2803_owner_deploy_20261029.json
+    evidence: context/runtime/connect_role_bot_owner_deploy_20261029.json
   cron: completed29Oct03_37MSK_exit0_1_282s_no_new_failures; current_adhoc1_overdue56_failed2_not_yet_drained
   cron_current_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
@@ -87,8 +92,10 @@ production:
     Docker: 29.9.0
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
-  post_deploy_receipt: context/runtime/feed2803_owner_deploy_20261029.json
-  previous_addon_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+  post_deploy_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
+  previous_addon_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  post2900_cron_run_receipt: pending; last supplied scheduled cron remains pre2900
+  current_worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
@@ -97,7 +104,7 @@ audit:
   scope: Original infrastructure audit immutable; current verification in context/reviews/20261026/VERIFIED_REVIEW_RU.md
 next_agent_read:
 - context/runtime/connect_bot_owner_order_20261029.json
-- context/runtime/feed2803_owner_deploy_20261029.json
+- context/runtime/connect_role_bot_owner_deploy_20261029.json
 - context/tasks/ACTIVE.md
 - context/decisions/0015-ustar-connect.md
 sysadmin_restore:
@@ -147,17 +154,14 @@ server_facts:
   followup: context/runtime/server_facts_followup_20261017.json
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
-  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance
-    and hardening still separate
-  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019
-    test failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live
-    overrides remain unverified
-  - 18 component skips explained by DB/source; effective runtime overrides/cache and
-    native full-cycle acceptance not checked
-  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware
-    redundancy not confirmed
-  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded
-    plugin/vendor provenance remain separate; native restore/RTO awaited
+  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still separate
+  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test failed. Other external
+    sources/IPv6/NAT/API identity and full SSH admission/live overrides remain unverified
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle acceptance
+    not checked
+  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not confirmed
+  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance remain
+    separate; native restore/RTO awaited
   additional_observations:
     provenance: context/runtime/core_extra_received_20261017.json
     review: context/reviews/20261017/core_extra_reconciliation.md
@@ -279,15 +283,22 @@ perf_query_deployment:
   workday_SLO: pending
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
 development_candidate:
-  manifest: context/code_map/feed_media_development_source.json
-  status: source_PR110_unmerged_owner_installed2803
-  scope: RSS media and passive workday capture; schema/theme/worker unchanged
-  PR: 110
-  application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
-  qualification_commit: 36be3f108f2eac6a3db728f93b4456a729b97a3e
-  owner_receipt: context/runtime/feed2803_owner_deploy_20261029.json
-  manifest_note: Frozen pre-deployment qualification source inventory; deployed=false
-    is historical, current owner deployment is recorded separately.
+  manifest: context/code_map/connect_role_bot_development_source.json
+  status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
+  scope: Owner installed fixed606-file/103-table payload and worker; live role acceptance pending; Git source still
+    unmerged
+  branch: feat/connect-role-bot-20261029
+  deployed: true
+  progress: context/runtime/connect_role_bot_progress_20261029.md
+  baseline_owner_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  PR: 111
+  previous_app_candidate: 3935779fd432a1a057f5f24e41d93f38a651a1e2
+  application_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+  worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+  previous_application_qualification: context/runtime/connect_role_bot_qualification_20261029.json
+  qualification_receipt: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json
+  qualification_head: b9f338c855339d398028a4655ceaff7ce18f692f
+  owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
 feed_media_workday_delivery:
   status: owner_installed_status_and_RSS_accepted_workday_pending
   application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
@@ -310,3 +321,46 @@ feed_media_workday_delivery:
   browser_accepted: true
   workday_reminder_local: '2026-10-30T11:00:00+03:00'
 connect_role_bot_order: context/runtime/connect_bot_owner_order_20261029.json
+connect_role_bot_delivery:
+  status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
+  PR: 111
+  baseline_application: ef903b7d276f1d62c4879f8a943a435b48e89117
+  baseline_worker: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  predecessor_tool: 36be3f108f2eac6a3db728f93b4456a729b97a3e
+  new_journal: /var/lib/ustar-connect-role-bot-update
+  owner_installed: true
+  agent_SSH: false
+  provider_sends: false
+  guide: docs/CONNECT_BOT_RU.md
+  progress: context/runtime/connect_role_bot_progress_20261029.md
+  application_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+  worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+  coordinated_worker_rollout_planned: true
+  previous_application_qualification: context/runtime/connect_role_bot_qualification_20261029.json
+  qualification_receipt: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json
+  qualification_head: b9f338c855339d398028a4655ceaff7ce18f692f
+  tool_commit: 9a68246b170dd6a08dc6a8e2118e69f32e16bea9
+  superseded_tool: 99dbecaac7fe9c6bd2fa9e77349d336e448ca8a6
+  archive_sha256: 0860a86786a6db2c3b88cc940203a4ed756b8ac372d9b21c69db53c4e03cfd4e
+  archive_bytes: 21082058
+  retained_copy_verified: true
+  owner_instruction: docs/CONNECT_BOT_2900_INSTALL_RU.md
+  owner_role_acceptance: pending
+  owner_preflight_followup: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json
+  owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
+  runtime_phase: runtime_active
+  role_bot_enabled: true
+  ack_enabled: true
+  coordinated_worker_rollout_completed: true
+  post_check: role_bot_ready
+
+connect_visual_candidate:
+  previous_source_commit: 5646e2de78b798056168169249c2ed764062d756
+  previous_qualification: context/runtime/connect_bot_visual_publication_20261031.json
+  source_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
+  previous_successor_source: a1bc5ddab211104ec279ca40cf3af91c9ea683a3
+  status: owner_installed_visual_UI_accepted
+  deployed: true
+  owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+  qualification: context/runtime/connect_outage_visual_successor_20261101.json
+  runbook: docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md

@@ -14,10 +14,13 @@ from urllib.request import Request, build_opener, HTTPSHandler, ProxyHandler, HT
 
 PATH = '/local/ustar/connect_bridge.php'
 OPERATIONS = {'launch.create', 'launch.exchange', 'entry.status', 'entry.revoke', 'link.claim',
+              'bot.update','bot.upload',
               'registration.options', 'registration.submit', 'registration.status',
               'notification.lease', 'notification.begin', 'notification.begin_v2', 'notification.begin_v3', 'notification.finish', 'notification.ack',
               'actor.open', 'actor.status', 'actor.revoke'}
 REJECTIONS = {'validation_failed', 'invalid_entry', 'revoked_entry', 'restart_required',
+              'bot_disabled','invalid_bot_request','invalid_bot_action','expired_bot_action','stale_revision',
+              'forbidden_scope','invalid_bot_upload','upload_expired',
               'expired_launch', 'launch_consumed', 'replayed_proof', 'launch_mismatch',
               'idempotency_conflict', 'already_registered', 'receipt_expired', 'rate_limited',
               'invalid_link_code', 'invalid_challenge', 'expired_challenge', 'claimed_challenge',
@@ -129,6 +132,10 @@ class BridgeClient:
     def probe_ack_scope(self) -> None:
         self._probe_forbidden('link.claim', 'ack-scope-v1')
         self._probe_forbidden('notification.lease', 'ack-scope-v1')
+
+    def probe_bot_scope(self) -> None:
+        for operation in ('link.claim','notification.lease','notification.ack'):
+            self._probe_forbidden(operation,'bot-scope-v4')
 
     def _probe_forbidden(self,operation,probe):
         # Nonempty JSON object also survives PHP associative canonicalization.

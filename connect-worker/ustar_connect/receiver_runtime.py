@@ -27,6 +27,9 @@ class Configuration:
     acknowledgements_enabled: bool = False
     ack_bridge: object = None
     notification_contract: int = 1
+    role_bot_enabled: bool = False
+    bot_bridge: object = None
+    bot_academy_origin: str | None = None
 
 
 def load_config(path,*,notification=False):
@@ -35,11 +38,19 @@ def load_config(path,*,notification=False):
         fields = {'bot_token_file','bot_username','state_directory','telegram_proxy','onboarding_enabled',
                   'bridge_endpoint','bridge_key_id','bridge_key_file','bridge_ca_file'}
         if notification:fields=fields|{'notification_subjects'}
-        optional = {'linking_enabled'} | ({'notification_contract'} if notification else
-            {'acknowledgements_enabled', 'ack_bridge_key_id', 'ack_bridge_key_file'})
+        optional = {'linking_enabled'} | ({'notification_contract','role_bot_delivery'} if notification else
+            {'acknowledgements_enabled', 'ack_bridge_key_id', 'ack_bridge_key_file',
+             'role_bot_enabled','bot_bridge_key_id','bot_bridge_key_file','bot_academy_origin'})
         if not isinstance(value,dict) or not fields <= set(value) or not set(value) <= fields | optional:
             raise ValueError('invalid_configuration')
         ack_enabled = value.get('acknowledgements_enabled', False)
+        role_bot=value.get('role_bot_enabled',False)
+        role_delivery=value.get('role_bot_delivery',False)
+        if type(role_delivery) is not bool:raise ValueError('invalid_bot_configuration')
+        bot_fields={'bot_bridge_key_id','bot_bridge_key_file','bot_academy_origin'}
+        if (type(role_bot) is not bool or (role_bot and not bot_fields<=set(value))
+                or (not role_bot and bot_fields.intersection(value)) or (role_bot and value['onboarding_enabled'])):
+            raise ValueError('invalid_bot_configuration')
         contract = value.get('notification_contract', 1)
         if (type(ack_enabled) is not bool or type(contract) is not int or contract not in (1, 2, 3)
                 or (ack_enabled and not {'ack_bridge_key_id', 'ack_bridge_key_file'} <= set(value))
@@ -48,12 +59,17 @@ def load_config(path,*,notification=False):
         subjects=None
         if notification:
             subjects=value['notification_subjects']
-            if (not isinstance(subjects,list) or len(subjects)!=1
+            if role_delivery:
+                if (subjects!='academy_linked_opt_in' or value['onboarding_enabled'] is not False
+                        or value.get('linking_enabled',False) is not False or contract!=3):
+                    raise ValueError('invalid_notification_configuration')
+                subjects=None
+            elif (not isinstance(subjects,list) or len(subjects)!=1
                     or not isinstance(subjects[0],str) or not re.fullmatch('[1-9][0-9]{0,15}',subjects[0])
                     or int(subjects[0])>=2**52 or value['onboarding_enabled'] is not False
                     or value.get('linking_enabled',False) is not False):
                 raise ValueError('invalid_notification_configuration')
-            subjects=tuple(subjects)
+            subjects=tuple(subjects) if subjects is not None else None
         linking = value.get('linking_enabled', False)
         if type(linking) is not bool:
             raise ValueError('invalid_configuration')
@@ -62,10 +78,10 @@ def load_config(path,*,notification=False):
             raise ValueError('invalid_configuration')
         directory = private_directory(value['state_directory'])
         token = read_private(value['bot_token_file'],512).strip()
-        api = TelegramClient(token,proxy=value['telegram_proxy'])
+        api = TelegramClient(token,proxy=value['telegram_proxy'],**({'role_navigation':True} if role_bot or role_delivery else {}))
         bridge, key, ack_bridge = None, None, None
         ca = value['bridge_ca_file']
-        if (value['onboarding_enabled'] or linking or notification or ack_enabled) and ca is not None:
+        if (value['onboarding_enabled'] or linking or notification or ack_enabled or role_bot) and ca is not None:
             ca = trusted_certificate(ca)
         if value['onboarding_enabled'] or linking or notification:
             key = read_private(value['bridge_key_file'],128).strip()
@@ -76,8 +92,19 @@ def load_config(path,*,notification=False):
                     or (key is not None and hmac.compare_digest(key, ack_key))):
                 raise ValueError('invalid_ack_configuration')
             ack_bridge = BridgeClient(value['bridge_endpoint'],value['ack_bridge_key_id'],ack_key,ca_file=ca)
+        bot_bridge=None
+        if role_bot:
+            from urllib.parse import urlsplit
+            origin=urlsplit(value['bot_academy_origin'])
+            if origin.scheme!='https' or not origin.hostname or origin.username or origin.password or origin.path not in ('','/') or origin.query or origin.fragment:
+                raise ValueError('invalid_bot_origin')
+            bot_key=read_private(value['bot_bridge_key_file'],128).strip()
+            if value['bot_bridge_key_id'] in (value['bridge_key_id'],value.get('ack_bridge_key_id')) or any(
+                    other is not None and hmac.compare_digest(other,bot_key) for other in [key,locals().get('ack_key')]):
+                raise ValueError('invalid_bot_configuration')
+            bot_bridge=BridgeClient(value['bridge_endpoint'],value['bot_bridge_key_id'],bot_key,ca_file=ca)
         return Configuration(token.split(':',1)[0],username,directory,value['onboarding_enabled'],api,bridge,
-                             linking,subjects,ack_enabled,ack_bridge,contract)
+                             linking,subjects,ack_enabled,ack_bridge,contract,role_bot,bot_bridge,value.get('bot_academy_origin'))
     except Exception:
         raise ValueError('configuration_invalid') from None
 
@@ -98,6 +125,8 @@ def main(argv=None):
                 config.bridge.probe_link_scope()
             if config.acknowledgements_enabled:
                 config.ack_bridge.probe_ack_scope()
+            if config.role_bot_enabled:
+                config.bot_bridge.probe_bot_scope()
             print(json.dumps({'status':'telegram_verified','bot_username':config.bot_username,
                               'updates_consumed':False,'onboarding_enabled':config.onboarding_enabled,
                               'linking_enabled':config.linking_enabled,
@@ -111,7 +140,8 @@ def main(argv=None):
         receiver = TelegramReceiver(config.api,config.bridge,journal,bot_id=config.bot_id,
             bot_username=config.bot_username,onboarding_enabled=config.onboarding_enabled,
             linking_enabled=config.linking_enabled,acknowledgements_enabled=config.acknowledgements_enabled,
-            ack_bridge=config.ack_bridge)
+            ack_bridge=config.ack_bridge,role_bot_enabled=config.role_bot_enabled,
+            bot_bridge=config.bot_bridge,bot_academy_origin=config.bot_academy_origin)
         stop = threading.Event()
         def requested_stop(_signal,_frame):
             stop.set()

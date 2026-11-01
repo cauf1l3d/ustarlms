@@ -4,6 +4,14 @@ defined('MOODLE_INTERNAL') || die();
 
 /** Separate provider-read authority. Never creates a Moodle login or a role grant. */
 final class actor_service {
+    /** Internal cache invalidation key only, never an access grant or wire response. */
+    public static function authorization_stamp(int $userid): string {
+        global $CFG;
+        $user=\core_user::get_user($userid,'*',MUST_EXIST);
+        return hash('sha256',self::auth_stamp($user).self::scope_stamp($userid,time()).json_encode([
+            get_user_preferences('auth_forcepasswordchange',0,$userid),get_config('tool_mfa','enabled'),
+            get_config('auth_manual','expiration'),$CFG->alternateloginurl??'']));
+    }
     private const IDLE = 900;
     private const ABSOLUTE = 28800;
 

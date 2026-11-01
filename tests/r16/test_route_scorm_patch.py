@@ -201,7 +201,8 @@ class Package(unittest.TestCase):
         sys.path.insert(0, str(ROOT / 'scripts/infra'))
         try:
             import build_route_scorm_patch as builder
-            head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip()
+            # This old2900 overlay is immutable; newer application trees must be refused.
+            head = '51332a218f9ff58f5aa7074f80a1a00426502108'
             with tempfile.TemporaryDirectory() as temp:
                 first = builder.build(head, Path(temp) / 'a', repo=ROOT)
                 second = builder.build(head, Path(temp) / 'b', repo=ROOT)

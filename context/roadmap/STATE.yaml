@@ -355,9 +355,9 @@ development_candidate:
   manifest: context/code_map/development_source.json
   status: implementation_under_qualification
   branch: feat/route-review-access-20261101
-  PR: null
+  PR: https://github.com/cauf1l3d/ustarlms/pull/113
   deployed: false
-  application_commit: d35a7b7b54a0a6a83753b89d9c29e9ec35e480d6
+  application_commit: 757dca12c9e9bc548be24b9bcc464796796e3024
   local_ustar_version: 2026110100
   theme_ustar_version: 2026102700
   schema_changed: true

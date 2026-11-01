@@ -28,6 +28,17 @@
   "owner_approval": "да потверждаю",
   "approval_source": "owner_message_after_inline_design",
   "status": "implementation_under_qualification",
-  "application_commit": "d35a7b7b54a0a6a83753b89d9c29e9ec35e480d6",
-  "native_CI": "pending"
+  "application_commit": "757dca12c9e9bc548be24b9bcc464796796e3024",
+  "native_CI": "pending",
+  "PR": "https://github.com/cauf1l3d/ustarlms/pull/113",
+  "qualification_attempts": [
+    {
+      "tool_commit": "9ade38e84a61a0ed14373f40755208d7b73346da",
+      "review_run": 41342024965,
+      "result": "source_failed_before_native",
+      "cause": "frozen old overlay test used HEAD; root-only ownership transactions were run without sudo",
+      "infra_new_operator": "passed including actual UID33/root group",
+      "correction": "pin old test to qualified51332; root transaction class delegates to mandatory sudo job; no frozen operator changed"
+    }
+  ]
 }

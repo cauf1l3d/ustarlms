@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "6e19a2287730909369e7faa96862402d97ba284f",
+    "moodle/local/ustar": "8cf866b271da058c41cdc765e7c9c419b783080b",
     "moodle/theme/ustar": "c60e0657cb957288c914fa46444d2d692012cb7e"
   },
   "versions": {
@@ -2185,7 +2185,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/route_point_access_test.php",
-      "sha256": "8d0f33d6801b017e982e75598dc18ccc8ce05a531451c3bd0fe07ef2747f51e7"
+      "sha256": "802ddc50baf085b1936233a582e8efb20afd9fec4b0deb962c529558bd49c34f"
     },
     {
       "path": "moodle/local/ustar/tests/route_studio_commands_test.php",

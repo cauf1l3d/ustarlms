@@ -54,6 +54,7 @@ class Host:
     def login(self):return self.running
     def healthy(self):return self.running
 
+@unittest.skipUnless(os.geteuid()==0, "real root ownership is checked by the mandatory sudo CI job")
 class Transaction(unittest.TestCase):
     def setUp(self):
         self.m=importlib.import_module('route_access_update');self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)

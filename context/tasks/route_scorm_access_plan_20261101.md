@@ -57,4 +57,10 @@ Full Python run ended without final summary; not recorded as passing. New operat
 contract/transaction tests pass with actualUID33 fixture reserved for mandatory sudo CI.
 Ruling: old2900/100 validators run on explicit historical projections and frozen2900
 source; current104 schema gets its own real-PG contract and CLI upgrade/repeat checks.
-No source merge or production access. Current appd35a7b7b, operator still being qualified.
+No source merge or production access. Current app757dca12, operator still being qualified.
+
+First CI9ade: console/rollback/new installer with actualUID33 passed; source/context
+found root-required ownership fixtures in unprivileged discovery and an old frozen
+package test pointed at HEAD. Ruling: root transactions run in mandatory sudo job;
+unprivileged discovery skips them, never fakes chown. Frozen overlay test pins51332.
+Native fixture now includes its department. FullRC rerun required before delivery.

@@ -355,7 +355,7 @@ development_candidate:
   branch: fix/route-direct-scorm-20261101
   PR: 112
   deployed: false
-  application_commit: 091e7176050d9f0e6eeb4aabd1c6d64d91a6eb0c
+  application_commit: 3f8521ec0b23ab0a974440d8eb3eaf378d21d741
   local_ustar_version: 2026102900
   theme_ustar_version: 2026102700
   schema_changed: false

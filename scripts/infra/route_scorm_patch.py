@@ -14,7 +14,7 @@ import sys
 import tempfile
 
 BASELINE = '5cc02944e1059ba015afcc7c5e8068ca56c34a92'
-APPLICATION = '091e7176050d9f0e6eeb4aabd1c6d64d91a6eb0c'
+APPLICATION = '3f8521ec0b23ab0a974440d8eb3eaf378d21d741'
 WEB = 'opt/ustar/data/moodle/public/public'
 CHANGED = ('local/ustar/course_launch.php', 'local/ustar/scorm_launch.php')
 ADDED = ('local/ustar/classes/scorm_route_launch.php', 'local/ustar/tests/scorm_route_launch_test.php')

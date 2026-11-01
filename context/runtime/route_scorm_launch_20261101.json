@@ -5,7 +5,7 @@
   "PR": 112,
   "branch": "fix/route-direct-scorm-20261101",
   "baseline_application": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
-  "application_commit": "091e7176050d9f0e6eeb4aabd1c6d64d91a6eb0c",
+  "application_commit": "3f8521ec0b23ab0a974440d8eb3eaf378d21d741",
   "status": "native_qualification_and_owner_overlay_preparation",
   "deployed": false,
   "versions_unchanged": {
@@ -30,7 +30,8 @@
     "red_job": 124860440112,
     "red_reason": "course: expected /local/ustar/scorm_launch.php, got /course/view.php",
     "local_green": "nine real-endpoint cases including stale component cache PASS; route_flow31 PASS; code overlay10 tests PASS with one actual-owner fixture delegated to sudo CI; exact-Git package deterministic/offline plan PASS",
-    "cached_component_map": "RED class not found with the existing map; explicit require_once in both launch endpoints GREEN without global cache purge"
+    "cached_component_map": "RED class not found with the existing map; explicit require_once in both launch endpoints GREEN without global cache purge",
+    "persisted_values_assertion": "Separate DB stdClass instances are compared by record data, not PHP object identity; fixed before native retry"
   },
   "native_CI": "pending",
   "owner_instructions": "inline_chat_only",
@@ -73,7 +74,7 @@
   },
   "delivery": {
     "status": "new_source_snapshot_and_package_qualification_pending",
-    "application_commit": "091e7176050d9f0e6eeb4aabd1c6d64d91a6eb0c",
+    "application_commit": "3f8521ec0b23ab0a974440d8eb3eaf378d21d741",
     "owner_apply": false
   },
   "native_second_attempt": {

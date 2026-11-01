@@ -3300,8 +3300,8 @@
     {
       "path": "context/runtime/route_scorm_launch_20261101.json",
       "domain": "runtime",
-      "size": 2968,
-      "sha256": "b084a963cc098e1475a9b7a6752781568e22c21da5a32271868a85078a97c040"
+      "size": 3958,
+      "sha256": "92685ef66eb6b0c645ba9d4712d3df495f48b5d49d2a03ef8e69bc0bcdc2af74"
     },
     {
       "path": "context/runtime/server-extra/20261017T095914Z-0411e053/README.md",

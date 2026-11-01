@@ -35,8 +35,8 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: PERF-01
-  related_task: INTEGRATIONS-01
+  task: LEARN-SCORM-01
+  related_task: PERF-01
   status: passive_workday_baseline_report_pending
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   observation_tool: observe.py from frozen role-bot installer9a68246b

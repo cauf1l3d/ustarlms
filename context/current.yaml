@@ -104,7 +104,7 @@ current_work:
     tested with leadership from2Nov; public HTTPS and Mini App await approval. Next
     PERF-01 is passive ordinary-workday latency/SQL/cron/host baseline; no new production
     change.
-  next_task: PERF-01
+  next_task: LEARN-SCORM-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -130,6 +130,7 @@ current_work:
     INF-13: planned
     INF-14: in_progress
     INTEGRATIONS-01: in_progress
+    LEARN-SCORM-01: in_progress
     MOB-01: planned
     MOB-02: planned
     MOB-03: planned

@@ -1,14 +1,14 @@
 schema_version: 2
 updated_at: '2026-11-01'
 project: USTAR Academy
-stage: performance_workday_baseline
+stage: route_scorm_launch_fix
 stage_label: Feed and Connect integrated; next PERF-01; management gates remain explicit
 current_activity: PR110/111 integrated after one qualified combined FullRC. Owner accepted
   bot graphics/readability and task execution/return/photo. Other processes are tested
   with leadership from2Nov; public HTTPS and Mini App await approval. Next PERF-01 is
   passive ordinary-workday latency/SQL/cron/host baseline; no new production change.
 entrypoint: START_HERE.md
-next_task: PERF-01
+next_task: LEARN-SCORM-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -348,3 +348,18 @@ connect_visual_candidate:
   runbook: docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md
 
 latest_source_integration: context/runtime/connect_feed_integration_order_20261101.json
+
+development_candidate:
+  manifest: context/code_map/development_source.json
+  status: direct_scorm_launch_native_qualification_pending
+  branch: fix/route-direct-scorm-20261101
+  PR: 112
+  deployed: false
+  application_commit: 7fb26f9bc36e8170a2c0dde25484f5220fbbc5b3
+  local_ustar_version: 2026102900
+  theme_ustar_version: 2026102700
+  schema_changed: false
+  worker_rollout: false
+  preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
+  scope: four-file source overlay on accepted5cc2900; versions/DB/cron/worker unchanged; guarded file backup/recovery; no owner apply yet
+  progress: context/runtime/route_scorm_launch_20261101.json

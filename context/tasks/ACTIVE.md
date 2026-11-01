@@ -1,5 +1,12 @@
 # Активная работа —01.11.2026
 
+## LEARN-SCORM-01: прямой запуск из маршрута — текущий bugfix
+
+Owner сообщил: импортированный курс открывает меню вместо SCORM. PR112 исправляет
+course/CM launch с прежними current point/version/actor gates и Moodle attempts.
+Кандидат не установлен; app/worker production2900/267 сохраняются.
+[Проверки и поставка](../runtime/route_scorm_launch_20261101.json). После фикса — PERF-01.
+
 ## PERF-01: производительность и стабильность обычного рабочего дня
 
 PR110/111 объединены в main после единой FullRC по
@@ -15,10 +22,7 @@ PR110/111 объединены в main после единой FullRC по
 затем выбирать изменения по найденным узким местам. SQL/page, Web-SAPI OPcache и
 concurrency/SLO не выводить из Apache aggregate или одного ответа status.
 
-Последний переданный scheduled cron29Oct03:37MSK: exit0/1.282s, new failures[],
-USTAR counters0. Adhoc1/overdue56/failed2 — отдельный старый срез; не сбрасывать
-историю и не объявлять очередь разгруженной без свежих данных. Напоминание30Oct
-создано ранее, запуск observe/report им не подтверждён.
+Старый cron/очереди не являются свежим замером; история в STATE и owner receipts.
 
 ## INTEGRATIONS-01: принятое и ожидающее руководства
 

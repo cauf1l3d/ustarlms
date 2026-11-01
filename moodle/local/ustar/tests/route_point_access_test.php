@@ -133,6 +133,13 @@ final class route_point_access_test extends \advanced_testcase {
         $this->assertSame((int)$next->id,route_model::for_user($position,$u->id)['currentpoint']['id']);
     }
 
+    public function test_review_policy_requires_a_mandatory_scorm_material(): void {
+        [$u,$position,$point,$version,$scorm] = $this->fixture([]);
+        $this->expectException(\invalid_parameter_exception::class);
+        route_point_access::validate_for_requirements(route_point_access::normalize(['advance'=>'manual']),
+            [['type'=>'cm','sourceid'=>$scorm->cmid,'required'=>false]]);
+    }
+
     public function test_a_foreign_actor_cannot_close_another_window(): void {
         [$u,$position,$point,$version,$scorm] = $this->fixture(['advance'=>'manual']);
         $this->complete($u,$scorm);

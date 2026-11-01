@@ -49,6 +49,7 @@ final class route_point_access {
         global $DB;
         if ($policy === self::normalize([])) { return; }
         foreach ($requirements as $r) {
+            if (empty($r['required'])) { continue; }
             if (($r['type'] ?? '') === 'cm') {
                 $cm = get_coursemodule_from_id(null, (int)$r['sourceid'], 0, false, IGNORE_MISSING);
                 if ($cm && $cm->modname === 'scorm') { return; }
@@ -116,6 +117,7 @@ final class route_point_access {
             if ($persist) {
                 view_as::assert_writable();
                 $lock = self::lock($userid);
+                $tx = null;
                 try {
                     $tx = $DB->start_delegated_transaction();
                     $window = $DB->get_record('local_ustar_route_access',$key);
@@ -130,7 +132,7 @@ final class route_point_access {
                         self::close($window,'deadline',0);
                     }
                     $tx->allow_commit();
-                } catch (\Throwable $e) { $tx->rollback($e); } finally { $lock->release(); }
+                } catch (\Throwable $e) { if ($tx) { $tx->rollback($e); } throw $e; } finally { $lock->release(); }
             } else { $window = $DB->get_record('local_ustar_route_access',$key) ?: null; }
         }
         $state = self::window_state($policy,$window,time());
@@ -200,6 +202,7 @@ final class route_point_access {
             throw new \moodle_exception('Сначала выполните текущие обязательные задания.');
         }
         $lock = self::lock($userid);
+        $tx = null;
         try {
             $tx = $DB->start_delegated_transaction();
             $version = route_model::current_published_version($pointid);
@@ -218,9 +221,19 @@ final class route_point_access {
                 if ((int)$row['id'] === $pointid && empty($row['locked'])) { $reachable = true; }
             }
             if (!$reachable) { throw new \moodle_exception('Точка недоступна в вашем маршруте.'); }
+            if (!(int)$window->closedat) {
+                $live = route_model::for_user($position,$userid,true);
+                $valid = false;
+                foreach ($live['points'] ?? [] as $row) {
+                    if ((int)$row['id'] === $pointid && !empty($row['studied'])
+                            && (!empty($row['reviewing']) || (self::policy($version)['advance'] === 'timed'
+                                && (int)$window->deadline > 0 && (int)$window->deadline <= time()))) { $valid = true; }
+                }
+                if (!$valid) { throw new \moodle_exception('Условия точки изменились. Обновите маршрут.'); }
+            }
             self::close($window,'manual',$userid);
             $tx->allow_commit();
-        } catch (\Throwable $e) { $tx->rollback($e); } finally { $lock->release(); }
+        } catch (\Throwable $e) { if ($tx) { $tx->rollback($e); } throw $e; } finally { $lock->release(); }
     }
 
     /** Native player/file access must agree with published route windows; null means not managed. */

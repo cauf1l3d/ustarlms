@@ -1,6 +1,6 @@
 domain: economy
 reviewed_at: '2026-10-02'
-source_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+source_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 purpose: XP, USCOIN ledger, награды, сезоны соревнований
 services:
 - moodle/local/ustar/classes/economy.php
@@ -30,3 +30,4 @@ entry_points:
 - moodle/local/ustar/competition_studio.php
 - moodle/local/ustar/reward_control.php
 - moodle/local/ustar/games.php
+source_reconciled_at: '2026-11-01'

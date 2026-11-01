@@ -1,6 +1,6 @@
 domain: registration
 reviewed_at: '2026-10-02'
-source_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+source_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 purpose: Внутренняя регистрация и решение HRD
 services:
 - moodle/local/ustar/classes/registration_service.php
@@ -17,3 +17,4 @@ rules:
 entry_points:
 - moodle/local/ustar/register.php
 - moodle/local/ustar/staffing.php
+source_reconciled_at: '2026-11-01'

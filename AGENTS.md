@@ -1,10 +1,8 @@
 # USTAR — инструкции агентам
 
 Актуально01.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
-Канонический baseline — main2802; PR110/111 ещё не слиты. Owner29Oct установил
-app2900/theme2700 и включил worker5cc02944 штатным tool9a68246b:
-[owner receipt](context/runtime/connect_role_bot_owner_deploy_20261029.json).
-Runtime_active/ACK true, role_bot_ready; all4CI fe2f05d PASS.
+Канонический main — app2900/source5cc02944; PR110/111 слиты. Owner29Oct установил app2900/theme2700 через9a:
+[receipt](context/runtime/connect_role_bot_owner_deploy_20261029.json).
 Owner1Nov восстановил egress (CONNECT200/HTTP302/TLS0), оба бота отвечают.
 Worker267e5587 установлен: visuals_active/visuals_ready, recovery_required:false.
 [Owner receipt](context/runtime/connect_visual_owner_deploy_20261101.json); PNG/читаемость и задачи/возврат/фото приняты.
@@ -14,14 +12,13 @@ Worker267e5587 установлен: visuals_active/visuals_ready, recovery_requ
 
 ## Работа и разрешения
 
-Владелец разрешил push; согласованная интеграция PR107/109 завершена28Oct.
-[Основание](context/runtime/perf2802_integration_20261028.json).
-Main source app22607c69/local2802; PR110 source2803 ещё не слит. Owner29Oct
-установил app ef903b7d/operator36be3f10, local2803/theme2700 и принял RSS:
-[receipt](context/runtime/feed2803_owner_deploy_20261029.json). App_ready/DB available,
-receiver+notify active/enabled. Последний cron03:37MSK exit0/1.282s без новых ошибок;
-текущий adhoc1/overdue56/failed2 не выдавать за разгруженную очередь.
-PERF-01: рабочий день ещё не измерен.
+Owner1Nov разрешил merge110/111; объединены после FullRC.
+[Основание/проверки](context/runtime/connect_feed_integration_order_20261101.json).
+App2900/theme2700 и worker267e5587 уже установлены владельцем; merge не deploy.
+Задачи/возврат/фото/читаемость приняты. Остальные процессы с руководством с2Nov;
+публичный HTTPS/Mini App ждут согласования. Следующий этап — PERF-01: пассивное
+наблюдение обычного рабочего дня. Отчёт8h ещё не получен; старые cron19/failed2
+не сбрасывать и не выдавать за новую ошибку.
 
 Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,
 все роли через существующую Академию; Mini App и внешний HTTPS в конце.
@@ -30,8 +27,8 @@ Owner29Oct возобновил полный Connect: кнопки/коротк�
 [Квалификация2803](context/runtime/feed2803_qualification_20261029.json) сохраняет
 4CI/native357/1706/actualPG/UID33. Архив/старые операторы неизменны.
 
-Owner1Nov разрешил merge PR110/111; [поручение](context/runtime/connect_feed_integration_order_20261101.json).
-Остальные слияния не делать. Старые операторы неизменны.
+Разрешённое объединение110/111 завершено; новые слияния без поручения не делать.
+Старые операторы неизменны.
 Субагенты запрещены. Агент не подключается по SSH к production, не отправляет
 сообщения/письма/архивы через провайдеров и не меняет сервер в рамках Git-работ.
 Docker rotation/health/recreate отложены до

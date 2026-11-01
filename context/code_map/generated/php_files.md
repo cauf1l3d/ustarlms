@@ -1,6 +1,6 @@
 # PHP files
 
-Source: `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`. Git source only; not a live database snapshot.
+Source: `5cc02944e1059ba015afcc7c5e8068ca56c34a92`. Git source only; not a live database snapshot.
 
 - `moodle/local/ustar/achievements.php`
 - `moodle/local/ustar/activity_launch.php`
@@ -53,6 +53,19 @@ Source: `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`. Git source only; not a live 
 - `moodle/local/ustar/classes/completion_cycle.php`
 - `moodle/local/ustar/classes/compliance.php`
 - `moodle/local/ustar/classes/connect/actor_service.php`
+- `moodle/local/ustar/classes/connect/bot_actor.php`
+- `moodle/local/ustar/classes/connect/bot_adaptation.php`
+- `moodle/local/ustar/classes/connect/bot_confirmation.php`
+- `moodle/local/ustar/classes/connect/bot_forms.php`
+- `moodle/local/ustar/classes/connect/bot_guards.php`
+- `moodle/local/ustar/classes/connect/bot_learning.php`
+- `moodle/local/ustar/classes/connect/bot_people.php`
+- `moodle/local/ustar/classes/connect/bot_registration.php`
+- `moodle/local/ustar/classes/connect/bot_request.php`
+- `moodle/local/ustar/classes/connect/bot_service.php`
+- `moodle/local/ustar/classes/connect/bot_store.php`
+- `moodle/local/ustar/classes/connect/bot_upload.php`
+- `moodle/local/ustar/classes/connect/bot_work.php`
 - `moodle/local/ustar/classes/connect/bridge_auth.php`
 - `moodle/local/ustar/classes/connect/bridge_http.php`
 - `moodle/local/ustar/classes/connect/bridge_service.php`
@@ -208,6 +221,7 @@ Source: `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`. Git source only; not a live 
 - `moodle/local/ustar/classes/task_workspace/home_cards.php`
 - `moodle/local/ustar/classes/task_workspace/page.php`
 - `moodle/local/ustar/classes/task_workspace/policy.php`
+- `moodle/local/ustar/classes/task_workspace/received_photo.php`
 - `moodle/local/ustar/classes/task_workspace/recipients.php`
 - `moodle/local/ustar/classes/task_workspace/service.php`
 - `moodle/local/ustar/classes/task_workspace/worker.php`
@@ -257,6 +271,7 @@ Source: `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`. Git source only; not a live 
 - `moodle/local/ustar/cli/validate_2726.php`
 - `moodle/local/ustar/competition_studio.php`
 - `moodle/local/ustar/connect.php`
+- `moodle/local/ustar/connect_bot_confirm.php`
 - `moodle/local/ustar/connect_bridge.php`
 - `moodle/local/ustar/continue.php`
 - `moodle/local/ustar/course_launch.php`
@@ -348,6 +363,7 @@ Source: `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`. Git source only; not a live 
 - `moodle/local/ustar/tests/competition_studio_test.php`
 - `moodle/local/ustar/tests/completion_cycle_test.php`
 - `moodle/local/ustar/tests/connect_actor_test.php`
+- `moodle/local/ustar/tests/connect_bot_test.php`
 - `moodle/local/ustar/tests/connect_bridge_test.php`
 - `moodle/local/ustar/tests/connect_entry_test.php`
 - `moodle/local/ustar/tests/connect_identity_test.php`

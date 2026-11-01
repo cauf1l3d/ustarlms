@@ -30,7 +30,113 @@
     "PR110_all4CI": "success",
     "PR111_all4CI": "success"
   },
-  "execution": "one FullRC on the final combined PR111 tree, then expected-head merge110 and111; canonical main metadata follow-up; no automatic production deploy",
-  "status": "integration_preparation",
-  "next_unblocked_stage": "PERF-01 real-workday latency/SQL/cron/host baseline; deployed passive observer already prepared; no speculative tuning"
+  "execution": "one FullRC on exact combined PR111 head; expected-head merge110 then111; qualified tree preserved; canonical metadata follow-up only; no production deploy",
+  "status": "merged_main_canonical_context_reconciled",
+  "next_unblocked_stage": "PERF-01 passive ordinary-workday host/DB/cron and aggregate HTTP timing report; no real 8h report yet; no SQL/page or authenticated-page SLO claim",
+  "verification": {
+    "qualified_head": "2bd47af36de9c91b8dbb46e245c6a40a2810aba9",
+    "qualified_tree": "daf821fd3c72ccb9fbd019829ee5ee286bc08967",
+    "all_four_workflows": {
+      "review_FullRC": {
+        "run_id": 41262736011,
+        "conclusion": "success"
+      },
+      "context": {
+        "run_id": 41262736087,
+        "conclusion": "success"
+      },
+      "console": {
+        "run_id": 41262736021,
+        "conclusion": "success"
+      },
+      "infrastructure": {
+        "run_id": 41262736008,
+        "conclusion": "success"
+      }
+    },
+    "FullRC_jobs": {
+      "source_php82": {
+        "job_id": 124719155780,
+        "conclusion": "success"
+      },
+      "source_php83": {
+        "job_id": 124719155918,
+        "conclusion": "success",
+        "python_tests": 1488,
+        "skipped": 235
+      },
+      "rollback": {
+        "job_id": 124719155615,
+        "conclusion": "success"
+      },
+      "prepare_rc": {
+        "job_id": 124720986307,
+        "conclusion": "success"
+      },
+      "connect_native_db": {
+        "job_id": 124720986238,
+        "conclusion": "success",
+        "tests": 172,
+        "assertions": 875,
+        "also_verified": [
+          "fresh_upgrade_repeat",
+          "independent_concurrent_requests",
+          "actual_PG_UID33_scope",
+          "installer_native_migration_and_recovery"
+        ]
+      },
+      "moodle_historical_db": {
+        "job_id": 124721038776,
+        "conclusion": "success",
+        "tests": 371,
+        "assertions": 1751
+      },
+      "moodle_patch518_db": {
+        "job_id": 124721038838,
+        "conclusion": "success",
+        "tests": 371,
+        "assertions": 1751
+      },
+      "gate": {
+        "job_id": 124723142097,
+        "conclusion": "success"
+      }
+    }
+  },
+  "merges": [
+    {
+      "PR": 110,
+      "expected_head": "9d10d4413a2f61d42dfe83b227d109a56497c35a",
+      "merge_commit": "0670fcb2b428f0ebbe1c06f9b004726a60084cd2",
+      "method": "merge",
+      "tree": "b92a5ef0b99cb40116f311fcd6082e833ce95a4d",
+      "tree_equals_PR110_head": true
+    },
+    {
+      "PR": 111,
+      "expected_head": "2bd47af36de9c91b8dbb46e245c6a40a2810aba9",
+      "merge_commit": "73f3b818cef6cc82bdc38e5cf1afecf4059f742f",
+      "method": "merge",
+      "tree": "daf821fd3c72ccb9fbd019829ee5ee286bc08967",
+      "tree_equals_FullRC_qualified_head": true
+    }
+  ],
+  "canonical_context": {
+    "application_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+    "local_ustar": 2026102900,
+    "theme_ustar": 2026102700,
+    "files": 606,
+    "tables": 103,
+    "owner_installed_worker": "267e55874eb8f6c36259d748f28a2c636adc9810",
+    "scope": "metadata/inventories only; application, worker, scripts, console and workflow trees unchanged from merged qualified source",
+    "checks": [
+      "check_context",
+      "secret_boundaries",
+      "current_context_generation",
+      "agent_inventory_generation",
+      "context_governance_3_tests",
+      "diff_whitespace"
+    ],
+    "main_metadata_push_CI": "recorded by GitHub Actions on the metadata follow-up commit; not a second FullRC"
+  }
 }

@@ -1,18 +1,23 @@
 # Архитектура USTAR
 
-Проверено26Oct по source6c56a5b6/local2300. [Границы](boundaries.md) и
-[ADR](../decisions/README.md) объясняют владельцев данных.
+Актуально01Nov: main application5cc02944/local2900/theme2700; worker267e5587.
+[Границы](boundaries.md), [ADR](../decisions/README.md), [интеграция](../runtime/connect_feed_integration_order_20261101.json).
 
-- Moodle core: пользователи, курсы, File API, SCORM, capabilities и native sessions.
-- local_ustar: регистрация/HR/занятость, адаптация, маршруты и версии точек,
-  evidence/completion, грейды/награды, задачи и контент. Единый canonical writer
-  каждого домена; actor/scope/revision/locks обязательны на записи.
-- theme_ustar: native PHP/Mustache/AMD/SCSS, parent boost, общий responsive shell.
-- connect-worker: receiver/notifier каналов; Academy bridge и permissions остаются
-  в local_ustar. Telegram2300 принят владельцем; группы/reserve — deferred.
-- server-console: собственная ops auth и allowlisted Unix RPC, не Academy auth.
-- scripts/infra: owner-executed инструменты с guard/check/recovery и dated receipts.
+- Moodle5.1.8 владеет пользователями, auth/sessions, курсами, File API, SCORM/Quiz и native messaging.
+- local_ustar: регистрация/HR/занятость, адаптация, маршруты, evidence/completion,
+  грейды/награды, задачи, контент и общая Studio. Каждый домен имеет canonical writer;
+  actor/capability/scope/revision/locks обязательны на записи.
+- theme_ustar: PHP/Mustache/AMD/SCSS, parent boost, responsive shell; тема не даёт прав записи.
+- connect-worker — тонкий Telegram receiver/notifier. Роли и бизнес-команды остаются
+  в local_ustar; Python отвечает за transport, durable delivery и представление.
+  [Карта Connect](../domains/connect.yaml). Не создавать вторую LMS/модель сотрудников.
+- server-console — отдельные ops auth и allowlisted Unix RPC; не Academy login.
+- scripts/infra — owner-executed инструменты с check/guards/recovery и отдельными
+  журналами. Старые операторы frozen. Новая запись Git не меняет сервер автоматически.
 
-Источники: [карта кода](../code_map/README.md), [STATE](../roadmap/STATE.yaml),
-[prod evidence](../runtime/evidence_20261026.yaml). Main — исходники; merge не deploy.
-Legacy frontend не входит в native release. Будущая студия PR107 пока отдельная.
+[Карта кода](../code_map/README.md) фиксирует606файлов/103таблицы приложения;
+[STATE](../roadmap/STATE.yaml) разделяет source, CI и owner receipts. Payload не
+является whole-host census. frontend — неактивный legacy, вне native release.
+
+Приняты задачи/возврат/фото/PNG/читаемость. Остальные процессы с руководством с2Nov;
+публичный HTTPS/Mini App — после согласования. Следующий доступный этап — PERF-01.

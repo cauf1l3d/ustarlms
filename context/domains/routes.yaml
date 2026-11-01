@@ -1,6 +1,6 @@
 domain: routes
 reviewed_at: '2026-10-17'
-source_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+source_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 purpose: Семейства маршрутов, scope, immutable publication и launch
 services:
 - moodle/local/ustar/classes/route_model.php
@@ -41,3 +41,4 @@ scenarios:
     version, progress and completion cycle remain distinct
 coverage_limit: Selected command/read paths only; complete endpoint, file access and
   actor/scope negative-path audit remains open
+source_reconciled_at: '2026-11-01'

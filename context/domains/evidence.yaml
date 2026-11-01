@@ -1,6 +1,6 @@
 domain: evidence
 reviewed_at: '2026-10-17'
-source_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+source_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 purpose: Подтверждённые результаты, gates и completion cycles
 services:
 - moodle/local/ustar/classes/target_core.php
@@ -36,3 +36,4 @@ scenarios:
     route versions do not silently replace pinned runtime
 coverage_limit: Selected evaluators only; canonical evidence event writers, endpoint
   access and legacy bridges require separate audit
+source_reconciled_at: '2026-11-01'

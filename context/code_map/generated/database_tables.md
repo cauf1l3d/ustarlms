@@ -1,6 +1,6 @@
 # XMLDB tables
 
-Source: `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`. Git source only; not a live database snapshot.
+Source: `5cc02944e1059ba015afcc7c5e8068ca56c34a92`. Git source only; not a live database snapshot.
 
 
 | Logical table | Fields | Indexes / keys |
@@ -105,3 +105,6 @@ Source: `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`. Git source only; not a live 
 | `local_ustar_conn_sessions` | `id:int`, `tokenhash:char`, `browserhash:char`, `identityhash:char`, `provider:char`, `tenant:char`, `subject:char`, `keyid:char`, `userid:int`, `linkid:int`, `linkrevision:int`, `scope:char`, `authdate:int`, `actorready:int`, `lastseenat:int`, `authstamp:char`, `scopestamp:char`, `timecreated:int`, `expiresat:int`, `revokedat:int` | `primary(id)`; `tokenhash_uix(tokenhash)` UNIQUE; `userid_idx(userid)`; `expiresat_idx(expiresat)` |
 | `local_ustar_conn_signups` | `id:int`, `identityhash:char`, `commandhash:char`, `payloadhash:char`, `keyid:char`, `userid:int`, `requestid:int`, `linkid:int`, `linkrevision:int`, `timecreated:int`, `expiresat:int` | `primary(id)`; `userid_fk(userid)`; `identityhash_uix(identityhash)` UNIQUE; `commandhash_uix(commandhash)` UNIQUE; `expiresat_idx(expiresat)` |
 | `local_ustar_conn_acktokens` | `id:int`, `tokenhash:char`, `notificationid:int`, `deliveryid:int`, `attempt:int`, `userid:int`, `provider:char`, `tenant:char`, `subject:char`, `linkid:int`, `linkrevision:int`, `timecreated:int`, `expires:int` | `primary(id)`; `userid_fk(userid)`; `notificationid_fk(notificationid)`; `deliveryid_fk(deliveryid)`; `linkid_fk(linkid)`; `tokenhash_uix(tokenhash)` UNIQUE; `delivery_attempt_uix(deliveryid,attempt)` UNIQUE; `userid_idx(userid)`; `expires_idx(expires)` |
+| `local_ustar_conn_dialogs` | `id:int`, `identityhash:char`, `userid:int`, `linkid:int`, `linkrevision:int`, `revision:int`, `phase:char`, `payload:text`, `expiresat:int`, `ratewindow:int`, `ratecount:int`, `timemodified:int`, `authority:char` | `primary(id)`; `identity_uix(identityhash)` UNIQUE; `expiry_idx(expiresat)` |
+| `local_ustar_conn_actions` | `id:int`, `tokenhash:char`, `dialogid:int`, `userid:int`, `revision:int`, `intent:char`, `payload:text`, `summary:text`, `status:char`, `resultjson:text`, `expiresat:int`, `timecreated:int`, `authority:char` | `primary(id)`; `token_uix(tokenhash)` UNIQUE; `owner_idx(userid,status)`; `expiry_idx(expiresat)` |
+| `local_ustar_conn_updates` | `id:int`, `eventhash:char`, `identityhash:char`, `userid:int`, `linkrevision:int`, `payloadhash:char`, `responsejson:text`, `timecreated:int`, `authority:char` | `primary(id)`; `event_uix(eventhash)` UNIQUE; `created_idx(timecreated)` |

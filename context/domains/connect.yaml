@@ -1,0 +1,42 @@
+domain: connect
+reviewed_at: '2026-11-01'
+source_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+purpose: Канал той же Академии — Telegram identities, роли, диалоги и события
+services:
+- moodle/local/ustar/classes/connect/identity_service.php
+- moodle/local/ustar/classes/connect/bridge_auth.php
+- moodle/local/ustar/classes/connect/bridge_service.php
+- moodle/local/ustar/classes/connect/bot_service.php
+- moodle/local/ustar/classes/connect/bot_actor.php
+- moodle/local/ustar/classes/connect/bot_store.php
+- moodle/local/ustar/classes/connect/bot_work.php
+- moodle/local/ustar/classes/connect/bot_people.php
+- moodle/local/ustar/classes/connect/bot_learning.php
+- moodle/local/ustar/classes/connect/bot_confirmation.php
+- moodle/local/ustar/classes/connect/bot_upload.php
+tables:
+- local_ustar_conn_links
+- local_ustar_conn_challenges
+- local_ustar_conn_proofs
+- local_ustar_conn_launches
+- local_ustar_conn_sessions
+- local_ustar_conn_signups
+- local_ustar_conn_acktokens
+- local_ustar_conn_dialogs
+- local_ustar_conn_actions
+- local_ustar_conn_updates
+entry_points:
+- moodle/local/ustar/connect.php
+- moodle/local/ustar/connect_bridge.php
+- moodle/local/ustar/connect_bot_confirm.php
+rules:
+- Metadata tables do not duplicate canonical staff, task, report or learning records
+- Current actor, capabilities, scope and revision are rechecked; opaque callback is not authority
+- Sensitive commands require independent native-session POST/sesskey confirmation
+- Receiver journal preserves delivery/cursor/uncertainty; timeout is not permission to replay
+- Academy identity is separate from server-console ops authorization
+- Public HTTPS and Mini App await leadership approval
+runtime_source: connect-worker
+worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
+owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+coverage_limit: Static source plus scoped CI/owner receipts; other business processes with leadership from2Nov

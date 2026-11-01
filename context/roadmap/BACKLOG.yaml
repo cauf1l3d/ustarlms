@@ -1,7 +1,7 @@
 schema_version: 2
 updated_at: '2026-11-01'
 canonical_branch: main
-source_baseline: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+source_baseline: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 tasks:
 - id: DOC-01
@@ -326,9 +326,11 @@ tasks:
   - G07
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   PR: 109
-  current_summary: 2803 installed and RSS accepted. Actual8h workday/route SQL/cache/concurrency/SLO
-    remain open; owner reminder30Oct11:00Europe/Moscow created. Does not block authorized
-    Connect source development.
+  current_summary: >-
+    App2900 and visual worker267 installed; task/return/photo and readability accepted.
+    Feed/Connect source integrated in main. Next unblocked work: ordinary-workday passive
+    baseline; actual8h report, SQL/page, Web-SAPI OPcache, concurrency/SLO remain unmeasured.
+    Other role processes start with leadership from2Nov; public HTTPS/Mini App await approval.
   deployment_evidence: context/runtime/perf2802_owner_deploy_20261029.json
   validation_evidence:
   - context/runtime/perf2802_owner_deploy_20261029.json
@@ -514,7 +516,7 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: authorized_merge110_111_remaining_roles_with_leadership
+  phase: source_integrated_remaining_roles_with_leadership
   owner_priority: complete_Telegram_role_bot_before_MiniApp_public_HTTPS
   current_summary: >-
     Owner29Oct installed app2900/theme2700 and directly enabled worker5cc02944
@@ -529,7 +531,7 @@ tasks:
     visuals_ready/recovery_required false. All4CI18c83925 PASS. Owner1Nov accepted live graphical UI and readability.
     Owner also accepted task execution/return/photo display. Remaining processes are
     tested with leadership from2Nov; public HTTPS/Mini App await leadership approval.
-    Owner authorized merge110/111; next available work is PERF-01. Owner instructions must be directly in chat.
+    Owner authorized merge110/111, now integrated after combined FullRC. Next: PERF-01. Owner instructions must be directly in chat.
     Report review/HRD, fresh scheduled cron and workday report pending.
     Native LAN confirmation/first password remain explicit; Mini App/public HTTPS follow.
   visual_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json

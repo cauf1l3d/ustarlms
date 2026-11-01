@@ -1,6 +1,6 @@
 # Classes, interfaces and traits
 
-Source: `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`. Git source only; not a live database snapshot.
+Source: `5cc02944e1059ba015afcc7c5e8068ca56c34a92`. Git source only; not a live database snapshot.
 
 | Symbol | File |
 |---|---|
@@ -35,6 +35,19 @@ Source: `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`. Git source only; not a live 
 | `local_ustar\completion_cycle` | `moodle/local/ustar/classes/completion_cycle.php` |
 | `local_ustar\compliance` | `moodle/local/ustar/classes/compliance.php` |
 | `local_ustar\connect\actor_service` | `moodle/local/ustar/classes/connect/actor_service.php` |
+| `local_ustar\connect\bot_actor` | `moodle/local/ustar/classes/connect/bot_actor.php` |
+| `local_ustar\connect\bot_adaptation` | `moodle/local/ustar/classes/connect/bot_adaptation.php` |
+| `local_ustar\connect\bot_confirmation` | `moodle/local/ustar/classes/connect/bot_confirmation.php` |
+| `local_ustar\connect\bot_forms` | `moodle/local/ustar/classes/connect/bot_forms.php` |
+| `local_ustar\connect\bot_guards` | `moodle/local/ustar/classes/connect/bot_guards.php` |
+| `local_ustar\connect\bot_learning` | `moodle/local/ustar/classes/connect/bot_learning.php` |
+| `local_ustar\connect\bot_people` | `moodle/local/ustar/classes/connect/bot_people.php` |
+| `local_ustar\connect\bot_registration` | `moodle/local/ustar/classes/connect/bot_registration.php` |
+| `local_ustar\connect\bot_request` | `moodle/local/ustar/classes/connect/bot_request.php` |
+| `local_ustar\connect\bot_service` | `moodle/local/ustar/classes/connect/bot_service.php` |
+| `local_ustar\connect\bot_store` | `moodle/local/ustar/classes/connect/bot_store.php` |
+| `local_ustar\connect\bot_upload` | `moodle/local/ustar/classes/connect/bot_upload.php` |
+| `local_ustar\connect\bot_work` | `moodle/local/ustar/classes/connect/bot_work.php` |
 | `local_ustar\connect\bridge_auth` | `moodle/local/ustar/classes/connect/bridge_auth.php` |
 | `local_ustar\connect\bridge_http` | `moodle/local/ustar/classes/connect/bridge_http.php` |
 | `local_ustar\connect\bridge_service` | `moodle/local/ustar/classes/connect/bridge_service.php` |
@@ -191,6 +204,7 @@ Source: `22607c69a27c9be65d78fd407ce240f9dc2b8c8b`. Git source only; not a live 
 | `local_ustar\task_workspace\home_cards` | `moodle/local/ustar/classes/task_workspace/home_cards.php` |
 | `local_ustar\task_workspace\page` | `moodle/local/ustar/classes/task_workspace/page.php` |
 | `local_ustar\task_workspace\policy` | `moodle/local/ustar/classes/task_workspace/policy.php` |
+| `local_ustar\task_workspace\received_photo` | `moodle/local/ustar/classes/task_workspace/received_photo.php` |
 | `local_ustar\task_workspace\recipients` | `moodle/local/ustar/classes/task_workspace/recipients.php` |
 | `local_ustar\task_workspace\service` | `moodle/local/ustar/classes/task_workspace/service.php` |
 | `local_ustar\task_workspace\worker` | `moodle/local/ustar/classes/task_workspace/worker.php` |

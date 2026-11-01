@@ -1,8 +1,14 @@
 # Профиль архитектурного агента USTAR
 
-Порядок входа — [START_HERE](../../START_HERE.md); правила в [AGENTS](../../AGENTS.md), [протоколе](../roadmap/AGENT_PROTOCOL.md), последняя инструкция17Oct в [STATE](../roadmap/STATE.yaml). `main` — канонический исходный код и текущий контекст.
+Порядок входа — [START_HERE](../../START_HERE.md); правила в [AGENTS](../../AGENTS.md), [протоколе](../roadmap/AGENT_PROTOCOL.md), актуальное поручение1Nov в [STATE](../roadmap/STATE.yaml). `main` — канонический исходный код и текущий контекст.
 
-Сейчас: оба owner snapshots17Oct проверены/imported,526 files совпали; [контекст готов к повторному аудиту](../reviews/20261017/runtime_reconciliation.md). Затем repo/[пульт/Telegram](../runtime/control_panel_telegram_20261016.md). Архив передан сисадмину, ждём restore. Moodle5.2/PG17 отложены. Не возобновлять прежние инструкции storage/5.1.8/host reboot/5.3 preparation.
+Сейчас: app2900/source5cc02944 и worker267e5587 уже установлены; source PR110/111
+объединены в main после общей FullRC. [Поручение/интеграция](../runtime/connect_feed_integration_order_20261101.json),
+[owner acceptance](../runtime/connect_visual_owner_deploy_20261101.json). Задачи/возврат/фото
+и читаемость приняты; остальные процессы с руководством с2Nov. Публичный HTTPS и
+Mini App ждут согласования. Следующий этап — PERF-01: пассивное наблюдение рабочего дня.
+Старые17Oct snapshots и platform receipts — история, не повод повторять принятую работу.
+Moodle5.2/PG17/Docker rotation отложены; agent SSH/subagents/provider sends запрещены.
 
 Перед изменением смотреть реальные entrypoints/services/readers/writers/XMLDB/ACL/tasks/тесты. Код описывает реализацию, ADR — решения, owner receipts — датированные наблюдения, CI — результат определённого runtime/synthetic scope. Не объявлять отсутствие evidence дефектом или synthetic PASS production-приёмкой.
 

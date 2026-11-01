@@ -1,31 +1,28 @@
 schema_version: 2
 updated_at: '2026-11-01'
 project: USTAR Academy
-stage: feed_connect_source_integration_authorized
-stage_label: Owner accepted tasks/return/photo and authorized merge110/111; leadership approvals pending
-current_activity: Owner1Nov accepted tasks, return/execution and photo display, and authorized
-  merging PR110/111 into main. Other business processes will be tested with leadership
-  from2Nov; public HTTPS and Mini App await leadership approval. One combined FullRC
-  precedes the merges. Next unblocked stage is PERF-01 passive real-workday baseline.
+stage: performance_workday_baseline
+stage_label: Feed and Connect integrated; next PERF-01; management gates remain explicit
+current_activity: PR110/111 integrated after one qualified combined FullRC. Owner accepted
+  bot graphics/readability and task execution/return/photo. Other processes are tested
+  with leadership from2Nov; public HTTPS and Mini App await approval. Next PERF-01 is
+  passive ordinary-workday latency/SQL/cron/host baseline; no new production change.
 entrypoint: START_HERE.md
-next_task: INTEGRATIONS-01
+next_task: PERF-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
   branch: main
-  commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
-  kind: query_batching_integrated_main_exact_component_trees
-  local_ustar_version: 2026102802
+  commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+  kind: integrated_main_exact_qualified_application_trees
+  local_ustar_version: 2026102900
   theme_ustar_version: 2026102700
-  source_pr: 109
-  ci_receipt: context/runtime/perf2802_qualification_20261028.json
-  integration_qualification:
-    commit: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
-    full_RC_run: 40761497871
-    merge: 01904edaf01dc6e340018eae8bf351dcc692b0c2
-    receipt: context/runtime/perf2802_qualification_20261028.json
-  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source integration is separate from
-    owner server acceptance.
+  source_pr: 111
+  integrated_PRs: [110, 111]
+  ci_receipt: context/runtime/connect_feed_integration_order_20261101.json
+  qualification_receipt: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json
+  previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+  previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
   latest_owner_browser_acceptance: context/runtime/feed2803_owner_deploy_20261029.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
@@ -40,7 +37,7 @@ production:
   effective_addon_deployment:
     receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
     reported_date_msk: '2026-10-29'
-    status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
+    status: owner_installed_main_integrated_remaining_leadership_acceptance
     installer_commit: 9a68246b170dd6a08dc6a8e2118e69f32e16bea9
     payload_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
     versions:
@@ -50,7 +47,8 @@ production:
     tables: 103
     counts_basis: fixed_controller_payload_not_new_whole_host_manifest
     independent_probe: false
-    worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+    worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
+    worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
     worker_rollout: true
     previous_exact_terminal_receipt: context/runtime/feed2803_owner_deploy_20261029.json
     previous_2801_preflight_in_same_receipt: false
@@ -59,10 +57,9 @@ production:
     role_bot_enabled: true
     runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
     post_check: role_bot_ready
-    live_role_acceptance: 'partial: visible buttons, task exchange between two accounts, Academy synchronization;
-      owner30Oct'
-    latest_functional_receipt: context/runtime/connect_role_bot_visual_owner_order_20261030.json
-  status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
+    live_role_acceptance: 'owner accepted tasks, return/execution, photos and visual readability; remaining processes with leadership from2Nov'
+    latest_functional_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+  status: owner_installed_tasks_photo_visuals_accepted_remaining_leadership
   observed_at: '2026-10-29'
   source: context/runtime/evidence_connect2900_20261029.yaml
   independently_measured: false
@@ -95,7 +92,9 @@ production:
   post_deploy_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
   previous_addon_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   post2900_cron_run_receipt: pending; last supplied scheduled cron remains pre2900
-  current_worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+  current_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
+  current_worker_observed_at: '2026-11-01'
+  current_worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
@@ -282,23 +281,6 @@ perf_query_deployment:
   browser_smoke_after2802: owner_accepted_four_areas_known_preexisting_RSS_media_defect
   workday_SLO: pending
   browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
-development_candidate:
-  manifest: context/code_map/connect_role_bot_development_source.json
-  status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
-  scope: Owner installed fixed606-file/103-table payload and worker; live role acceptance pending; Git source still
-    unmerged
-  branch: feat/connect-role-bot-20261029
-  deployed: true
-  progress: context/runtime/connect_role_bot_progress_20261029.md
-  baseline_owner_receipt: context/runtime/feed2803_owner_deploy_20261029.json
-  PR: 111
-  previous_app_candidate: 3935779fd432a1a057f5f24e41d93f38a651a1e2
-  application_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
-  worker_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
-  previous_application_qualification: context/runtime/connect_role_bot_qualification_20261029.json
-  qualification_receipt: context/runtime/connect_role_bot_cron_preflight_fix_20261029.json
-  qualification_head: b9f338c855339d398028a4655ceaff7ce18f692f
-  owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
 feed_media_workday_delivery:
   status: owner_installed_status_and_RSS_accepted_workday_pending
   application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
@@ -322,7 +304,7 @@ feed_media_workday_delivery:
   workday_reminder_local: '2026-10-30T11:00:00+03:00'
 connect_role_bot_order: context/runtime/connect_bot_owner_order_20261029.json
 connect_role_bot_delivery:
-  status: owner_installed_runtime_active_preflight_ready_role_acceptance_pending
+  status: owner_installed_tasks_photo_visuals_accepted_remaining_leadership
   PR: 111
   baseline_application: ef903b7d276f1d62c4879f8a943a435b48e89117
   baseline_worker: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
@@ -364,3 +346,5 @@ connect_visual_candidate:
   owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   qualification: context/runtime/connect_outage_visual_successor_20261101.json
   runbook: docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md
+
+latest_source_integration: context/runtime/connect_feed_integration_order_20261101.json

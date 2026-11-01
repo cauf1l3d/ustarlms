@@ -1,45 +1,42 @@
 # USTAR Academy — начало работы
 
-Актуально01.11.2026. Канонический код — main; PR110 source2803 не слит.
+Актуально01.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
+PR110 (RSS2803) и PR111 (ролевой Connect/графика) объединены после единой FullRC.
+[Интеграция](context/runtime/connect_feed_integration_order_20261101.json).
 
 1. [STATE](context/roadmap/STATE.yaml), [ACTIVE](context/tasks/ACTIVE.md), [BACKLOG](context/roadmap/BACKLOG.yaml).
-2. [Поручение Connect29Oct](context/runtime/connect_bot_owner_order_20261029.json).
-3. [Owner2900](context/runtime/connect_role_bot_owner_deploy_20261029.json), [ADR Connect](context/decisions/0015-ustar-connect.md).
+2. [Owner2900](context/runtime/connect_role_bot_owner_deploy_20261029.json).
+3. [Owner267](context/runtime/connect_visual_owner_deploy_20261101.json), [архитектура](context/architecture/overview.md).
 
-## Подтверждённый production
+## Подтверждённое состояние
 
-Owner29Oct установил app2900/theme2700 и включил worker5cc02944 штатным tool9a68246b.
-[Квитанция](context/runtime/connect_role_bot_owner_deploy_20261029.json): runtime_active,
-ACK true, role_bot_enabled true; контрольный --check вернул role_bot_ready.
-Payload606/103 не является новой whole-host инвентаризацией. Живая приёмка ролей
-и свежий scheduled cron после2900 ещё не получены. Предыдущие RSS acceptance и cron
-03:37MSK exit0/1.282s сохраняются как история; adhoc1/overdue56/failed2 не сброшены.
+Owner29Oct установил app2900/theme2700 и включил роли tool9a68246b. Owner1Nov
+восстановил общий Telegram egress и установил worker267e5587: visuals_active,
+visuals_ready/recovery_required:false. Оба бота отвечают; PNG/кнопки/читаемость и
+задачи/возврат/исполнение/фото приняты владельцем. Остальные процессы проверяет
+руководство с2Nov; публичный HTTPS и Mini App ожидают согласования.
 
-[Кандидат/блокировка публикации](context/runtime/connect_bot_visual_local_qualification_20261030.json).
+Точный payload606/103 — проверенный комплект, не новая whole-host инвентаризация.
+Приложение и worker имеют разные SHA; слияние Git не меняло production.
+Старые контроллеры/архивы не переписывать и не применять повторно по датированной истории.
 
-## Текущая работа
+## Следующий доступный этап — PERF-01
 
-Исправленный комплект2900: app/worker5cc02944 + tool9a68246b. Ошибка owner preflight99
-устранена, новый cron guard и actual systemd/UID33/TLS/recovery CI прошли.
-[Квитанция](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
-[установка](docs/CONNECT_BOT_2900_INSTALL_RU.md). Архив0860a867 совпал с CI и скачанной
-копией. App/worker не менялись и сохраняют предыдущую FullRC квалификацию.
-Owner30Oct принял кнопки и обмен задачами между2учётками/синхронизацию с Академией.
-[Запрошены цветные кнопки и PNG](context/runtime/connect_role_bot_visual_owner_order_20261030.json).
-Owner1Nov восстановил общий Telegram egress, оба бота отвечают; установил267e5587:
-visuals_active, затем visuals_ready/recovery_required:false. [Квитанция](context/runtime/connect_visual_owner_deploy_20261101.json).
-All4CI18c83925 PASS. Owner принял PNG/кнопки и читаемость; далее роли. App2900 прежний.
-Инструкции владельцу — прямо в чат, коротко.
+Пассивный отчёт обычного рабочего дня: latency, SQL, cron lag и нагрузка.
+Сборщик2900 уже подготовлен; фактический8h отчёт ещё не получен. Нет вывода о SLO,
+SQL/page, Web-SAPI OPcache или производительности из одного статуса служб.
+Предыдущий cron29Oct03:37MSK exit0/1.282s и adhoc1/overdue56/failed2 — история,
+а не свежая проверка очереди. [Активная работа](context/tasks/ACTIVE.md).
 
-Owner29Oct возобновил полный рабочий Telegram-бот по ролям: русские кнопки,
-пошаговые формы, короткие пояснения, визуальные сводки/таблицы/графики. Мини App
-и публичный HTTPS Академии — в конце. Существующие учётки/права/writers/история
-остаются едиными. Работать самому без субагентов; один согласованный выпуск,
-проверки по изменениям и обязательному gate без повторения принятых циклов.
-PERF-01 report ожидается; напоминание владельцу30Oct11:00МСК создано. Сборщик не
-запускался агентом, SQL/page/Web-SAPI OPcache/concurrency/SLO не измерены.
-Нового автоматического merge, SSH и provider sends нет.
+## Правила продолжения
 
-Логи/health/recreate — плановый Moodle window; SSH/firewall — перед внешним доступом.
-Копии переданы, внешний restore unknown. [Риски](context/roadmap/ACCEPTED_RISKS.yaml),
-[ревью26Oct](context/reviews/20261026/VERIFIED_REVIEW_RU.md), [индекс](context/CONTEXT_INDEX.md).
+Инструкции владельцу — прямо в чат короткими командами. Push разрешён;
+субагенты/agent SSH/provider sends запрещены. Merge110/111 завершён по поручению;
+новые слияния без нового поручения не делать. Публичный доступ/мобильный клиент не
+начинать до согласования руководства. Moodle5.2/PG17 и Docker rotation/recreate
+отложены; принятые host/storage/DB-role/code/HTTPS циклы не повторять.
+
+[AGENTS](AGENTS.md) — границы. [Риски](context/roadmap/ACCEPTED_RISKS.yaml),
+[решения](context/decisions/README.md), [код](context/code_map/README.md),
+[квитанции](context/runtime/README.md). Датированные receipts сохраняют область
+проверки; код/CI/owner acceptance/живое измерение различать.

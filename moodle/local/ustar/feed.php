@@ -10,7 +10,7 @@ $PAGE->set_context($context);
 $PAGE->set_title('Лента · USTAR Academy');
 $PAGE->set_heading('Лента');
 $PAGE->set_pagelayout('ustar');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260928-rss-stage3']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20261029-media']));
 $PAGE->requires->js(new moodle_url('/local/ustar/js/feed.js', ['v' => '20260928-rss-stage3']));
 $notice = '';
 $actorid = (int)$USER->id;
@@ -455,6 +455,25 @@ $renderattachment = static function(array $attachment, int $sourcepostid) use ($
     echo html_writer::end_tag('figcaption');
     echo html_writer::end_tag('figure');
 };
+$rendermedia = static function(array $files, bool $external, int $postid) use ($renderattachment): void {
+    $media = \local_ustar\feed_files::card_media($files, $external);
+    if (!$media['summary']) {
+        return;
+    }
+    echo html_writer::start_div('u-feed__media');
+    foreach ($media['summary'] as $attachment) {
+        $renderattachment($attachment, $postid);
+    }
+    if ($media['additional']) {
+        echo html_writer::start_tag('details', ['class' => 'u-feed__additional-media']);
+        echo html_writer::tag('summary', 'Ещё фото: ' . count($media['additional']));
+        foreach ($media['additional'] as $attachment) {
+            $renderattachment($attachment, $postid);
+        }
+        echo html_writer::end_tag('details');
+    }
+    echo html_writer::end_div();
+};
 foreach ($posts as $post) {
     $postid = (int)$post->id;
     $author = $users[(int)$post->actoruserid] ?? null;
@@ -509,11 +528,7 @@ foreach ($posts as $post) {
     }
     echo html_writer::tag('div', nl2br(s((string)$post->body)), ['class' => 'u-feed__body']);
     if ($post->status === 'published' && !empty($attachments[$postid])) {
-        echo html_writer::start_div('u-feed__media');
-        foreach ($attachments[$postid] as $attachment) {
-            $renderattachment($attachment, $postid);
-        }
-        echo html_writer::end_div();
+        $rendermedia($attachments[$postid], (bool)$external, $postid);
     }
     if ($external) {
         $externalpayload = $externalopen
@@ -558,9 +573,7 @@ foreach ($posts as $post) {
                 echo html_writer::tag('h4', s((string)$sourceexternal->title));
             }
             echo html_writer::tag('p', nl2br(s((string)$source->body)));
-            foreach ($attachments[(int)$source->id] ?? [] as $attachment) {
-                $renderattachment($attachment, (int)$source->id);
-            }
+            $rendermedia($attachments[(int)$source->id] ?? [], $source->publishertype === 'external', (int)$source->id);
             echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['postid' => (int)$source->id]),
                 'Открыть оригинал', ['class' => 'u-feed__source']);
             echo html_writer::end_div();

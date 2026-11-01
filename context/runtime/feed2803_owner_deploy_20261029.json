@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-29",
+  "evidence_kind": "owner_terminal_and_browser_report_not_agent_SSH",
+  "raw": "context/runtime/feed-20261029/owner_install_2803.txt",
+  "raw_sha256": "0e0f0edf743172a4fe86023f9e07d416daf765a63c932181c9e197b280382ba2",
+  "previous_receipt": "context/runtime/perf2802_owner_deploy_20261029.json",
+  "archive": {
+    "filename": "ustar-feed-media-install-36be3f10.tar.gz",
+    "sha256": "f09b21a969c91b9ce5e884065573586779b50ce699aa789edc394f20bad9589a",
+    "archive_and_four_inner_hashes": "owner_OK"
+  },
+  "preflight": {
+    "baseline_index_profile": "server1_legacy_indexes_20261023",
+    "host_changes": false,
+    "local_ustar": "2026102802",
+    "phase": "ready_for_feed_media_update",
+    "provider_called": false
+  },
+  "application": {
+    "payload_commit": "ef903b7d276f1d62c4879f8a943a435b48e89117",
+    "tool_commit": "36be3f108f2eac6a3db728f93b4456a729b97a3e",
+    "payload_files": 590,
+    "tables": 100,
+    "counts_basis": "fixed_controller_payload_not_a_new_whole_host_manifest",
+    "local_ustar": 2026102803,
+    "theme_ustar": 2026102700,
+    "generation": "cbc8148fff48407fa76b6821eb630a89",
+    "phase": "app_ready",
+    "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+    "worker_rollout": false,
+    "reported_phases": [
+      "source_activated",
+      "upgrade_1",
+      "upgrade_2",
+      "cron_written",
+      "public_release_committed",
+      "app_ready"
+    ],
+    "unit_finished_successfully": true,
+    "unit_CPU_seconds": 186.396,
+    "CPU_time_is_not_wall_time": true
+  },
+  "status": {
+    "app": {
+      "generation": "cbc8148fff48407fa76b6821eb630a89",
+      "phase": "app_ready"
+    },
+    "database_available": true,
+    "host_changes": false,
+    "runtime": null,
+    "services": {
+      "ustar-connect-notify.service": {
+        "active": true,
+        "enabled": true
+      },
+      "ustar-connect-receiver.service": {
+        "active": true,
+        "enabled": true
+      }
+    },
+    "versions": {
+      "local_ustar": "2026102803",
+      "theme_ustar": "2026102700"
+    }
+  },
+  "cron": {
+    "schedule_present": true,
+    "containers_match_installation": true,
+    "last_run": {
+      "started_utc": "2026-10-29T00:37:01.999301+00:00",
+      "trigger": "scheduled",
+      "email_disabled": false,
+      "before": {
+        "last_task_log_id": 5117816,
+        "adhoc_queued": 0,
+        "adhoc_failed": 0,
+        "scheduled_overdue_10m": 19,
+        "scheduled_failed": 2,
+        "ustar_failed": 0,
+        "latest_task_utc": "2026-10-29T00:36:02Z",
+        "failures_24h": []
+      },
+      "cron_exit_code": 0,
+      "log_truncated": false,
+      "finished_utc": "2026-10-29T00:37:03.280884+00:00",
+      "elapsed_seconds": 1.282,
+      "ustar": {
+        "error_lines": 0,
+        "warning_lines": 0,
+        "worker_errors": 0,
+        "grade_errors": 0,
+        "enrolment_errors": 0,
+        "enrolment_missing_manual": 0,
+        "cancelled_login_notifications": 0
+      },
+      "after": {
+        "last_task_log_id": 5117843,
+        "adhoc_queued": 0,
+        "adhoc_failed": 0,
+        "scheduled_overdue_10m": 19,
+        "scheduled_failed": 2,
+        "ustar_failed": 0,
+        "latest_task_utc": "2026-10-29T00:37:03Z",
+        "new_failures": []
+      }
+    },
+    "current": {
+      "last_task_log_id": 5117843,
+      "adhoc_queued": 1,
+      "adhoc_failed": 0,
+      "scheduled_overdue_10m": 56,
+      "scheduled_failed": 2,
+      "ustar_failed": 0,
+      "latest_task_utc": "2026-10-29T00:37:03Z",
+      "failures_24h": []
+    },
+    "last_wrapper_error": {
+      "utc": "2026-10-20T17:33:01.250048+00:00",
+      "error": "Production application versions differ from the reviewed snapshot"
+    }
+  },
+  "browser_acceptance": {
+    "scope": "RSS_card_and_additional_attachments_only",
+    "owner_quote": "Rss лента работает как надо, вложения открываются через еще.",
+    "accepted": true,
+    "other_domains": "prior2802_browser_acceptance_not_retested_in_this_message"
+  },
+  "workday": {
+    "captured": false,
+    "report_received": false,
+    "owner_plans_to_send": "tomorrow_relative_to29Oct",
+    "reminder_created": true,
+    "reminder_local": "2026-10-30T11:00:00+03:00",
+    "timezone": "Europe/Moscow",
+    "agent_will_not_execute_server_command": true
+  },
+  "limits": [
+    "Latest completed scheduled cron29Oct03:37MSK exit0/1.282s, no new failures and USTAR counters0.",
+    "Current raw snapshot differs from completed run: adhoc1, overdue56, failed2. Queue drain after update is not yet evidenced; counters/history are not reset.",
+    "Historical wrapper error20Oct is retained; not a new failure.",
+    "No fresh whole-host census, independent SSH, production restore, workday/SLO or all-role browser acceptance.",
+    "PR110 source remains unmerged; owner installation does not imply a Git merge."
+  ]
+}

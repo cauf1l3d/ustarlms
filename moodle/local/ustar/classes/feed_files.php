@@ -29,7 +29,7 @@ final class feed_files {
     }
 
     public static function list_for(int $postid, int $userid): array {
-        feed_access::readable($postid, $userid);
+        $post = feed_access::readable($postid, $userid);
         $contextid = \context_system::instance()->id;
         $out = [];
         foreach (get_file_storage()->get_area_files($contextid, 'local_ustar', self::AREA,
@@ -37,12 +37,13 @@ final class feed_files {
             $image = in_array($file->get_mimetype(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp'], true);
             $out[] = ['id' => (int)$file->get_id(), 'name' => $file->get_filename(), 'size' => (int)$file->get_filesize(),
                 'image' => $image,
+                'contenthash' => $file->get_contenthash(), 'source' => $file->get_source(),
                 'url' => \moodle_url::make_pluginfile_url($contextid, 'local_ustar', self::AREA,
                     $postid, $file->get_filepath(), $file->get_filename(), !$image)->out(false),
                 'downloadurl' => \moodle_url::make_pluginfile_url($contextid, 'local_ustar', self::AREA,
                     $postid, $file->get_filepath(), $file->get_filename(), true)->out(false)];
         }
-        return $out;
+        return self::for_display($out, $post->publishertype === 'external');
     }
 
     /** Read attachments for one already paged feed, applying the current audience in SQL. */
@@ -61,7 +62,8 @@ final class feed_files {
         ];
         $audience = feed_access::audience_sql($userid, 'p', $params, 'file');
         $sourceaudience = feed_access::audience_sql($userid, 'src', $params, 'filesource');
-        $files = $DB->get_records_sql("SELECT f.id, f.itemid, f.filename, f.filepath, f.mimetype, f.filesize
+        $files = $DB->get_records_sql("SELECT f.id, f.itemid, f.filename, f.filepath, f.mimetype, f.filesize,
+                       f.contenthash, f.source, p.publishertype
                 FROM {files} f
                 JOIN {local_ustar_feed_posts} p ON p.id = f.itemid
                WHERE f.contextid = :contextid AND f.component = :component
@@ -72,18 +74,65 @@ final class feed_files {
                       WHERE src.id = p.sourcepostid AND src.status = :sourcepublished
                         AND {$sourceaudience}))
             ORDER BY f.itemid, f.timecreated, f.id", $params);
-        $out = [];
+        $out = []; $external = [];
         foreach ($files as $file) {
+            $external[(int)$file->itemid] = $file->publishertype === 'external';
             $image = in_array($file->mimetype, ['image/jpeg', 'image/png', 'image/gif', 'image/webp'], true);
             $out[(int)$file->itemid][] = [
                 'id' => (int)$file->id, 'name' => $file->filename, 'size' => (int)$file->filesize, 'image' => $image,
+                'contenthash' => $file->contenthash, 'source' => $file->source,
                 'url' => \moodle_url::make_pluginfile_url($params['contextid'], 'local_ustar',
                     self::AREA, (int)$file->itemid, $file->filepath, $file->filename, !$image)->out(false),
                 'downloadurl' => \moodle_url::make_pluginfile_url($params['contextid'], 'local_ustar',
                     self::AREA, (int)$file->itemid, $file->filepath, $file->filename, true)->out(false),
             ];
         }
+        foreach ($out as $postid => $items) {
+            $out[$postid] = self::for_display($items, $external[$postid]);
+        }
         return $out;
+    }
+
+    /** Already ACL-filtered rows only. Keep files/saves intact; hide duplicate external images. */
+    public static function for_display(array $files, bool $external): array {
+        $out = []; $seen = [];
+        foreach ($files as $file) {
+            $keys = [];
+            if ($external && !empty($file['image'])) {
+                if (!empty($file['contenthash'])) {
+                    $keys[] = 'bytes:' . $file['contenthash'];
+                }
+                if (preg_match('~^https?://~i', (string)($file['source'] ?? ''))) {
+                    $keys[] = feed_rss::media_identity($file['source']);
+                }
+            }
+            $duplicate = false;
+            foreach ($keys as $key) {
+                $duplicate = $duplicate || isset($seen[$key]);
+                $seen[$key] = true;
+            }
+            unset($file['contenthash'], $file['source']);
+            if (!$duplicate) {
+                $out[] = $file;
+            }
+        }
+        return $out;
+    }
+
+    /** External cards have one cover; genuine extra images remain reachable without JS. */
+    public static function card_media(array $files, bool $external): array {
+        $summary = []; $additional = []; $cover = false;
+        foreach ($files as $file) {
+            if ($external && !empty($file['image'])) {
+                if ($cover) {
+                    $additional[] = $file;
+                    continue;
+                }
+                $cover = true;
+            }
+            $summary[] = $file;
+        }
+        return ['summary' => $summary, 'additional' => $additional];
     }
 
     /** Save a private, independent copy in the employee's personal knowledge library. */

@@ -12,7 +12,7 @@ production_theme_setting: ustar (source and owner UI; not a fresh SQL probe)
 production_versions:
   moodle: 5.1.8
   php: 8.3.33
-  local_ustar: 2026102802
+  local_ustar: 2026102803
   theme_ustar: 2026102700
   postgresql: '16.15'
 isolated_reference: tests/stage/runtime.json

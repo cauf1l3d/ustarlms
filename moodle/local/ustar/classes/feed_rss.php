@@ -342,6 +342,35 @@ final class feed_rss {
         return \core_text::substr(trim((string)$text), 0, $limit);
     }
 
+    /** Preserve signed/unknown URLs; only this known CDN's UUID identifies a source asset. */
+    public static function media_identity(string $url): string {
+        $parts = parse_url($url);
+        if (is_array($parts) && strtolower($parts['host'] ?? '') === 'leonardo.osnova.io'
+                && strtolower($parts['scheme'] ?? '') === 'https'
+                && (!isset($parts['port']) || $parts['port'] === 443)
+                && preg_match('~^/([a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})(?:/|$)~i',
+                    $parts['path'] ?? '', $match)) {
+            return 'leonardo:' . strtolower($match[1]);
+        }
+        return 'url:' . hash('sha256', $url);
+    }
+
+    public static function unique_media_urls(array $urls): array {
+        $out = []; $seen = [];
+        foreach ($urls as $url) {
+            if (!is_string($url) || trim($url) === '') {
+                continue;
+            }
+            $url = trim($url);
+            $key = self::media_identity($url);
+            if (!isset($seen[$key])) {
+                $seen[$key] = true;
+                $out[] = $url;
+            }
+        }
+        return $out;
+    }
+
     private static function image_urls(string $base, array $nodes, string ...$htmlblocks): array {
         $urls = [];
         foreach ($nodes as $node) {
@@ -365,7 +394,7 @@ final class feed_rss {
                 }
             }
         }
-        return array_slice(array_values(array_unique(array_filter($urls))), 0, self::MAX_MEDIA_PER_ITEM);
+        return array_slice(self::unique_media_urls($urls), 0, self::MAX_MEDIA_PER_ITEM);
     }
 
     public static function parse(string $xml): array {
@@ -470,7 +499,7 @@ final class feed_rss {
     }
 
     public static function sync_external_media(int $postid, array $urls): void {
-        $urls = array_slice(array_values(array_unique(array_filter($urls))), 0, self::MAX_MEDIA_PER_ITEM);
+        $urls = array_slice(self::unique_media_urls($urls), 0, self::MAX_MEDIA_PER_ITEM);
         if (!$urls) {
             return;
         }
@@ -487,11 +516,23 @@ final class feed_rss {
         );
         $stored = count(array_filter($existingfiles, static fn($file): bool =>
             str_starts_with((string)$file->get_filename(), 'rss-')));
+        $hashes = []; $identities = [];
+        foreach ($existingfiles as $file) {
+            $hashes[$file->get_contenthash()] = true;
+            $source = (string)$file->get_source();
+            if (preg_match('~^https?://~i', $source)) {
+                $identities[self::media_identity($source)] = true;
+            }
+        }
         foreach ($urls as $url) {
             if ($stored >= self::MAX_MEDIA_PER_ITEM) {
                 break;
             }
             try {
+                $identity = self::media_identity($url);
+                if (isset($identities[$identity])) {
+                    continue;
+                }
                 $response = self::fetch_external(
                     self::validate_url((string)$url),
                     self::MAX_MEDIA_BYTES,
@@ -503,6 +544,11 @@ final class feed_rss {
                 $imagetype = is_array($info) ? (int)($info[2] ?? 0) : 0;
                 $extension = self::media_extension($imagetype);
                 if ($extension === '') {
+                    continue;
+                }
+                $contenthash = sha1($bytes); // Moodle file storage's content-addressed identity.
+                if (isset($hashes[$contenthash])) {
+                    $identities[$identity] = true;
                     continue;
                 }
                 $filename = 'rss-' . substr(hash('sha256', (string)$url), 0, 20) . '.' . $extension;
@@ -517,7 +563,10 @@ final class feed_rss {
                     'itemid' => $postid,
                     'filepath' => '/v1/',
                     'filename' => $filename,
+                    'source' => $url,
                 ], $bytes);
+                $hashes[$contenthash] = true;
+                $identities[$identity] = true;
                 $stored++;
             } catch (\Throwable $e) {
                 // A broken remote image must never abort the article import.

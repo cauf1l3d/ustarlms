@@ -4,6 +4,7 @@ namespace local_ustar;
 defined('MOODLE_INTERNAL') || die();
 
 #[\PHPUnit\Framework\Attributes\CoversClass(feed_rss::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(feed_files::class)]
 final class feed_rss_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
@@ -73,6 +74,63 @@ XML;
         $this->assertSame('Atom summary', $items[0]['summary']);
         $this->assertSame('Atom full content', $items[0]['contenttext']);
         $this->assertSame(['https://cdn.example.com/atom.jpg'], $items[0]['media']);
+    }
+
+    public function test_rss_and_enrichment_share_one_cover_identity_without_merging_distinct_urls(): void {
+        $original = 'https://leonardo.osnova.io/ffc2def2-f8d0-574d-83c7-825ff5fa829e/';
+        $resized = $original . '-/resize/1300/';
+        $xml = '<rss version="2.0"><channel><item><title>Media</title>'
+            . '<link>https://example.com/post</link><guid>media-test</guid>'
+            . '<description><![CDATA[<p>Summary</p><img src="' . $resized . '">]]></description>'
+            . '<enclosure type="image/jpeg" url="' . $original . '"/>'
+            . '</item></channel></rss>';
+        $this->assertSame([$original], feed_rss::parse($xml)[0]['media']);
+        $text = str_repeat('Article paragraph has sufficient unique text for extracting the article. ', 20);
+        $html = '<html><head><meta property="og:image" content="' . $resized . '"></head>'
+            . '<body><article><p>' . $text . '</p><img src="' . $original . '"></article></body></html>';
+        $this->assertSame([$original], feed_article_resolver::extract($html, 'https://example.com/post')['media']);
+        $this->assertSame(['https://cdn.example/image?v=1', 'https://cdn.example/image?v=2'],
+            feed_rss::unique_media_urls(['https://cdn.example/image?v=1', 'https://cdn.example/image?v=2']));
+    }
+
+    public function test_old_duplicate_external_files_display_once_without_deleting_originals(): void {
+        global $USER, $DB;
+        $this->setAdminUser();
+        $postid = (int)$DB->insert_record('local_ustar_feed_posts', (object)[
+            'actoruserid' => 0, 'publishertype' => 'external', 'publisherid' => '1',
+            'status' => 'published', 'body' => 'Old RSS photo', 'version' => 1,
+            'audienceversion' => 1, 'publishedat' => time(), 'timecreated' => time(), 'timemodified' => time(),
+        ]);
+        $fs = get_file_storage();
+        $record = ['contextid' => \context_system::instance()->id, 'component' => 'local_ustar',
+            'filearea' => feed_files::AREA, 'itemid' => $postid, 'filepath' => '/v1/'];
+        $bytes = base64_decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
+        $first = $fs->create_file_from_string($record + ['filename' => 'rss-first.gif'], $bytes);
+        $fs->create_file_from_string($record + ['filename' => 'rss-copy.gif'], $bytes);
+        $single = feed_files::list_for($postid, (int)$USER->id);
+        $batch = feed_files::list_for_visible_posts([$postid], (int)$USER->id);
+        $this->assertSame([(int)$first->get_id()], array_column($single, 'id'));
+        $this->assertSame($single, $batch[$postid]);
+        $this->assertArrayNotHasKey('contenthash', $single[0]);
+        $this->assertArrayNotHasKey('source', $single[0]);
+        $this->assertCount(2, $fs->get_area_files($record['contextid'], 'local_ustar', feed_files::AREA,
+            $postid, 'id ASC', false));
+        $DB->set_field('local_ustar_feed_posts', 'publishertype', 'academy', ['id' => $postid]);
+        $this->assertCount(2, feed_files::list_for($postid, (int)$USER->id));
+        $this->assertCount(2, feed_files::list_for_visible_posts([$postid], (int)$USER->id)[$postid]);
+    }
+
+    public function test_stored_source_identity_skips_network_and_preserves_original_file(): void {
+        $fs = get_file_storage();
+        $contextid = \context_system::instance()->id;
+        $url = 'https://cdn.example.invalid/already-stored.gif';
+        $file = $fs->create_file_from_string(['contextid' => $contextid, 'component' => 'local_ustar',
+            'filearea' => feed_files::AREA, 'itemid' => 98765, 'filepath' => '/v1/',
+            'filename' => 'rss-existing.gif', 'source' => $url],
+            base64_decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'));
+        feed_rss::sync_external_media(98765, [$url]);
+        $this->assertSame([(int)$file->get_id()], array_map(static fn($f): int => (int)$f->get_id(),
+            array_values($fs->get_area_files($contextid, 'local_ustar', feed_files::AREA, 98765, 'id ASC', false))));
     }
 
     public function test_parse_rejects_document_without_supported_feed_items(): void {

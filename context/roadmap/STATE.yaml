@@ -1,14 +1,16 @@
 schema_version: 2
 updated_at: '2026-10-29'
 project: USTAR Academy
-stage: perf2802_owner_installed_workday_SLO_pending
-stage_label: Owner installed2802; guarded status and scheduled cron confirmed; browser/workday/SLO pending
-current_activity: Owner29Oct passed exact2801 preflight and installed2802 using3c1ddd09; status app_ready/DB available/local2802/theme2700,
-  both Connect services active+enabled. Scheduled cron00:42MSK exit0/34.311s with no new failures; adhoc1 to0, overdue63
-  to19, failed2. Bounded source delivery is accepted; post2802 browser smoke and broader workday/concurrency/SLO
-  remain open. Agent did not access server1.
+stage: connect_role_bot_implementation_after_owner2803_acceptance
+stage_label: Owner installed2803 and accepted RSS; full role Telegram bot authorized,
+  Mini App last
+current_activity: Owner29Oct verified2803 archive/check/upgrade/status and RSS attachments.
+  Last completed cron03:37MSK exit0/1.282s; current adhoc1/overdue56/failed2 retained,
+  no drain claim. Workday report pending; reminder30Oct11:00Europe/Moscow created.
+  Next implement one coherent button-driven role Connect bot, self/no subagents; no
+  SSH/provider sends/automatic merge.
 entrypoint: START_HERE.md
-next_task: PERF-01
+next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -24,25 +26,25 @@ code_baseline:
     full_RC_run: 40761497871
     merge: 01904edaf01dc6e340018eae8bf351dcc692b0c2
     receipt: context/runtime/perf2802_qualification_20261028.json
-  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source integration is separate from
-    owner server acceptance.
+  scope_note: Exact plugin/theme tree in merged main01904eda; worker stays6c56. Source
+    integration is separate from owner server acceptance.
 production:
-  latest_owner_browser_acceptance: context/runtime/studio_viewport_owner_acceptance_20261028.json
+  latest_owner_browser_acceptance: context/runtime/feed2803_owner_deploy_20261029.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
-  latest_cron_contract: context/runtime/perf2802_owner_deploy_20261029.json
-  previous_scheduled_cron_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
-  latest_addon_preflight: context/runtime/perf2802_owner_deploy_20261029.json
+  latest_cron_contract: context/runtime/feed2803_owner_deploy_20261029.json
+  previous_scheduled_cron_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+  latest_addon_preflight: context/runtime/feed2803_owner_deploy_20261029.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
   effective_addon_deployment:
-    receipt: context/runtime/perf2802_owner_deploy_20261029.json
+    receipt: context/runtime/feed2803_owner_deploy_20261029.json
     reported_date_msk: '2026-10-29'
-    status: owner_install_status_scheduled_cron_confirmed_browser_workday_pending
-    installer_commit: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
-    payload_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+    status: owner2803_installed_status_and_RSS_accepted
+    installer_commit: 36be3f108f2eac6a3db728f93b4456a729b97a3e
+    payload_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
     versions:
-      local_ustar: 2026102802
+      local_ustar: 2026102803
       theme_ustar: 2026102700
     files: 590
     tables: 100
@@ -50,26 +52,28 @@ production:
     independent_probe: false
     worker_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
     worker_rollout: false
-    previous_exact_terminal_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
-    previous_2801_preflight_in_same_receipt: true
-    post_deploy_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  status: owner_perf2802_install_status_and_scheduled_cron_confirmed
+    previous_exact_terminal_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+    previous_2801_preflight_in_same_receipt: false
+    post_deploy_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+    browser_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  status: owner_feed2803_install_status_and_RSS_accepted
   observed_at: '2026-10-29'
   source: context/runtime/evidence_20261029.yaml
   independently_measured: false
-  current_source_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
-  current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh host filesystem census
+  current_source_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
+  current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh
+    host filesystem census
   current_versions:
-    local_ustar: 2026102802
+    local_ustar: 2026102803
     theme_ustar: 2026102700
   last_exact_source_manifest:
-    commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+    commit: ef903b7d276f1d62c4879f8a943a435b48e89117
     date: '2026-10-29'
     matching_files: 590
     kind: owner_verified_controller_payload_not_fresh_manifest
-    evidence: context/runtime/perf2802_owner_deploy_20261029.json
-  cron: owner_scheduled29Oct00_42MSK_exit0_no_new_failures_ustar_errors0_adhoc0_overdue19_failed2
-  cron_current_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+    evidence: context/runtime/feed2803_owner_deploy_20261029.json
+  cron: completed29Oct03_37MSK_exit0_1_282s_no_new_failures; current_adhoc1_overdue56_failed2_not_yet_drained
+  cron_current_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
   regular_backup_current_receipt: context/runtime/infra_readonly_owner_20261023.json
   later_observations: context/runtime/RELEASE_LEDGER.md
@@ -83,7 +87,8 @@ production:
     Docker: 29.9.0
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
-  post_deploy_receipt: context/runtime/perf2802_owner_deploy_20261029.json
+  post_deploy_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  previous_addon_receipt: context/runtime/perf2802_owner_deploy_20261029.json
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
@@ -91,9 +96,10 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original infrastructure audit immutable; current verification in context/reviews/20261026/VERIFIED_REVIEW_RU.md
 next_agent_read:
-- context/runtime/perf2802_owner_deploy_20261029.json
-- context/reviews/20261026/VERIFIED_REVIEW_RU.md
-- context/roadmap/ACCEPTED_RISKS.yaml
+- context/runtime/connect_bot_owner_order_20261029.json
+- context/runtime/feed2803_owner_deploy_20261029.json
+- context/tasks/ACTIVE.md
+- context/decisions/0015-ustar-connect.md
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'
@@ -141,14 +147,17 @@ server_facts:
   followup: context/runtime/server_facts_followup_20261017.json
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
-  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still separate
-  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test failed. Other external
-    sources/IPv6/NAT/API identity and full SSH admission/live overrides remain unverified
-  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle acceptance
-    not checked
-  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not confirmed
-  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance remain
-    separate; native restore/RTO awaited
+  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance
+    and hardening still separate
+  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019
+    test failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live
+    overrides remain unverified
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and
+    native full-cycle acceptance not checked
+  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware
+    redundancy not confirmed
+  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded
+    plugin/vendor provenance remain separate; native restore/RTO awaited
   additional_observations:
     provenance: context/runtime/core_extra_received_20261017.json
     review: context/reviews/20261017/core_extra_reconciliation.md
@@ -245,7 +254,7 @@ accepted_Studio_source:
   qualification_metadata: 9332829c46ec32976987ba8f2ba57fae0ea02b3d
   receipt: context/runtime/studio_viewport_owner_acceptance_20261028.json
 perf_query_deployment:
-  status: owner_installed_status_and_scheduled_cron_confirmed_browser_workday_pending
+  status: owner_installed_status_cron_and_basic_browser_accepted_workday_pending
   application_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   baseline_application: a3df57831a5ed49b901e5116ee800f2217fb61e9
   predecessor_tool: 81118e39f54c9ac34475f640bf2b9d4d8a047f24
@@ -266,5 +275,38 @@ perf_query_deployment:
   retained_copy_verified: true
   archive_bytes: 20529822
   owner_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  browser_smoke_after2802: not_reported
+  browser_smoke_after2802: owner_accepted_four_areas_known_preexisting_RSS_media_defect
   workday_SLO: pending
+  browser_receipt: context/runtime/perf2802_owner_browser_acceptance_20261029.json
+development_candidate:
+  manifest: context/code_map/feed_media_development_source.json
+  status: source_PR110_unmerged_owner_installed2803
+  scope: RSS media and passive workday capture; schema/theme/worker unchanged
+  PR: 110
+  application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
+  qualification_commit: 36be3f108f2eac6a3db728f93b4456a729b97a3e
+  owner_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  manifest_note: Frozen pre-deployment qualification source inventory; deployed=false
+    is historical, current owner deployment is recorded separately.
+feed_media_workday_delivery:
+  status: owner_installed_status_and_RSS_accepted_workday_pending
+  application_commit: ef903b7d276f1d62c4879f8a943a435b48e89117
+  baseline_application: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
+  predecessor_tool: 3c1ddd099a1d7abdfa44ec3a9ebc54296a553618
+  new_journal: /var/lib/ustar-feed-media-update
+  PR: 110
+  owner_installed: true
+  agent_SSH: false
+  worker_rollout: false
+  progress: context/runtime/feed_media_workday_progress_20261029.md
+  tool_commit: 36be3f108f2eac6a3db728f93b4456a729b97a3e
+  qualification_receipt: context/runtime/feed2803_qualification_20261029.json
+  owner_instruction: docs/FEED_2803_INSTALL_RU.md
+  archive_sha256: f09b21a969c91b9ce5e884065573586779b50ce699aa789edc394f20bad9589a
+  archive_bytes: 20688439
+  retained_copy_verified: true
+  actual_workday_captured: false
+  owner_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  browser_accepted: true
+  workday_reminder_local: '2026-10-30T11:00:00+03:00'
+connect_role_bot_order: context/runtime/connect_bot_owner_order_20261029.json

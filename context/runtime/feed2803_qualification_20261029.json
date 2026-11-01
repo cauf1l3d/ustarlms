@@ -1,0 +1,244 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-29",
+  "kind": "qualified_unmerged_source_and_verified_owner_archive_not_production_receipt",
+  "PR": 110,
+  "agent_SSH": false,
+  "subagents": 0,
+  "provider_messages_sent": false,
+  "automatically_merged": false,
+  "production_installation_confirmed": false,
+  "source": {
+    "application_commit": "ef903b7d276f1d62c4879f8a943a435b48e89117",
+    "tool_commit": "36be3f108f2eac6a3db728f93b4456a729b97a3e",
+    "baseline_application": "22607c69a27c9be65d78fd407ce240f9dc2b8c8b",
+    "predecessor_tool": "3c1ddd099a1d7abdfa44ec3a9ebc54296a553618",
+    "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+    "worker_rollout": false,
+    "baseline_files": 590,
+    "candidate_files": 590,
+    "tables": 100,
+    "changed_files": [
+      "classes/feed_rss.php",
+      "classes/feed_files.php",
+      "classes/feed_article_resolver.php",
+      "feed.php",
+      "styles/feed.css",
+      "tests/feed_rss_test.php",
+      "version.php"
+    ],
+    "added_application_files": [],
+    "schema_delta": false,
+    "versions": {
+      "local_ustar": 2026102803,
+      "theme_ustar": 2026102700
+    }
+  },
+  "scope": {
+    "RSS": "known Leonardo asset identity; identical stored bytes displayed once; one cover and collapsed additional images; originals and saved copies retained",
+    "legacy_limit": "old resized variants without source identity may remain in collapsed additional images; no perceptual matching or destructive cleanup",
+    "observer": "bounded explicit passive8h capture, no bootstrap/application HTTP/credentials/user data/raw logs exported",
+    "actual_workday_captured": false,
+    "concurrency_SLO_accepted": false,
+    "not_measured": [
+      "SQL_per_page",
+      "authenticated_page_timings",
+      "Web_SAPI_OPcache",
+      "MUC_sessions",
+      "effective_component_task_policy"
+    ]
+  },
+  "local": {
+    "media_fixtures": "six cases RED to GREEN using real PHP classes; existing nine query cases preserved",
+    "observer": "initial11 cases RED to GREEN; outer config boundary and copytruncate regrowth RED to GREEN;13 cases GREEN",
+    "delivery": "4 contract cases RED;26 tests GREEN/1 namespace GID33 skip in50.885s",
+    "full_R16": {
+      "tests": 1400,
+      "skips": 50,
+      "seconds": 321.153,
+      "result": "PASS"
+    },
+    "PHP": "scratch Ubuntu snapshot8.3.6; not production8.3.33; system packages not changed",
+    "source_checks": {
+      "php": 400,
+      "js": 33,
+      "tables": 100,
+      "templates": 57,
+      "result": "PASS"
+    },
+    "owner_shell_blocks": "8 blocks passed bash -n; not executed on server by agent"
+  },
+  "CI": {
+    "head": "36be3f108f2eac6a3db728f93b4456a729b97a3e",
+    "workflows": [
+      {
+        "name": "review",
+        "run": 40783956780,
+        "result": "success"
+      },
+      {
+        "name": "infra",
+        "run": 40783956785,
+        "result": "success"
+      },
+      {
+        "name": "context",
+        "run": 40783956724,
+        "result": "success"
+      },
+      {
+        "name": "console",
+        "run": 40783956847,
+        "result": "success"
+      }
+    ],
+    "source82": {
+      "job": 123153022993,
+      "tests": 1403,
+      "skips": 234,
+      "seconds": 318.198,
+      "result": "PASS"
+    },
+    "source83": {
+      "job": 123153023318,
+      "tests": 1403,
+      "skips": 234,
+      "seconds": 322.416,
+      "result": "PASS"
+    },
+    "rollback": {
+      "job": 123153022662,
+      "result": "PASS"
+    },
+    "prepare_RC": {
+      "job": 123156289331,
+      "result": "PASS"
+    },
+    "native_patch518": {
+      "job": 123156428984,
+      "tests": 357,
+      "assertions": 1706,
+      "result": "PASS"
+    },
+    "native_historical": {
+      "job": 123156429076,
+      "tests": 357,
+      "assertions": 1706,
+      "result": "PASS"
+    },
+    "gate": {
+      "job": 123159887246,
+      "result": "PASS"
+    },
+    "connect_DB": "skipped by scope detector; no Connect/schema/worker changes",
+    "actual_UID33": {
+      "job": 123152366784,
+      "mandatory_env": "USTAR_REQUIRE_FEED_UID33=1",
+      "test": "test_feed_source_is_readable_but_not_writable_by_actual_uid33",
+      "result": "PASS"
+    },
+    "actual_root_observer_output": {
+      "job": 123152366784,
+      "tests": 13,
+      "seconds": 0.175,
+      "result": "PASS"
+    }
+  },
+  "native_PG16": {
+    "result": "PASS",
+    "actual_postgres_metadata": true,
+    "tables": 100,
+    "profiles": [
+      "xml_install_indexes",
+      "server1_legacy_indexes_20261023"
+    ],
+    "versions": [
+      2026102802,
+      2026102803,
+      2026102803,
+      2026102802
+    ],
+    "SQL_mutations_denied": [
+      "partial_local_ustar_coin_accounts",
+      "partial_local_ustar_test_results",
+      "extra_index",
+      "column_default",
+      "task",
+      "extra_table",
+      "missing_ACK_index"
+    ],
+    "all_fixture_SQL_rolled_back": true,
+    "observer_fixed_SQL_executed": true,
+    "observer_WRITE_refused": true,
+    "query_text_exported": false,
+    "scope": "database metadata transitions and observer SQL; physical paired recovery verified separately"
+  },
+  "archive": {
+    "archive": "ustar-feed-media-install-36be3f10.tar.gz",
+    "archive_sha256": "f09b21a969c91b9ce5e884065573586779b50ce699aa789edc394f20bad9589a",
+    "archive_bytes": 20688439,
+    "monolith_sha256": "b7f026e13f87ede6f1d616ac324dd8284c6a56761120fa65b702e23c7b2c2569",
+    "monolith_bytes": 37754877,
+    "observer_sha256": "fad3c8529aeb1c009de4b143b3d827dd7c191b85a3603c6a283440aa1b48cb6c",
+    "members": [
+      "INSTALL.json",
+      "README.txt",
+      "SHA256SUMS",
+      "observe.py",
+      "update.py"
+    ],
+    "inner_hashes_ok": true,
+    "root_private_regular_members": true,
+    "both_offline_defaults_verified": true,
+    "metadata": {
+      "app_commit": "ef903b7d276f1d62c4879f8a943a435b48e89117",
+      "baseline_commit": "22607c69a27c9be65d78fd407ce240f9dc2b8c8b",
+      "bytes": 37754877,
+      "default_host_access": false,
+      "journal": "/var/lib/ustar-feed-media-update",
+      "observer_bytes": 16565,
+      "observer_sha256": "fad3c8529aeb1c009de4b143b3d827dd7c191b85a3603c6a283440aa1b48cb6c",
+      "payload_files": 590,
+      "predecessor_tool": "3c1ddd099a1d7abdfa44ec3a9ebc54296a553618",
+      "schema": 1,
+      "sha256": "b7f026e13f87ede6f1d616ac324dd8284c6a56761120fa65b702e23c7b2c2569",
+      "tables": 100,
+      "tool_commit": "36be3f108f2eac6a3db728f93b4456a729b97a3e",
+      "versions": {
+        "local_ustar": "2026102803",
+        "theme_ustar": "2026102700"
+      },
+      "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+      "worker_rollout": false
+    },
+    "CI_artifact_id": 12857099112,
+    "CI_run": 40783956785,
+    "CI_zip_sha256": "6ca8fe392554e6cfee378020aa516e761dfbefd7bbb12c3ca514b759c2038d65",
+    "CI_zip_bytes": 41297296,
+    "CI_ZIP_CRC_valid": true,
+    "all_five_CI_files_byte_identical": true,
+    "retained_copy_downloaded_and_byte_verified": true
+  },
+  "review": {
+    "mode": "author_self_review_per_AGENTS_no_subagents",
+    "critical_or_important_open": [],
+    "decisions": [
+      "next task is current PERF-01 passive capture preparation",
+      "exact provider/content identity and one cover; retain unknown old variants behind details",
+      "no automatic merge/new production actions"
+    ],
+    "minor_deferred": []
+  },
+  "first_source_CI_failure": {
+    "commit": "ef903b7d276f1d62c4879f8a943a435b48e89117",
+    "reason": "new observer absent from source-only console knowledge inventory",
+    "resolution": "register observer and both new operator sources; no executable UI action; test retained"
+  },
+  "owner_handoff": {
+    "instruction": "docs/FEED_2803_INSTALL_RU.md",
+    "journal": "/var/lib/ustar-feed-media-update",
+    "expected_check": "ready_for_feed_media_update/local2802",
+    "expected_target": "app_ready/local2803/theme2700",
+    "workday": "owner starts explicit capture at beginning of an ordinary workday; report still pending"
+  }
+}

@@ -1,5 +1,19 @@
 # Реестр кода, проверок и deployment evidence
 
+29.10.2026 — Owner установил2803 оператором36be3f10: hashes/check/upgrade/status OK,
+local2803/theme2700, app_ready/DB available, receiver+notify active/enabled. RSS принят.
+Последний scheduled cron03:37MSK exit0/1.282s без новых ошибок; current adhoc1/overdue56/
+failed2 остаётся отдельным срезом. PR110 не слит. Workday report pending; напоминание
+30Oct11:00МСК создано. Далее owner поручил полный button-driven role Connect bot,
+Mini App/public HTTPS last, self/no subagents. [Receipt](feed2803_owner_deploy_20261029.json),
+[order](connect_bot_owner_order_20261029.json).
+
+29.10.2026 — PR110: RSS media и passive workday observer2803 квалифицированы на
+app ef903b7d/operator36be3f10. Все4CI, PHP1403/234, native357/1706, actualPG/UID33 PASS.
+Архив f09b21a9 побайтно совпадает с CI и скачанной сохранённой копией; owner apply и
+рабочий день ожидаются. Main/production2802 не подменены кандидатом.
+[Квитанция](feed2803_qualification_20261029.json).
+
 28.10.2026 — Academy Studio/материалы/Word2700 квалифицированы на37952997: full RC40602646743, обе Moodle347тестов/1671проверка, HTTP/rollback/source PASS; context/infra/console SUCCESS.589файлов/100таблиц, новая схема не вводится. [Квитанция](studio_materials_qualification_20261028.json). Код опубликован в PR107; production остаётся2600, merge и установка2700 не выполнялись.
 
 29.10.2026 — Владелец проверил точный2801 и установил2802 оператором3c1ddd09;

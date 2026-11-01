@@ -602,10 +602,10 @@ final class feed_article_resolver {
                 }
             }
 
-            $media = array_values(array_unique(array_filter(array_map(
+            $media = feed_rss::unique_media_urls(array_filter(array_map(
                 static fn(string $candidate): string => self::safe_href($url, $candidate),
                 $media
-            ))));
+            )));
             $media = array_slice($media, 0, 8);
 
             $text = \core_text::substr($text, 0, self::MAX_CONTENT_CHARS);

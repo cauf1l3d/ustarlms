@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-29",
+  "source": "context/runtime/feed-20261029/owner_install_2803.txt",
+  "owner_quote": "После фиксации в гитхаб и постановки задача, начинай реализовывать полностью контур UStar Conect(рабочий бот по ролям), мини апп в конце. не делай обрывками, кусками, не запускай субагентов, не трать время на бесконечные тесты, используй скиллы разработки рационально. В самом боте вместо команд реализуй понятные кнопки и короткие понятные объяснения от бота. В сами ответы по действиям и сценариям чуть больше визуальных акцентов и графиков, таблиц, в общем приятной визуальной составляющей вместо сухого текста",
+  "authorization": {
+    "resume_Connect": true,
+    "implement_complete_role_bot": true,
+    "push": true,
+    "automatic_merge": false,
+    "agent_SSH": false,
+    "provider_sends": false,
+    "subagents": false
+  },
+  "requirements": [
+    "Finish2803 GitHub receipt and create30Oct11:00Europe/Moscow workday reminder first.",
+    "One coherent role-based Telegram bot with understandable Russian buttons and short guidance; slash commands remain optional compatibility.",
+    "Registration, notifications, task/report/checklist/review and role summaries reuse canonical Academy domains and actual rights.",
+    "Use visual accents, progress indicators, readable compact tables/charts where useful.",
+    "Mini App and public Academy HTTPS are deferred to the end.",
+    "Self implementation and proportional checks; avoid repetitive full-test loops."
+  ],
+  "scope_assumptions": [
+    "Existing staff link from their authenticated LAN Academy session. New staff password setup stays in LAN; no password requested in chat.",
+    "Sensitive commands retain independent authorization; a bot callback never grants HRD capabilities.",
+    "Quiz/SCORM and Studio remain native Academy interfaces, not a second LMS in Telegram.",
+    "Bitrix/WhatsApp are later adapters, not implied by this Telegram role-bot order."
+  ]
+}

@@ -23,6 +23,8 @@ const tick=()=>new Promise(resolve=>setImmediate(resolve));
   v.eval(fs.readFileSync(path.join(root,'scorm_route_return.js'),'utf8'));await tick();
   async function poll(){const t=[...tasks].find(([,t])=>t.delay!==10000);assert.ok(t,'scheduled check');tasks.delete(t[0]);await t[1].fn();await tick()}
   await poll();
+  assert.equal([...tasks.values()].find(t=>t.delay!==10000).delay,15000,
+    'an open SCORM without a finish action uses the 15-second background interval');
   const control=v.document.querySelector('[data-ustar-scorm-finish]')||inner.querySelector('[data-ustar-scorm-finish]');
   assert.ok(control,'completed old package offers an enabled route control');
   assert.equal(posts,0,'opening a completed package does not submit or reward');

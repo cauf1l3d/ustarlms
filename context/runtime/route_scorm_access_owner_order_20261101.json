@@ -28,7 +28,7 @@
   "owner_approval": "да потверждаю",
   "approval_source": "owner_message_after_inline_design",
   "status": "implementation_under_qualification",
-  "application_commit": "757dca12c9e9bc548be24b9bcc464796796e3024",
+  "application_commit": "c9361c09374c178375038555064edce90e00da29",
   "native_CI": "pending",
   "PR": "https://github.com/cauf1l3d/ustarlms/pull/113",
   "qualification_attempts": [
@@ -39,6 +39,16 @@
       "cause": "frozen old overlay test used HEAD; root-only ownership transactions were run without sudo",
       "infra_new_operator": "passed including actual UID33/root group",
       "correction": "pin old test to qualified51332; root transaction class delegates to mandatory sudo job; no frozen operator changed"
+    },
+    {
+      "tool_commit": "8ad47feff5ef06322445d1c043860baf9cad3048",
+      "review_run": 41342938696,
+      "result": "superseded_by_review_fix",
+      "source_php82": "PASS 1509 tests/243 skips; browser and source suite PASS",
+      "source_php83": "PASS",
+      "context_console_infra": "PASS",
+      "self_review_fix": "Unacknowledged SCORM poll was1200ms, now15000ms; browser regression RED -> GREEN, existing41 assertions PASS",
+      "archive_delivered": false
     }
   ]
 }

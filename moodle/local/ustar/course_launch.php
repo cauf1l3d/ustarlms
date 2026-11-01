@@ -41,4 +41,10 @@ foreach (\local_ustar\route_model::requirements_for_version($version) as $requir
 if (!$matches) {
     throw new invalid_parameter_exception('Курс не относится к текущему шагу маршрута.');
 }
+$cmid = \local_ustar\scorm_route_launch::course_cmid($courseid, $userid);
+if ($cmid > 0) {
+    redirect(new moodle_url('/local/ustar/scorm_launch.php', [
+        'cmid' => $cmid, 'pointid' => $pointid, 'versionid' => $versionid,
+    ]));
+}
 redirect(new moodle_url('/course/view.php', ['id' => $courseid]));

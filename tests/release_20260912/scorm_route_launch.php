@@ -15,11 +15,13 @@ mkdir($tmp . '/local/ustar', 0700, true);
 mkdir($tmp . '/mod/scorm', 0700, true);
 file_put_contents($tmp . '/mod/scorm/locallib.php', '<?php');
 file_put_contents($tmp . '/mod/scorm/lib.php', '<?php');
+file_put_contents($tmp . '/completionlib.php', '<?php');
 $bootstrap = <<<'PHP'
 <?php
 namespace {
 define('MOODLE_INTERNAL', true); define('PARAM_INT', 1); define('MUST_EXIST', 2);
 define('SCORM_UPDATE_EVERYTIME', 3); define('TOCFULLURL', 4);
+define('SCORM_FORCEATTEMPT_ALWAYS', 1);
 class moodle_exception extends \Exception {}
 class invalid_parameter_exception extends moodle_exception {}
 class required_capability_exception extends moodle_exception {}
@@ -110,6 +112,6 @@ try {
         if (!in_array($mode, ['foreign', 'preview', 'stale'], true)) {throw $e;}
     }
 } finally {
-    foreach (['local/ustar/' . $endpoint, 'mod/scorm/locallib.php', 'mod/scorm/lib.php', 'config.php'] as $file) {unlink($tmp . '/' . $file);}
+    foreach (['local/ustar/' . $endpoint, 'mod/scorm/locallib.php', 'mod/scorm/lib.php', 'completionlib.php', 'config.php'] as $file) {unlink($tmp . '/' . $file);}
     foreach (['local/ustar','local','mod/scorm','mod',''] as $dir) {rmdir($tmp . '/' . $dir);}
 }

@@ -1,6 +1,8 @@
 <?php
 
 require_once(__DIR__ . '/../../config.php');
+// Source-only hotfix: an existing component cache may not know this new class yet.
+require_once(__DIR__ . '/classes/scorm_route_launch.php');
 
 require_login();
 require_capability('local/ustar:use', context_system::instance());
@@ -68,6 +70,8 @@ $versionid = (int)$published->id;
 $matches = false;
 foreach (\local_ustar\route_model::requirements_for_version($published) as $requirement) {
     if (($requirement['type'] ?? '') === 'cm' && (int)($requirement['sourceid'] ?? 0) === $cmid) { $matches = true; }
+    if (($requirement['type'] ?? '') === 'course'
+            && (int)($requirement['sourceid'] ?? 0) === (int)$cm->course) { $matches = true; }
 }
 if (!$matches || empty($current['canlaunch'])) { throw new moodle_exception('Материал не относится к доступной точке.'); }
 $course = get_course((int)$cm->course);
@@ -99,9 +103,4 @@ $SESSION->ustar_scorm_route = [
     'startedat' => time(),
 ];
 
-redirect(
-    new moodle_url(
-        '/mod/scorm/view.php',
-        ['id' => $cmid]
-    )
-);
+redirect(\local_ustar\scorm_route_launch::player_url($cm, $USER));

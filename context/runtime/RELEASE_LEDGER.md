@@ -1,5 +1,13 @@
 # Реестр кода, проверок и deployment evidence
 
+01.11.2026 — PR112: прямой запуск SCORM из текущей точки квалифицирован на51332a21,
+app3f8521ec. Все4CI SUCCESS; обе native Moodle suites374tests/1762assertions,
+PHP8.2/8.3 source1499/236skips, rollback и actualUID33 file recovery PASS.
+Archive74672bytes SHA92fb191f, ZIP/CRC/all6 CI-файлов и сохранённая скачанная копия
+побайтно совпали. Четырёхфайловый source overlay сохраняет версии2900/theme2700,
+схему, данные, пакеты, опубликованные точки и worker267. Owner apply и live-проверка
+сообщённой точки ещё ожидаются; main не слит. [Квитанция](route_scorm_launch_20261101.json).
+
 01.11.2026 — По прямому поручению владельца PR110/111 объединены в main:
 110→0670fcb2, 111→73f3b818. Единая FullRC41262736011 на2bd47af3 и все4CI SUCCESS;
 обе Moodle DB suites371/1751, Connect native172/875, rollback PASS. Дерево merge111

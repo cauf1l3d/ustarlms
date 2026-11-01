@@ -99,12 +99,11 @@ production:
   current_worker_observed_at: '2026-11-01'
   current_worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
 current_work:
-  activity: PR110/111 integrated after one qualified combined FullRC. Owner accepted
-    bot graphics/readability and task execution/return/photo. Other processes are
-    tested with leadership from2Nov; public HTTPS and Mini App await approval. Next
-    PERF-01 is passive ordinary-workday latency/SQL/cron/host baseline; no new production
-    change.
-  next_task: PERF-01
+  activity: PR112 fixes course menu detours with native Moodle SCORM player and existing-cache
+    support. Source-only overlay passed all4CI/FullRC; owner apply pending. Accepted
+    production2900/worker267 unchanged. After this fix, PERF-01 ordinary-workday report
+    remains next; leadership process acceptance and HTTPS/Mini App gates remain.
+  next_task: LEARN-SCORM-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -130,6 +129,7 @@ current_work:
     INF-13: planned
     INF-14: in_progress
     INTEGRATIONS-01: in_progress
+    LEARN-SCORM-01: in_progress
     MOB-01: planned
     MOB-02: planned
     MOB-03: planned

@@ -50,6 +50,8 @@ jobs:
           extensions: pdo_sqlite
           coverage: none
       - run: python scripts/ci/source_checks.py
+      - name: Route points launch the authorised SCORM player directly
+        run: php tests/release_20260912/scorm_route_launch.php
       - name: Determine whether Connect schema or service requires native DB verification
         id: connect-scope
         env:

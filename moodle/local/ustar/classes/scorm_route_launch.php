@@ -36,7 +36,8 @@ final class scorm_route_launch {
         require_once($CFG->dirroot . '/mod/scorm/locallib.php');
         $scorm = $DB->get_record('scorm', ['id' => (int)$cm->instance], '*', MUST_EXIST);
         $context = \context_module::instance((int)$cm->id);
-        require_capability('mod/scorm:view', $context);
+        // SCORM has no mod/scorm:view capability. The launcher and native player
+        // use require_login(course, false, cm), with tracking permissions enforced by Moodle.
         scorm_require_available($scorm);
         if ((int)$scorm->updatefreq === SCORM_UPDATE_EVERYTIME) {
             scorm_parse($scorm, false);

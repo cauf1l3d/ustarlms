@@ -62,7 +62,7 @@ final class scorm_route_launch_test extends \advanced_testcase {
         $this->assertSame($basepath . '/mod/scorm/player.php', $url->get_path());
         $this->assertSame((int)$scorm->cmid, (int)$url->get_param('cm'));
         $this->assertSame((int)$sco->id, (int)$url->get_param('scoid'));
-        $this->assertSame($before, $DB->get_records('scorm_scoes_value', [], 'id'));
+        $this->assertEquals($before, $DB->get_records('scorm_scoes_value', [], 'id'));
         $this->assertSame(1, $DB->count_records('scorm_attempt', ['userid' => $learner->id]));
     }
 }

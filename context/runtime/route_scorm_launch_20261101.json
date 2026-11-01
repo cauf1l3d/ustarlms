@@ -5,7 +5,7 @@
   "PR": 112,
   "branch": "fix/route-direct-scorm-20261101",
   "baseline_application": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
-  "application_commit": "994bf23b0019e48428021884e744cda3cec4abc4",
+  "application_commit": "091e7176050d9f0e6eeb4aabd1c6d64d91a6eb0c",
   "status": "native_qualification_and_owner_overlay_preparation",
   "deployed": false,
   "versions_unchanged": {
@@ -33,23 +33,6 @@
     "cached_component_map": "RED class not found with the existing map; explicit require_once in both launch endpoints GREEN without global cache purge"
   },
   "native_CI": "pending",
-  "delivery": {
-    "tool_commit": "ec8a232df5dcb4ee978cd4069273010277d25b2f",
-    "archive": "ustar-scorm-direct-ec8a232d.tar.gz",
-    "bytes": 74609,
-    "sha256": "0167a4b5ba92becab0700d8b8c408ec24904d812bb1268dd2d250563729e8297",
-    "script_sha256": "b630491e5b6c73980e891bf04599428aac520c7311d68fe6ac96c8ce1129cb63",
-    "CI_run": 41313235755,
-    "CI_job": 124867812528,
-    "CI_job_result": "success",
-    "CI_artifact": 13085574597,
-    "CI_zip_sha256": "cf538b37dde3cc77ac049af0deaefe5e65b444844e360dbe31c741a0d3b1cb91",
-    "zip_crc_and_all6_files_byte_equal": true,
-    "isolated_python3_I_S_plan": "PASS",
-    "actual_UID33_root_group": "mandatory sudo CI passed 10 transaction tests",
-    "full_native_qualification": "pending",
-    "owner_apply": false
-  },
   "owner_instructions": "inline_chat_only",
   "merge_authorized": false,
   "next_stage_after_fix": "PERF-01 ordinary-workday passive report; leadership processes2Nov and HTTPS/Mini App approvals pending",
@@ -69,5 +52,42 @@
     "failed_test": "test_every_infrastructure_source_is_reviewed_without_adding_actions",
     "reason": "new operator and builder missing from reviewed source-only catalog",
     "fixed": "SOURCE_ONLY registry updated; no console actions added; local regression passed"
+  },
+  "previous_unqualified_package": {
+    "tool_commit": "ec8a232df5dcb4ee978cd4069273010277d25b2f",
+    "archive": "ustar-scorm-direct-ec8a232d.tar.gz",
+    "bytes": 74609,
+    "sha256": "0167a4b5ba92becab0700d8b8c408ec24904d812bb1268dd2d250563729e8297",
+    "script_sha256": "b630491e5b6c73980e891bf04599428aac520c7311d68fe6ac96c8ce1129cb63",
+    "CI_run": 41313235755,
+    "CI_job": 124867812528,
+    "CI_job_result": "success",
+    "CI_artifact": 13085574597,
+    "CI_zip_sha256": "cf538b37dde3cc77ac049af0deaefe5e65b444844e360dbe31c741a0d3b1cb91",
+    "zip_crc_and_all6_files_byte_equal": true,
+    "isolated_python3_I_S_plan": "PASS",
+    "actual_UID33_root_group": "mandatory sudo CI passed 10 transaction tests",
+    "full_native_qualification": "pending",
+    "owner_apply": false,
+    "not_delivered_reason": "native PHPUnit expected path omitted the /moodle installation prefix; three production launcher files unchanged"
+  },
+  "delivery": {
+    "status": "new_source_snapshot_and_package_qualification_pending",
+    "application_commit": "091e7176050d9f0e6eeb4aabd1c6d64d91a6eb0c",
+    "owner_apply": false
+  },
+  "native_second_attempt": {
+    "head": "763c042cb107fa61aa265ea8b4dad6a8cdec3c60",
+    "run": 41313919391,
+    "attempt": 2,
+    "historical_job": 124872872153,
+    "patch518_job": 124872872165,
+    "status": "failed_before_delivery",
+    "tests_each": 374,
+    "assertions_each": 1758,
+    "failures_each": 1,
+    "reason": "test expected /mod/scorm/player.php, actual correct /moodle/mod/scorm/player.php",
+    "fix": "test derives only installation prefix from CFG; literal player path, CM/SCO and stored progress assertions retained",
+    "production_launcher_files_changed": false
   }
 }

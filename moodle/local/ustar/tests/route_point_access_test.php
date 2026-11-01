@@ -133,6 +133,27 @@ final class route_point_access_test extends \advanced_testcase {
         $this->assertSame((int)$next->id,route_model::for_user($position,$u->id)['currentpoint']['id']);
     }
 
+    public function test_an_independent_retraining_assignment_survives_route_closure_and_its_cancellation(): void {
+        global $DB;
+        [$u,$position,$point,$version,$scorm,$next] = $this->fixture(['advance'=>'manual','repeat'=>'close']);
+        $this->complete($u,$scorm);
+        $review=route_model::for_user($position,$u->id);
+        route_point_access::advance($u->id,$point->id,$version->id,$review['currentpoint']['accessid']);
+        $this->assertFalse(route_point_access::allowed_cmid($u->id,$scorm->cmid));
+        $nextversion=route_model::current_published_version((int)$next->id);
+        $policyid=$DB->insert_record('local_ustar_assess_policy',(object)[
+            'pointid'=>$next->id,'versionid'=>$nextversion->id,'providerkind'=>'quiz','providerref'=>'fixture',
+            'remediationpointid'=>$point->id]);
+        $event=['entitytype'=>'forced_retraining','entityid'=>$u->id,'actorid'=>0,'timecreated'=>time(),'reason'=>'Fixture'];
+        $id=$DB->insert_record('local_ustar_workflow_events',(object)($event+[
+            'eventtype'=>'forced_retraining_assigned','detailsjson'=>json_encode([
+                'positionid'=>$position,'policyid'=>$policyid,'remediationpointid'=>$point->id,'remediationversionid'=>$version->id])]));
+        $this->assertTrue(route_point_access::allowed_cmid($u->id,$scorm->cmid));
+        $DB->insert_record('local_ustar_workflow_events',(object)($event+[
+            'eventtype'=>'forced_retraining_cancelled','detailsjson'=>json_encode(['assignmentid'=>$id])]));
+        $this->assertFalse(route_point_access::allowed_cmid($u->id,$scorm->cmid));
+    }
+
     public function test_review_policy_requires_a_mandatory_scorm_material(): void {
         [$u,$position,$point,$version,$scorm] = $this->fixture([]);
         $this->expectException(\invalid_parameter_exception::class);

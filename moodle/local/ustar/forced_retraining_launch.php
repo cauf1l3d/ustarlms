@@ -5,10 +5,12 @@ require_login();
 require_capability('local/ustar:use', context_system::instance());
 \local_ustar\view_as::assert_writable();
 
-global $USER;
+global $USER, $SESSION;
 
 $assignmentid = required_param('id', PARAM_INT);
 $next = \local_ustar\forced_retraining::launch((int)$USER->id, $assignmentid);
+// This is an independently authorised assignment; an old route finish context must not capture it.
+unset($SESSION->ustar_scorm_route);
 $kind = (string)($next['kind'] ?? '');
 
 if ($kind === 'assessment') {

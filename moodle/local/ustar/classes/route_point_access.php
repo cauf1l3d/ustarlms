@@ -241,10 +241,9 @@ final class route_point_access {
         global $DB;
         $resolved = structure::resolve_user($userid);
         $position = (string)($resolved['position']['id'] ?? '');
-        if ($position === '') { return null; }
         $cm = get_coursemodule_from_id('scorm',$cmid,0,false,IGNORE_MISSING);
         if (!$cm) { return null; }
-        $snapshot = route_model::read_only_snapshot($position,$userid);
+        $snapshot = $position !== '' ? route_model::read_only_snapshot($position,$userid) : [];
         $managed = false;
         $allowed = false;
         foreach ($snapshot['points'] ?? [] as $point) {
@@ -263,6 +262,8 @@ final class route_point_access {
                 if (self::contains($old,$cmid,(int)$cm->course)) { $managed = true; break; }
             }
         }
+        if ($managed && !employment::learning_allowed($userid)) { return false; }
+        if ($managed && !$allowed && forced_retraining::material_access($userid,$cmid,(int)$cm->course,$position)) { return true; }
         return $managed ? $allowed : null;
     }
 

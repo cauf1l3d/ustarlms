@@ -10,7 +10,7 @@ final class scorm_route_launch_test extends \advanced_testcase {
     }
 
     public function test_course_resumes_the_first_unfinished_scorm_in_section_order(): void {
-        global $DB;
+        global $CFG, $DB;
         $generator = $this->getDataGenerator();
         $course = $generator->create_course(['enablecompletion' => 1]);
         $generator->create_module('forum', ['course' => $course->id, 'section' => 0]);
@@ -44,7 +44,7 @@ final class scorm_route_launch_test extends \advanced_testcase {
     }
 
     public function test_player_url_uses_native_sco_without_resetting_attempt_or_resume_data(): void {
-        global $DB;
+        global $CFG, $DB;
         $generator = $this->getDataGenerator();
         $course = $generator->create_course(['enablecompletion' => 1]);
         $scorm = $generator->create_module('scorm', ['course' => $course->id,
@@ -58,7 +58,8 @@ final class scorm_route_launch_test extends \advanced_testcase {
         $before = $DB->get_records('scorm_scoes_value', [], 'id');
         $cm = get_coursemodule_from_id('scorm', $scorm->cmid);
         $url = scorm_route_launch::player_url($cm, $learner);
-        $this->assertSame('/mod/scorm/player.php', $url->get_path());
+        $basepath = parse_url($CFG->wwwroot, PHP_URL_PATH) ?? '';
+        $this->assertSame($basepath . '/mod/scorm/player.php', $url->get_path());
         $this->assertSame((int)$scorm->cmid, (int)$url->get_param('cm'));
         $this->assertSame((int)$sco->id, (int)$url->get_param('scoid'));
         $this->assertSame($before, $DB->get_records('scorm_scoes_value', [], 'id'));

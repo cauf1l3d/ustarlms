@@ -22,7 +22,7 @@ visuals_ready/recovery_required:false. Оба бота отвечают; PNG/к�
 
 ## Текущий bugfix — прямой запуск SCORM
 
-PR112 устраняет переход из точки в меню курса. Кандидат не установлен; source overlay
+PR112 устраняет переход из точки в меню курса. Кандидат проверен, установка ожидается; source overlay
 не меняет версии/БД/worker. [Статус](context/runtime/route_scorm_launch_20261101.json).
 
 ## После исправления — PERF-01

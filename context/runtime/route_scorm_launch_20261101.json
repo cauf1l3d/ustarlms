@@ -6,7 +6,7 @@
   "branch": "fix/route-direct-scorm-20261101",
   "baseline_application": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "application_commit": "3f8521ec0b23ab0a974440d8eb3eaf378d21d741",
-  "status": "native_qualification_and_owner_overlay_preparation",
+  "status": "qualified_source_overlay_waiting_owner_apply",
   "deployed": false,
   "versions_unchanged": {
     "local_ustar": 2026102900,
@@ -33,7 +33,52 @@
     "cached_component_map": "RED class not found with the existing map; explicit require_once in both launch endpoints GREEN without global cache purge",
     "persisted_values_assertion": "Separate DB stdClass instances are compared by record data, not PHP object identity; fixed before native retry"
   },
-  "native_CI": "pending",
+  "native_CI": {
+    "qualified_head": "51332a218f9ff58f5aa7074f80a1a00426502108",
+    "all4CI": "success",
+    "runs": {
+      "review_fullRC": 41316616865,
+      "context": 41316616789,
+      "console": 41316616806,
+      "infrastructure": 41316616808
+    },
+    "moodle_suites": [
+      {
+        "profile": "historical",
+        "job": 124880327754,
+        "tests": 374,
+        "assertions": 1762,
+        "result": "success"
+      },
+      {
+        "profile": "Moodle5.1.8",
+        "job": 124880327738,
+        "tests": 374,
+        "assertions": 1762,
+        "result": "success"
+      }
+    ],
+    "source_php82": {
+      "job": 124877996105,
+      "result": "success"
+    },
+    "source_php83": {
+      "job": 124877996403,
+      "result": "success",
+      "python_tests": 1499,
+      "skipped": 236
+    },
+    "rollback": {
+      "job": 124877996395,
+      "result": "success"
+    },
+    "final_gate": {
+      "job": 124882208478,
+      "result": "success"
+    },
+    "connect_db": "skipped_not_changed",
+    "production_files_unchanged_after_test_corrections": true
+  },
   "owner_instructions": "inline_chat_only",
   "merge_authorized": false,
   "next_stage_after_fix": "PERF-01 ordinary-workday passive report; leadership processes2Nov and HTTPS/Mini App approvals pending",
@@ -73,9 +118,23 @@
     "not_delivered_reason": "native PHPUnit expected path omitted the /moodle installation prefix; three production launcher files unchanged"
   },
   "delivery": {
-    "status": "new_source_snapshot_and_package_qualification_pending",
+    "tool_commit": "51332a218f9ff58f5aa7074f80a1a00426502108",
     "application_commit": "3f8521ec0b23ab0a974440d8eb3eaf378d21d741",
-    "owner_apply": false
+    "archive": "ustar-scorm-direct-51332a21.tar.gz",
+    "bytes": 74672,
+    "sha256": "92fb191fb09debf064aca6e3433b65e44f1a3f12cc00ce040162d8bc3ae349ae",
+    "script_sha256": "ee5346cbeb42b233956997a1fa0d70c9f95ee7fbb68d4b041105d01e1e0040a6",
+    "CI_run": 41316616808,
+    "CI_job": 124877904219,
+    "CI_job_result": "success",
+    "CI_artifact": 13086779928,
+    "CI_zip_sha256": "6d66972b52c0a3794036fc388a738db21482f9b400c47131a5e9a026842877a6",
+    "zip_crc_and_all6_files_byte_equal": true,
+    "isolated_python3_I_S_plan": "PASS",
+    "actual_UID33_root_group": "mandatory sudo CI passed 10 transaction tests",
+    "full_native_qualification": "PASS",
+    "owner_apply": false,
+    "saved_copy_downloaded_and_byte_equal": true
   },
   "native_second_attempt": {
     "head": "763c042cb107fa61aa265ea8b4dad6a8cdec3c60",
@@ -90,5 +149,7 @@
     "reason": "test expected /mod/scorm/player.php, actual correct /moodle/mod/scorm/player.php",
     "fix": "test derives only installation prefix from CFG; literal player path, CM/SCO and stored progress assertions retained",
     "production_launcher_files_changed": false
-  }
+  },
+  "review": "author self-review, no subagents by owner instruction; fixes verified RED/GREEN; exact source/native/infra gates and artifact byte verification",
+  "next_action": "owner copies archive to /home/aduk, verifies external SHA then private extraction and --check; --upgrade --acknowledge-outage under systemd-run; --check active; open the reported route point"
 }

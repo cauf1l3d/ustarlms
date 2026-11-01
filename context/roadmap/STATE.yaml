@@ -4,7 +4,7 @@ project: USTAR Academy
 stage: route_scorm_launch_fix
 stage_label: Direct SCORM route launch fix; owner overlay pending
 current_activity: PR112 fixes course menu detours with native Moodle SCORM player and
-  existing-cache support. Source-only overlay is under qualification, not deployed.
+  existing-cache support. Source-only overlay passed all4CI/FullRC; owner apply pending.
   Accepted production2900/worker267 unchanged. After this fix, PERF-01 ordinary-workday
   report remains next; leadership process acceptance and HTTPS/Mini App gates remain.
 entrypoint: START_HERE.md
@@ -351,7 +351,7 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: direct_scorm_launch_native_qualification_pending
+  status: qualified_source_overlay_owner_apply_pending
   branch: fix/route-direct-scorm-20261101
   PR: 112
   deployed: false
@@ -363,3 +363,7 @@ development_candidate:
   preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
   scope: four-file source overlay on accepted5cc2900; versions/DB/cron/worker unchanged; guarded file backup/recovery; no owner apply yet
   progress: context/runtime/route_scorm_launch_20261101.json
+  qualification_head: 51332a218f9ff58f5aa7074f80a1a00426502108
+  qualification_receipt: context/runtime/route_scorm_launch_20261101.json
+  delivery_tool: 51332a218f9ff58f5aa7074f80a1a00426502108
+  archive_sha256: 92fb191fb09debf064aca6e3433b65e44f1a3f12cc00ce040162d8bc3ae349ae

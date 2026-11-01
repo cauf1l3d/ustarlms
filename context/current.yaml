@@ -100,9 +100,9 @@ production:
   current_worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
 current_work:
   activity: PR112 fixes course menu detours with native Moodle SCORM player and existing-cache
-    support. Source-only overlay is under qualification, not deployed. Accepted production2900/worker267
-    unchanged. After this fix, PERF-01 ordinary-workday report remains next; leadership
-    process acceptance and HTTPS/Mini App gates remain.
+    support. Source-only overlay passed all4CI/FullRC; owner apply pending. Accepted
+    production2900/worker267 unchanged. After this fix, PERF-01 ordinary-workday report
+    remains next; leadership process acceptance and HTTPS/Mini App gates remain.
   next_task: LEARN-SCORM-01
   ready_tasks: []
   task_statuses:

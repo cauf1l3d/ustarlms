@@ -32,7 +32,7 @@ jobs:
           sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_route_scorm_patch.Transaction -v
       - name: Build the fixed SCORM overlay and verify offline plan
         run: |
-          python3 scripts/infra/build_route_scorm_patch.py --tool-commit "$(git rev-parse HEAD)" --output artifacts/route-scorm-fix
+          python3 scripts/infra/build_route_scorm_patch.py --tool-commit 51332a218f9ff58f5aa7074f80a1a00426502108 --output artifacts/route-scorm-fix
           tar --no-same-owner -xzf artifacts/route-scorm-fix/ustar-scorm-direct-*.tar.gz -C artifacts/route-scorm-fix
           cd artifacts/route-scorm-fix
           sha256sum --check --strict SHA256SUMS

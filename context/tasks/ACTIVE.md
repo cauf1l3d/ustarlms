@@ -1,10 +1,10 @@
 # Активная работа —01.11.2026
 
-## LEARN-SCORM-01: прямой запуск из маршрута — текущий bugfix
+## LEARN-SCORM-01: прямой запуск из маршрута — готово к установке
 
 Owner сообщил: импортированный курс открывает меню вместо SCORM. PR112 исправляет
 course/CM launch с прежними current point/version/actor gates и Moodle attempts.
-Кандидат не установлен; app/worker production2900/267 сохраняются.
+Кандидат прошёл все4CI и FullRC; owner apply ожидается. Production2900/267 сохраняются.
 [Проверки и поставка](../runtime/route_scorm_launch_20261101.json). После фикса — PERF-01.
 
 ## PERF-01: производительность и стабильность обычного рабочего дня

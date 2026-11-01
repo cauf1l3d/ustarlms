@@ -37,7 +37,7 @@ current_operator_handoff:
 current_work:
   task: LEARN-SCORM-01
   related_task: PERF-01
-  status: direct_scorm_source_overlay_qualification
+  status: qualified_source_overlay_owner_apply_pending
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py

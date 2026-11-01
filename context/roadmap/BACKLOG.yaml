@@ -730,6 +730,7 @@ tasks:
   - Existing packages, published route versions and result history unchanged
   - Guarded owner source overlay qualified; actual production apply recorded separately
   progress: context/runtime/route_scorm_launch_20261101.json
+  current_summary: Qualified source overlay51332a21, all4CI and both Moodle374/1762 PASS; archive and saved readback byte-verified. Owner apply pending; source/production2900 and worker267 retained.
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

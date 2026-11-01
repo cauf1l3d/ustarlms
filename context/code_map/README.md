@@ -11,9 +11,10 @@ Generated: [manifest](generated/source_manifest.json), [классы](generated/
 [таблицы](generated/database_tables.md), [API](generated/web_services.md).
 Обновление: bash scripts/build_code_map.sh EXACT_SOURCE_COMMIT.
 [Токены](../design/tokens.yaml), [capability references](../architecture/access_matrix.yaml),
-[домены](../domains). Исторические development_source.json и
-connect_role_bot_development_source.json сохраняют прежние кандидатные snapshots;
-канонический текущий источник — generated/source_manifest.json и STATE.code_baseline.
+[домены](../domains). Текущий кандидат PR112 — development_source.json:608файлов/103таблицы,
+SCORM overlay3f8521ec; не установлен. connect_role_bot_development_source.json —
+исторический snapshot. Канонический main/production источник — generated/source_manifest.json
+и STATE.code_baseline; квалификация кандидата — в STATE.development_candidate.
 
 [Connect](../domains/connect.yaml) использует текущие Academy writers/права/историю.
 frontend — legacy; server-console имеет отдельную ops identity и собственный CI.

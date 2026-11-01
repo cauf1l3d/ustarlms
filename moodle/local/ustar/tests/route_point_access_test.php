@@ -21,6 +21,7 @@ final class route_point_access_test extends \advanced_testcase {
         $user = $gen->create_and_enrol($course, 'student');
         $position = 'review_fixture';
         $structure = structure::get(structure::NAME_STRUCTURE);
+        $structure['departments'][] = ['id'=>'fixture','name'=>'Fixture department'];
         $structure['positions'][] = ['id'=>$position,'name'=>'Review learner','department'=>'fixture','level'=>1];
         structure::save(structure::NAME_STRUCTURE, $structure);
         $field = $DB->get_record('user_info_field', ['shortname'=>'ustar_position']);

@@ -28,4 +28,5 @@ USTAR_STAGE_PREFIX=botold_ php /source/tests/stage/schema_snapshot.php > /artifa
 USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifacts/route-access-repeat.log 2>&1
 USTAR_STAGE_PREFIX=botold_ php /source/tests/stage/schema_snapshot.php > /artifacts/route-access-repeat.json
 cmp /artifacts/route-access-upgraded.json /artifacts/route-access-repeat.json
+python3 /source/tests/stage/route_access_native.py --verify
 php admin/cli/purge_caches.php > /artifacts/route-access-purge.log 2>&1

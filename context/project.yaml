@@ -37,8 +37,8 @@ current_operator_handoff:
 current_work:
   task: LEARN-SCORM-02
   related_task: PERF-01
-  status: direct_launch_owner_accepted_access_design_pending
-  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  status: route_access_implementation_under_qualification
+  spec: context/tasks/route_scorm_access_20261101.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py
   observation_sha256: ee883caff5be0b391db583bb4deeb795c1dbd3c1bba0c4127faa02f9cd444f92

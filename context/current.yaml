@@ -100,10 +100,10 @@ production:
   current_worker_observed_at: '2026-11-01'
   current_worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
 current_work:
-  activity: Owner accepted SCORM direct launch after51332a21, but continuation remains
-    broken. Per-point review access, manual/timed advancement and configurable finish
-    destination requested. Design proposed, implementation not changed; exact server
-    apply output absent. PERF-01 follows; leadership and HTTPS/Mini App gates remain.
+  activity: Owner approved the inline design. Candidate adds versioned review access,
+    protected manual/timed advancement and configurable SCORM finish action. Native/infra
+    qualification and owner delivery pending. Production2900/worker267 retained; direct
+    launch accepted but exact server apply output absent.
   next_task: LEARN-SCORM-02
   ready_tasks: []
   task_statuses:

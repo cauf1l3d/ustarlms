@@ -18,6 +18,29 @@ concurrency:
   group: ustar-infra-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  route-review-access:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Exact source, private images, mixed owners and forward recovery
+        run: |
+          python3 -m unittest tests.r16.test_route_access_update.Contract tests.r16.test_route_access_update.Package -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_route_access_update.Transaction -v
+      - name: Build fixed route review release and verify offline envelope
+        run: |
+          python3 scripts/infra/build_route_access_update.py --tool-commit "$(git rev-parse HEAD)" --output artifacts/route-review
+          tar --no-same-owner -xzf artifacts/route-review/ustar-route-review-*.tar.gz -C artifacts/route-review
+          cd artifacts/route-review
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: route-review-access
+          path: artifacts/route-review/
   route-scorm-source-overlay:
     runs-on: ubuntu-24.04
     timeout-minutes: 10

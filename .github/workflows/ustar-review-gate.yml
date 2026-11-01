@@ -54,6 +54,8 @@ jobs:
         run: php tests/release_20260912/scorm_route_launch.php
       - name: Route review policy keeps completion and server access separate
         run: php tests/release_20260912/route_access_policy.php
+      - name: Imported SCORM completion preserves Moodle announcements and all other requirements
+        run: php tests/release_20260912/scorm_import_completion.php
       - name: Determine whether Connect schema or service requires native DB verification
         id: connect-scope
         env:
@@ -146,6 +148,7 @@ jobs:
           git archive 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/telegram-presentation-target
           python3 tests/stage/con02_update_native.py prepare
           python3 tests/stage/connect_role_bot_native.py --prepare
+          python3 tests/stage/route_access_native.py --prepare
           python3 - <<'PYCONFIG'
           import importlib.util
           from pathlib import Path
@@ -222,6 +225,7 @@ jobs:
           python3 tests/stage/perf_query_legacy_native.py --prepare
           python3 tests/stage/feed_media_legacy_native.py --prepare
           python3 tests/stage/connect_role_bot_native.py --prepare
+          python3 tests/stage/route_access_native.py --prepare
           mkdir -p artifacts
           cp .stage-input/baseline.json artifacts/baseline.json
       - name: Build isolated test runtime

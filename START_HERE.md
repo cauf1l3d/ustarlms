@@ -24,7 +24,7 @@ visuals_ready/recovery_required:false. Оба бота отвечают; PNG/к�
 
 Owner принял прямое открытие после51332a21; точного server apply receipt нет.
 Теперь LEARN-SCORM-02: завершение, повторный доступ, таймер и переход точки.
-[Проект](context/tasks/route_scorm_access_20261101.md) для согласования, код ещё не менялся.
+[Правила](context/tasks/route_scorm_access_20261101.md) утверждены; код на квалификации.
 
 ## После исправления — PERF-01
 

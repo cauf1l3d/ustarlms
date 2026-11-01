@@ -17,12 +17,17 @@
   ],
   "source_review": "7ee2e45fe01d2587178849f14d198c1370898e92",
   "design": "context/tasks/route_scorm_access_20261101.md",
-  "design_status": "proposed_pending_owner_approval",
+  "design_status": "owner_approved",
   "timer_origin_question": "asked_no_answer_received",
   "agent_proposed_timer_origin": "first_verified_study_completion",
-  "proposal_is_owner_decision": false,
-  "implementation_changed": false,
+  "proposal_is_owner_decision": true,
+  "implementation_changed": true,
   "merge_authorized": false,
   "server_access_authorized": false,
-  "owner_instructions": "inline_chat_only"
+  "owner_instructions": "inline_chat_only",
+  "owner_approval": "да потверждаю",
+  "approval_source": "owner_message_after_inline_design",
+  "status": "implementation_under_qualification",
+  "application_commit": "d35a7b7b54a0a6a83753b89d9c29e9ec35e480d6",
+  "native_CI": "pending"
 }

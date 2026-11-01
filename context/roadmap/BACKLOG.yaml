@@ -742,7 +742,7 @@ tasks:
   - Repeat access preserves one verified learning credit and reward
   - Per-point manual/timed advancement and finish destination are versioned
   - Deadline and stale URLs are enforced server-side; assessments keep real results
-  current_summary: Source reviewed; design proposed for owner approval. No runtime change or new delivery yet.
+  current_summary: Owner approved design; implementation under native/infra qualification. Not deployed; archive not delivered.
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-11-01'
 project: USTAR Academy
-stage: route_scorm_access_design
-stage_label: Owner accepted direct launch; completion and access policy design pending
-current_activity: Owner accepted SCORM direct launch after51332a21, but continuation
-  remains broken. Per-point review access, manual/timed advancement and configurable
-  finish destination requested. Design proposed, implementation not changed; exact
-  server apply output absent. PERF-01 follows; leadership and HTTPS/Mini App gates remain.
+stage: route_scorm_access_implementation
+stage_label: Owner approved route review policy; implementation under qualification
+current_activity: Owner approved the inline design. Candidate adds versioned review
+  access, protected manual/timed advancement and configurable SCORM finish action.
+  Native/infra qualification and owner delivery pending. Production2900/worker267
+  retained; direct launch accepted but exact server apply output absent.
 entrypoint: START_HERE.md
 next_task: LEARN-SCORM-02
 ready_tasks: []
@@ -350,21 +350,18 @@ connect_visual_candidate:
 
 latest_source_integration: context/runtime/connect_feed_integration_order_20261101.json
 
+previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: qualified_source_overlay_owner_apply_pending
-  branch: fix/route-direct-scorm-20261101
-  PR: 112
+  status: implementation_under_qualification
+  branch: feat/route-review-access-20261101
+  PR: null
   deployed: false
-  application_commit: 3f8521ec0b23ab0a974440d8eb3eaf378d21d741
-  local_ustar_version: 2026102900
+  application_commit: d35a7b7b54a0a6a83753b89d9c29e9ec35e480d6
+  local_ustar_version: 2026110100
   theme_ustar_version: 2026102700
-  schema_changed: false
+  schema_changed: true
   worker_rollout: false
   preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
-  scope: four-file source overlay on accepted5cc2900; versions/DB/cron/worker unchanged; guarded file backup/recovery; no owner apply yet
-  progress: context/runtime/route_scorm_launch_20261101.json
-  qualification_head: 51332a218f9ff58f5aa7074f80a1a00426502108
-  qualification_receipt: context/runtime/route_scorm_launch_20261101.json
-  delivery_tool: 51332a218f9ff58f5aa7074f80a1a00426502108
-  archive_sha256: 92fb191fb09debf064aca6e3433b65e44f1a3f12cc00ce040162d8bc3ae349ae
+  scope: versioned review access and advancement; additive104-table schema and cron guard; worker/egress preserved
+  progress: context/runtime/route_scorm_access_owner_order_20261101.json

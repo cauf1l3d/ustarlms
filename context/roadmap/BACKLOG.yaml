@@ -721,7 +721,7 @@ tasks:
   deployment_evidence: context/runtime/feed2803_owner_deploy_20261029.json
 - id: LEARN-SCORM-01
   title: Открывать SCORM из точки маршрута без меню курса
-  status: in_progress
+  status: done
   depends_on: []
   PR: 112
   acceptance:
@@ -733,7 +733,7 @@ tasks:
   current_summary: Qualified51332a21 passed all4CI and native374/1762; owner now accepts direct launch. Exact server apply output absent; continuation issue tracked separately in LEARN-SCORM-02.
 - id: LEARN-SCORM-02
   title: Завершение SCORM и настройки доступа/перехода точки
-  status: in_progress
+  status: done
   depends_on: [LEARN-SCORM-01]
   progress: context/runtime/route_scorm_access_owner_order_20261101.json
   design: context/tasks/route_scorm_access_20261101.md
@@ -743,7 +743,19 @@ tasks:
   - Per-point manual/timed advancement and finish destination are versioned
   - Deadline and stale URLs are enforced server-side; assessments keep real results
   qualification: context/runtime/scorm_tracking_20261102.json
-  current_summary: Owner CM104/user132 has savetrack=false and no native result. Scoped Student repair app2150affe/toolb5ead9cb passed all4CI and both native389 suites; exact bounded1100 archive hashes pass on host; owner trace confirms missing /run/ustar-connect-install.lock; safe atomic creation verified locally, owner check/apply pending; upgrade not run. See context/runtime/scorm_tracking_20261102.json.
+  current_summary: "Owner2Nov installed app2150affe/toolb5ead9cb: active/exit0/active; SCORM opening, completion and configured transitions accepted."
+  owner_receipt: context/runtime/scorm_tracking_owner_20261102.json
+- id: LEARN-ASSESS-01
+  title: Прямой запуск аттестации Студии из точки маршрута
+  status: in_progress
+  depends_on: [LEARN-SCORM-02]
+  progress: context/runtime/studio_assessment_route_20261102.json
+  acceptance:
+  - Published point opens the concrete native quiz activity
+  - Authoritative quiz pass closes the point; opening alone grants no assessment credit
+  - Owner verifies access, submission and continuation
+  current_summary: Course30 menu has no visible assessment. Existing activity_launch/bridge supports direct quiz; configure the native activity selector and verify before changing source. Exact production module/roles not queried.
+
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

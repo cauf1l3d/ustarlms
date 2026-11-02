@@ -10,7 +10,7 @@ Helper active/HTTP200/ready=false. This supersedes the timestamp hypothesis for 
 - [x] Preserve frozen operators/archives, xattrs, worker/egress/config/cron; source rollback only.
 - [x] Verify real Moodle native permissions and completion; qualify immutable tool source.
 - [x] Build archive, compare exact CI bytes/CRC and downloaded saved copy.
-- [ ] Owner installation and fresh SCORM completion/next-point acceptance.
+- [x] Owner installation and fresh SCORM completion/next-point acceptance.
 
 No synthetic completion or manual credit. The earlier unsaved package state is not a
 server-side result. After repair, reopen through the route so Moodle can save the attempt.
@@ -22,3 +22,6 @@ An active root-private receipt is accepted as historical; cron backoff and worke
 are not replayed. Current source/control integrity is verified by the overlay. The overlay
 changes only the helper and its existing native test, preserving1100/2700 and all104 tables.
 No SSH, provider sends, subagents or merge.
+
+Owner2Nov: ready -> active/exit0 -> active; course opening/completion/configured transitions accepted.
+[Owner receipt](../runtime/scorm_tracking_owner_20261102.json). Native Quiz routing is a separate follow-up.

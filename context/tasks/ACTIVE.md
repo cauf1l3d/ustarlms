@@ -1,22 +1,22 @@
 # Активная работа —02.11.2026
 
-## LEARN-SCORM-02: завершение, повторный доступ и переход
+## LEARN-ASSESS-01: запуск аттестации Студии
 
-Owner CM104/course29/user132: savetrack=false, completion=false, tracks=[].
-Helper active/HTTP200/ready=false. [Факты и выпуск](../runtime/scorm_tracking_20261102.json).
-Исправление app2150affe выдаёт штатную учебную роль только в доступном курсе,
-сохраняет запреты и сроки. Toolb5ead9cb: all4CI/native389; точный архив готов.
-Поставка —2 файла поверх1100, без схемы/worker/egress. [План](scorm_tracking_fix_20261102.md).
-Owner trace: нет /run/ustar-connect-install.lock. Безопасное создание проверено; ждём check/apply.
+Owner2Nov установил app2150affe/toolb5ead9cb: active/exit0/active. SCORM открывается,
+завершается и переводит дальше по настройкам. [Принято](../runtime/scorm_tracking_owner_20261102.json).
+Новая проблема: точка открывает /course/view.php?id=30, теста не видно.
+В Студии выбрать конкретный тест в «Учебная активность или тест», убрать курс/дубль
+материала и опубликовать новую версию. Этот native CM путь уже поддерживается.
+[Факты/проверка](../runtime/studio_assessment_route_20261102.json); owner outcome ещё не получен.
 
 ## PERF-01: производительность и стабильность обычного рабочего дня
 
 PR110/111 объединены в main после единой FullRC по
 [поручению владельца](../runtime/connect_feed_integration_order_20261101.json).
-Код приложения5cc02944/local2900/theme2700; текущий worker267e5587.
+Main5cc02944/app2900; production2150affe/app1100/theme2700, worker267e5587.
 Приложение/worker уже установлены владельцем; merge не означает новый deploy.
 
-После приёмки1100 — пассивное наблюдение: latency, SQL, cron lag и нагрузка
+После проверки аттестации — пассивное наблюдение: latency, SQL, cron lag и нагрузка
 в обычный рабочий день. observe.py из frozen9a поддерживает2900; для1100 сначала
 нужен проверенный вариант сборщика. [Builder](../../scripts/infra/build_connect_role_bot_update.py).
 Исходный workday_observer.py остаётся frozen2802/2803. Фактический8h отчёт ещё

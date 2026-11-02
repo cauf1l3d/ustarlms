@@ -20,14 +20,13 @@ Payload606/103 — комплект, не whole-host инвентаризаци�
 Приложение и worker имеют разные SHA; merge не меняет production.
 Старые контроллеры/архивы не переписывать и не применять повторно по датированной истории.
 
-## Текущий выпуск — SCORM и повторный доступ
+## Текущее состояние — app1100 и аттестация
 
-Owner принял прямое открытие51332; точного apply receipt нет.
-Выпускf879/app1100 квалифицирован: all4CI, native387/1812; архив и сохранённая
-копия сверены. [Квалификация](context/runtime/route_scorm_access_qualification_20261102.json).
-Owner CM104/user132: savetrack=false, native результата нет. Исправление
-app2150affe/toolb5ead9cb: CI/native389; owner trace: нет runtime lock. Ждём check/apply.
-[Текущее состояние](context/runtime/scorm_tracking_20261102.json). Worker267 сохраняется.
+Owner2Nov: app2150affe/toolb5ead9cb установлен, active/exit0/active; SCORM и переходы
+по настройкам приняты. [Receipt](context/runtime/scorm_tracking_owner_20261102.json).
+Production614/104, worker267; main остаётся2900, PR113 открыт, merge не разрешён.
+Новая точка ведёт в меню course30. Выбрать конкретный Quiz в «Учебная активность
+или тест»; [проверка](context/runtime/studio_assessment_route_20261102.json) ожидает owner.
 
 ## После исправления — PERF-01
 

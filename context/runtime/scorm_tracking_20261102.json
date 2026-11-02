@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "date_msk": "2026-11-02",
-  "status": "owner_missing_runtime_lock_confirmed_safe_create_then_check_pending",
+  "status": "owner_installed_SCORM_functional_accepted",
   "source": "owner_console_and_readonly_CM104_diagnostic_in_current_dialogue",
   "PR": 113,
   "previous_application": "b9f170d89cead30021b0acbfba6ee681cec024f8",
@@ -131,8 +131,11 @@
       "actual_PostgreSQL": "104 tables;2900->1100/repeat;fresh/accepted legacy parity;4 foreign schema refusals PASS"
     }
   },
-  "owner_new_archive_applied": false,
-  "owner_tracking_after_reopen": null,
+  "owner_new_archive_applied": true,
+  "owner_tracking_after_reopen": {
+    "basis": "owner functional statement, not fresh tracking SQL",
+    "courses_open_complete_and_transition_as_configured": true
+  },
   "historical_finish_evidence": "context/runtime/route_review_recovery_20261102.json",
   "previous_code_qualification": {
     "head": "d70616c8b088bff108ae34f9e63fb3ff2a13bc5a",
@@ -169,6 +172,10 @@
       "<qualified-route-scorm-overlay>:146:locks"
     ],
     "cause": "The last shared managed lock path is absent. Read-only check opens existing locks without O_CREAT; the native Connect installer creates this sentinel with O_CREAT|O_RDWR|O_NOFOLLOW mode0600. No source update has run.",
-    "why_file_disappeared": "Not confirmed; /run is runtime storage. Do not assert a reboot from this trace alone."
-  }
+    "why_file_disappeared": "Not confirmed; /run is runtime storage. Do not assert a reboot from this trace alone.",
+    "resolved_by_owner": true,
+    "resolution_receipt": "context/runtime/scorm_tracking_owner_20261102.json"
+  },
+  "owner_receipt": "context/runtime/scorm_tracking_owner_20261102.json",
+  "next_separate_issue": "context/runtime/studio_assessment_route_20261102.json"
 }

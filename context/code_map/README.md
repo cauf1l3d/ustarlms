@@ -1,6 +1,6 @@
 # Карта кода
 
-Актуально01Nov: source `5cc02944e1059ba015afcc7c5e8068ca56c34a92`, main local2900/theme2700.
+Актуально02Nov: source `5cc02944e1059ba015afcc7c5e8068ca56c34a92`, main local2900/theme2700.
 Приложение: 606файлов, 103 XMLDB tables.
 Worker267e5587 имеет отдельную поставку. Это Git inventory, не свежий whole-host manifest.
 [Интеграция](../runtime/connect_feed_integration_order_20261101.json),
@@ -11,10 +11,11 @@ Generated: [manifest](generated/source_manifest.json), [классы](generated/
 [таблицы](generated/database_tables.md), [API](generated/web_services.md).
 Обновление: bash scripts/build_code_map.sh EXACT_SOURCE_COMMIT.
 [Токены](../design/tokens.yaml), [capability references](../architecture/access_matrix.yaml),
-[домены](../domains). Текущий кандидат PR112 — development_source.json:608файлов/103таблицы,
-SCORM overlay3f8521ec; не установлен. connect_role_bot_development_source.json —
-исторический snapshot. Канонический main/production источник — generated/source_manifest.json
-и STATE.code_baseline; квалификация кандидата — в STATE.development_candidate.
+[домены](../domains). PR113/app2150affe — development_source.json:614файлов/104таблицы.
+Owner2Nov установил1100 и принял SCORM/переходы: [receipt](../runtime/scorm_tracking_owner_20261102.json).
+Generated/source_manifest.json и STATE.code_baseline описывают main2900;
+STATE.production — установленный1100. PR113 ещё не объединён.
+connect_role_bot_development_source.json сохраняет исторический snapshot.
 
 [Connect](../domains/connect.yaml) использует текущие Academy writers/права/историю.
 frontend — legacy; server-console имеет отдельную ops identity и собственный CI.

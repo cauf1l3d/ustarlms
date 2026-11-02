@@ -25,9 +25,9 @@ Payload606/103 — комплект, не whole-host инвентаризаци�
 Owner принял прямое открытие51332; точного apply receipt нет.
 Выпускf879/app1100 квалифицирован: all4CI, native387/1812; архив и сохранённая
 копия сверены. [Квалификация](context/runtime/route_scorm_access_qualification_20261102.json).
-Owner дошёл до publication_committed, но finish отказал на login80=302;
-Moodle8082=200. [Текущее восстановление](context/runtime/route_review_recovery_20261102.json).
-Подтверждения active/ботов и приёмки точки ещё нет; worker267 сохраняется.
+Owner CM104/user132: savetrack=false, native результата нет. Исправление
+app2150affe подготавливает учебную роль в доступном курсе; CI/архив ожидаются.
+[Текущее состояние](context/runtime/scorm_tracking_20261102.json). Worker267 сохраняется.
 
 ## После исправления — PERF-01
 

@@ -18,6 +18,30 @@ concurrency:
   group: ustar-infra-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  scorm-tracking-access:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Scoped tracking source, frozen companion and real private metadata recovery
+        run: |
+          python3 -m unittest tests.r16.test_scorm_tracking_patch.Contract -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_scorm_tracking_patch.Transaction -v
+      - name: Build the bounded1100 tracking repair without host access
+        run: |
+          python3 scripts/infra/build_scorm_tracking_patch.py --tool-commit "$(git rev-parse HEAD)" --output artifacts/scorm-tracking
+          tar --no-same-owner -xzf artifacts/scorm-tracking/ustar-scorm-tracking-*.tar.gz -C artifacts/scorm-tracking
+          cd artifacts/scorm-tracking
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+          python3 -I -S finish.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: scorm-tracking-access
+          path: artifacts/scorm-tracking/
   route-review-access:
     runs-on: ubuntu-24.04
     timeout-minutes: 12

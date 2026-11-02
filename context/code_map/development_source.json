@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "713b555a0522969094ea0b8b4a8d625fcbf98cdf",
+    "moodle/local/ustar": "fa55d5beead2f75e6ffd9141a9e14b5171e06759",
     "moodle/theme/ustar": "c60e0657cb957288c914fa46444d2d692012cb7e"
   },
   "versions": {
@@ -853,7 +853,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/scorm_route_launch.php",
-      "sha256": "24623c6d898d6f2bb76e477510aa3cd9eb047aeff3dcccefb6573a52e3066aa5"
+      "sha256": "b2dba9dd68f6040c9f9e45eef0858f68127d9cae64acd592090bd65de8cb5e41"
     },
     {
       "path": "moodle/local/ustar/classes/skill_assessment.php",
@@ -2193,7 +2193,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/scorm_route_launch_test.php",
-      "sha256": "b85a835f720148df7d72f19b8c5f550625cd858c67497ea850163e0682205cfd"
+      "sha256": "5a17c9bca73017c4279e30328fa497f2c9655f6664cb6ca7d9e9ce1b87166e25"
     },
     {
       "path": "moodle/local/ustar/tests/stage1_test.php",

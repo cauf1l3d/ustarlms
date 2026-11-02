@@ -139,7 +139,7 @@ class Package(unittest.TestCase):
     def test_exact_git_archive_is_deterministic_private_and_offline(self):
         import subprocess,tarfile
         builder=importlib.import_module('build_route_access_update')
-        commit=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD'],text=True).strip()
+        commit='f879822a406eefc3c65fe4a5d0c36d28bc091ba5'  # Delivered archive stays immutable after later source fixes.
         with tempfile.TemporaryDirectory() as td:
             first=builder.build(commit,Path(td)/'first');second=builder.build(commit,Path(td)/'second')
             a=Path(first['archive']);self.assertEqual(a.read_bytes(),Path(second['archive']).read_bytes())

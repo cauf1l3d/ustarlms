@@ -14,8 +14,8 @@ Owner1Nov разрешил merge110/111; объединены после FullRC.
 [Основание/проверки](context/runtime/connect_feed_integration_order_20261101.json).
 App2900/theme2700 и worker267e5587 уже установлены владельцем; merge не deploy.
 Задачи/возврат/фото/читаемость приняты. Owner принял прямой SCORM запуск51332a21;
-LEARN-SCORM-02 дошёл до publication_committed, finish отказал (80=302/8082=200).
-[Восстановление](context/runtime/route_review_recovery_20261102.json); active ещё не подтверждён.
+LEARN-SCORM-02: CM104/user132 не имеет savetrack, native результата нет.
+[Исправление/квалификация](context/runtime/scorm_tracking_20261102.json); приёмка ещё не получена.
 После него PERF-01: пассивный рабочий день. Остальные процессы с руководством
 с2Nov; HTTPS/Mini App ждут согласования. Старые cron19/failed2 не сбрасывать.
 

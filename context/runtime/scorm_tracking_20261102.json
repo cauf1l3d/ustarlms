@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "date_msk": "2026-11-02",
+  "status": "tracking_fix_implemented_native_qualification_pending",
+  "source": "owner_console_and_readonly_CM104_diagnostic_in_current_dialogue",
+  "PR": 113,
+  "previous_application": "b9f170d89cead30021b0acbfba6ee681cec024f8",
+  "application_commit": "2150affe7e2964a1056468cce0e438f9e2f91dcb",
+  "versions_unchanged": {
+    "local_ustar": 2026110100,
+    "theme_ustar": 2026102700
+  },
+  "files": 614,
+  "tables": 104,
+  "owner_browser": {
+    "cmid": 104,
+    "helper": true,
+    "sameOrigin": true,
+    "http": 200,
+    "active": true,
+    "ready": false,
+    "closed": false,
+    "error": false
+  },
+  "owner_native": {
+    "CM": {
+      "id": 104,
+      "course": 29,
+      "instance": 20,
+      "completion": 2
+    },
+    "learner": {
+      "userid": 132,
+      "lastview": 1793610091,
+      "savetrack": false,
+      "completion": false,
+      "tracks": []
+    }
+  },
+  "confirmed_cause": "No effective mod/scorm:savetrack capability and no native result. The completed label inside the package is not native evidence.",
+  "not_proven": "Which assigned role or missing assignment causes the denial on the host; the fix preserves explicit role denials and fails clearly if standard Student itself cannot track.",
+  "rejected_as_current_explanation": "Old completion timestamp: there is no stored completion to be rejected in this owner output.",
+  "implementation": [
+    "The authorised native player launch checks savetrack before opening the SCO.",
+    "Missing positive learner access can receive only the existing Student role in that course through manual enrolment.",
+    "Explicit CAP_PREVENT/CAP_PROHIBIT, disabled/suspended/future/expired enrolment are not overridden.",
+    "Existing enrolment dates, native attempts, grades and one-time route rewards are preserved."
+  ],
+  "delivery": {
+    "operator": "scripts/infra/scorm_tracking_patch.py",
+    "builder": "scripts/infra/build_scorm_tracking_patch.py",
+    "runtime_files": [
+      "local/ustar/classes/scorm_route_launch.php",
+      "local/ustar/tests/scorm_route_launch_test.php"
+    ],
+    "source_only": true,
+    "schema_changed": false,
+    "database_restore": false,
+    "worker_changed": false,
+    "previous_finish_companion": "scripts/infra/route_review_finish.py",
+    "finish_sha256": "38fa5e373a319e8bba4bb0cee3e69d9e5930432bee9e85b6c9dca9ff2a4aa76d",
+    "companion_behavior": "Check first; only finish publication_committed when needed. Active previous installation is not reactivated.",
+    "recovery": "Source-only rollback; business learning and role assignments are never restored from a database copy."
+  },
+  "local_checks": {
+    "PHP_tracking": "RED missing savetrack -> GREEN scoped role/replay/denials/disabled instance",
+    "PHP_direct_launch": "PASS",
+    "operator_transactions": "PASS; actual UID33 delegated to mandatory sudo CI"
+  },
+  "native_CI": "pending",
+  "owner_new_archive_applied": false,
+  "owner_tracking_after_reopen": null,
+  "historical_finish_evidence": "context/runtime/route_review_recovery_20261102.json",
+  "previous_code_qualification": {
+    "head": "d70616c8b088bff108ae34f9e63fb3ff2a13bc5a",
+    "all4CI": "success",
+    "context": "1522 tests /249 skips; infra and both native suites passed; not owner acceptance"
+  },
+  "plan": "context/tasks/scorm_tracking_fix_20261102.md",
+  "owner_instructions": "inline_chat_only",
+  "agent_server_access": false,
+  "merge_authorized": false
+}

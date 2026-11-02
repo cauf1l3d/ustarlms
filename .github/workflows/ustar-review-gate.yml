@@ -52,6 +52,8 @@ jobs:
       - run: python scripts/ci/source_checks.py
       - name: Route points launch the authorised SCORM player directly
         run: php tests/release_20260912/scorm_route_launch.php
+      - name: Authorised SCORM learners receive tracking without overriding denials or enrolment dates
+        run: php tests/release_20260912/scorm_tracking.php
       - name: Route review policy keeps completion and server access separate
         run: php tests/release_20260912/route_access_policy.php
       - name: Removing an automatic point never revives its closed material URL

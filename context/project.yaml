@@ -1,10 +1,10 @@
 schema_version: 2
-updated_at: '2026-11-01'
+updated_at: '2026-11-02'
 project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: route_scorm_launch_fix
+  stage: scorm_tracking_native_qualification
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:

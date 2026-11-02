@@ -2,13 +2,12 @@
 
 ## LEARN-SCORM-02: завершение, повторный доступ и переход
 
-Owner2Nov установил f879/app1100 до publication_committed. Завершение отказало:
-проверка login на80 ожидает200, фактически302; Moodle8082 отвечает200.
-Две Academy-службы остались inactive. [Восстановление](../runtime/route_review_recovery_20261102.json).
-Новый узкий finish-helper сохраняет guards frozen-оператора и проверяет8082.
-Подтверждение active/ботов и пользовательская приёмка ещё не получены.
-[Квалификация приложения](../runtime/route_scorm_access_qualification_20261102.json),
-[план](route_scorm_access_plan_20261101.md). Инструкции владельцу прямо в чат.
+Owner CM104/course29/user132: savetrack=false, completion=false, tracks=[].
+Helper active/HTTP200/ready=false. [Факты и выпуск](../runtime/scorm_tracking_20261102.json).
+Исправление app2150affe выдаёт штатную учебную роль только в доступном курсе,
+сохраняет запреты и сроки. Локальный RED→GREEN; native CI/архив ещё ожидаются.
+Поставка —2 файла поверх1100, без схемы/worker/egress. [План](scorm_tracking_fix_20261102.md).
+Приёмка владельцем не получена; инструкции прямо в чат.
 
 ## PERF-01: производительность и стабильность обычного рабочего дня
 

@@ -36,6 +36,7 @@ class context_system {static function instance() {return new self();}}
 class context_module {static function instance($id) {return new self();}}
 function require_login(...$args) {}
 function require_capability(...$args) {}
+function has_capability(...$args) { return true; }
 function required_param($name, $type) {return ['cmid'=>501, 'courseid'=>50, 'pointid'=>70, 'versionid'=>8][$name];}
 function optional_param($name, $default, $type) {return $name === 'versionid' ? 8 : $default;}
 function redirect($url) {throw new Redirected($url);}

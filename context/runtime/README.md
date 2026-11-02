@@ -9,3 +9,6 @@
 [Операции](OPERATIONS.md), [backup/restore](BACKUP_RESTORE.md), [реестр](RELEASE_LEDGER.md),
 [принятые риски](../roadmap/ACCEPTED_RISKS.yaml). Docker successor
 [заморожен](docker_runtime_successor_20261026.md); старые команды не возобновлять.
+
+Единая Библиотека0200: [qualified6ee71123](library_qualification_20261102.json).
+Архив проверен, production1100 не изменён; установка и реальная приёмка владельцем ожидаются.

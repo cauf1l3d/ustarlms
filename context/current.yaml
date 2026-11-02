@@ -106,9 +106,10 @@ production:
   latest_assessment_issue: context/runtime/studio_assessment_route_20261102.json
   historical_incomplete_update_attempt: context/runtime/route_review_recovery_20261102.json
 current_work:
-  activity: Owner installed app2150affe/toolb5ead9cb, active/exit0/active and SCORM
-    completion/transitions accepted. Course30 opens an empty menu; use the existing
-    native Quiz activity selector, then verify the assessment result and continuation.
+  activity: Library0200 app26bd4fe0/tool6ee71123 passed full native, source, infra
+    and design qualification. Deliver one guarded archive from accepted production1100.
+    Owner already accepted SCORM and native Quiz; no new production deployment or
+    merge.
   next_task: LIBRARY-01
   ready_tasks: []
   task_statuses:

@@ -83,3 +83,18 @@ access, existing test fixtures updated for108 tables/new seeded manager role, pr
 translation keys. Tool pin and host-prepared native schema reference updated. All earlier Library
 archives remain undelivered/superseded; final native qualification pending. Changes sincea025 do not
 alter purchase/grant/optional-attempt runtime logic; the schema source now matches generated PG.
+
+
+Final qualification6ee71123/application26bd4fe0: all4 workflows and8 fullRC jobs PASS.
+Moodle5.1.1 and5.1.8 each415 tests/1916 assertions,26 Library cases, no failures/errors;
+authenticated Library GET/redirect/readonly checks PASS. Source PHP8.2/8.3 each1548
+Python tests (266 explicit skips), mandatory real root/UID33 fixture separately PASS;
+36 browser scenes each, visual management density correction inspected and accepted.
+Actual PG16 exact accepted1100→0200/repeat/fresh schema PASS,108 tables; all4 measured
+schema/index/task mutations refused and rolled back. Bootstrap repeat is byte-identical.
+Archive6ee71123,381392 bytes, SHA256db2f51a1b8b95c4a3cf7a2ef4fb3cf6fef559927131b4dfdb93dda67eaab770f:
+CI artifact13159215434 ZIP CRC/digest PASS, local/CI members byte-identical; saved-copy
+readback byte-identical. Three private regular members only. No production operation,
+merge, provider send or change to worker267. Receipt: library_qualification_20261102.json.
+All code/qualification tasks complete; owner delivery, installation and real-account
+acceptance remain. Do not rebuild or alter this delivered tool; future code needs a successor.

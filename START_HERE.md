@@ -27,8 +27,9 @@ Owner2Nov: app2150affe/toolb5ead9cb установлен, active/exit0/active; S
 Production614/104, worker267; main остаётся2900, PR113 открыт, merge не разрешён.
 Owner2Nov подтвердил: тест работает. Прямой native Quiz принят.
 Текущая работа — LIBRARY-01: проверка и интеграция импортированного патча единой
-Библиотеки. Candidate0200/108 таблиц, ещё не установлен; production остаётся1100.
-[Ход работы](context/runtime/library_integration_progress_20261102.md).
+Библиотеки. Candidate0200/108 таблиц прошёл FullRC6ee71123, ещё не установлен; production1100.
+[Квалификация/архив](context/runtime/library_qualification_20261102.json).
+Owner deploy и реальная приёмка Библиотеки ожидаются; затем PERF-01.
 
 ## PERF-01 после Библиотеки
 

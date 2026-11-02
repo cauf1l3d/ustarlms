@@ -766,7 +766,8 @@ tasks:
   - Purchases and scoped grants cannot bypass employment, publication or content audience
   - Optional checks write marks only; current route/rewards and native results preserved
   - Exact1100 to0200 upgrade, repeat, actual PG schema and guarded archive qualified
-  current_summary: Imported identical lib01 archives; confirmed and repaired access/store/assessment/schema blockers. Native qualification pending.
+  qualification: context/runtime/library_qualification_20261102.json
+  current_summary: Code, fullRC and guarded archive qualified on6ee71123. Owner installation and real-account Library acceptance pending; production stays1100.
 
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade

@@ -23,41 +23,44 @@
 
 Files: classes/library_access.php, library_offer.php, library_grant.php, library_store.php; db/install.xml, upgrade.php, access.php, version.php; tests/library_access_test.php, library_store_test.php.
 
-- [ ] Reproduce supplied defects: bulk grant bypass, gated-zero bypass, actor/scope substitution, duplicate debit/refund/re-buy and same-second revision overwrite.
-- [ ] Implement one resolver path for single/bulk, source validation and policy decisions; make bulk safe before optimising reads.
-- [ ] Serialise commands with one documented lock order; preserve native wallet transactions and ACL writers, enforce eligible real targets and org scope inside the service.
-- [ ] Append final108-table schema to the current104-table baseline, add writer capabilities and explicit default flags with fresh/upgrade parity.
-- [ ] Run native positive/negative/concurrency/replay tests; commit self-contained domain change.
+- [x] Reproduce supplied defects: bulk grant bypass, gated-zero bypass, actor/scope substitution, duplicate debit/refund/re-buy and same-second revision overwrite.
+- [x] Implement one resolver path for single/bulk, source validation and policy decisions; make bulk safe before optimising reads.
+- [x] Serialise commands with one documented lock order; preserve native wallet transactions and ACL writers, enforce eligible real targets and org scope inside the service.
+- [x] Append final108-table schema to the current104-table baseline, add writer capabilities and explicit default flags with fresh/upgrade parity.
+- [x] Run native positive/negative/concurrency/replay tests; commit self-contained domain change.
 
 ## Task2 — end-to-end body access and unified UI
 
 Files: library.php, library_manage.php, content.php, open.php/view/file/native hooks as needed, catalog.php/knowledge.php compatibility, theme layout, templates/library*.mustache, styles/library.css, DOM/native access tests.
 
-- [ ] Test direct URL and file/native bypass, current mandatory-route access, revoked employment/grant, old knowledge/feed file paths and browser view-as.
-- [ ] Use existing content/native and catalog presenters for real body/detail links, personal history plus active grants, feed saves and read-only route projection.
-- [ ] Provide real management forms for offers, settings, scoped assignments/revokes/refunds and material publication through content_admin. No arbitrary user-ID authorisation in controllers.
-- [ ] Replace duplicated Library navigation with one entry while preserving editors and legacy GET parameters/POST writers.
-- [ ] Render all states in light/dark at390 and1440; verify contrast, overflow, focus and reduced motion; commit.
+- [x] Test direct URL and file/native bypass, current mandatory-route access, revoked employment/grant, old knowledge/feed file paths and browser view-as.
+- [x] Use existing content/native and catalog presenters for real body/detail links, personal history plus active grants, feed saves and read-only route projection.
+- [x] Provide real management forms for offers, settings, scoped assignments/revokes/refunds and material publication through content_admin. No arbitrary user-ID authorisation in controllers.
+- [x] Replace duplicated Library navigation with one entry while preserving editors and legacy GET parameters/POST writers.
+- [x] Render all states in light/dark at390 and1440; verify contrast, overflow, focus and reduced motion; commit.
 
 ## Task3 — optional checks and product sync
 
 Files: library_assessment.php, library_quick_generator.php, library_quick_sync.php, task/sync_library_quick_checks.php, library_check.php, catalog.php save/archive hook, CLI seed/audit/sync; native tests.
 
-- [ ] Test POST-only start, same-attempt resume, submitted replay, ownership/access loss, frozen pass threshold and revision, no coins/evidence/route writes.
-- [ ] Implement safe validated bank authoring for group/topic/skill plus generated product quick checks; keep catalog_mastery separate.
-- [ ] Reconcile deterministic product sources including inactive ancestors, input changes, reactivation and imports under one lock. Avoid whole-catalog synchronous work inside a catalog transaction.
-- [ ] Register scheduled fallback and immediate bounded after-commit product trigger. Prove unchanged rerun performs no writes; commit.
+- [x] Test POST-only start, same-attempt resume, submitted replay, ownership/access loss, frozen pass threshold and revision, no coins/evidence/route writes.
+- [x] Implement safe validated bank authoring for group/topic/skill plus generated product quick checks; keep catalog_mastery separate.
+- [x] Reconcile deterministic product sources including inactive ancestors, input changes, reactivation and imports under one lock. Avoid whole-catalog synchronous work inside a catalog transaction.
+- [x] Register scheduled fallback and immediate bounded after-commit product trigger. Prove unchanged rerun performs no writes; commit.
 
 ## Task4 — qualification and guarded deploy
 
 Files: new scripts/infra/library_update.py and build_library_update.py, tests/r16/test_library_update.py, existing CI stage/native schema contracts, context receipts/inventories.
 
-- [ ] Build a new immutable owner updater from qualified full-deploy mechanics, accepting only app2150affe/1100 and fixed worker267, with private code/DB recovery copy, metadata/xattrs/control preservation and loopback8082 smoke.
-- [ ] Test missing/busy managed locks, UID33/root metadata, foreign source/schema, interruption/resume, no provider calls, and all new migrations twice on actual PostgreSQL.
-- [ ] Run source/context/console/infra and both native Moodle suites on an exact application/tool SHA; independently inspect all review results.
-- [ ] Compare archive/all members with exact CI artifact, verify ZIP CRC and a downloaded saved copy; freeze the delivered tool and leave PR open.
+- [x] Build a new immutable owner updater from qualified full-deploy mechanics, accepting only app2150affe/1100 and fixed worker267, with private code/DB recovery copy, metadata/xattrs/control preservation and loopback8082 smoke.
+- [x] Test missing/busy managed locks, UID33/root metadata, foreign source/schema, interruption/resume, no provider calls, and all new migrations twice on actual PostgreSQL.
+- [x] Run source/context/console/infra and both native Moodle suites on an exact application/tool SHA; independently inspect all review results.
+- [x] Compare archive/all members with exact CI artifact, verify ZIP CRC and a downloaded saved copy; freeze the delivered tool and leave PR open.
 - [ ] Deliver one archive and simple root commands inline. Owner installs; no agent server mutation. Record preceding SCORM/Quiz acceptance and Library acceptance limits.
 
 ## Review focus
 
 Suspended target with old grant; paid body/native file URL versus public teaser; mandatory-route entitlement without paying; refund/re-purchase and multiple manager grants; catalog changes during an in-flight attempt. Each belongs to a native test above. Supplied tests are not treated as passing until executed.
+
+Qualification completed on6ee71123; see context/runtime/library_qualification_20261102.json.
+Delivery follows in chat; installation/real-account acceptance are owner actions.

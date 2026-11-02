@@ -1,11 +1,11 @@
 schema_version: 2
 updated_at: '2026-11-02'
 project: USTAR Academy
-stage: studio_assessment_route_configuration
-stage_label: SCORM1100 accepted; native quiz course-container navigation needs correct point target
-current_activity: Owner installed app2150affe/toolb5ead9cb, active/exit0/active and SCORM
-  completion/transitions accepted. Course30 opens an empty menu; use the existing native
-  Quiz activity selector, then verify the assessment result and continuation.
+stage: library_qualified_owner_deploy_pending
+stage_label: Unified Library qualified; owner installation and real-account acceptance pending
+current_activity: Library0200 app26bd4fe0/tool6ee71123 passed full native, source, infra
+  and design qualification. Deliver one guarded archive from accepted production1100.
+  Owner already accepted SCORM and native Quiz; no new production deployment or merge.
 entrypoint: START_HERE.md
 next_task: LIBRARY-01
 ready_tasks: []
@@ -362,7 +362,7 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   application_commit: 26bd4fe05a7e1c81bdb4b83992c16d4b4c0a0971
-  status: library_integration_native_qualification_pending
+  status: library_qualified_owner_deploy_pending
   branch: feat/library-unification-20261102
   deployed: false
   local_ustar_version: 2026110200
@@ -373,5 +373,7 @@ development_candidate:
   deployment_baseline: 2150affe7e2964a1056468cce0e438f9e2f91dcb
   progress: context/runtime/library_integration_progress_20261102.md
   previous_accepted_delivery: context/runtime/scorm_tracking_owner_20261102.json
-  scope: Unified Library;108 tables; actual native/infra qualification pending; no
-    production deploy
+  scope: Unified Library;108 tables; actual native/infra qualification passed; owner
+    production installation pending
+  tool_commit: 6ee7112318b672779f84a801e27a8da0c2f94898
+  qualification: context/runtime/library_qualification_20261102.json

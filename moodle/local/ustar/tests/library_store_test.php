@@ -58,4 +58,12 @@ final class library_store_test extends \advanced_testcase {
         $permission=$DB->get_field('role_capabilities','permission',['roleid'=>$role,'contextid'=>\context_system::instance()->id,'capability'=>'local/ustar:librarygrant']);
         $this->assertSame(CAP_ALLOW,(int)$permission);$this->assertSame($before,$DB->count_records('role_assignments'));
     }
+    public function test_revocation_requires_fresh_assignment_form_and_preserves_history(): void {
+        global $DB;$u=$this->employee();$o=$this->offer();$actor=get_admin()->id;$nonce=bin2hex(random_bytes(16));
+        $first=library_grant::assign($o->id,$u->id,$actor,'','Fixture',$nonce);
+        library_grant::revoke($first,$actor);
+        $second=library_grant::assign($o->id,$u->id,$actor,'','New form',bin2hex(random_bytes(16)));
+        $this->assertNotSame($first,$second);$this->assertSame(2,$DB->count_records('local_ustar_library_grant',['userid'=>$u->id]));
+        $this->expectException(\moodle_exception::class);library_grant::assign($o->id,$u->id,$actor,'','Stale form',$nonce);
+    }
 }

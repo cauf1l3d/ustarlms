@@ -24,7 +24,13 @@ final class library_grant {
             }
             $key=hash('sha256','assign:'.$offerid.':'.$userid.':'.$actorid.':'.$nonce);
             $existing=$DB->get_record('local_ustar_library_grant',['idempotencykey'=>$key]);
-            if ($existing) { return (int)$existing->id; }
+            if ($existing) {
+                if ((int)$existing->revokedat>0 || (int)$existing->validfrom>time()
+                        || ((int)$existing->validto>0 && (int)$existing->validto<=time())) {
+                    library_access::fail('Это назначение уже закрыто. Обновите страницу для нового назначения.');
+                }
+                return (int)$existing->id;
+            }
             $now=time();
             $active=$DB->get_records_select('local_ustar_library_grant',
                 'offerid=:offer AND userid=:uid AND grantedby=:actor AND source=:source AND revokedat=0

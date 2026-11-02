@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
                 try {
                     set_config('library_pricemin',$min,'local_ustar');set_config('library_pricemax',$max,'local_ustar');
                     set_config('library_store_enabled',optional_param('storeenabled',0,PARAM_BOOL),'local_ustar');
-                    set_config('library_settings_revision',time(),'local_ustar');
+                    set_config('library_settings_revision',max(time(),(int)get_config('local_ustar','library_settings_revision')+1),'local_ustar');
                     library_offer::audit(0,'store_settings_changed',$uid,['min'=>$min,'max'=>$max,'enabled'=>(bool)get_config('local_ustar','library_store_enabled')]);
                     $tx->allow_commit();
                 } catch (Throwable $e) { $tx->rollback($e);throw $e; }

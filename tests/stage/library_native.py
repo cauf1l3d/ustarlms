@@ -22,7 +22,6 @@ def main():
     baseline={**fresh,'tasks':{k:v for k,v in fresh['tasks'].items() if k!=update.NEW_TASK}}
     mutations={
         'changed_grant_uid':'ALTER TABLE fresh_local_ustar_library_grant ALTER COLUMN userid TYPE integer;',
-        'missing_idempotency_index':'DROP INDEX fresh_locustalibrgran_ide_uix;',
         'unexpected_index':'CREATE INDEX unexpected_library_idx ON fresh_local_ustar_library_attempt(userid);',
         'task_disabled':"UPDATE fresh_task_scheduled SET disabled=1 WHERE classname='\\local_ustar\\task\\sync_library_quick_checks';",
     }
@@ -32,6 +31,7 @@ def main():
             import re
             match=re.search(r'INDEX (\w+) ON',definition)
             update.require(bool(match),'grant_index_name');mutations['missing_idempotency_index']='DROP INDEX "'+match[1]+'";'
+    update.require('missing_idempotency_index' in mutations,'measured_grant_idempotency_index_required')
     for label,mutation in mutations.items():
         sql=db_query('fresh_');changed=query(sql.replace('BEGIN READ ONLY;','BEGIN; '+mutation,1).removesuffix('COMMIT;')+'ROLLBACK;')
         try:update.verify_database(changed,candidate,baseline)

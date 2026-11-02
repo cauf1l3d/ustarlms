@@ -27,3 +27,13 @@ transaction helpers. Ten locally applicable operator checks pass, real UID33 fix
 Prepare-runtime-lock command only creates the absent runtime inode and never truncates existing locks.
 Historical operators remain unchanged. Context index regeneration corrected stale generated inventory;
 check_context passes. FullRC/production/archive delivery still pending.
+
+CI first pass08834d82: library-successor native UID33/root and deterministic archive passed
+(run41466090354/job125347250317). Console knowledge gate found missing classification for the
+new source-only operator; fixed by the existing SOURCE_ONLY pattern, no console actions added.
+FullRC label caused the initial unlabelled run to cancel; complete labelled run pending.
+Added production-template/tokens browser matrix36 views (390/768/1440, light/dark), quote fields,
+keyboard and touch sizing. Local runtime has no Chromium; CDN download returned truncated ZIP;
+browser execution delegated to the existing native CI Playwright job, not claimed locally passed.
+Local Python1530 had3 dependency errors (mcp absent), no assertion failures. Two harness tests
+passed with supplied dependencies; actual stdio uses isolated child interpreter and remains for CI.

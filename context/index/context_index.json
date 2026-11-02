@@ -3042,8 +3042,8 @@
     {
       "path": "context/runtime/library_integration_progress_20261102.md",
       "domain": "runtime",
-      "size": 3030,
-      "sha256": "c62a96e16078e5878f7af13389120bc3f04db6334d23fd37b9b8d6535250f686"
+      "size": 3887,
+      "sha256": "984ecf6482cdf0f8ac2719d6d175c1878ca8d9a266de39e0c0c889de4a92c8c3"
     },
     {
       "path": "context/runtime/moodle.yaml",

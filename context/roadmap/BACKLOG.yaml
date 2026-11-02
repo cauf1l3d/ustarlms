@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-11-01'
+updated_at: '2026-11-02'
 canonical_branch: main
 source_baseline: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -716,9 +716,46 @@ tasks:
   - Existing files, saved library copies, private ACL and employee attachments survive
   - Qualified2802-to2803 successor and passive workday observer delivered together
   current_summary: Owner29Oct installed2803, status app_ready and RSS cover/additional
-    attachments accepted. Source PR110 remains unmerged; no full role acceptance implied.
+    attachments accepted. Source PR110 integrated1Nov; no full role acceptance implied.
   deployment_status: owner2803_installed_RSS_accepted
   deployment_evidence: context/runtime/feed2803_owner_deploy_20261029.json
+- id: LEARN-SCORM-01
+  title: Открывать SCORM из точки маршрута без меню курса
+  status: done
+  depends_on: []
+  PR: 112
+  acceptance:
+  - Course and direct CM requirements enter the authorised Moodle SCORM player
+  - Native resume/attempt policy, current point/version and visibility checks preserved
+  - Existing packages, published route versions and result history unchanged
+  - Guarded owner source overlay qualified; actual production apply recorded separately
+  progress: context/runtime/route_scorm_launch_20261101.json
+  current_summary: Qualified51332a21 passed all4CI and native374/1762; owner now accepts direct launch. Exact server apply output absent; continuation issue tracked separately in LEARN-SCORM-02.
+- id: LEARN-SCORM-02
+  title: Завершение SCORM и настройки доступа/перехода точки
+  status: done
+  depends_on: [LEARN-SCORM-01]
+  progress: context/runtime/route_scorm_access_owner_order_20261101.json
+  design: context/tasks/route_scorm_access_20261101.md
+  acceptance:
+  - Imported course and CM completion reaches the next eligible route point
+  - Repeat access preserves one verified learning credit and reward
+  - Per-point manual/timed advancement and finish destination are versioned
+  - Deadline and stale URLs are enforced server-side; assessments keep real results
+  qualification: context/runtime/scorm_tracking_20261102.json
+  current_summary: "Owner2Nov installed app2150affe/toolb5ead9cb: active/exit0/active; SCORM opening, completion and configured transitions accepted."
+  owner_receipt: context/runtime/scorm_tracking_owner_20261102.json
+- id: LEARN-ASSESS-01
+  title: Прямой запуск аттестации Студии из точки маршрута
+  status: in_progress
+  depends_on: [LEARN-SCORM-02]
+  progress: context/runtime/studio_assessment_route_20261102.json
+  acceptance:
+  - Published point opens the concrete native quiz activity
+  - Authoritative quiz pass closes the point; opening alone grants no assessment credit
+  - Owner verifies access, submission and continuation
+  current_summary: Course30 menu has no visible assessment. Existing activity_launch/bridge supports direct quiz; configure the native activity selector and verify before changing source. Exact production module/roles not queried.
+
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

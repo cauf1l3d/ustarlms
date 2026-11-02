@@ -1,5 +1,7 @@
 <?php
 require_once(__DIR__ . '/../../config.php');
+// Source-only hotfix: an existing component cache may not know this new class yet.
+require_once(__DIR__ . '/classes/scorm_route_launch.php');
 
 require_login();
 require_capability('local/ustar:use', context_system::instance());
@@ -23,6 +25,11 @@ if ($positionid === '' || !empty(\local_ustar\adaptation_service::route_card($us
 // course access. The route page itself reads only persisted progress.
 $route = \local_ustar\route_model::for_user($positionid, $userid);
 $current = $route['currentpoint'] ?? null;
+if (!$current || (int)$current['id'] !== $pointid) {
+    foreach ($route['points'] ?? [] as $candidate) {
+        if ((int)$candidate['id'] === $pointid && !empty($candidate['done']) && !empty($candidate['canlaunch'])) { $current = $candidate; break; }
+    }
+}
 if (!$current || (int)$current['id'] !== $pointid || empty($current['canlaunch'])) {
     redirect(new moodle_url('/local/ustar/route.php'));
 }
@@ -40,5 +47,11 @@ foreach (\local_ustar\route_model::requirements_for_version($version) as $requir
 }
 if (!$matches) {
     throw new invalid_parameter_exception('Курс не относится к текущему шагу маршрута.');
+}
+$cmid = \local_ustar\scorm_route_launch::course_cmid($courseid, $userid);
+if ($cmid > 0) {
+    redirect(new moodle_url('/local/ustar/scorm_launch.php', [
+        'cmid' => $cmid, 'pointid' => $pointid, 'versionid' => $versionid,
+    ]));
 }
 redirect(new moodle_url('/course/view.php', ['id' => $courseid]));

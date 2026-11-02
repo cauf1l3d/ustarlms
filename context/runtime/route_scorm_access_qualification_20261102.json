@@ -1,0 +1,187 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-02",
+  "status": "qualified_waiting_owner_apply",
+  "PR": 113,
+  "branch": "feat/route-review-access-20261101",
+  "application_commit": "b9f170d89cead30021b0acbfba6ee681cec024f8",
+  "tool_commit": "f879822a406eefc3c65fe4a5d0c36d28bc091ba5",
+  "qualification_commit": "52c30f08479d1b4958dd4a0b4df06dfa66c2e5df",
+  "release_runtime_trees_equal_qualification": true,
+  "runtime_equivalence_scope": [
+    "moodle/local/ustar",
+    "moodle/theme/ustar",
+    "scripts/infra",
+    "connect-worker"
+  ],
+  "qualification_only_changes": "Declared successor task is verified separately for the frozen legacy probe; no application/worker/operator changes; CI builder pins f879 archive.",
+  "versions": {
+    "local_ustar": 2026110100,
+    "theme_ustar": 2026102700
+  },
+  "files": 614,
+  "tables": 104,
+  "baseline_application_commits": [
+    "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+    "3f8521ec0b23ab0a974440d8eb3eaf378d21d741"
+  ],
+  "worker_preserved": "267e55874eb8f6c36259d748f28a2c636adc9810",
+  "schema_changed": true,
+  "all4CI": "success",
+  "CI": {
+    "runs": [
+      {
+        "id": 41367165190,
+        "name": "USTAR context integrity",
+        "conclusion": "success"
+      },
+      {
+        "id": 41367165185,
+        "name": "USTAR console",
+        "conclusion": "success"
+      },
+      {
+        "id": 41367165216,
+        "name": "USTAR infrastructure verification",
+        "conclusion": "success"
+      },
+      {
+        "id": 41367165299,
+        "name": "USTAR review gate",
+        "conclusion": "success"
+      }
+    ],
+    "jobs": [
+      {
+        "id": 125029659274,
+        "name": "source (8.3)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125029659441,
+        "name": "rollback",
+        "conclusion": "success"
+      },
+      {
+        "id": 125029659526,
+        "name": "source (8.2)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125032308631,
+        "name": "connect-db",
+        "conclusion": "success"
+      },
+      {
+        "id": 125032308738,
+        "name": "prepare-rc",
+        "conclusion": "success"
+      },
+      {
+        "id": 125032375753,
+        "name": "moodle-db (patch-518, tests/stage/patch-compose.yaml, moodle-patch-evidence)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125032375757,
+        "name": "moodle-db (historical, tests/stage/compose.yaml, moodle-db-evidence)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125034222968,
+        "name": "gate",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "source_each": {
+    "PHP": [
+      "8.2",
+      "8.3"
+    ],
+    "python_tests": 1512,
+    "skipped": 243,
+    "result": "PASS"
+  },
+  "native_suites": [
+    {
+      "profile": "historical",
+      "job": 125032375757,
+      "tests": 387,
+      "assertions": 1812,
+      "result": "PASS"
+    },
+    {
+      "profile": "Moodle5.1.8",
+      "job": 125032375753,
+      "tests": 387,
+      "assertions": 1812,
+      "result": "PASS"
+    },
+    {
+      "profile": "Connect",
+      "job": 125032308631,
+      "tests": 172,
+      "assertions": 875,
+      "result": "PASS"
+    }
+  ],
+  "actual_PostgreSQL": {
+    "tables": 104,
+    "fresh_profile": "xml_install_indexes",
+    "upgraded_profile": "server1_legacy_indexes_20261023",
+    "exact2900_CLI_upgrade_and_repeat": true,
+    "foreign_metadata_denials": [
+      "access_deadline_type",
+      "unexpected_index",
+      "changed_old_field",
+      "changed_task"
+    ],
+    "old103_and100_contracts": "explicit historical projections; frozen operators unchanged; current104 checked independently"
+  },
+  "operator": {
+    "CI_job": 125029659392,
+    "tests": 10,
+    "actual_UID33_root_group": "PASS mandatory sudo transaction job",
+    "offline_default": "PLAN_ONLY",
+    "check": "read_only",
+    "upgrade": "explicit_outage_acknowledgement",
+    "recovery": "forward_only",
+    "business_database_automatically_restored": false,
+    "private_database_copy": true,
+    "cron_version_guard_updated": true
+  },
+  "behaviour": [
+    "Proven single-SCORM imports complete the route, retaining announcements and other mandatory conditions",
+    "Per-version immediate/manual/timed advancement and SCORM finish destination",
+    "Review keeps one canonical learning credit/reward; manual confirmation can be cancelled",
+    "Server timer advances without a browser; unfinished assessments never pass by time",
+    "Native old URLs enforce closure, including archived automatic points; independent grants and cancellation remain effective",
+    "Completed old SCORM packages have an enabled route return control; idle polling stays15s"
+  ],
+  "delivery": {
+    "CI_run": 41367165216,
+    "artifact_id": 13107637426,
+    "qualification_head": "52c30f08479d1b4958dd4a0b4df06dfa66c2e5df",
+    "tool_commit": "f879822a406eefc3c65fe4a5d0c36d28bc091ba5",
+    "CI_zip_crc": "PASS",
+    "CI_zip_sha256": "2afcaf53178f0e9287759a29c8a267c54792b922c0b440bedb6632eddc6905f3",
+    "byte_identical": true,
+    "all3_tar_members_private_and_byte_equal": true,
+    "external_sha_file_byte_equal": true,
+    "archive": "ustar-route-review-f879822a.tar.gz",
+    "bytes": 381914,
+    "sha256": "afbd0b86d82688fe7de3b820ea38fcc8c1157cb1d5c25b30f75c9fe5fd4d227c",
+    "script_sha256": "a811fd52db1e8d1debdf32b07e075ed91db4220adc91ac701ae57b4782ede04c",
+    "saved_copy_downloaded_and_byte_equal": true,
+    "owner_instructions": "inline_chat_only"
+  },
+  "review": "Author self-review, no subagents by owner instruction; important findings verified RED/GREEN; no deferred findings",
+  "deployed": false,
+  "owner_acceptance_received": false,
+  "agent_SSH": false,
+  "provider_messages_sent": false,
+  "merge_authorized": false,
+  "next_action": "Owner verifies archive privately, runs --check then --upgrade --acknowledge-outage, checks active, publishes point settings and accepts the UI.",
+  "next_stage": "PERF-01 after owner acceptance; adapt2900 observer for1100 first; no measured workday report yet"
+}

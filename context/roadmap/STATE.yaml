@@ -1,14 +1,13 @@
 schema_version: 2
-updated_at: '2026-11-01'
+updated_at: '2026-11-02'
 project: USTAR Academy
-stage: performance_workday_baseline
-stage_label: Feed and Connect integrated; next PERF-01; management gates remain explicit
-current_activity: PR110/111 integrated after one qualified combined FullRC. Owner accepted
-  bot graphics/readability and task execution/return/photo. Other processes are tested
-  with leadership from2Nov; public HTTPS and Mini App await approval. Next PERF-01 is
-  passive ordinary-workday latency/SQL/cron/host baseline; no new production change.
+stage: studio_assessment_route_configuration
+stage_label: SCORM1100 accepted; native quiz course-container navigation needs correct point target
+current_activity: Owner installed app2150affe/toolb5ead9cb, active/exit0/active and SCORM
+  completion/transitions accepted. Course30 opens an empty menu; use the existing native
+  Quiz activity selector, then verify the assessment result and continuation.
 entrypoint: START_HERE.md
-next_task: PERF-01
+next_task: LEARN-ASSESS-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -24,27 +23,29 @@ code_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
-  latest_owner_browser_acceptance: context/runtime/feed2803_owner_deploy_20261029.json
+  latest_SCORM_tracking_evidence: context/runtime/scorm_tracking_owner_20261102.json
+  latest_SCORM_functional_acceptance: context/runtime/scorm_tracking_owner_20261102.json
+  latest_owner_browser_acceptance: context/runtime/scorm_tracking_owner_20261102.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
   latest_cron_contract: context/runtime/feed2803_owner_deploy_20261029.json
   previous_scheduled_cron_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  latest_addon_preflight: context/runtime/connect_role_bot_owner_deploy_20261029.json
+  latest_addon_preflight: context/runtime/scorm_tracking_owner_20261102.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   latest_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
   latest_worker_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   effective_addon_deployment:
-    receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
-    reported_date_msk: '2026-10-29'
-    status: owner_installed_main_integrated_remaining_leadership_acceptance
-    installer_commit: 9a68246b170dd6a08dc6a8e2118e69f32e16bea9
-    payload_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+    receipt: context/runtime/scorm_tracking_owner_20261102.json
+    reported_date_msk: '2026-11-02'
+    status: owner_installed1100_SCORM_functional_accepted
+    installer_commit: b5ead9cb705cf538fe2134f332cfe5ccd055aa06
+    payload_commit: 2150affe7e2964a1056468cce0e438f9e2f91dcb
     versions:
-      local_ustar: 2026102900
+      local_ustar: 2026110100
       theme_ustar: 2026102700
-    files: 606
-    tables: 103
+    files: 614
+    tables: 104
     counts_basis: fixed_controller_payload_not_new_whole_host_manifest
     independent_probe: false
     worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
@@ -52,28 +53,33 @@ production:
     worker_rollout: true
     previous_exact_terminal_receipt: context/runtime/feed2803_owner_deploy_20261029.json
     previous_2801_preflight_in_same_receipt: false
-    post_deploy_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
-    browser_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+    post_deploy_receipt: context/runtime/scorm_tracking_owner_20261102.json
+    browser_receipt: context/runtime/scorm_tracking_owner_20261102.json
     role_bot_enabled: true
     runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
-    post_check: role_bot_ready
-    live_role_acceptance: 'owner accepted tasks, return/execution, photos and visual readability; remaining processes with leadership from2Nov'
-    latest_functional_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
-  status: owner_installed_tasks_photo_visuals_accepted_remaining_leadership
-  observed_at: '2026-10-29'
-  source: context/runtime/evidence_connect2900_20261029.yaml
+    post_check: active
+    live_role_acceptance: owner accepted tasks, return/execution, photos and visual
+      readability; remaining processes with leadership from2Nov
+    latest_functional_receipt: context/runtime/scorm_tracking_owner_20261102.json
+    previous_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
+    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh
+      service query in2Nov SCORM receipt
+  status: owner_installed1100_SCORM_accepted_native_quiz_routing_under_review
+  observed_at: '2026-11-02'
+  source: context/runtime/evidence_scorm1100_20261102.yaml
   independently_measured: false
-  current_source_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
-  current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh host filesystem census
+  current_source_commit: 2150affe7e2964a1056468cce0e438f9e2f91dcb
+  current_source_commit_scope: owner verified full614 fixed addon manifest through
+    source overlay post-check; not a whole-host census
   current_versions:
-    local_ustar: 2026102900
+    local_ustar: 2026110100
     theme_ustar: 2026102700
   last_exact_source_manifest:
-    commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
-    date: '2026-10-29'
-    matching_files: 606
+    commit: 2150affe7e2964a1056468cce0e438f9e2f91dcb
+    date: '2026-11-02'
+    matching_files: 614
     kind: owner_verified_controller_payload_not_fresh_manifest
-    evidence: context/runtime/connect_role_bot_owner_deploy_20261029.json
+    evidence: context/runtime/scorm_tracking_owner_20261102.json
   cron: completed29Oct03_37MSK_exit0_1_282s_no_new_failures; current_adhoc1_overdue56_failed2_not_yet_drained
   cron_current_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
@@ -89,12 +95,15 @@ production:
     Docker: 29.9.0
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
-  post_deploy_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
-  previous_addon_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  post_deploy_receipt: context/runtime/scorm_tracking_owner_20261102.json
+  previous_addon_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
   post2900_cron_run_receipt: pending; last supplied scheduled cron remains pre2900
   current_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
   current_worker_observed_at: '2026-11-01'
   current_worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+  latest_assessment_issue: context/runtime/studio_assessment_route_20261102.json
+  historical_incomplete_update_attempt: context/runtime/route_review_recovery_20261102.json
+
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
@@ -348,3 +357,33 @@ connect_visual_candidate:
   runbook: docs/CONNECT_VISUAL_SUCCESSOR_20261101_RU.md
 
 latest_source_integration: context/runtime/connect_feed_integration_order_20261101.json
+
+previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
+development_candidate:
+  manifest: context/code_map/development_source.json
+  status: owner_installed_SCORM_accepted_quiz_configuration_pending
+  branch: feat/route-review-access-20261101
+  PR: https://github.com/cauf1l3d/ustarlms/pull/113
+  deployed: true
+  publication_committed_owner_report: true
+  deployment_completed: true
+  recovery_receipt: context/runtime/route_review_recovery_20261102.json
+  application_commit: 2150affe7e2964a1056468cce0e438f9e2f91dcb
+  previous_tool_commit: f879822a406eefc3c65fe4a5d0c36d28bc091ba5
+  tool_commit: b5ead9cb705cf538fe2134f332cfe5ccd055aa06
+  previous_qualification_commit: 52c30f08479d1b4958dd4a0b4df06dfa66c2e5df
+  qualification_commit: b5ead9cb705cf538fe2134f332cfe5ccd055aa06
+  qualification: context/runtime/scorm_tracking_20261102.json
+  local_ustar_version: 2026110100
+  theme_ustar_version: 2026102700
+  schema_changed: true
+  worker_rollout: false
+  preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
+  scope: versioned review access plus scoped SCORM tracking repair;104 tables; worker/egress preserved
+  archive: ustar-scorm-tracking-b5ead9cb.tar.gz
+  archive_sha256: 1a58fb0e713f0ac38324e22ca19011487b067b4d12e990181ff84d39100dc66f
+  full_RC_run: 41425685784
+  delivery_schema_changed: false
+  delivery_baseline: b9f170d89cead30021b0acbfba6ee681cec024f8
+  owner_receipt: context/runtime/scorm_tracking_owner_20261102.json
+  progress: context/runtime/studio_assessment_route_20261102.json

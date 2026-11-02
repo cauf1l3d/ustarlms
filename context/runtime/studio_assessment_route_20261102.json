@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "date_msk": "2026-11-02",
+  "task": "LEARN-ASSESS-01",
+  "status": "native_quiz_route_configuration_proposed_owner_verification_pending",
+  "source": "owner screenshot and current-source review",
+  "owner_observation": {
+    "opened_url": "/course/view.php?id=30",
+    "course_id": 30,
+    "page": "Announcements plus empty course section; no visible assessment link",
+    "point": "Active route step created after SCORM courses",
+    "route_version_in_top_of_form": "not supplied",
+    "published_requirement_json": "not read",
+    "quiz_cmid": "not supplied",
+    "current_quiz_role_capabilities": "not read"
+  },
+  "verified_source_findings": [
+    "course_launch.php resolves SCORM directly; other course requirements fall back to the course menu.",
+    "Route Studio offers every undeleted activity in the existing Учебная активность или тест select, including stealth quizzes.",
+    "A concrete quiz CM goes through activity_launch.php -> moodle_activity_bridge::prepare, which prepares actor enrolment and direct module access.",
+    "The activity bridge intentionally sets visibleoncoursepage=0; an empty course section alone cannot establish absence of the quiz.",
+    "Native quiz CM requirements participate in assessment_lifecycle and route_continue review navigation; a generic content/open fact must not replace a real pass."
+  ],
+  "proposed_owner_action": [
+    "Edit this assessment point in Route Studio.",
+    "Moodle-курс: Не добавлять курс.",
+    "Учебная активность или тест: select the created quiz activity.",
+    "Remove a duplicate selection of that assessment from Материалы, файлы и видео if present.",
+    "Publish as a new point version and open from the employee route."
+  ],
+  "expected": "The route targets native Quiz; only its authoritative result closes the required assessment. Owner pass/retry/next-step acceptance pending.",
+  "source_changes": false,
+  "new_archive_required_for_this_configuration": false,
+  "not_proven": "Exact production module visibility/roles and requirement selection need owner verification if the existing direct-CM path does not resolve the issue."
+}

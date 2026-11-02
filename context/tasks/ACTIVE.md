@@ -1,24 +1,29 @@
-# Активная работа —01.11.2026
+# Активная работа —02.11.2026
+
+## LEARN-ASSESS-01: запуск аттестации Студии
+
+Owner2Nov установил app2150affe/toolb5ead9cb: active/exit0/active. SCORM открывается,
+завершается и переводит дальше по настройкам. [Принято](../runtime/scorm_tracking_owner_20261102.json).
+Новая проблема: точка открывает /course/view.php?id=30, теста не видно.
+В Студии выбрать конкретный тест в «Учебная активность или тест», убрать курс/дубль
+материала и опубликовать новую версию. Этот native CM путь уже поддерживается.
+[Факты/проверка](../runtime/studio_assessment_route_20261102.json); owner outcome ещё не получен.
 
 ## PERF-01: производительность и стабильность обычного рабочего дня
 
 PR110/111 объединены в main после единой FullRC по
 [поручению владельца](../runtime/connect_feed_integration_order_20261101.json).
-Код приложения5cc02944/local2900/theme2700; текущий worker267e5587.
+Main5cc02944/app2900; production2150affe/app1100/theme2700, worker267e5587.
 Приложение/worker уже установлены владельцем; merge не означает новый deploy.
 
-Следующая доступная работа — пассивное наблюдение: latency, SQL, cron lag и
-нагрузка хоста/БД в обычный рабочий день. Сборщик observe.py из frozen9a поддерживает2900:
-[builder/derive_observer](../../scripts/infra/build_connect_role_bot_update.py).
-Исходный workday_observer.py остаётся frozen2802/2803, его напрямую для2900 не запускать;
-фактический8h отчёт ещё не получен. Подготовить исходный срез, получить наблюдения,
-затем выбирать изменения по найденным узким местам. SQL/page, Web-SAPI OPcache и
-concurrency/SLO не выводить из Apache aggregate или одного ответа status.
+После проверки аттестации — пассивное наблюдение: latency, SQL, cron lag и нагрузка
+в обычный рабочий день. observe.py из frozen9a поддерживает2900; для1100 сначала
+нужен проверенный вариант сборщика. [Builder](../../scripts/infra/build_connect_role_bot_update.py).
+Исходный workday_observer.py остаётся frozen2802/2803. Фактический8h отчёт ещё
+не получен. SQL/page, Web-SAPI OPcache и concurrency/SLO не выводить из Apache
+aggregate или одного ответа status. Изменения выбирать по полученным измерениям.
 
-Последний переданный scheduled cron29Oct03:37MSK: exit0/1.282s, new failures[],
-USTAR counters0. Adhoc1/overdue56/failed2 — отдельный старый срез; не сбрасывать
-историю и не объявлять очередь разгруженной без свежих данных. Напоминание30Oct
-создано ранее, запуск observe/report им не подтверждён.
+Старый cron/очереди не являются свежим замером; история в STATE и owner receipts.
 
 ## INTEGRATIONS-01: принятое и ожидающее руководства
 

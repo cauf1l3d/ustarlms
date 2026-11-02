@@ -243,6 +243,8 @@ final class route_family {
                                 $sourceversion
                             ),
 
+                        'accesspolicy' => route_point_access::policy($sourceversion),
+
                         'renewalpolicy' =>
                             (string)$sourceversion->renewalpolicy,
 

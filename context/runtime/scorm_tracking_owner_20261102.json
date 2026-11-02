@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "date_msk": "2026-11-02",
+  "kind": "owner_terminal_install_and_SCORM_functional_acceptance",
+  "status": "owner_installed_SCORM_completion_and_configured_transitions_accepted",
+  "basis": "Owner terminal and explicit functional report in the current dialogue; no agent production access.",
+  "PR": 113,
+  "tool_commit": "b5ead9cb705cf538fe2134f332cfe5ccd055aa06",
+  "application": {
+    "payload_commit": "2150affe7e2964a1056468cce0e438f9e2f91dcb",
+    "payload_files": 614,
+    "tables": 104,
+    "counts_basis": "fixed_controller_payload_not_a_new_whole_host_manifest",
+    "versions": {
+      "local_ustar": 2026110100,
+      "theme_ustar": 2026102700
+    },
+    "phase": "active"
+  },
+  "pre_check": {
+    "database_changed": false,
+    "host_changes": false,
+    "local_ustar": "2026110100",
+    "phase": "ready",
+    "previous_update": "active",
+    "schema_changed": false,
+    "worker_changed": false
+  },
+  "upgrade": {
+    "database_changed": false,
+    "local_ustar": "2026110100",
+    "phase": "active",
+    "previous_update": "active",
+    "schema_changed": false,
+    "worker_changed": false
+  },
+  "post_check": {
+    "database_changed": false,
+    "host_changes": false,
+    "local_ustar": "2026110100",
+    "phase": "active",
+    "schema_changed": false,
+    "worker_changed": false
+  },
+  "unit": "ustar-scorm-tracking-1793619361.service",
+  "invocation_id": "d3c8bf0b63fb495e9cece025f583021f",
+  "unit_result": "success",
+  "exit_code": 0,
+  "runtime_seconds": 3.338,
+  "CPU_seconds": 0.531,
+  "memory_peak_MiB": 2.8,
+  "swap_peak_bytes": 0,
+  "worker_commit": "267e55874eb8f6c36259d748f28a2c636adc9810",
+  "worker_changed": false,
+  "worker_scope": "Unchanged per operator and pinned control/source guards; no fresh independent service snapshot.",
+  "acceptance": {
+    "owner_statement": "Курсы открываются завершаются и переходят как в настройках",
+    "courses_open": true,
+    "SCORM_completion": true,
+    "configured_transitions": true,
+    "individual_timer_and_access_edge_cases": "not individually specified in owner report; CI evidence remains separate",
+    "native_CM104_tracking_requery": "not supplied; do not invent a new savetrack/tracks row"
+  },
+  "previous_full_update": "previous_update=active in both pre-check and upgrade confirms predecessor completion; no longer recovery_required",
+  "archive": {
+    "filename": "ustar-scorm-tracking-b5ead9cb.tar.gz",
+    "sha256": "1a58fb0e713f0ac38324e22ca19011487b067b4d12e990181ff84d39100dc66f",
+    "bytes": 110176,
+    "qualification": "context/runtime/scorm_tracking_20261102.json"
+  },
+  "new_separate_issue": "context/runtime/studio_assessment_route_20261102.json",
+  "limits": [
+    "Source-only transaction reports database_changed=false; this is not a new database inventory.",
+    "Main still app2900; PR113 remains open and merge is not authorised.",
+    "No fresh cron, provider delivery, whole-host census or PERF01 measurement."
+  ]
+}

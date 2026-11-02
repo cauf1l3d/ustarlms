@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-01",
+  "source": "owner_message_in_current_dialogue",
+  "direct_launch_acceptance": "скорм открывается все ок",
+  "previous_delivery": "context/runtime/route_scorm_launch_20261101.json",
+  "exact_server_apply_output_received": true,
+  "independent_host_probe": false,
+  "completion_and_continuation_accepted": false,
+  "new_request": [
+    "Repair continuation after imported SCORM completion",
+    "Per-point Route Studio access and advancement settings",
+    "Repeated review with one learning credit",
+    "Manual Next with warning when closing repeat access",
+    "Timed automatic advancement",
+    "Configurable SCORM finish destination"
+  ],
+  "source_review": "7ee2e45fe01d2587178849f14d198c1370898e92",
+  "design": "context/tasks/route_scorm_access_20261101.md",
+  "design_status": "owner_approved",
+  "timer_origin_question": "asked_no_answer_received",
+  "agent_proposed_timer_origin": "first_verified_study_completion",
+  "proposal_is_owner_decision": true,
+  "implementation_changed": true,
+  "merge_authorized": false,
+  "server_access_authorized": false,
+  "owner_instructions": "inline_chat_only",
+  "owner_approval": "да потверждаю",
+  "approval_source": "owner_message_after_inline_design",
+  "status": "owner_publication_committed_finish_pending",
+  "application_commit": "b9f170d89cead30021b0acbfba6ee681cec024f8",
+  "native_CI": {
+    "all4CI": "success",
+    "head": "52c30f08479d1b4958dd4a0b4df06dfa66c2e5df",
+    "receipt": "context/runtime/route_scorm_access_qualification_20261102.json"
+  },
+  "PR": "https://github.com/cauf1l3d/ustarlms/pull/113",
+  "qualification_attempts": [
+    {
+      "tool_commit": "9ade38e84a61a0ed14373f40755208d7b73346da",
+      "review_run": 41342024965,
+      "result": "source_failed_before_native",
+      "cause": "frozen old overlay test used HEAD; root-only ownership transactions were run without sudo",
+      "infra_new_operator": "passed including actual UID33/root group",
+      "correction": "pin old test to qualified51332; root transaction class delegates to mandatory sudo job; no frozen operator changed"
+    },
+    {
+      "tool_commit": "8ad47feff5ef06322445d1c043860baf9cad3048",
+      "review_run": 41342938696,
+      "result": "superseded_by_review_fix",
+      "source_php82": "PASS 1509 tests/243 skips; browser and source suite PASS",
+      "source_php83": "PASS",
+      "context_console_infra": "PASS",
+      "self_review_fix": "Unacknowledged SCORM poll was1200ms, now15000ms; browser regression RED -> GREEN, existing41 assertions PASS",
+      "archive_delivered": false
+    },
+    {
+      "tool_commit": "1312754a5a22331020daabdd278a7681c3d01a77",
+      "review_run": 41344042477,
+      "result": "native_failed",
+      "source_context_console_infra": "PASS",
+      "native_actual_SQL": "PASS104 tables fresh/legacy; actual2900 CLI upgrade/repeat;4 foreign mutations rejected",
+      "native_tests": {
+        "tests": 386,
+        "assertions": 1798,
+        "errors": 1,
+        "failures": 1,
+        "notices": 1
+      },
+      "root_causes": [
+        "independent-assignment fixture used unsupported provider quiz and invalid ref",
+        "current native schema test still expected103 tables",
+        "XMLDB does not accept CHAR NOTNULL default empty string"
+      ],
+      "corrections": [
+        "real native Quiz and supported moodle_quiz cm ref",
+        "exact104 expectation only in current native test; frozen validators remain103/100",
+        "omit invalid DEFAULT; the application explicitly supplies closereason"
+      ],
+      "review_fix": "automatic closure now remains enforced after point archival through existing progress history",
+      "archive_delivered": false
+    },
+    {
+      "tool_commit": "f879822a406eefc3c65fe4a5d0c36d28bc091ba5",
+      "review_run": 41346149144,
+      "result": "runtime_native_passed_legacy_host_probe_failed",
+      "source_context_console_infra": "PASS",
+      "native_moodle": {
+        "historical": "PASS387 tests/1812 assertions",
+        "patch518": "PASS387 tests/1812 assertions"
+      },
+      "native_connect": "PASS172 tests/875 assertions; actual104-table SQL/upgrade/repeat and4 foreign-metadata denials passed",
+      "failure": "frozen Connect installer validator expected its old task list and correctly rejected the additional route task",
+      "correction": "test adapter verifies exact successor version1100 and task[0,0], projects only that task for the immutable legacy verifier; all other task flags remain strict",
+      "correction_evidence": "three unit tests GREEN; modified verifier passes actual CI-captured SQL snapshots without altering them",
+      "production_and_operator_trees_changed": false,
+      "archive_delivered": false
+    }
+  ],
+  "release_tool_commit": "f879822a406eefc3c65fe4a5d0c36d28bc091ba5",
+  "qualification": "context/runtime/route_scorm_access_qualification_20261102.json",
+  "qualification_commit": "52c30f08479d1b4958dd4a0b4df06dfa66c2e5df",
+  "latest_server_attempt": "context/runtime/route_review_recovery_20261102.json",
+  "server_apply_completed": false
+}

@@ -18,8 +18,8 @@
     {
       "path": "context/architecture/access_matrix.yaml",
       "domain": "architecture",
-      "size": 35106,
-      "sha256": "d165c48db34573cbc692c236bb32d7f659a10c69e9537ffde2baa68f92aa84f2"
+      "size": 35294,
+      "sha256": "658551689559d0aa6690e03bd6531f0ff9af6416bb50b56ba592c82b887ed2f7"
     },
     {
       "path": "context/architecture/boundaries.md",
@@ -528,8 +528,8 @@
     {
       "path": "context/code_map/README.md",
       "domain": "code_map",
-      "size": 1401,
-      "sha256": "4b210d0b26a3b8482bd759cae6e73fa80834ab1d475b5637022d9b889cbc659a"
+      "size": 1605,
+      "sha256": "1b32a0edad73fc688abba8270af2a768eadffe008f79aa47e3c42d769ffcc94b"
     },
     {
       "path": "context/code_map/backend.yaml",
@@ -558,8 +558,8 @@
     {
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
-      "size": 89132,
-      "sha256": "be0d34986b9499eb5f1e24823eb26b79a2b3c29647dd50bb87d2d51300e5e627"
+      "size": 98378,
+      "sha256": "779b54e7985374def39af23ade724bd2474332f4d5c3c409812106e40c0117ac"
     },
     {
       "path": "context/code_map/feed_media_development_source.json",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 9673,
-      "sha256": "f35f8d6754610d4684077ab85e40623c288a64944745f7e5809ba86544d1f57f"
+      "size": 10177,
+      "sha256": "10e7bf2fba204f36490c085ccd27ddd12e1304e05c318086c72c23d044a19209"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -882,8 +882,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 3119,
-      "sha256": "9738d86137a461a8157bc71e3aa87f21aaafde8b90050c094702e54442acc526"
+      "size": 3210,
+      "sha256": "14c449f6ac26c81b8c51ebf15571f4d2827a75a811a34650d373a25730911617"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1446,8 +1446,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 38300,
-      "sha256": "e87c16f5eae0dc7041996429aca67fe55e117dec5796b535c553ec903a499a96"
+      "size": 40644,
+      "sha256": "046549c417f1717f2e752c52825acb2d619145eebdb0b98d326f2bba2f0450bc"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1500,8 +1500,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 18553,
-      "sha256": "6da037f04ccee61d23a4a2e03acc5513ea4078e74a484866ecba3fb39ccf68c2"
+      "size": 20546,
+      "sha256": "832f0a4bf82f0d93e205f4c94287416ac945ce026e61490290990a25e43e2bc8"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1596,8 +1596,8 @@
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 95768,
-      "sha256": "0dee41cb90ca65da3b844898d25e45082613ae91f5cb11dbb47973f4aab204b2"
+      "size": 96565,
+      "sha256": "3c21da88d3e2faf0d6dc303a87a8f0dae19bb0c1f823bd89f2dcf28a51574897"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -2416,6 +2416,12 @@
       "sha256": "cf23b7dbe0caf388bf902bf846d695bee0172c0ccfdc87b1f4e68752ecb666ea"
     },
     {
+      "path": "context/runtime/evidence_scorm1100_20261102.yaml",
+      "domain": "runtime",
+      "size": 5191,
+      "sha256": "adb4c4af480e33ab6d55c3ca4c026a39e51d2980b37f5d4aa801e77da4725153"
+    },
+    {
       "path": "context/runtime/external_network_result_20261017.json",
       "domain": "runtime",
       "size": 2412,
@@ -3018,8 +3024,8 @@
     {
       "path": "context/runtime/moodle.yaml",
       "domain": "runtime",
-      "size": 1193,
-      "sha256": "17cab3c079d764fde7c6b24ee2febf5c43384343602dcf8595ad932159159e9f"
+      "size": 1191,
+      "sha256": "c01aa1931530e2c139b240dc8d576ba347917f5bc2133a708c930448a8b7620d"
     },
     {
       "path": "context/runtime/moodle53_preparation_20261014.md",
@@ -3298,6 +3304,42 @@
       "sha256": "81bac639785b4f69294067d8f8ffd959f4982ef4eb16de0038b9b93ee5968e8c"
     },
     {
+      "path": "context/runtime/route_review_recovery_20261102.json",
+      "domain": "runtime",
+      "size": 2794,
+      "sha256": "496c44ff8b73779a0341eadc5baa4dc4be1dc8cb28c306ddebc54b4aa97b39de"
+    },
+    {
+      "path": "context/runtime/route_scorm_access_owner_order_20261101.json",
+      "domain": "runtime",
+      "size": 5125,
+      "sha256": "b33a4ee517b297ed50f01e091ec141b980e483565df6143c85e6247121c72b7c"
+    },
+    {
+      "path": "context/runtime/route_scorm_access_qualification_20261102.json",
+      "domain": "runtime",
+      "size": 6012,
+      "sha256": "3fc6933cf59837135d72f7ba2b5f254cc5a91d910fb9bd8c0d40ad767a42ed4d"
+    },
+    {
+      "path": "context/runtime/route_scorm_launch_20261101.json",
+      "domain": "runtime",
+      "size": 7175,
+      "sha256": "1e5b5a8f48a305e320144e67560f7961d690c5f653b9996114b81ebf607be163"
+    },
+    {
+      "path": "context/runtime/scorm_tracking_20261102.json",
+      "domain": "runtime",
+      "size": 8143,
+      "sha256": "7c555e0c7fd4e0a97b31f36271ad65e718440ea737255578cbad476712407cc9"
+    },
+    {
+      "path": "context/runtime/scorm_tracking_owner_20261102.json",
+      "domain": "runtime",
+      "size": 3003,
+      "sha256": "4362e03087a431f74cdaae4a50aca38dfcea7f2383e46b83707c9e46e285ee4a"
+    },
+    {
       "path": "context/runtime/server-extra/20261017T095914Z-0411e053/README.md",
       "domain": "runtime",
       "size": 2028,
@@ -3550,6 +3592,12 @@
       "sha256": "857408bc6b31a4e4b527fb04527719a34fb0b89d13ee91b736d4f249441563ab"
     },
     {
+      "path": "context/runtime/studio_assessment_route_20261102.json",
+      "domain": "runtime",
+      "size": 2223,
+      "sha256": "27cba34654c021e8110033043c5317c2e2e4b8a560bf24c724b289f38e9aced8"
+    },
+    {
       "path": "context/runtime/studio_colors_canvas_progress_20261028.md",
       "domain": "runtime",
       "size": 4066,
@@ -3690,8 +3738,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3579,
-      "sha256": "ed52f3da59257db1a64a8977270064eba25b7b4c230a966c16156ce176c81bd2"
+      "size": 3981,
+      "sha256": "ff0feebcd65653d760d199a79d747e0302dacd123ca141619e56232f0dba82de"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",
@@ -3704,6 +3752,24 @@
       "domain": "tasks",
       "size": 133,
       "sha256": "08efe768ed1cea63da4f638d08e5ee84357a58316cfbea1c14f0b0c4a4707045"
+    },
+    {
+      "path": "context/tasks/route_scorm_access_20261101.md",
+      "domain": "tasks",
+      "size": 8689,
+      "sha256": "111daa8ad63f58a29dfc99c49e03e3e86646dbf4bccb8921feabdfe8270e8dd0"
+    },
+    {
+      "path": "context/tasks/route_scorm_access_plan_20261101.md",
+      "domain": "tasks",
+      "size": 8206,
+      "sha256": "012b8f76c9d0594807a4a5bfe530902312440d51a541305aef0ac36abbd2b514"
+    },
+    {
+      "path": "context/tasks/scorm_tracking_fix_20261102.md",
+      "domain": "tasks",
+      "size": 1828,
+      "sha256": "373ed5f89cbd7d149cc361b3a390314fe777fe74c6a5b761c16f504279c3ea82"
     }
   ]
 }

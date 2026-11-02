@@ -1,24 +1,23 @@
 # USTAR — инструкции агентам
 
-Актуально01.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
+Актуально02.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
 Канонический main — app2900/source5cc02944; PR110/111 слиты. Owner29Oct установил app2900/theme2700 через9a:
 [receipt](context/runtime/connect_role_bot_owner_deploy_20261029.json).
 Owner1Nov восстановил egress (CONNECT200/HTTP302/TLS0), оба бота отвечают.
 Worker267e5587 установлен: visuals_active/visuals_ready, recovery_required:false.
 [Owner receipt](context/runtime/connect_visual_owner_deploy_20261101.json); PNG/читаемость и задачи/возврат/фото приняты.
 Инструкции владельцу — прямо в чат короткими блоками команд.
-[Квалификация](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
-[команды](docs/CONNECT_BOT_2900_INSTALL_RU.md).
 
 ## Работа и разрешения
 
 Owner1Nov разрешил merge110/111; объединены после FullRC.
 [Основание/проверки](context/runtime/connect_feed_integration_order_20261101.json).
 App2900/theme2700 и worker267e5587 уже установлены владельцем; merge не deploy.
-Задачи/возврат/фото/читаемость приняты. Остальные процессы с руководством с2Nov;
-публичный HTTPS/Mini App ждут согласования. Следующий этап — PERF-01: пассивное
-наблюдение обычного рабочего дня. Отчёт8h ещё не получен; старые cron19/failed2
-не сбрасывать и не выдавать за новую ошибку.
+Задачи/возврат/фото/читаемость приняты. Owner принял прямой SCORM запуск51332a21;
+Owner2Nov: app1100/2150affe, toolb5 active; SCORM/переходы приняты.
+[Receipt](context/runtime/scorm_tracking_owner_20261102.json). Теперь LEARN-ASSESS-01:
+course30 → конкретный Quiz в точке; затем PERF-01: пассивный рабочий день. Остальные процессы с руководством
+с2Nov; HTTPS/Mini App ждут согласования. Старые cron19/failed2 не сбрасывать.
 
 Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,
 все роли через существующую Академию; Mini App и внешний HTTPS в конце.

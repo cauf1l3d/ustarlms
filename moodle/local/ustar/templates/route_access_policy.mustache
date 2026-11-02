@@ -1,0 +1,23 @@
+<fieldset>
+  <legend>Доступ к SCORM и переход дальше</legend>
+  <p>Изучение засчитывается один раз. Повторные просмотры не дают дополнительных наград. Эти правила действуют для SCORM-курсов и SCORM-активностей этой точки.</p>
+  <div class="u-route-editor__grid">
+    <label><span>Когда переходить к следующей точке</span><select name="advancepolicy">
+      <option value="auto" {{#accessauto}}selected{{/accessauto}}>Сразу после выполнения условий</option>
+      <option value="manual" {{#accessmanual}}selected{{/accessmanual}}>По кнопке «Далее» в маршруте</option>
+      <option value="timed" {{#accesstimed}}selected{{/accesstimed}}>По кнопке «Далее» или окончании срока</option>
+    </select></label>
+    <label><span>Доступ после перехода</span><select name="repeataccess">
+      <option value="close" {{#accessclose}}selected{{/accessclose}}>Закрыть повторное изучение</option>
+      <option value="keep" {{#accesskeep}}selected{{/accesskeep}}>Оставить материал доступным</option>
+    </select></label>
+    <label><span>Срок повторения</span><input name="reviewduration" type="number" min="0.02" max="87600" step="0.01" value="{{#reviewduration}}{{reviewduration}}{{/reviewduration}}{{^reviewduration}}24{{/reviewduration}}"></label>
+    <label><span>Единица срока</span><select name="reviewunit"><option value="hours">Часы</option><option value="days">Дни</option></select></label>
+    <label><span>После завершения всего SCORM-курса</span><select name="finishaction">
+      <option value="next" {{#finishnext}}selected{{/finishnext}}>Открыть следующий доступный шаг</option>
+      <option value="route" {{#finishroute}}selected{{/finishroute}}>Вернуться на страницу маршрута</option>
+      <option value="stay" {{#finishstay}}selected{{/finishstay}}>Остаться в материале</option>
+    </select></label>
+  </div>
+  <p>Срок начинается после первого подтверждённого выполнения условий точки. До «Далее» или окончания срока материал можно повторять. Обязательные тесты и задания сохраняют свои условия. Срок повторения применяется только в режиме «по окончании срока» и отличается от срока действия результата ниже.</p>
+</fieldset>

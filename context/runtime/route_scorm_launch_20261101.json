@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "date_msk": "2026-11-01",
+  "owner_request": "я импортировал курс из материалов и положил его в маршрут при открытии точки открывается меню курса, нужно чтоб на всех курсах открывался сразу сам скорм",
+  "PR": 112,
+  "branch": "fix/route-direct-scorm-20261101",
+  "baseline_application": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
+  "application_commit": "3f8521ec0b23ab0a974440d8eb3eaf378d21d741",
+  "status": "qualified_source_overlay_waiting_owner_apply",
+  "deployed": false,
+  "versions_unchanged": {
+    "local_ustar": 2026102900,
+    "theme_ustar": 2026102700
+  },
+  "schema_changed": false,
+  "worker_unchanged": "267e55874eb8f6c36259d748f28a2c636adc9810",
+  "root_cause": [
+    "course_launch ended at course/view for course requirements",
+    "scorm_launch ended at scorm/view and depended on package skipview"
+  ],
+  "behaviour": [
+    "course requirement selects first unfinished uservisible SCORM in section order; completed course can review first SCORM",
+    "no available SCORM keeps native course fallback",
+    "exact CM requirement or SCORM in explicitly assigned course accepted only after current point/version and actor gates",
+    "Moodle TOC chooses SCO; player owns normal/review/force-new-attempt and restrictions"
+  ],
+  "regression": {
+    "red_head": "e03f269a7cffa72118c8e10b2a3c6ed66cce5e70",
+    "red_CI": 41310761254,
+    "red_job": 124860440112,
+    "red_reason": "course: expected /local/ustar/scorm_launch.php, got /course/view.php",
+    "local_green": "nine real-endpoint cases including stale component cache PASS; route_flow31 PASS; code overlay10 tests PASS with one actual-owner fixture delegated to sudo CI; exact-Git package deterministic/offline plan PASS",
+    "cached_component_map": "RED class not found with the existing map; explicit require_once in both launch endpoints GREEN without global cache purge",
+    "persisted_values_assertion": "Separate DB stdClass instances are compared by record data, not PHP object identity; fixed before native retry"
+  },
+  "native_CI": {
+    "qualified_head": "51332a218f9ff58f5aa7074f80a1a00426502108",
+    "all4CI": "success",
+    "runs": {
+      "review_fullRC": 41316616865,
+      "context": 41316616789,
+      "console": 41316616806,
+      "infrastructure": 41316616808
+    },
+    "moodle_suites": [
+      {
+        "profile": "historical",
+        "job": 124880327754,
+        "tests": 374,
+        "assertions": 1762,
+        "result": "success"
+      },
+      {
+        "profile": "Moodle5.1.8",
+        "job": 124880327738,
+        "tests": 374,
+        "assertions": 1762,
+        "result": "success"
+      }
+    ],
+    "source_php82": {
+      "job": 124877996105,
+      "result": "success"
+    },
+    "source_php83": {
+      "job": 124877996403,
+      "result": "success",
+      "python_tests": 1499,
+      "skipped": 236
+    },
+    "rollback": {
+      "job": 124877996395,
+      "result": "success"
+    },
+    "final_gate": {
+      "job": 124882208478,
+      "result": "success"
+    },
+    "connect_db": "skipped_not_changed",
+    "production_files_unchanged_after_test_corrections": true
+  },
+  "owner_instructions": "inline_chat_only",
+  "merge_authorized": false,
+  "next_stage_after_fix": "PERF-01 ordinary-workday passive report; leadership processes2Nov and HTTPS/Mini App approvals pending",
+  "native_first_attempt": {
+    "run": 41311553563,
+    "patch518_job": 124865175346,
+    "status": "failed_before_delivery",
+    "reason": "new adapter mistakenly required nonexistent mod/scorm:view; native entry contract restored",
+    "tests": 374,
+    "assertions": 1757,
+    "errors": 1
+  },
+  "decision": "Source-only overlay preserves2900 versions and existing cron/Connect guards. Four payload files and private file backups; web stop/start resets opcode cache. No DB restore, published point migration, package rebuild or worker/egress mutation.",
+  "source_metadata_gate": {
+    "head": "ec8a232df5dcb4ee978cd4069273010277d25b2f",
+    "run": 41313235738,
+    "failed_test": "test_every_infrastructure_source_is_reviewed_without_adding_actions",
+    "reason": "new operator and builder missing from reviewed source-only catalog",
+    "fixed": "SOURCE_ONLY registry updated; no console actions added; local regression passed"
+  },
+  "previous_unqualified_package": {
+    "tool_commit": "ec8a232df5dcb4ee978cd4069273010277d25b2f",
+    "archive": "ustar-scorm-direct-ec8a232d.tar.gz",
+    "bytes": 74609,
+    "sha256": "0167a4b5ba92becab0700d8b8c408ec24904d812bb1268dd2d250563729e8297",
+    "script_sha256": "b630491e5b6c73980e891bf04599428aac520c7311d68fe6ac96c8ce1129cb63",
+    "CI_run": 41313235755,
+    "CI_job": 124867812528,
+    "CI_job_result": "success",
+    "CI_artifact": 13085574597,
+    "CI_zip_sha256": "cf538b37dde3cc77ac049af0deaefe5e65b444844e360dbe31c741a0d3b1cb91",
+    "zip_crc_and_all6_files_byte_equal": true,
+    "isolated_python3_I_S_plan": "PASS",
+    "actual_UID33_root_group": "mandatory sudo CI passed 10 transaction tests",
+    "full_native_qualification": "pending",
+    "owner_apply": false,
+    "not_delivered_reason": "native PHPUnit expected path omitted the /moodle installation prefix; three production launcher files unchanged"
+  },
+  "delivery": {
+    "tool_commit": "51332a218f9ff58f5aa7074f80a1a00426502108",
+    "application_commit": "3f8521ec0b23ab0a974440d8eb3eaf378d21d741",
+    "archive": "ustar-scorm-direct-51332a21.tar.gz",
+    "bytes": 74672,
+    "sha256": "92fb191fb09debf064aca6e3433b65e44f1a3f12cc00ce040162d8bc3ae349ae",
+    "script_sha256": "ee5346cbeb42b233956997a1fa0d70c9f95ee7fbb68d4b041105d01e1e0040a6",
+    "CI_run": 41316616808,
+    "CI_job": 124877904219,
+    "CI_job_result": "success",
+    "CI_artifact": 13086779928,
+    "CI_zip_sha256": "6d66972b52c0a3794036fc388a738db21482f9b400c47131a5e9a026842877a6",
+    "zip_crc_and_all6_files_byte_equal": true,
+    "isolated_python3_I_S_plan": "PASS",
+    "actual_UID33_root_group": "mandatory sudo CI passed 10 transaction tests",
+    "full_native_qualification": "PASS",
+    "owner_apply": false,
+    "saved_copy_downloaded_and_byte_equal": true
+  },
+  "native_second_attempt": {
+    "head": "763c042cb107fa61aa265ea8b4dad6a8cdec3c60",
+    "run": 41313919391,
+    "attempt": 2,
+    "historical_job": 124872872153,
+    "patch518_job": 124872872165,
+    "status": "failed_before_delivery",
+    "tests_each": 374,
+    "assertions_each": 1758,
+    "failures_each": 1,
+    "reason": "test expected /mod/scorm/player.php, actual correct /moodle/mod/scorm/player.php",
+    "fix": "test derives only installation prefix from CFG; literal player path, CM/SCO and stored progress assertions retained",
+    "production_launcher_files_changed": false
+  },
+  "review": "author self-review, no subagents by owner instruction; fixes verified RED/GREEN; exact source/native/infra gates and artifact byte verification",
+  "next_action": "owner copies archive to /home/aduk, verifies external SHA then private extraction and --check; --upgrade --acknowledge-outage under systemd-run; --check active; open the reported route point"
+}

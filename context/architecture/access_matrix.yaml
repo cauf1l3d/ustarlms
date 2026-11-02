@@ -604,6 +604,7 @@ capabilities:
   - moodle/local/ustar/classes/notebook_board.php
   - moodle/local/ustar/classes/position_access.php
   - moodle/local/ustar/classes/route_model.php
+  - moodle/local/ustar/classes/route_point_access.php
   - moodle/local/ustar/classes/route_tester.php
   - moodle/local/ustar/classes/target_core.php
   - moodle/local/ustar/cli/audit_feed_roles.php
@@ -630,6 +631,7 @@ capabilities:
   - moodle/local/ustar/profile.php
   - moodle/local/ustar/profile_settings.php
   - moodle/local/ustar/route.php
+  - moodle/local/ustar/route_access.php
   - moodle/local/ustar/route_career.php
   - moodle/local/ustar/route_next.php
   - moodle/local/ustar/route_profile_reveal.php
@@ -669,6 +671,7 @@ capabilities:
   - moodle/local/ustar/classes/connect/receipt_actor.php
   - moodle/local/ustar/classes/external/base.php
   - moodle/local/ustar/classes/feed_access.php
+  - moodle/local/ustar/classes/route_point_access.php
   - moodle/local/ustar/classes/route_tester.php
   - moodle/local/ustar/continue.php
   - moodle/local/ustar/course_launch.php
@@ -689,6 +692,7 @@ capabilities:
   - moodle/local/ustar/profile.php
   - moodle/local/ustar/profile_settings.php
   - moodle/local/ustar/route.php
+  - moodle/local/ustar/route_access.php
   - moodle/local/ustar/route_career.php
   - moodle/local/ustar/route_next.php
   - moodle/local/ustar/route_profile_reveal.php

@@ -32,7 +32,7 @@ jobs:
           sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_route_access_update.Transaction -v
       - name: Build fixed route review release and verify offline envelope
         run: |
-          python3 scripts/infra/build_route_access_update.py --tool-commit "$(git rev-parse HEAD)" --output artifacts/route-review
+          python3 scripts/infra/build_route_access_update.py --tool-commit f879822a406eefc3c65fe4a5d0c36d28bc091ba5 --output artifacts/route-review
           tar --no-same-owner -xzf artifacts/route-review/ustar-route-review-*.tar.gz -C artifacts/route-review
           cd artifacts/route-review
           sha256sum --check --strict SHA256SUMS

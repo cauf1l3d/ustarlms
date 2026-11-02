@@ -3300,8 +3300,8 @@
     {
       "path": "context/runtime/route_scorm_access_owner_order_20261101.json",
       "domain": "runtime",
-      "size": 3591,
-      "sha256": "689ba81648a4a3116ee310f461e063fde3493a2a581990cf990cb83c7eccf60c"
+      "size": 4689,
+      "sha256": "75d822bc10e00e5d7d690cd9e8d0f2948507450559b329bd7a26e79f417a142f"
     },
     {
       "path": "context/runtime/route_scorm_launch_20261101.json",
@@ -3726,8 +3726,8 @@
     {
       "path": "context/tasks/route_scorm_access_plan_20261101.md",
       "domain": "tasks",
-      "size": 6885,
-      "sha256": "3f3ea222ce648703186d42c179b69d73fae3f1a3b3f12cc348ee53019b42bf03"
+      "size": 7584,
+      "sha256": "cd910c6bc03da2e0cc21b7936e5dd8cb9063c9916aa2dfbd4c9a4e269f184c86"
     }
   ]
 }

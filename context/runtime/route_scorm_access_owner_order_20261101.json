@@ -75,6 +75,23 @@
       ],
       "review_fix": "automatic closure now remains enforced after point archival through existing progress history",
       "archive_delivered": false
+    },
+    {
+      "tool_commit": "f879822a406eefc3c65fe4a5d0c36d28bc091ba5",
+      "review_run": 41346149144,
+      "result": "runtime_native_passed_legacy_host_probe_failed",
+      "source_context_console_infra": "PASS",
+      "native_moodle": {
+        "historical": "PASS387 tests/1812 assertions",
+        "patch518": "PASS387 tests/1812 assertions"
+      },
+      "native_connect": "PASS172 tests/875 assertions; actual104-table SQL/upgrade/repeat and4 foreign-metadata denials passed",
+      "failure": "frozen Connect installer validator expected its old task list and correctly rejected the additional route task",
+      "correction": "test adapter verifies exact successor version1100 and task[0,0], projects only that task for the immutable legacy verifier; all other task flags remain strict",
+      "correction_evidence": "three unit tests GREEN; modified verifier passes actual CI-captured SQL snapshots without altering them",
+      "production_and_operator_trees_changed": false,
+      "archive_delivered": false
     }
-  ]
+  ],
+  "release_tool_commit": "f879822a406eefc3c65fe4a5d0c36d28bc091ba5"
 }

@@ -23,19 +23,19 @@ Preserve published versions, attempt history, single credit/reward and current a
 
 Files: classes/route_point_access.php, classes/route_model.php, classes/scorm_route_launch.php, classes/studio_scorm_runtime.php, db/install.xml, db/upgrade.php, version.php; tests/route_point_access_test.php and standalone policy test.
 Interfaces: policy(version):array; project(user,point,version,fact,persist):array; advance(user,point,version,window):void; review_url(version):string; allowed_cmid(user,cm):bool|null.
-- [ ] Add failing pure policy and native course/CM lifecycle cases; observe policy RED.
-- [ ] Add policy column and access table with install/upgrade parity; implement strict validated defaults and immutable copying.
-- [ ] Repair imported-course evidence; hold only advancement while preserving canonical completion. Test actual native completion and one reward across review/closure.
-- [ ] Verify standalone/source/native; commit.
+- [x] Add failing pure policy and native course/CM lifecycle cases; observe policy RED.
+- [x] Add policy column and access table with install/upgrade parity; implement strict validated defaults and immutable copying.
+- [x] Repair imported-course evidence; hold only advancement while preserving canonical completion. Test actual native completion and one reward across review/closure.
+- [x] Verify standalone/source/native; commit.
 
 ## Task 2: Studio, learner actions, finish and deadline
 
 Files: route_studio.php/template, route.php/template, route_access.php, route_access.js, scorm_launch.php, course_launch.php, scorm_route_status.php, scorm_route_return.js, lib.php, task/reconcile_route_access.php, db/tasks.php, privacy provider/language strings.
 Interfaces: Task1 services; own-actor POST with sesskey and exact point/version/window; server-derived deadline.
-- [ ] Add failing browser tests for cancel/confirm, finish/revisit and timer refresh.
-- [ ] Expose policy fields and state; verify save/reload/override immutability, direct launches and protected old URL paths.
-- [ ] Add cron reconciliation, server confirmation and retry-safe generic finish controls for old packages.
-- [ ] Verify boundary/native/browser regressions; commit.
+- [x] Add failing browser tests for cancel/confirm, finish/revisit and timer refresh.
+- [x] Expose policy fields and state; verify save/reload/override immutability, direct launches and protected old URL paths.
+- [x] Add cron reconciliation, server confirmation and retry-safe generic finish controls for old packages.
+- [x] Verify boundary/native/browser regressions; commit.
 
 ## Task 3: guarded owner release and qualification
 
@@ -86,3 +86,13 @@ XMLDB empty CHAR default notice. Use a real native Quiz in the independent
 assignment fixture, exact104 expectation in the current schema test, and no
 CHAR empty default. Frozen103/100 validators stay unchanged. No business data
 rollback or production access occurred; full native rerun must confirm GREEN.
+
+Task1/2 complete: frozen releasef879/appb9f170d8 passed both actual Moodle
+suites387/1812, Connect172/875, source PHP8.2/8.3 1509/243, context and infra.
+The final host-side old installer probe rejected the one new route task.
+Ruling: keep its operator frozen; validate successor1100/task0,0 explicitly and
+project only that declared task for this historical contract. Three RED->GREEN
+unit cases preserve all other flags; the adapted probe passes exact captured
+native SQL snapshots. Application/worker/operator source remains byte-identical
+to f879. CI builds are pinned to that same immutable owner archive while the
+qualification-only follow-up receives a complete gate. No owner delivery yet.

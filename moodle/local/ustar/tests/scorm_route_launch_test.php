@@ -65,4 +65,62 @@ final class scorm_route_launch_test extends \advanced_testcase {
         $this->assertEquals($before, $DB->get_records('scorm_scoes_value', [], 'id'));
         $this->assertSame(1, $DB->count_records('scorm_attempt', ['userid' => $learner->id]));
     }
+
+    public function test_enrolled_user_without_a_learner_role_gets_native_tracking_and_keeps_enrolment_dates(): void {
+        global $CFG, $DB;
+        require_once($CFG->libdir.'/enrollib.php');
+        $gen=$this->getDataGenerator();
+        $course=$gen->create_course(['enablecompletion'=>1]);
+        $scorm=$gen->create_module('scorm',['course'=>$course->id,'completion'=>2,'completionstatusrequired'=>6]);
+        $learner=$gen->create_user();
+        $instances=array_filter(enrol_get_instances($course->id,false),static fn($i)=>$i->enrol==='manual');
+        $manual=enrol_get_plugin('manual');
+        $instance=reset($instances);
+        $start=time()-100;$end=time()+86400;
+        $manual->enrol_user($instance,$learner->id,0,$start,$end,ENROL_USER_ACTIVE);
+        $this->setUser($learner);
+        $cm=get_coursemodule_from_id('scorm',$scorm->cmid);
+        $context=\context_module::instance($cm->id);
+        $this->assertFalse(has_capability('mod/scorm:savetrack',$context));
+        $url=scorm_route_launch::player_url($cm,$learner);
+        $this->assertSame((int)$cm->id,(int)$url->get_param('cm'));
+        $this->assertTrue(has_capability('mod/scorm:savetrack',$context));
+        $before=$DB->get_record('user_enrolments',['enrolid'=>$instance->id,'userid'=>$learner->id]);
+        $this->assertSame($start,(int)$before->timestart);
+        $this->assertSame($end,(int)$before->timeend);
+        scorm_route_launch::ensure_tracking($cm,$learner);
+        $this->assertEquals($before,$DB->get_record('user_enrolments',['id'=>$before->id]));
+        $this->assertSame(0,$DB->count_records('scorm_attempt',['userid'=>$learner->id]));
+        $sco=$DB->get_record_select('scorm_scoes','scorm=:id AND launch<>:empty',
+            ['id'=>$scorm->id,'empty'=>''],'*',MUST_EXIST);
+        scorm_insert_track($learner->id,$scorm->id,$sco->id,1,'cmi.core.lesson_status','completed');
+        (new \completion_info($course))->update_state($cm,COMPLETION_UNKNOWN,$learner->id);
+        $this->assertContains((int)$DB->get_field('course_modules_completion','completionstate',
+            ['coursemoduleid'=>$cm->id,'userid'=>$learner->id]),[1,2]);
+    }
+
+    public function test_explicit_tracking_denials_do_not_add_student_role(): void {
+        global $CFG,$DB;
+        require_once($CFG->libdir.'/enrollib.php');
+        $gen=$this->getDataGenerator();$course=$gen->create_course();
+        $scorm=$gen->create_module('scorm',['course'=>$course->id]);
+        $learner=$gen->create_user();
+        $instances=array_filter(enrol_get_instances($course->id,false),static fn($i)=>$i->enrol==='manual');$instance=reset($instances);
+        enrol_get_plugin('manual')->enrol_user($instance,$learner->id,0);
+        $context=\context_module::instance($scorm->cmid);
+        $role=create_role('Restricted learner','scorm_restricted_fixture','');
+        role_assign($role,$learner->id,$context->id);
+        foreach ([CAP_PREVENT,CAP_PROHIBIT] as $permission) {
+            $this->setAdminUser();assign_capability('mod/scorm:savetrack',$permission,$role,$context->id,true);
+            accesslib_clear_all_caches(true);$this->setUser($learner);
+            $before=$DB->get_records('role_assignments',['userid'=>$learner->id],'id');
+            try {
+                scorm_route_launch::ensure_tracking(get_coursemodule_from_id('scorm',$scorm->cmid),$learner);
+                $this->fail('A configured tracking denial must be preserved');
+            } catch (\moodle_exception $expected) {
+                $this->assertEquals($before,$DB->get_records('role_assignments',['userid'=>$learner->id],'id'));
+                $this->assertFalse(has_capability('mod/scorm:savetrack',$context));
+            }
+        }
+    }
 }

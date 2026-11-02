@@ -5,6 +5,77 @@ defined('MOODLE_INTERNAL') || die();
 
 /** Direct entry into Moodle's SCORM runtime after the route has authorised the launch. */
 final class scorm_route_launch {
+    /** Supply the learner role for an already route-authorised SCORM launch. */
+    public static function ensure_tracking(\stdClass $cm, \stdClass $user): void {
+        global $CFG, $DB, $USER;
+        $userid = (int)($user->id ?? 0);
+        $context = \context_module::instance((int)$cm->id);
+        $capability = 'mod/scorm:savetrack';
+        if ($userid <= 0 || !empty($user->deleted) || !empty($user->suspended)) {
+            throw new \moodle_exception('Учётная запись недоступна для прохождения SCORM.');
+        }
+        if (has_capability($capability, $context, $userid)) { return; }
+
+        // An explicit deny is an access decision, not a missing technical role.
+        $roleids = [(int)($CFG->defaultuserroleid ?? 0)];
+        foreach (get_user_roles($context, $userid, true) as $role) { $roleids[] = (int)$role->roleid; }
+        foreach (array_unique(array_filter($roleids)) as $roleid) {
+            $caps = role_context_capabilities($roleid, $context, $capability);
+            if ((int)($caps[$capability] ?? 0) < 0) {
+                throw new \moodle_exception('Сохранение SCORM запрещено настройками роли. Обратитесь к администратору.');
+            }
+        }
+        $studentroleid = (int)$DB->get_field('role', 'id', ['shortname' => 'student']);
+        $studentcaps = $studentroleid > 0 ? role_context_capabilities($studentroleid, $context, $capability) : [];
+        if ((int)($studentcaps[$capability] ?? 0) !== CAP_ALLOW) {
+            throw new \moodle_exception('Штатная роль Студент не разрешает сохранять SCORM. Обратитесь к администратору.');
+        }
+        require_once($CFG->libdir . '/enrollib.php');
+        $manual = enrol_get_plugin('manual');
+        if (!$manual) { throw new \moodle_exception('Ручное зачисление Moodle отключено.'); }
+        $instance = null;
+        $disabled = false;
+        foreach (enrol_get_instances((int)$cm->course, false) as $candidate) {
+            if ($candidate->enrol !== 'manual') { continue; }
+            if ((int)$candidate->status === ENROL_INSTANCE_ENABLED) { $instance = $candidate; break; }
+            $disabled = true;
+        }
+        if (!$instance && $disabled) {
+            throw new \moodle_exception('Зачисление на этот курс отключено администратором.');
+        }
+        $enrolment = $instance ? $DB->get_record('user_enrolments', [
+            'enrolid' => (int)$instance->id, 'userid' => $userid,
+        ]) : null;
+        $now = time();
+        if ($enrolment && ((int)$enrolment->status !== ENROL_USER_ACTIVE
+                || ((int)$enrolment->timestart > $now)
+                || (!empty($enrolment->timeend) && (int)$enrolment->timeend <= $now))) {
+            throw new \moodle_exception('Зачисление сотрудника приостановлено или срок доступа ещё не действует.');
+        }
+        $transaction = $DB->start_delegated_transaction();
+        try {
+            if (!$instance) {
+                $course = $DB->get_record('course', ['id' => (int)$cm->course], '*', MUST_EXIST);
+                $id = $manual->add_instance($course, [
+                    'status' => ENROL_INSTANCE_ENABLED, 'roleid' => $studentroleid, 'enrolperiod' => 0,
+                ]);
+                $instance = $DB->get_record('enrol', ['id' => (int)$id], '*', MUST_EXIST);
+            }
+            $start = $enrolment ? (int)$enrolment->timestart : $now;
+            $end = $enrolment ? (int)$enrolment->timeend
+                : (!empty($instance->enrolperiod) ? $now + (int)$instance->enrolperiod : 0);
+            $manual->enrol_user($instance, $userid, $studentroleid, $start, $end, ENROL_USER_ACTIVE);
+            if ((int)($USER->id ?? 0) === $userid) { reload_all_capabilities(); }
+            else { accesslib_clear_all_caches(true); }
+            if (!has_capability($capability, $context, $userid)) {
+                throw new \moodle_exception('Moodle не разрешает сохранять прохождение SCORM. Обратитесь к администратору.');
+            }
+            $transaction->allow_commit();
+        } catch (\Throwable $error) {
+            $transaction->rollback($error);
+        }
+    }
+
     /** Old Studio imports contain one SCORM but did not configure whole-course completion. */
     public static function managed_course_completedat(int $courseid, int $userid): int {
         global $DB;
@@ -70,6 +141,7 @@ final class scorm_route_launch {
         // SCORM has no mod/scorm:view capability. The launcher and native player
         // use require_login(course, false, cm), with tracking permissions enforced by Moodle.
         scorm_require_available($scorm);
+        self::ensure_tracking($cm, $user);
         if ((int)$scorm->updatefreq === SCORM_UPDATE_EVERYTIME) {
             scorm_parse($scorm, false);
         }

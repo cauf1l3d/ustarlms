@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-11-01'
+updated_at: '2026-11-02'
 canonical_branch: main
 source_baseline: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -742,7 +742,8 @@ tasks:
   - Repeat access preserves one verified learning credit and reward
   - Per-point manual/timed advancement and finish destination are versioned
   - Deadline and stale URLs are enforced server-side; assessments keep real results
-  current_summary: Owner approved design; implementation under native/infra qualification. Not deployed; archive not delivered.
+  qualification: context/runtime/route_scorm_access_qualification_20261102.json
+  current_summary: Qualified f879/app1100; all4CI on52c30f08 and native387/1812 passed. Archive and saved copy byte-equal. Owner installation/acceptance pending; worker267 preserved.
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

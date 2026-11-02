@@ -27,9 +27,13 @@
   "owner_instructions": "inline_chat_only",
   "owner_approval": "да потверждаю",
   "approval_source": "owner_message_after_inline_design",
-  "status": "implementation_under_qualification",
+  "status": "qualified_waiting_owner_apply",
   "application_commit": "b9f170d89cead30021b0acbfba6ee681cec024f8",
-  "native_CI": "pending",
+  "native_CI": {
+    "all4CI": "success",
+    "head": "52c30f08479d1b4958dd4a0b4df06dfa66c2e5df",
+    "receipt": "context/runtime/route_scorm_access_qualification_20261102.json"
+  },
   "PR": "https://github.com/cauf1l3d/ustarlms/pull/113",
   "qualification_attempts": [
     {
@@ -93,5 +97,7 @@
       "archive_delivered": false
     }
   ],
-  "release_tool_commit": "f879822a406eefc3c65fe4a5d0c36d28bc091ba5"
+  "release_tool_commit": "f879822a406eefc3c65fe4a5d0c36d28bc091ba5",
+  "qualification": "context/runtime/route_scorm_access_qualification_20261102.json",
+  "qualification_commit": "52c30f08479d1b4958dd4a0b4df06dfa66c2e5df"
 }

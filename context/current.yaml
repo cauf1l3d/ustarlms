@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-01'
+updated_at: '2026-11-02'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -100,10 +100,9 @@ production:
   current_worker_observed_at: '2026-11-01'
   current_worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
 current_work:
-  activity: Owner approved the inline design. Candidate adds versioned review access,
-    protected manual/timed advancement and configurable SCORM finish action. Native/infra
-    qualification and owner delivery pending. Production2900/worker267 retained; direct
-    launch accepted but exact server apply output absent.
+  activity: Release f879/app1100 is qualified on52c30f08 with all4CI and both native
+    suites387/1812. Archive matches CI and the saved downloaded copy. Owner installation
+    and functional acceptance pending; worker267 preserved.
   next_task: LEARN-SCORM-02
   ready_tasks: []
   task_statuses:

@@ -1,12 +1,11 @@
 schema_version: 2
-updated_at: '2026-11-01'
+updated_at: '2026-11-02'
 project: USTAR Academy
-stage: route_scorm_access_implementation
-stage_label: Owner approved route review policy; implementation under qualification
-current_activity: Owner approved the inline design. Candidate adds versioned review
-  access, protected manual/timed advancement and configurable SCORM finish action.
-  Native/infra qualification and owner delivery pending. Production2900/worker267
-  retained; direct launch accepted but exact server apply output absent.
+stage: route_scorm_access_owner_handoff
+stage_label: Qualified route review archive; awaiting owner installation
+current_activity: Release f879/app1100 is qualified on52c30f08 with all4CI and both
+  native suites387/1812. Archive matches CI and the saved downloaded copy.
+  Owner installation and functional acceptance pending; worker267 preserved.
 entrypoint: START_HERE.md
 next_task: LEARN-SCORM-02
 ready_tasks: []
@@ -353,11 +352,14 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: implementation_under_qualification
+  status: qualified_waiting_owner_apply
   branch: feat/route-review-access-20261101
   PR: https://github.com/cauf1l3d/ustarlms/pull/113
   deployed: false
   application_commit: b9f170d89cead30021b0acbfba6ee681cec024f8
+  tool_commit: f879822a406eefc3c65fe4a5d0c36d28bc091ba5
+  qualification_commit: 52c30f08479d1b4958dd4a0b4df06dfa66c2e5df
+  qualification: context/runtime/route_scorm_access_qualification_20261102.json
   local_ustar_version: 2026110100
   theme_ustar_version: 2026102700
   schema_changed: true

@@ -1,6 +1,6 @@
 # USTAR — инструкции агентам
 
-Актуально01.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
+Актуально02.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
 Канонический main — app2900/source5cc02944; PR110/111 слиты. Owner29Oct установил app2900/theme2700 через9a:
 [receipt](context/runtime/connect_role_bot_owner_deploy_20261029.json).
 Owner1Nov восстановил egress (CONNECT200/HTTP302/TLS0), оба бота отвечают.
@@ -16,7 +16,7 @@ Owner1Nov разрешил merge110/111; объединены после FullRC.
 [Основание/проверки](context/runtime/connect_feed_integration_order_20261101.json).
 App2900/theme2700 и worker267e5587 уже установлены владельцем; merge не deploy.
 Задачи/возврат/фото/читаемость приняты. Owner принял прямой SCORM запуск51332a21;
-точного apply receipt нет. LEARN-SCORM-02 утверждён; реализация/проверки в ACTIVE.
+точного apply receipt нет. LEARN-SCORM-02 квалифицирован; передача в ACTIVE.
 После него PERF-01: пассивный рабочий день. Остальные процессы с руководством
 с2Nov; HTTPS/Mini App ждут согласования. Старые cron19/failed2 не сбрасывать.
 

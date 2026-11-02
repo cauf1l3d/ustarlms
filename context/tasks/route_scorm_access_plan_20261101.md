@@ -41,10 +41,10 @@ Interfaces: Task1 services; own-actor POST with sesskey and exact point/version/
 
 Files: new route access operator/builder and transaction tests; source-only catalog, infra workflow, current context/manifest.
 Interfaces: immutable exact app/tool commits; accepts fixed2900 baseline and installed51332 overlay; preserves worker267 and egress.
-- [ ] Add failing transaction cases for unknown baseline, crash/recovery, real owner metadata and cron guard.
-- [ ] Implement exact-source deployment, private backup, maintenance/native upgrade, forward recovery and updated cron guard. Never restore business DB automatically.
-- [ ] Commit/push candidate and PR; run applicable source/context/native/infra on exact release.
-- [ ] Compare CI ZIP CRC/bytes and saved/downloaded artifact; deliver archive and inline commands.
+- [x] Add failing transaction cases for unknown baseline, crash/recovery, real owner metadata and cron guard.
+- [x] Implement exact-source deployment, private backup, maintenance/native upgrade, forward recovery and updated cron guard. Never restore business DB automatically.
+- [x] Commit/push candidate and PR; run applicable source/context/native/infra on exact release.
+- [x] Compare CI ZIP CRC/bytes and saved/downloaded artifact; deliver archive and inline commands.
 
 ## Execution ledger
 
@@ -96,3 +96,12 @@ unit cases preserve all other flags; the adapted probe passes exact captured
 native SQL snapshots. Application/worker/operator source remains byte-identical
 to f879. CI builds are pinned to that same immutable owner archive while the
 qualification-only follow-up receives a complete gate. No owner delivery yet.
+
+Task3 complete: FullRC52c30f08 all4CI SUCCESS. Both Moodle suites387/1812;
+Connect172/875; PHP8.2/8.3 source1512/243. ActualPG104/upgrade/repeat/4 denials,
+10 operator cases with mandatory realUID33/root group, tar CRC/member bytes and
+saved downloaded copy PASS. Release archive remains f879 and appb9f170d8;
+application/worker/operator trees are identical across qualification.
+Finishing follows existing owner option2: PR113 stays open, branch/worktree kept,
+no merge or production action. Instructions are inline. Owner apply/acceptance
+is the remaining operational step; the2900 observer needs adaptation after1100.

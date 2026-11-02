@@ -49,4 +49,13 @@ final class library_store_test extends \advanced_testcase {
         library_offer::save($o->id,$input,$actor,(int)$o->timemodified);
         $this->expectException(\moodle_exception::class);library_offer::save($o->id,$input,$actor,(int)$o->timemodified);
     }
+    public function test_fresh_defaults_prepare_manager_grant_capability_without_personal_assignments(): void {
+        global $DB;
+        require_once(__DIR__.'/../db/library_defaults.php');
+        $before=$DB->count_records('role_assignments');
+        \local_ustar_library_defaults();
+        $role=(int)$DB->get_field('role','id',['shortname'=>'ustar_manager']);$this->assertGreaterThan(0,$role);
+        $permission=$DB->get_field('role_capabilities','permission',['roleid'=>$role,'contextid'=>\context_system::instance()->id,'capability'=>'local/ustar:librarygrant']);
+        $this->assertSame(CAP_ALLOW,(int)$permission);$this->assertSame($before,$DB->count_records('role_assignments'));
+    }
 }

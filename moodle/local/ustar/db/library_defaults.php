@@ -4,6 +4,7 @@ defined('MOODLE_INTERNAL') || die();
 function local_ustar_library_defaults(): void {
     global $DB;
     update_capabilities('local_ustar');
+    \local_ustar\position_access::ensure_roles();
     foreach (['library_rail'=>1,'library_store_enabled'=>0,'library_pricemin'=>1,'library_pricemax'=>25] as $key=>$value) {
         if (get_config('local_ustar',$key) === false) { set_config($key,$value,'local_ustar'); }
     }

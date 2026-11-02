@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "d1ddc4995035d017c978ab1fc6f4ea7cb77c413c",
+    "moodle/local/ustar": "cf7ba6004fc4792e6a4f5f676aa3a3158fce0df2",
     "moodle/theme/ustar": "d7de53fc6658e81c7b41e7478ba960ac0f9d2b68"
   },
   "versions": {
@@ -1477,11 +1477,11 @@
     },
     {
       "path": "moodle/local/ustar/lang/en/local_ustar.php",
-      "sha256": "ac63243281bf916b0369e05c114c73297d808dbf089ec2d281fcf0a4258e87fe"
+      "sha256": "1e38566e2fe3ee6be009c47afd534bc4194b85c2b4336b7275e4a503a61a41c5"
     },
     {
       "path": "moodle/local/ustar/lang/ru/local_ustar.php",
-      "sha256": "d9b25c5827a237be7540fd6310492a52c5561df5dfe66c55a25ec3e1ff49942b"
+      "sha256": "2500defb9015ff43f616920cc30a39d2c4f32d3b6e4d32a307dcc942910ef67d"
     },
     {
       "path": "moodle/local/ustar/learning.php",
@@ -2277,7 +2277,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/library_store_test.php",
-      "sha256": "70b73cfc576471b8ca6bbd260720917d1021a196bab33457134e5e0dac896703"
+      "sha256": "6c8c51a280244151070751c87b9887438d1d3df85333065c360fa079c3dcddbd"
     },
     {
       "path": "moodle/local/ustar/tests/material_catalog_test.php",

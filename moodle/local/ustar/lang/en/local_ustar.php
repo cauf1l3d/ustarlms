@@ -55,7 +55,7 @@ $string['task_route_access'] = 'Close expired route review windows';
 $string['privacy:metadata:route_access'] = 'Learning point review windows: learner, version, deadline and confirmed access closure.';
 
 $string['libraryerror'] = 'Library: {$a}';
-$string['librarypublish'] = 'Manage Library offers';
-$string['librarygrant'] = 'Grant Library access within scope';
-$string['libraryassess'] = 'Author optional Library checks';
+$string['ustar:librarypublish'] = 'Manage Library offers';
+$string['ustar:librarygrant'] = 'Grant Library access within scope';
+$string['ustar:libraryassess'] = 'Author optional Library checks';
 $string['privacy:metadata:library'] = 'Library access history and optional assessment attempts.';

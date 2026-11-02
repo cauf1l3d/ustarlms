@@ -57,6 +57,9 @@ final class library_store_test extends \advanced_testcase {
         $role=(int)$DB->get_field('role','id',['shortname'=>'ustar_manager']);$this->assertGreaterThan(0,$role);
         $permission=$DB->get_field('role_capabilities','permission',['roleid'=>$role,'contextid'=>\context_system::instance()->id,'capability'=>'local/ustar:librarygrant']);
         $this->assertSame(CAP_ALLOW,(int)$permission);$this->assertSame($before,$DB->count_records('role_assignments'));
+        foreach (['librarypublish','librarygrant','libraryassess'] as $name) {
+            $this->assertNotSame('[[ustar:'.$name.']]',get_string('ustar:'.$name,'local_ustar'));
+        }
     }
     public function test_revocation_requires_fresh_assignment_form_and_preserves_history(): void {
         global $DB;$u=$this->employee();$o=$this->offer();$actor=get_admin()->id;$nonce=bin2hex(random_bytes(16));

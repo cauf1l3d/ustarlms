@@ -7,8 +7,6 @@ Owner1Nov восстановил egress (CONNECT200/HTTP302/TLS0), оба бот
 Worker267e5587 установлен: visuals_active/visuals_ready, recovery_required:false.
 [Owner receipt](context/runtime/connect_visual_owner_deploy_20261101.json); PNG/читаемость и задачи/возврат/фото приняты.
 Инструкции владельцу — прямо в чат короткими блоками команд.
-[Квалификация](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
-[команды](docs/CONNECT_BOT_2900_INSTALL_RU.md).
 
 ## Работа и разрешения
 
@@ -16,7 +14,8 @@ Owner1Nov разрешил merge110/111; объединены после FullRC.
 [Основание/проверки](context/runtime/connect_feed_integration_order_20261101.json).
 App2900/theme2700 и worker267e5587 уже установлены владельцем; merge не deploy.
 Задачи/возврат/фото/читаемость приняты. Owner принял прямой SCORM запуск51332a21;
-точного apply receipt нет. LEARN-SCORM-02 квалифицирован; передача в ACTIVE.
+LEARN-SCORM-02 дошёл до publication_committed, finish отказал (80=302/8082=200).
+[Восстановление](context/runtime/route_review_recovery_20261102.json); active ещё не подтверждён.
 После него PERF-01: пассивный рабочий день. Остальные процессы с руководством
 с2Nov; HTTPS/Mini App ждут согласования. Старые cron19/failed2 не сбрасывать.
 

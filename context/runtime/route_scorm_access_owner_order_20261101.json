@@ -4,7 +4,7 @@
   "source": "owner_message_in_current_dialogue",
   "direct_launch_acceptance": "скорм открывается все ок",
   "previous_delivery": "context/runtime/route_scorm_launch_20261101.json",
-  "exact_server_apply_output_received": false,
+  "exact_server_apply_output_received": true,
   "independent_host_probe": false,
   "completion_and_continuation_accepted": false,
   "new_request": [
@@ -27,7 +27,7 @@
   "owner_instructions": "inline_chat_only",
   "owner_approval": "да потверждаю",
   "approval_source": "owner_message_after_inline_design",
-  "status": "qualified_waiting_owner_apply",
+  "status": "owner_publication_committed_finish_pending",
   "application_commit": "b9f170d89cead30021b0acbfba6ee681cec024f8",
   "native_CI": {
     "all4CI": "success",
@@ -99,5 +99,7 @@
   ],
   "release_tool_commit": "f879822a406eefc3c65fe4a5d0c36d28bc091ba5",
   "qualification": "context/runtime/route_scorm_access_qualification_20261102.json",
-  "qualification_commit": "52c30f08479d1b4958dd4a0b4df06dfa66c2e5df"
+  "qualification_commit": "52c30f08479d1b4958dd4a0b4df06dfa66c2e5df",
+  "latest_server_attempt": "context/runtime/route_review_recovery_20261102.json",
+  "server_apply_completed": false
 }

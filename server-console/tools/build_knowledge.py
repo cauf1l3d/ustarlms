@@ -197,6 +197,7 @@ SOURCE_ONLY = SOURCE_ONLY | {'connect_bot_visual_update', 'build_connect_bot_vis
 SOURCE_ONLY = SOURCE_ONLY | {'connect_bot_visual_successor', 'build_connect_bot_visual_successor'}
 SOURCE_ONLY = SOURCE_ONLY | {'route_scorm_patch', 'build_route_scorm_patch'}
 SOURCE_ONLY = SOURCE_ONLY | {'route_access_update', 'build_route_access_update'}
+SOURCE_ONLY = SOURCE_ONLY | {'route_review_finish'}
 METADATA.update({'academy_https': ('Владелец HTTPS Академии',
                    'Исходники проверенных поставок',
                    'Справка об исходнике; конкретная версия и режим указаны в dated runtime-квитанции.',

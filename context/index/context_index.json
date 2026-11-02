@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 9724,
-      "sha256": "3264600f5a62cd3316b72c3465c7394565db3f88822c3fcb7421dd28a70aeba5"
+      "size": 9907,
+      "sha256": "a017655bd6b38ac5f39f201395b5c3c099c34a416419427624e8ee1b0d0fdc1a"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -1446,8 +1446,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 39948,
-      "sha256": "509c5b198f227db25057d8ea98e66a839f17c7344aef75d11bd68c6de625f5a0"
+      "size": 40058,
+      "sha256": "4ad9a51ee1519a52e8a6bcf200309f5083d40efec766b3fd13577aaf4b94c875"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1500,8 +1500,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 19477,
-      "sha256": "97da186d010030fdfb80a0ac1b69ad00c1c5c791331ed51cc21b4223b1745228"
+      "size": 19816,
+      "sha256": "aa05270026e26b4a8cfa14609fea5d5754fc691d2ee98169e29ae4745df0ad4f"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3298,10 +3298,16 @@
       "sha256": "81bac639785b4f69294067d8f8ffd959f4982ef4eb16de0038b9b93ee5968e8c"
     },
     {
+      "path": "context/runtime/route_review_recovery_20261102.json",
+      "domain": "runtime",
+      "size": 2794,
+      "sha256": "496c44ff8b73779a0341eadc5baa4dc4be1dc8cb28c306ddebc54b4aa97b39de"
+    },
+    {
       "path": "context/runtime/route_scorm_access_owner_order_20261101.json",
       "domain": "runtime",
-      "size": 4996,
-      "sha256": "582747f6a6a6bd00e06f6c770d5f86b8c3e1fdd6d90fc21d7485effdb7f9a01e"
+      "size": 5125,
+      "sha256": "b33a4ee517b297ed50f01e091ec141b980e483565df6143c85e6247121c72b7c"
     },
     {
       "path": "context/runtime/route_scorm_access_qualification_20261102.json",
@@ -3708,8 +3714,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3888,
-      "sha256": "5d499a7a83e0ec2d752987235454e6693fab7fc44eb230bda5f0bb2239900054"
+      "size": 4027,
+      "sha256": "ee4465a28f4ffeefa1f4b20a0aa98561d39ffed73a27a261a702f67716d7c7d5"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

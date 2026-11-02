@@ -1,11 +1,12 @@
 schema_version: 2
 updated_at: '2026-11-02'
 project: USTAR Academy
-stage: route_scorm_access_owner_handoff
-stage_label: Qualified route review archive; awaiting owner installation
-current_activity: Release f879/app1100 is qualified on52c30f08 with all4CI and both
-  native suites387/1812. Archive matches CI and the saved downloaded copy.
-  Owner installation and functional acceptance pending; worker267 preserved.
+stage: route_scorm_access_finish_recovery
+stage_label: Owner publication committed; login smoke recovery pending
+current_activity: Owner applied f879 through publication_committed; finish refused
+  application_login_failed because port80 returns302 while Moodle loopback8082
+  returns200. Two Academy workers were left inactive; finish recovery and owner
+  functional acceptance pending. Receipt context/runtime/route_review_recovery_20261102.json.
 entrypoint: START_HERE.md
 next_task: LEARN-SCORM-02
 ready_tasks: []
@@ -23,6 +24,7 @@ code_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
+  incomplete_update_attempt: context/runtime/route_review_recovery_20261102.json
   latest_SCORM_functional_acceptance: context/runtime/route_scorm_access_owner_order_20261101.json
   latest_owner_browser_acceptance: context/runtime/feed2803_owner_deploy_20261029.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
@@ -352,10 +354,13 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: qualified_waiting_owner_apply
+  status: owner_publication_committed_finish_pending
   branch: feat/route-review-access-20261101
   PR: https://github.com/cauf1l3d/ustarlms/pull/113
   deployed: false
+  publication_committed_owner_report: true
+  deployment_completed: false
+  recovery_receipt: context/runtime/route_review_recovery_20261102.json
   application_commit: b9f170d89cead30021b0acbfba6ee681cec024f8
   tool_commit: f879822a406eefc3c65fe4a5d0c36d28bc091ba5
   qualification_commit: 52c30f08479d1b4958dd4a0b4df06dfa66c2e5df

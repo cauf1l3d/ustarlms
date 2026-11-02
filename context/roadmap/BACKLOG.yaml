@@ -743,7 +743,7 @@ tasks:
   - Per-point manual/timed advancement and finish destination are versioned
   - Deadline and stale URLs are enforced server-side; assessments keep real results
   qualification: context/runtime/route_scorm_access_qualification_20261102.json
-  current_summary: Qualified f879/app1100; all4CI on52c30f08 and native387/1812 passed. Archive and saved copy byte-equal. Owner installation/acceptance pending; worker267 preserved.
+  current_summary: Owner f879/app1100 reached publication_committed; finishing blocked by hardcoded port80 login200 check (actual302; Moodle8082=200). Narrow guarded finish helper prepared; owner recovery/functional acceptance pending. See context/runtime/route_review_recovery_20261102.json.
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

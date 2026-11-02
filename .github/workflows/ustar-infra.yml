@@ -30,6 +30,18 @@ jobs:
         run: |
           python3 -m unittest tests.r16.test_route_access_update.Contract tests.r16.test_route_access_update.Package -v
           sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_route_access_update.Transaction -v
+          python3 -m unittest tests.r16.test_route_review_finish.Contract -v
+          sudo -n python3 -m unittest tests.r16.test_route_review_finish.Transaction -v
+      - name: Package the narrow committed-publication recovery
+        run: |
+          install -D -m 600 scripts/infra/route_review_finish.py artifacts/route-finish/ustar-route-finish-20261102.py
+          cd artifacts/route-finish
+          sha256sum ustar-route-finish-20261102.py > SHA256SUMS
+          python3 -I -S ustar-route-finish-20261102.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: route-review-finish
+          path: artifacts/route-finish/
       - name: Build fixed route review release and verify offline envelope
         run: |
           python3 scripts/infra/build_route_access_update.py --tool-commit f879822a406eefc3c65fe4a5d0c36d28bc091ba5 --output artifacts/route-review

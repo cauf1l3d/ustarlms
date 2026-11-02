@@ -25,6 +25,7 @@ application_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
+  incomplete_update_attempt: context/runtime/route_review_recovery_20261102.json
   latest_SCORM_functional_acceptance: context/runtime/route_scorm_access_owner_order_20261101.json
   latest_owner_browser_acceptance: context/runtime/feed2803_owner_deploy_20261029.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
@@ -100,9 +101,10 @@ production:
   current_worker_observed_at: '2026-11-01'
   current_worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
 current_work:
-  activity: Release f879/app1100 is qualified on52c30f08 with all4CI and both native
-    suites387/1812. Archive matches CI and the saved downloaded copy. Owner installation
-    and functional acceptance pending; worker267 preserved.
+  activity: Owner applied f879 through publication_committed; finish refused application_login_failed
+    because port80 returns302 while Moodle loopback8082 returns200. Two Academy workers
+    were left inactive; finish recovery and owner functional acceptance pending. Receipt
+    context/runtime/route_review_recovery_20261102.json.
   next_task: LEARN-SCORM-02
   ready_tasks: []
   task_statuses:

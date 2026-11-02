@@ -11,8 +11,14 @@ from connect_role_bot_native import query,stable
 from connect_academy_installer import db_query
 
 def main():
+    reference=ROOT/'.stage-input/library-reference.json'
+    if sys.argv[1:]==['--prepare']:
+        before,_=profile(ROOT,update.BASELINES[0]);candidate,_=profile(ROOT,update.APPLICATION)
+        reference.parent.mkdir(exist_ok=True)
+        reference.write_text(json.dumps({'before':before,'candidate':candidate},sort_keys=True)+'\n')
+        return
     update.require(sys.argv[1:]==['--verify'],'fixture_mode')
-    before_profile,_=profile(ROOT,update.BASELINES[0]);candidate,_=profile(ROOT,update.APPLICATION)
+    data=json.loads(reference.read_text());before_profile=data['before'];candidate=data['candidate']
     # Capture the real1100 profile before the successor, including accepted task/index metadata.
     before=json.loads(Path('/artifacts/library-baseline-native.json').read_text())
     update.verify_database(before,before_profile)

@@ -774,8 +774,8 @@
     {
       "path": "context/decisions/README.md",
       "domain": "decisions",
-      "size": 497,
-      "sha256": "319e79a5d18068f5a6144c17510dd8ddeca2f3654c4d118ec59a642f4fa9bb91"
+      "size": 713,
+      "sha256": "c24a4263bbb28dfbbe79986d48e47620aa3547eb4d6a313d8b4cb86ebf527360"
     },
     {
       "path": "context/design/README.md",
@@ -1519,7 +1519,7 @@
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
       "size": 19844,
-      "sha256": "2a96dea4e21544214fb0e059f0096a97d177606d58f2e8668927f405dc021ad8"
+      "sha256": "919eb02c458eb6ebc135cf651456c0a6e97ced88d06a3d78030ce9799fa9d4d0"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3042,8 +3042,8 @@
     {
       "path": "context/runtime/library_integration_progress_20261102.md",
       "domain": "runtime",
-      "size": 7173,
-      "sha256": "e8b6c1037fe26a03a2b6a2393322dcb2659c3669d11d2b13bcb21313e90016df"
+      "size": 7767,
+      "sha256": "962bc7f9022a72d992d152e1a35c5ab469594c66f8091f54f479115b023cc3f9"
     },
     {
       "path": "context/runtime/moodle.yaml",

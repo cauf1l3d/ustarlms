@@ -76,3 +76,10 @@ manifest with PostgreSQL's generated no-default schema. Connect native verifier 
 104-table predecessor and actual0200 upgrade, then failed Git inside root-owned /source bind;
 profile preparation moved to the host --prepare step, matching the existing frozen verifier pattern.
 Candidate2f9/94309812 is superseded; do not install. No production operation occurred.
+
+26bd4fe05a7e1c81bdb4b83992c16d4b4c0a0971 is the corrected application candidate: XMLDB empty
+defaults removed, compact field layout,26 Library native tests including mandatory-route independent
+access, existing test fixtures updated for108 tables/new seeded manager role, proper Moodle capability
+translation keys. Tool pin and host-prepared native schema reference updated. All earlier Library
+archives remain undelivered/superseded; final native qualification pending. Changes sincea025 do not
+alter purchase/grant/optional-attempt runtime logic; the schema source now matches generated PG.

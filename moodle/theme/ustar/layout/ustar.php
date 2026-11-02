@@ -342,6 +342,9 @@ $pagelabels = [
 ];
 
 $controlpagelabels = [
+    '/local/ustar/library.php' => 'Библиотека',
+    '/local/ustar/library_check.php' => 'Проверка знаний',
+    '/local/ustar/library_manage.php' => 'Управление Библиотекой',
     '/local/ustar/reward_control.php' => 'Управление наградами',
     '/local/ustar/notebook.php' => 'Личный блокнот',
     '/local/ustar/hr.php' => 'Сотрудники',

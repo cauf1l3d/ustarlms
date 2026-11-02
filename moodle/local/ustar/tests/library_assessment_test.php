@@ -42,4 +42,10 @@ final class library_assessment_test extends \advanced_testcase {
     public function test_bank_validator_rejects_duplicate_options_and_out_of_range_answers(): void {
         $this->expectException(\moodle_exception::class);library_assessment::questions('[{"text":"Q","options":["A","A"],"correct":5}]');
     }
+    public function test_editor_removes_trailing_slots_without_changing_correct_option(): void {
+        $json=library_assessment::editor_questions([['text'=>'Q','options'=>['True','False','',''],'correct'=>'1']]);
+        $q=json_decode($json,true)[0];$this->assertSame(['True','False'],$q['options']);$this->assertSame(1,$q['correct']);
+        $this->expectException(\moodle_exception::class);
+        library_assessment::editor_questions([['text'=>'Q','options'=>['','True','False'],'correct'=>'1']]);
+    }
 }

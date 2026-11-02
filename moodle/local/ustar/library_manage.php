@@ -41,15 +41,9 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             } finally { $lock->release(); }
             $notice='Настройки сохранены.';
         } else if ($action==='savecheck') {
-            $questions=[];
-            foreach ((array)($_POST['questions']??[]) as $q) {
-                if (!is_array($q) || trim((string)($q['text']??''))==='') { continue; }
-                $options=array_values(array_filter(array_map('trim',(array)($q['options']??[])),static fn($s)=>$s!==''));
-                $questions[]=['text'=>(string)$q['text'],'options'=>$options,'correct'=>(int)($q['correct']??0)];
-            }
             $input=$_POST;$ref=explode(':',required_param('targetref',PARAM_TEXT),2);
             $input['targettype']=$ref[0];$input['targetkey']=$ref[0]==='topic' ? required_param('topic',PARAM_TEXT) : ($ref[1]??'');
-            $input['questionsjson']=json_encode($questions,JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR);
+            $input['questionsjson']=library_assessment::editor_questions((array)($_POST['questions']??[]));
             $id=library_assessment::save(optional_param('id',0,PARAM_INT),$input,$uid,required_param('expectedrevision',PARAM_INT));
             redirect(new moodle_url('/local/ustar/library_manage.php',['check'=>$id]),'Проверка сохранена.');
         } else { throw new invalid_parameter_exception('Неизвестное действие.'); }

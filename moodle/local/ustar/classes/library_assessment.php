@@ -140,6 +140,27 @@ final class library_assessment {
         return $out;
     }
 
+    /** Normalise editor blanks without ever shifting the correct answer to a different option. */
+    public static function editor_questions(array $rows): string {
+        if (count($rows)>100) { library_access::fail('Допускается не более100 вопросов.'); }
+        $questions=[];
+        foreach ($rows as $q) {
+            if (!is_array($q) || !is_string($q['text']??null)) { library_access::fail('Проверьте текст вопроса.'); }
+            if (trim($q['text'])==='') { continue; }
+            if (!is_array($q['options']??null) || !is_scalar($q['correct']??null)
+                    || !preg_match('/^[0-5]$/D',(string)$q['correct'])) { library_access::fail('Выберите верный ответ.'); }
+            $options=[];
+            foreach ($q['options'] as $value) {
+                if (!is_string($value)) { library_access::fail('Ответы должны быть текстовыми.'); }
+                $options[]=trim($value);
+            }
+            // Only trailing unused slots are removed. An empty slot in the middle is an error.
+            while ($options && end($options)==='') { array_pop($options); }
+            $questions[]=['text'=>$q['text'],'options'=>$options,'correct'=>(int)$q['correct']];
+        }
+        return json_encode(self::questions(json_encode($questions,JSON_THROW_ON_ERROR)),JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR);
+    }
+
     public static function save(int $id,array $input,int $actorid,int $expectedrevision=0): int {
         global $DB;
         library_access::require_actor($actorid);

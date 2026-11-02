@@ -5,7 +5,7 @@
 Owner CM104/course29/user132: savetrack=false, completion=false, tracks=[].
 Helper active/HTTP200/ready=false. [Факты и выпуск](../runtime/scorm_tracking_20261102.json).
 Исправление app2150affe выдаёт штатную учебную роль только в доступном курсе,
-сохраняет запреты и сроки. Локальный RED→GREEN; native CI/архив ещё ожидаются.
+сохраняет запреты и сроки. Toolb5ead9cb: all4CI/native389; точный архив готов.
 Поставка —2 файла поверх1100, без схемы/worker/egress. [План](scorm_tracking_fix_20261102.md).
 Приёмка владельцем не получена; инструкции прямо в чат.
 

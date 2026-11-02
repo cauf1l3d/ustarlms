@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: scorm_tracking_native_qualification
+  stage: scorm_tracking_owner_installation_pending
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -37,7 +37,7 @@ current_operator_handoff:
 current_work:
   task: LEARN-SCORM-02
   related_task: PERF-01
-  status: route_access_implementation_under_qualification
+  status: qualified_tracking_archive_owner_installation_pending
   spec: context/tasks/route_scorm_access_20261101.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py

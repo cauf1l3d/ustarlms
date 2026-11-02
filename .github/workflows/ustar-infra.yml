@@ -32,7 +32,7 @@ jobs:
           sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_scorm_tracking_patch.Transaction -v
       - name: Build the bounded1100 tracking repair without host access
         run: |
-          python3 scripts/infra/build_scorm_tracking_patch.py --tool-commit "$(git rev-parse HEAD)" --output artifacts/scorm-tracking
+          python3 scripts/infra/build_scorm_tracking_patch.py --tool-commit b5ead9cb705cf538fe2134f332cfe5ccd055aa06 --output artifacts/scorm-tracking
           tar --no-same-owner -xzf artifacts/scorm-tracking/ustar-scorm-tracking-*.tar.gz -C artifacts/scorm-tracking
           cd artifacts/scorm-tracking
           sha256sum --check --strict SHA256SUMS

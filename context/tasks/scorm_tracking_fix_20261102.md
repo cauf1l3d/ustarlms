@@ -8,8 +8,8 @@ Helper active/HTTP200/ready=false. This supersedes the timestamp hypothesis for 
 - [x] Preserve explicit negative capabilities, dates, disabled enrolment and idempotence.
 - [x] Implement a bounded two-file614/104 overlay from appb9f1100 to app2150affe.
 - [x] Preserve frozen operators/archives, xattrs, worker/egress/config/cron; source rollback only.
-- [ ] Verify real Moodle native permissions and completion; qualify immutable tool source.
-- [ ] Build archive, compare exact CI bytes/CRC and downloaded saved copy.
+- [x] Verify real Moodle native permissions and completion; qualify immutable tool source.
+- [x] Build archive, compare exact CI bytes/CRC and downloaded saved copy.
 - [ ] Owner installation and fresh SCORM completion/next-point acceptance.
 
 No synthetic completion or manual credit. The earlier unsaved package state is not a

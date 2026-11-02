@@ -103,8 +103,8 @@ production:
   current_worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
 current_work:
   activity: Owner CM104/course29/user132 has savetrack=false and no native result.
-    Scoped Student enrolment fix app2150affe is implemented; native qualification
-    and source-only delivery pending. See context/runtime/scorm_tracking_20261102.json.
+    Scoped Student repair app2150affe/toolb5ead9cb passed all4CI and both native389
+    suites; exact archive verified. Owner install/reopen pending. See context/runtime/scorm_tracking_20261102.json.
   next_task: LEARN-SCORM-02
   ready_tasks: []
   task_statuses:

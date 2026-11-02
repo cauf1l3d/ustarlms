@@ -55,7 +55,7 @@ class Contract(unittest.TestCase):
     def test_exact_package_is_private_offline_and_repeatable(self):
         import subprocess,tarfile
         fix=module();builder=importlib.import_module('build_scorm_tracking_patch')
-        commit=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD'],text=True).strip()
+        commit='b5ead9cb705cf538fe2134f332cfe5ccd055aa06'  # Frozen owner archive; application changes need a successor.
         with tempfile.TemporaryDirectory() as td:
             first=builder.build(commit,Path(td)/'first');second=builder.build(commit,Path(td)/'second')
             self.assertEqual(Path(first['archive']).read_bytes(),Path(second['archive']).read_bytes())

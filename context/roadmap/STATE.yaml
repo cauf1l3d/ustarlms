@@ -361,6 +361,7 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
+  application_commit: 440f349a494748a0c7ef3c3e6580d9e1acc9a653
   status: library_integration_native_qualification_pending
   branch: feat/library-unification-20261102
   deployed: false

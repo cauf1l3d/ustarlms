@@ -15,15 +15,15 @@ def main(args):
     path=ROOT/'.stage-input/route-access-reference.json'
     if args==['--prepare']:
         before,_=profile(ROOT,update.BASELINES[0]);after,_=profile(ROOT,update.APPLICATION)
-        path.parent.mkdir(exist_ok=True);path.write_text(json.dumps({'baseline':before,'candidate':after},sort_keys=True)+'\n')
+        path.parent.mkdir(exist_ok=True);path.write_text(json.dumps({'baseline':before,'candidate':after,'fresh':profile(ROOT,'HEAD')[0]},sort_keys=True)+'\n')
         return
     update.require(args==['--verify'],'fixture_mode')
     ref=json.loads(path.read_text());baseline=json.loads(Path('/artifacts/connect-role-bot-upgraded.json').read_text())
     before_profile=update.verify_database(baseline,ref['baseline'])
     current=query(db_query('botold_'))
     update.require(update.verify_database(current,ref['candidate'],baseline)==before_profile,'accepted_legacy_indexes_changed')
-    fresh=query(db_query('fresh_'))
-    update.require(update.verify_database(fresh,ref['candidate'])=='xml_install_indexes','current_fresh_schema')
+    fresh=query(db_query('fresh_'));fresh_profile=ref.get('fresh',ref['candidate'])
+    update.require(update.verify_database(fresh,fresh_profile)=='xml_install_indexes','current_fresh_schema')
     denied=[]
     test_baseline={**fresh,'tasks':{k:v for k,v in fresh['tasks'].items() if k!=update.NEW_TASK}}
     for label,mutation in {
@@ -34,7 +34,7 @@ def main(args):
     }.items():
         sql=db_query('fresh_');update.require(sql.startswith('BEGIN READ ONLY;') and sql.endswith('COMMIT;'),'read_query_shape')
         changed=query(sql.replace('BEGIN READ ONLY;','BEGIN; '+mutation,1).removesuffix('COMMIT;')+'ROLLBACK;')
-        try:update.verify_database(changed,ref['candidate'],test_baseline)
+        try:update.verify_database(changed,fresh_profile,test_baseline)
         except update.Refusal:denied.append(label)
         else:raise AssertionError('Foreign metadata accepted: '+label)
     update.require(stable(fresh)==stable(query(db_query('fresh_'))),'fixture_not_rolled_back')

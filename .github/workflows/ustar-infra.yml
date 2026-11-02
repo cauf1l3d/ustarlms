@@ -18,6 +18,30 @@ concurrency:
   group: ustar-infra-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  library-successor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Library operator contract and real mixed-owner recovery
+        run: |
+          python3 -m unittest tests.r16.test_library_update.Contract tests.r16.test_library_update.Package -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_library_update.Transaction -v
+      - name: Build exact offline successor
+        run: |
+          LIBRARY_TOOL=$(git log -1 --format=%H -- scripts/infra/library_update.py scripts/infra/build_library_update.py)
+          python3 scripts/infra/build_library_update.py --tool-commit "$LIBRARY_TOOL" --output artifacts/library
+          tar --no-same-owner -xzf artifacts/library/ustar-library-*.tar.gz -C artifacts/library
+          cd artifacts/library
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: library-successor
+          path: artifacts/library/
   scorm-tracking-access:
     runs-on: ubuntu-24.04
     timeout-minutes: 12

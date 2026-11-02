@@ -18,3 +18,12 @@ POST-only optional attempts, frozen thresholds, idempotent submission; unified U
 scoped grants and admin refunds, deterministic quick sync + deferred per-product task.
 Source structural checks pass (native qualification pending). Fixed schema insertion after observing
 that the original XML closing tag had no indentation; no migration has been run on production.
+
+Task1/2/3 implementation committed as application440f349a494748a0c7ef3c3e6580d9e1acc9a653
+(remote tree matches local60cd4264 exactly). PHP lint445 files and12 explicit regression contracts
+pass locally. Native PHPUnit22 added cases are pending real Moodle/PostgreSQL. Guarded successor
+pins accepted2150/1100, preserves worker267, accepts104→108 only, reuses reviewed private/metadata
+transaction helpers. Ten locally applicable operator checks pass, real UID33 fixture delegated to CI.
+Prepare-runtime-lock command only creates the absent runtime inode and never truncates existing locks.
+Historical operators remain unchanged. Context index regeneration corrected stale generated inventory;
+check_context passes. FullRC/production/archive delivery still pending.

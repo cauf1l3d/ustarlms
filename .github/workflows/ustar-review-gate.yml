@@ -75,6 +75,12 @@ jobs:
           fi
       - run: pip install -r tests/stage/python-requirements.txt
       - run: python -m unittest discover -s tests/r16 -v
+      - name: Library business refusal and snapshot regressions
+        run: |
+          php tests/release_20260912/library_access_contract.php
+          php tests/release_20260912/library_store_contract.php
+          php tests/release_20260912/library_assessment_contract.php
+          php tests/release_20260912/library_generator_contract.php
       - name: Verify production paired copy with exact reported Unix owners
         if: matrix.php == '8.3'
         run: >-
@@ -152,6 +158,8 @@ jobs:
           git archive 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/telegram-presentation-target
           python3 tests/stage/con02_update_native.py prepare
           python3 tests/stage/connect_role_bot_native.py --prepare
+          mkdir -p .stage-input/library-baseline
+          git archive 2150affe7e2964a1056468cce0e438f9e2f91dcb moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/library-baseline
           python3 tests/stage/route_access_native.py --prepare
           python3 - <<'PYCONFIG'
           import importlib.util
@@ -229,6 +237,8 @@ jobs:
           python3 tests/stage/perf_query_legacy_native.py --prepare
           python3 tests/stage/feed_media_legacy_native.py --prepare
           python3 tests/stage/connect_role_bot_native.py --prepare
+          mkdir -p .stage-input/library-baseline
+          git archive 2150affe7e2964a1056468cce0e438f9e2f91dcb moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/library-baseline
           python3 tests/stage/route_access_native.py --prepare
           mkdir -p artifacts
           cp .stage-input/baseline.json artifacts/baseline.json

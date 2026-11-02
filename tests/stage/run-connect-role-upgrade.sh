@@ -20,7 +20,7 @@ USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifa
 python3 /source/tests/stage/connect_role_bot_native.py --after-repeat
 python3 /source/tests/stage/legacy_103_projection.py
 # Subsequent tests exercise the actual current candidate, not the historical overlay.
-sources /source/moodle
+sources /source/.stage-input/library-baseline/moodle
 
 # Exact2900 with the accepted legacy index pair upgrades to the current candidate twice.
 USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifacts/route-access-upgrade.log 2>&1
@@ -29,4 +29,13 @@ USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifa
 USTAR_STAGE_PREFIX=botold_ php /source/tests/stage/schema_snapshot.php > /artifacts/route-access-repeat.json
 cmp /artifacts/route-access-upgraded.json /artifacts/route-access-repeat.json
 python3 /source/tests/stage/route_access_native.py --verify
-php admin/cli/purge_caches.php > /artifacts/route-access-purge.log 2>&1
+# The delivered successor starts from this exact accepted app1100 baseline.
+python3 -c 'import sys,json;sys.path[:0]=["/source/tests/stage","/source/scripts/infra"];from connect_role_bot_native import query;from connect_academy_installer import db_query;from pathlib import Path;Path("/artifacts/library-baseline-native.json").write_text(json.dumps(query(db_query("botold_"))))'
+sources /source/moodle
+USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifacts/library-upgrade.log 2>&1
+USTAR_STAGE_PREFIX=botold_ php /source/tests/stage/schema_snapshot.php > /artifacts/library-upgraded.json
+USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifacts/library-repeat.log 2>&1
+USTAR_STAGE_PREFIX=botold_ php /source/tests/stage/schema_snapshot.php > /artifacts/library-repeat.json
+cmp /artifacts/library-upgraded.json /artifacts/library-repeat.json
+python3 /source/tests/stage/library_native.py --verify
+php admin/cli/purge_caches.php > /artifacts/library-purge.log 2>&1

@@ -109,7 +109,7 @@ current_work:
   activity: Owner installed app2150affe/toolb5ead9cb, active/exit0/active and SCORM
     completion/transitions accepted. Course30 opens an empty menu; use the existing
     native Quiz activity selector, then verify the assessment result and continuation.
-  next_task: LEARN-ASSESS-01
+  next_task: LIBRARY-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -135,9 +135,10 @@ current_work:
     INF-13: planned
     INF-14: in_progress
     INTEGRATIONS-01: in_progress
-    LEARN-ASSESS-01: in_progress
+    LEARN-ASSESS-01: done
     LEARN-SCORM-01: done
     LEARN-SCORM-02: done
+    LIBRARY-01: in_progress
     MOB-01: planned
     MOB-02: planned
     MOB-03: planned

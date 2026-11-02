@@ -18,8 +18,8 @@
     {
       "path": "context/architecture/access_matrix.yaml",
       "domain": "architecture",
-      "size": 35294,
-      "sha256": "658551689559d0aa6690e03bd6531f0ff9af6416bb50b56ba592c82b887ed2f7"
+      "size": 36390,
+      "sha256": "6bae82ca369ed47eaa68aaff87d006361bb549ed9d6f5324f518e0ef54db05e3"
     },
     {
       "path": "context/architecture/boundaries.md",
@@ -558,8 +558,8 @@
     {
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
-      "size": 98378,
-      "sha256": "779b54e7985374def39af23ade724bd2474332f4d5c3c409812106e40c0117ac"
+      "size": 104037,
+      "sha256": "d5174d26345cd6f6d86be76af928cfed3c96efbb2c1f5e8d5b9796fd88b3859b"
     },
     {
       "path": "context/code_map/feed_media_development_source.json",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 10177,
-      "sha256": "10e7bf2fba204f36490c085ccd27ddd12e1304e05c318086c72c23d044a19209"
+      "size": 10193,
+      "sha256": "c99940bdec2481334c54116410e3f5d096921f41dbf836bf0b4dc3f2733f1b39"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -716,6 +716,12 @@
       "domain": "decisions",
       "size": 2000,
       "sha256": "7b9503562121227383dd190dc8e4b2f3fa634a3f9bb8e418ef36ac7765325fed"
+    },
+    {
+      "path": "context/decisions/0019-library-unified-domain.md",
+      "domain": "decisions",
+      "size": 5341,
+      "sha256": "f19b7b702624701662ab9e4a26d36a285ca7cfc4fcf0d7c76238637e2ed17f6a"
     },
     {
       "path": "context/decisions/ADR-0001-git-source-of-truth.md",
@@ -824,6 +830,12 @@
       "domain": "domains",
       "size": 1247,
       "sha256": "12a52949e249b01fdda54163de8c64f46db3e7ecf2862b1cbcd782afec259fea"
+    },
+    {
+      "path": "context/domains/library.yaml",
+      "domain": "domains",
+      "size": 1487,
+      "sha256": "5548a26bd8fbab1b7764f2c009f7f7d492059fd3ed7389082a60c62c4f21f94c"
     },
     {
       "path": "context/domains/messaging.yaml",
@@ -1426,6 +1438,12 @@
       "sha256": "8121f2aaa6196fc8dc3fa1b9a10de2189c6ea9baf9f63a9b68c78fe47558634a"
     },
     {
+      "path": "context/reviews/20261102/library_intake.md",
+      "domain": "reviews",
+      "size": 2682,
+      "sha256": "05b01122aa9157dc2ce088a5f9d4bb61cc187f3f11ae3a5b6e13d2bde1c35f93"
+    },
+    {
       "path": "context/roadmap/ACCEPTED_RISKS.yaml",
       "domain": "roadmap",
       "size": 983,
@@ -1446,8 +1464,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 40644,
-      "sha256": "046549c417f1717f2e752c52825acb2d619145eebdb0b98d326f2bba2f0450bc"
+      "size": 41276,
+      "sha256": "cee93bfa38e412d0a06815814381feabd3549b8194dc1ab3a47d0748fe1d4f07"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1500,8 +1518,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 20546,
-      "sha256": "832f0a4bf82f0d93e205f4c94287416ac945ce026e61490290990a25e43e2bc8"
+      "size": 19844,
+      "sha256": "673e9d1be44095f58e1947d00582ad098bf367469d0cf33668e5b0b07826bb6b"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3022,6 +3040,12 @@
       "sha256": "361dfbb57fafa9e0bdaddbf1920c2744be6402d73b0b4a5ff9c217fd624b6231"
     },
     {
+      "path": "context/runtime/library_integration_progress_20261102.md",
+      "domain": "runtime",
+      "size": 3030,
+      "sha256": "c62a96e16078e5878f7af13389120bc3f04db6334d23fd37b9b8d6535250f686"
+    },
+    {
       "path": "context/runtime/moodle.yaml",
       "domain": "runtime",
       "size": 1191,
@@ -3594,8 +3618,8 @@
     {
       "path": "context/runtime/studio_assessment_route_20261102.json",
       "domain": "runtime",
-      "size": 2223,
-      "sha256": "27cba34654c021e8110033043c5317c2e2e4b8a560bf24c724b289f38e9aced8"
+      "size": 2458,
+      "sha256": "0fc85aee5ab743162f70a5e1252d2856da4fc84d093bdbfcc00a9e07fbf08e25"
     },
     {
       "path": "context/runtime/studio_colors_canvas_progress_20261028.md",
@@ -3738,8 +3762,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3981,
-      "sha256": "ff0feebcd65653d760d199a79d747e0302dacd123ca141619e56232f0dba82de"
+      "size": 3982,
+      "sha256": "0d95994c85c477acb529f47acf4647172abfde2877e375fa6db36243996f4e47"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

@@ -19,7 +19,7 @@ from connect_con02_contract import Refusal, require, sha, verify_schema_profile,
 from connect_con02_state import capture, descriptor, replace, private_directory, sync
 from connect_academy_installer import db_query
 
-APPLICATION='440f349a494748a0c7ef3c3e6580d9e1acc9a653'
+APPLICATION='6f8f85d56ca72b9e2ac3f312ad1723d83c83efd7'
 WORKER='267e55874eb8f6c36259d748f28a2c636adc9810'
 BASELINES=('2150affe7e2964a1056468cce0e438f9e2f91dcb',)
 WEB='opt/ustar/data/moodle/public/public'

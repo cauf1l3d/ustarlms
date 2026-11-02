@@ -37,3 +37,9 @@ keyboard and touch sizing. Local runtime has no Chromium; CDN download returned 
 browser execution delegated to the existing native CI Playwright job, not claimed locally passed.
 Local Python1530 had3 dependency errors (mcp absent), no assertion failures. Two harness tests
 passed with supplied dependencies; actual stdio uses isolated child interpreter and remains for CI.
+
+Final source review fixed fresh-install manager role preparation through position_access::ensure_roles
+(no user assignments), closed-grant stale-form replay, and monotonic settings revision. Added native
+regressions; candidate application6f8f85d56ca72b9e2ac3f312ad1723d83c83efd7 supersedes440f.
+Local isolated stdio interpreter/dependencies repaired in scratch; all3 prior dependency failures
+now pass without repository changes. New fullRC will qualify the exact app/tool pair.

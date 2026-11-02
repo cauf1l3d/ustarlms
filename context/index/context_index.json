@@ -559,7 +559,7 @@
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
       "size": 104037,
-      "sha256": "3da70fda00773ae52aac6d78180a25df5293fe414e3e895464a1bee6f27d894e"
+      "sha256": "76a7c01048297251770ed66e91112079d5d1df86c546e9c3079184146f6c0bc1"
     },
     {
       "path": "context/code_map/feed_media_development_source.json",
@@ -3042,8 +3042,8 @@
     {
       "path": "context/runtime/library_integration_progress_20261102.md",
       "domain": "runtime",
-      "size": 5629,
-      "sha256": "2e101c4f2fdae7540911d5d3597b8d2138dc341152f23feb09ca96d22252b7e9"
+      "size": 7173,
+      "sha256": "e8b6c1037fe26a03a2b6a2393322dcb2659c3669d11d2b13bcb21313e90016df"
     },
     {
       "path": "context/runtime/moodle.yaml",

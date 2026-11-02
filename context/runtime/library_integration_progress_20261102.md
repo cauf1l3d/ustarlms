@@ -58,3 +58,21 @@ Tool pin updated; candidate877 archive/43021a69 is superseded and must not be de
 Final qualification includes25 native cases,36 browser scenes, real authenticated Library pages,
 exact104→108 upgrade/repeat and read-only historical projections, actual UID33/root transaction.
 All production status remains owner2150/1100; no deploy, merge, provider send or SSH performed.
+
+Visual inspection of actual CI PNGs (catalog desktop light, offer mobile dark, mine mobile light,
+manage desktop dark) found a real density defect: inherited .u-field flex-basis240px, originally
+for row layouts, reserved240px vertically in column editor forms. Resetting fields to auto basis
+and zero margin, with a browser assertion for visible field height<180px. Palette/typography,
+mobile card layout, keyboard focus and primary-button contrast match current Academy tokens.
+Native2f9 business/upgrade tests continue so any actual failures can be addressed in the same final revision.
+
+Native2f9 result: Library25/25 passed; authenticated7 Library tabs/manage/check GETs and legacy
+redirects passed; no GET attempt write. Full414-case suite exposed3 legacy fixture failures:
+expected104 vs108 tables and2 duplicate ust ar_manager creations after its new fresh-install seed.
+Fixture lookups/counts updated without removing authority/privacy assertions. XMLDB warned on
+2 newly declared CHAR NOT NULL empty defaults (inputhash/submissionhash); removed the defaults,
+with a new source check observed RED on inputhash before correction. This also aligns the exact
+manifest with PostgreSQL's generated no-default schema. Connect native verifier reached accepted
+104-table predecessor and actual0200 upgrade, then failed Git inside root-owned /source bind;
+profile preparation moved to the host --prepare step, matching the existing frozen verifier pattern.
+Candidate2f9/94309812 is superseded; do not install. No production operation occurred.

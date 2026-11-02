@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "e41b9d746870b2dea027478955e12ce5b63af166",
+    "moodle/local/ustar": "d1ddc4995035d017c978ab1fc6f4ea7cb77c413c",
     "moodle/theme/ustar": "d7de53fc6658e81c7b41e7478ba960ac0f9d2b68"
   },
   "versions": {
@@ -1349,7 +1349,7 @@
     },
     {
       "path": "moodle/local/ustar/db/install.xml",
-      "sha256": "0f85d599bb0fa1857f53af65040639dba7d1fbf0b0922c0837a562c7f36bcf3f"
+      "sha256": "e07a94b22b858da93fa3b97150ba7332f89a56f01c4ed35cbb3b072393ab42fd"
     },
     {
       "path": "moodle/local/ustar/db/library_defaults.php",
@@ -1813,7 +1813,7 @@
     },
     {
       "path": "moodle/local/ustar/styles/library.css",
-      "sha256": "a609f4f061581ce04453a36878e3cde3448c20011ddc80e5d245a9a940bb6b1a"
+      "sha256": "a8a164696a9efc09da556f62ed193e1ca3a7511e2479798bdf557da1abee7cb2"
     },
     {
       "path": "moodle/local/ustar/styles/notebook.css",
@@ -2189,7 +2189,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/connect_notification_action_test.php",
-      "sha256": "082cfa2020d13d9293df62092faa59fc6fe3cae93f2c8f715fc5dfcd3e53fb81"
+      "sha256": "c67bc1398d28570293c172584618d4884eb435c9523016952ea13ac8f014348a"
     },
     {
       "path": "moodle/local/ustar/tests/connect_notification_test.php",
@@ -2265,7 +2265,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/library_access_test.php",
-      "sha256": "da4dc5724b00ee4393cd27759ae1e283bb7efec91f77d99b1de9e83ccc32b255"
+      "sha256": "6a55fbd7a0293f77e1c7f8d529f00c28d15e45c1b1943642f893ab6fc9477c48"
     },
     {
       "path": "moodle/local/ustar/tests/library_assessment_test.php",
@@ -2301,7 +2301,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/organization_identity_test.php",
-      "sha256": "fab39bf6d4326267772bb8d7cad810a830be4e66e14f05f70451be62803335a5"
+      "sha256": "115b343d7710619f1bc9f105aa4748df22a10e4e25974260347169dff1e9ae44"
     },
     {
       "path": "moodle/local/ustar/tests/query_batching_test.php",

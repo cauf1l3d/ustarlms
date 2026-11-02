@@ -2211,7 +2211,7 @@
         <FIELD NAME="maxattempts" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="3" />
         <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" DEFAULT="draft" />
         <FIELD NAME="revision" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="1" />
-        <FIELD NAME="inputhash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" DEFAULT="" />
+        <FIELD NAME="inputhash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
         <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
@@ -2238,7 +2238,7 @@
         <FIELD NAME="passpercent" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="100" />
         <FIELD NAME="maxattempts" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="3" />
         <FIELD NAME="answersjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="submissionhash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" DEFAULT="" />
+        <FIELD NAME="submissionhash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="idempotencykey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="startedat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
         <FIELD NAME="submittedat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />

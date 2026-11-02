@@ -301,7 +301,8 @@ html[data-ustar-theme="dark"] .u-library__tab.is-active {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  flex: 1 1 240px;
+  flex: 0 0 auto;
+  margin: 0;
   font-size: 14px;
 }
 

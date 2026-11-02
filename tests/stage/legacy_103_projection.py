@@ -11,12 +11,12 @@ assert len(PREFIX)==len('fresh_')
 
 def main():
     original=old.query(old.db_query('fresh_'))
-    old.role.c.require(len(original['tables'])==104 and original['addons']['local_ustar']=='2026110100',
+    old.role.c.require(len(original['tables'])==108 and original['addons']['local_ustar']=='2026110200',
         'actual_route_access_schema_required')
     old.role.c.require(old.query("SELECT count(*)::int FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'histw\\_%';")==0,
         'historical_projection_exists')
     sql("DO $clone$ DECLARE item record; field record; target text; seq text; BEGIN FOR item IN SELECT tablename FROM pg_tables "
-        "WHERE schemaname='public' AND tablename LIKE 'fresh\\_%' AND tablename <> 'fresh_local_ustar_route_access' ORDER BY tablename "
+        "WHERE schemaname='public' AND tablename LIKE 'fresh\\_%' AND tablename NOT IN ('fresh_local_ustar_route_access','fresh_local_ustar_library_offer','fresh_local_ustar_library_grant','fresh_local_ustar_library_assessment','fresh_local_ustar_library_attempt') ORDER BY tablename "
         "LOOP target:='histw_'||substring(item.tablename from 7); "
         "EXECUTE format('CREATE TABLE %I (LIKE %I INCLUDING ALL)',target,item.tablename); "
         "EXECUTE format('INSERT INTO %I SELECT * FROM %I',target,item.tablename); "
@@ -30,6 +30,8 @@ def main():
         "END LOOP; END IF; END LOOP; END $clone$;"
         "ALTER TABLE histw_local_ustar_route_versions DROP COLUMN accesspolicyjson;"
         "DELETE FROM histw_task_scheduled WHERE classname='\\local_ustar\\task\\reconcile_route_access';"
+        "DELETE FROM histw_task_scheduled WHERE classname='\\local_ustar\\task\\sync_library_quick_checks';"
+        "UPDATE histw_config_plugins SET value='2026102700' WHERE plugin='theme_ustar' AND name='version';"
         "UPDATE histw_config_plugins SET value='2026102900' WHERE plugin='local_ustar' AND name='version';")
     original_query=old.query
     try:
@@ -45,6 +47,6 @@ def main():
         sql("DO $drop$ DECLARE item record; BEGIN FOR item IN SELECT tablename FROM pg_tables WHERE schemaname='public' "
             "AND tablename LIKE 'histw\\_%' LOOP EXECUTE format('DROP TABLE %I CASCADE',item.tablename); END LOOP; END $drop$;")
     old.role.c.require(old.stable(original)==old.stable(old.query(old.db_query('fresh_'))),'actual_candidate_changed')
-    print('FROZEN2900_HISTORICAL_PROJECTION=PASS current104_untouched=true')
+    print('FROZEN2900_HISTORICAL_PROJECTION=PASS current108_untouched=true')
 
 if __name__=='__main__':main()

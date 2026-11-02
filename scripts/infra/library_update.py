@@ -19,7 +19,7 @@ from connect_con02_contract import Refusal, require, sha, verify_schema_profile,
 from connect_con02_state import capture, descriptor, replace, private_directory, sync
 from connect_academy_installer import db_query
 
-APPLICATION='6f8f85d56ca72b9e2ac3f312ad1723d83c83efd7'
+APPLICATION='a025caa10be1176d2040f3bb4b1104a18ef0be03'
 WORKER='267e55874eb8f6c36259d748f28a2c636adc9810'
 BASELINES=('2150affe7e2964a1056468cce0e438f9e2f91dcb',)
 WEB='opt/ustar/data/moodle/public/public'
@@ -148,8 +148,8 @@ class Host:
         self.run(['docker','exec','-u','33:33',self.ids['web'],'php','-d','memory_limit=512M',
             '-d','sendmail_path=/bin/false','-d','opcache.enable_cli=0','/var/www/html/admin/cli/upgrade.php','--non-interactive'],timeout=600)
     def setup_library(self):
-        for command in ('/var/www/html/public/local/ustar/cli/library_offer_seed.php',
-                        '/var/www/html/public/local/ustar/cli/library_quick_sync.php',
+        for command in ('/var/www/html/public/local/ustar/cli/library_quick_sync.php',
+                        '/var/www/html/public/local/ustar/cli/library_offer_seed.php',
                         '/var/www/html/admin/cli/purge_caches.php'):
             self.run(['docker','exec','-u','33:33',self.ids['web'],'php','-d','sendmail_path=/bin/false',command],timeout=300)
         self.run(['docker','exec','-u','33:33',self.ids['web'],'php',

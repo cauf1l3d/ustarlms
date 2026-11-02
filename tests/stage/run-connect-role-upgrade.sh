@@ -38,4 +38,11 @@ USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifa
 USTAR_STAGE_PREFIX=botold_ php /source/tests/stage/schema_snapshot.php > /artifacts/library-repeat.json
 cmp /artifacts/library-upgraded.json /artifacts/library-repeat.json
 python3 /source/tests/stage/library_native.py --verify
+# Definitions precede offers; a second bootstrap pass must be a byte-for-byte no-op.
+for library_pass in first repeat; do
+    USTAR_STAGE_PREFIX=botold_ php public/local/ustar/cli/library_quick_sync.php > "/artifacts/library-sync-$library_pass.log" 2>&1
+    USTAR_STAGE_PREFIX=botold_ php public/local/ustar/cli/library_offer_seed.php > "/artifacts/library-seed-$library_pass.log" 2>&1
+    USTAR_STAGE_PREFIX=botold_ php -r 'define("CLI_SCRIPT",true); require "/stage/moodle/config.php"; $rows=[];foreach(["offer","grant","assessment","attempt"] as $suffix){$rows[$suffix]=array_values($DB->get_records("local_ustar_library_".$suffix,[],"id"));}echo json_encode($rows,JSON_UNESCAPED_UNICODE);' > "/artifacts/library-bootstrap-$library_pass.json"
+done
+cmp /artifacts/library-bootstrap-first.json /artifacts/library-bootstrap-repeat.json
 php admin/cli/purge_caches.php > /artifacts/library-purge.log 2>&1

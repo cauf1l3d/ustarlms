@@ -1519,7 +1519,7 @@
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
       "size": 19844,
-      "sha256": "0c3bda423296b7e3f3f309a273d287b9443388ea61786439ceea6413845f235d"
+      "sha256": "2a96dea4e21544214fb0e059f0096a97d177606d58f2e8668927f405dc021ad8"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3042,8 +3042,8 @@
     {
       "path": "context/runtime/library_integration_progress_20261102.md",
       "domain": "runtime",
-      "size": 4367,
-      "sha256": "2d47a556cb08f4e779fc2952cd63c5fb4f1a1a30823c52607f9c1b411954b75d"
+      "size": 5629,
+      "sha256": "2e101c4f2fdae7540911d5d3597b8d2138dc341152f23feb09ca96d22252b7e9"
     },
     {
       "path": "context/runtime/moodle.yaml",

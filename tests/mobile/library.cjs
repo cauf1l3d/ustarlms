@@ -28,7 +28,7 @@ const server=http.createServer((req,res)=>{const u=new URL(req.url,'http://fixtu
   await page.setViewportSize({width,height:900});await page.goto('http://127.0.0.1:'+server.address().port+'/?tab='+tab+'&theme='+color);
   assert.equal(await page.locator('h1').count(),1,'one title');
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'no horizontal overflow '+[width,color,tab]);
-  for(const box of await page.locator('button.u-btn').all()) { const rect=await box.boundingBox();if(rect)assert(rect.height>=43,'touch control at least44px'); }
+  for(const box of await page.locator('button.u-btn:visible').all()) { const rect=await box.boundingBox();if(rect)assert(rect.height>=43,'touch control at least44px '+JSON.stringify({width,color,tab,rect,text:await box.textContent()})); }
   if(tab==='offer') {assert.equal(await page.locator('form [name=price]').inputValue(),'10');assert.equal(await page.locator('form [name=revision]').inputValue(),'123');assert.equal(await page.locator('button').textContent(),'Открыть за 10 USCOIN');}
   await page.keyboard.press('Tab');assert(await page.evaluate(()=>document.activeElement!==document.body),'keyboard focus');
   if(width!==768 && ['mine','catalog','offer','manage'].includes(tab)) await page.screenshot({path:out+'/library-'+tab+'-'+width+'-'+color+'.png',fullPage:true});

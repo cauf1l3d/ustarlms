@@ -23,14 +23,14 @@ def sql(command):
 def main():
     if ROOT!=Path('/source') or not Path('/stage/moodle/config.php').is_file():raise ValueError('isolated_stage_required')
     original=query(db_query('fresh_'))
-    if len(original['tables'])!=104:raise ValueError('actual_route_access_schema_required')
+    if len(original['tables'])!=108 or original['addons']['local_ustar']!='2026110200':raise ValueError('actual_library_schema_required')
     if query("SELECT count(*)::int FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'histx\\_%';"):
         raise ValueError('historical_projection_exists')
     # LIKE copies serial defaults verbatim. Each historical plugin table needs its
     # own correctly named sequence so the frozen default-name assertions stay strict.
     sql("DO $clone$ DECLARE item record; field record; target text; seq text; BEGIN FOR item IN SELECT tablename FROM pg_tables "
         "WHERE schemaname='public' AND tablename LIKE 'fresh\\_%' AND tablename NOT IN "
-        "('fresh_local_ustar_conn_dialogs','fresh_local_ustar_conn_actions','fresh_local_ustar_conn_updates','fresh_local_ustar_route_access') ORDER BY tablename "
+        "('fresh_local_ustar_conn_dialogs','fresh_local_ustar_conn_actions','fresh_local_ustar_conn_updates','fresh_local_ustar_route_access','fresh_local_ustar_library_offer','fresh_local_ustar_library_grant','fresh_local_ustar_library_assessment','fresh_local_ustar_library_attempt') ORDER BY tablename "
         "LOOP target:='histx_'||substring(item.tablename from 7); "
         "EXECUTE format('CREATE TABLE %I (LIKE %I INCLUDING ALL)',target,item.tablename); "
         "EXECUTE format('INSERT INTO %I SELECT * FROM %I',target,item.tablename); "
@@ -44,6 +44,8 @@ def main():
         "END LOOP; END IF; END LOOP; END $clone$;"
         "ALTER TABLE histx_local_ustar_route_versions DROP COLUMN accesspolicyjson;"
         "DELETE FROM histx_task_scheduled WHERE classname='\\local_ustar\\task\\reconcile_route_access';"
+        "DELETE FROM histx_task_scheduled WHERE classname='\\local_ustar\\task\\sync_library_quick_checks';"
+        "UPDATE histx_config_plugins SET value='2026102700' WHERE plugin='theme_ustar' AND name='version';"
         "UPDATE histx_config_plugins SET value='2026102803' WHERE plugin='local_ustar' AND name='version';")
     try:
         historical=query(db_query('histx_'))
@@ -63,7 +65,7 @@ def main():
         sql("DO $drop$ DECLARE item record; BEGIN FOR item IN SELECT tablename FROM pg_tables WHERE schemaname='public' "
             "AND tablename LIKE 'histx\\_%' LOOP EXECUTE format('DROP TABLE %I CASCADE',item.tablename); END LOOP; END $drop$;")
     if stable(original)!=stable(query(db_query('fresh_'))):raise ValueError('actual_fresh_schema_changed')
-    print('FROZEN100_HISTORICAL_PROJECTION=PASS actual_route_access_schema_untouched=true')
+    print('FROZEN100_HISTORICAL_PROJECTION=PASS actual_library108_schema_untouched=true')
 
 
 if __name__=='__main__':main()

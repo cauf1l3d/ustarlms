@@ -105,6 +105,13 @@ jobs:
       - run: npm ci --prefix tests/mobile
       - run: cd tests/mobile && npx playwright install --with-deps chromium
       - run: npm test --prefix tests/mobile
+      - name: Library browser evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: library-browser-${{ matrix.php }}
+          path: artifacts/library-browser/
+          if-no-files-found: ignore
       - run: node tests/release_20260912/course_studio_browser.cjs
       - name: Studio viewport resize handoff preserves compact canvas height
         run: USTAR_STUDIO_DELAY_RESIZE=1 node tests/release_20260912/course_studio_browser.cjs

@@ -43,3 +43,18 @@ Final source review fixed fresh-install manager role preparation through positio
 regressions; candidate application6f8f85d56ca72b9e2ac3f312ad1723d83c83efd7 supersedes440f.
 Local isolated stdio interpreter/dependencies repaired in scratch; all3 prior dependency failures
 now pass without repository changes. New fullRC will qualify the exact app/tool pair.
+
+FullRC877 source PHP8.2/8.3 passed Python/DOM and existing60 Chromium scenes; Library touch test
+failed on collapsed details controls included by the test selector. Restricting touch assertions to
+visible buttons; hidden controls are not touch targets. Added diagnostic context to any future failure.
+Review also fixed Library header labels, scoped shared CSS to the Library wrapper and preserved
+correct-answer indices when optional editor answer slots are blank. Native regression added.
+Historical100/103 validators now receive declared copies excluding exactly the4 Library tables,
+Library task and metadata version changes; real108 schema remains untouched and separately verified.
+Old task projection remains strict1100; a separate explicit0200 projection verifies both declared tasks.
+
+Reviewed UI/editor correction application is a025caa10be1176d2040f3bb4b1104a18ef0be03.
+Tool pin updated; candidate877 archive/43021a69 is superseded and must not be delivered.
+Final qualification includes25 native cases,36 browser scenes, real authenticated Library pages,
+exact104→108 upgrade/repeat and read-only historical projections, actual UID33/root transaction.
+All production status remains owner2150/1100; no deploy, merge, provider send or SSH performed.

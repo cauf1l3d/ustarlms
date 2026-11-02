@@ -18,6 +18,7 @@ Current facts/limits: [receipt](../runtime/scorm_tracking_20261102.json).
 
 The companion38fa5e37 checks the fixed original f879 installation. If committed but not
 finished, it completes only that phase through loopback8082 before acquiring overlay locks.
-An active installation is checked without restarting saved worker states. The overlay
+An active root-private receipt is accepted as historical; cron backoff and worker states
+are not replayed. Current source/control integrity is verified by the overlay. The overlay
 changes only the helper and its existing native test, preserving1100/2700 and all104 tables.
 No SSH, provider sends, subagents or merge.

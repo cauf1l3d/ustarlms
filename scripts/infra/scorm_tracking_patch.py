@@ -86,7 +86,7 @@ def runtime():
     m.Host=Host
     return m
 
-def previous_finish(*,apply):
+def previous_finish(root,*,apply):
     """The qualified companion completes only committed f879, with all its native DB guards."""
     script=Path(sys.argv[0]).absolute().with_name('finish.py')
     image=capture(script)
@@ -94,6 +94,16 @@ def previous_finish(*,apply):
         raise ValueError('qualified_finish_companion_required')
     meta=image['metadata']
     if meta['uid']!=0 or meta['mode']!=0o600:raise ValueError('private_root_artifact_required')
+    journal=Path(root)/('var/lib/ustar-route-review-update-'+BASELINE[:12])/'state.json'
+    before=capture(journal);folder=journal.parent.lstat()
+    if (before['kind']!='file' or before['metadata']['uid']!=0 or before['metadata']['mode']!=0o600
+            or folder.st_uid!=0 or stat.S_IMODE(folder.st_mode)!=0o700):
+        raise ValueError('private_previous_journal_required')
+    phase=json.loads(before['raw']).get('phase')
+    # A completed receipt is historical: normal cron backoff and worker state can change.
+    # The overlay independently verifies all614 source files and preserves current controls.
+    if phase=='active':return {'phase':'active','host_changes':False}
+    if phase!='publication_committed':raise ValueError('previous_update_finish_required')
     def run(options):
         result=subprocess.run([sys.executable,'-I','-B',str(script),*options],
             stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=240)
@@ -126,7 +136,7 @@ def main(argv=None,*,bundle=None):
         state=operation.saved()
         # Finish f879 before acquiring its shared managed locks; no migrations or source changes are repeated.
         if (not state or state['phase']=='rolled_back') and not args.recover:
-            previous=previous_finish(apply=args.upgrade)
+            previous=previous_finish(operation.root,apply=args.upgrade)
         else:previous=None
         result=operation.check() if args.check else operation.recover() if args.recover else operation.apply()
         if previous:result['previous_update']=previous['phase']

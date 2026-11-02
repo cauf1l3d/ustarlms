@@ -59,7 +59,7 @@
     "worker_changed": false,
     "previous_finish_companion": "scripts/infra/route_review_finish.py",
     "finish_sha256": "38fa5e373a319e8bba4bb0cee3e69d9e5930432bee9e85b6c9dca9ff2a4aa76d",
-    "companion_behavior": "Check first; only finish publication_committed when needed. Active previous installation is not reactivated.",
+    "companion_behavior": "The protected active predecessor receipt is historical; do not replay its cron backoff or worker states. Only publication_committed uses the qualified checker/recoverer. Overlay independently verifies all614 source files and current preserved controls.",
     "recovery": "Source-only rollback; business learning and role assignments are never restored from a database copy."
   },
   "local_checks": {

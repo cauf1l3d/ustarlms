@@ -124,15 +124,31 @@ class Transaction(unittest.TestCase):
         self.assertEqual(1,self.host.calls.count('stop'))
 
     def test_completed_previous_update_does_not_restart_its_workers(self):
-        from types import SimpleNamespace
         script=self.root/'update.py';script.write_bytes(b'fixture');script.chmod(0o600)
         (self.root/'finish.py').write_bytes((ROOT/'scripts/infra/route_review_finish.py').read_bytes())
         (self.root/'finish.py').chmod(0o600)
-        def readonly(args,**kwargs):
-            if '--recover' in args:raise AssertionError('Already active must not restore previous worker states again')
-            return SimpleNamespace(returncode=0,stdout=b'{"phase":"active"}\n')
-        with patch('sys.argv',[str(script)]),patch.object(self.fix.subprocess,'run',side_effect=readonly):
-            self.assertEqual('active',self.fix.previous_finish(apply=True)['phase'])
+        folder=self.root/('var/lib/ustar-route-review-update-'+self.fix.BASELINE[:12]);folder.mkdir(mode=0o700)
+        (folder/'state.json').write_text('{"phase":"active"}\n');(folder/'state.json').chmod(0o600)
+        with patch('sys.argv',[str(script)]),patch.object(self.fix.subprocess,'run',side_effect=AssertionError('Historical task/worker state must not be replayed')):
+            self.assertEqual('active',self.fix.previous_finish(self.root,apply=True)['phase'])
+
+    def test_only_unfinished_committed_previous_update_uses_qualified_recovery(self):
+        from types import SimpleNamespace
+        script=self.root/'update.py';script.write_bytes(b'fixture');script.chmod(0o600)
+        (self.root/'finish.py').write_bytes((ROOT/'scripts/infra/route_review_finish.py').read_bytes());(self.root/'finish.py').chmod(0o600)
+        folder=self.root/('var/lib/ustar-route-review-update-'+self.fix.BASELINE[:12]);folder.mkdir(mode=0o700)
+        journal=folder/'state.json';journal.write_text('{"phase":"publication_committed"}\n');journal.chmod(0o600)
+        def finish(args,**kwargs):
+            if '--recover' in args:
+                self.assertIn('--acknowledge-outage',args)
+                journal.write_text('{"phase":"active"}\n')
+                return SimpleNamespace(returncode=0,stdout=b'{"phase":"active"}\n')
+            return SimpleNamespace(returncode=0,stdout=b'{"phase":"ready_to_finish"}\n')
+        with patch('sys.argv',[str(script)]),patch.object(self.fix.subprocess,'run',side_effect=finish):
+            self.assertEqual('ready_to_finish',self.fix.previous_finish(self.root,apply=False)['phase'])
+            self.assertEqual('publication_committed',json.loads(journal.read_text())['phase'])
+            self.assertEqual('active',self.fix.previous_finish(self.root,apply=True)['phase'])
+            self.assertEqual('active',json.loads(journal.read_text())['phase'])
 
     def test_actual_uid33_and_root_group_survive(self):
         if os.environ.get('USTAR_REQUIRE_ROOT_OWNER_FIXTURE')!='1':self.skipTest('mandatory sudo CI checks actual UID33')

@@ -3324,8 +3324,8 @@
     {
       "path": "context/runtime/scorm_tracking_20261102.json",
       "domain": "runtime",
-      "size": 3460,
-      "sha256": "5064a6f4a2e086bd1ae0a8f092c33ec54980a73ae820eb00296c1739889c799f"
+      "size": 3604,
+      "sha256": "ce46984c75b5a644a5e3a36ee3d444e782b27a93ff2678e71f007c674330364f"
     },
     {
       "path": "context/runtime/server-extra/20261017T095914Z-0411e053/README.md",
@@ -3750,8 +3750,8 @@
     {
       "path": "context/tasks/scorm_tracking_fix_20261102.md",
       "domain": "tasks",
-      "size": 1521,
-      "sha256": "d206c3625e7561c77693df54708a8704824b14a712a2c22b9ef970fdf262e8fa"
+      "size": 1615,
+      "sha256": "411661b229265ee374e5deb0c69ef8ac585951d9f6f56c1b4d8cb56118bff076"
     }
   ]
 }

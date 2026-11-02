@@ -1,0 +1,42 @@
+name: library
+source_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
+title: 'Библиотека: дополнительные знания, товары и доступ'
+services:
+- moodle/local/ustar/classes/library_access.php
+- moodle/local/ustar/classes/library_offer.php
+- moodle/local/ustar/classes/library_grant.php
+- moodle/local/ustar/classes/library_store.php
+- moodle/local/ustar/classes/library_assessment.php
+- moodle/local/ustar/classes/library_quick_sync.php
+- moodle/local/ustar/classes/library_runtime.php
+- moodle/local/ustar/classes/library_view.php
+tables:
+- local_ustar_library_offer
+- local_ustar_library_grant
+- local_ustar_library_assessment
+- local_ustar_library_attempt
+entry_points:
+- moodle/local/ustar/library.php
+- moodle/local/ustar/library_manage.php
+- moodle/local/ustar/library_check.php
+rules:
+- Existing content/catalog/economy/native writers remain canonical
+- Grants never bypass employment, publication or source audience
+- Optional checks write marks only, never route/evidence/coins
+- Only real actor, scope, revision, locks and idempotency authorise writes
+owned:
+- local_ustar_library_offer
+- local_ustar_library_grant
+- local_ustar_library_assessment
+- local_ustar_library_attempt
+borrowed_read_only:
+- local_ustar_content
+- local_ustar_catalog
+- local_ustar_route_progress
+canonical_writers:
+  coins: economy
+  content: content_admin
+  catalog: catalog
+  mandatory_route: route_model
+candidate_only: true
+source_reconciled_at: '2026-11-02'

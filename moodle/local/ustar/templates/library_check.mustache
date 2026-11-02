@@ -1,0 +1,70 @@
+{{!
+    Library — take an assessment.
+    Mark only: no USCOIN, no XP, no evidence. Owner decision Q7.
+}}
+<div class="u-library">
+
+  <header class="u-library__head">
+    <div class="u-library__headmain">
+      <p class="u-pagehead__eyebrow">Проверка знаний</p>
+      <h1>{{title}}</h1>
+      <p class="u-library__lede">
+        Порог {{passpercent}}% · не более {{maxattempts}} попыток.
+        Результат сохраняется как отметка и не начисляет USCOIN.
+      </p>
+    </div>
+    {{#hasbest}}
+    <div class="u-library__wallet">
+      <span class="u-library__walletlabel">Лучший результат</span>
+      <strong>{{bestpercent}}%</strong>
+      {{#bestpassed}}<span class="u-badge u-badge--success">Пройдено</span>{{/bestpassed}}
+    </div>
+    {{/hasbest}}
+  </header>
+
+  {{#notice}}<div class="u-alert u-alert--danger" role="status">{{notice}}</div>{{/notice}}
+
+  {{#blocked}}
+  <div class="u-empty"><p>{{blocked}}</p></div>
+  {{/blocked}}
+
+  {{^blocked}}
+    {{#hasquestions}}{{#writable}}
+    <form method="post" action="{{actionurl}}" class="u-library__checkform">
+      <input type="hidden" name="sesskey" value="{{sesskey}}">
+      <input type="hidden" name="action" value="submit">
+      <input type="hidden" name="attemptid" value="{{attemptid}}">
+
+      <ol class="u-checklist">
+        {{#questions}}
+        <li class="u-checkitem">
+          <fieldset>
+            <legend>
+              <span class="u-checkitem__num">{{number}}</span>
+              <span>{{text}}</span>
+            </legend>
+            {{#options}}
+            <label class="u-choice" for="{{id}}">
+              <input type="radio" id="{{id}}" name="{{name}}" value="{{value}}" required>
+              <span>{{label}}</span>
+            </label>
+            {{/options}}
+          </fieldset>
+        </li>
+        {{/questions}}
+      </ol>
+
+      <div class="u-library__checkactions">
+        <button class="u-btn u-btn--primary" type="submit">Завершить проверку</button>
+        <a class="u-btn" href="{{backurl}}">Вернуться в библиотеку</a>
+      </div>
+    </form>
+    {{/writable}}{{/hasquestions}}
+
+    {{^hasquestions}}
+    {{#canstart}}<form method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="start"><button class="u-btn u-btn--primary" type="submit">Начать проверку</button></form>{{/canstart}}
+    {{^writable}}<p>В режиме просмотра прохождение недоступно.</p>{{/writable}}
+    {{/hasquestions}}
+  {{/blocked}}
+
+</div>

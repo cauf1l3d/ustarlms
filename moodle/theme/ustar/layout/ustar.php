@@ -701,7 +701,7 @@ if (class_exists('\local_ustar\communication')) {
 }
 
 // Layouts run after STATE_PRINTING_HEADER. Pass classes to body_attributes().
-$widthclass = in_array($pagepath, ['/local/ustar/notebook.php', '/local/ustar/catalog.php', '/local/ustar/messages.php'], true)
+$widthclass = in_array($pagepath, ['/local/ustar/notebook.php', '/local/ustar/library.php', '/local/ustar/catalog.php', '/local/ustar/messages.php'], true)
     ? 'u-personal-wide' : 'u-standard-width';
 
 $preset = (string)get_user_preferences('local_ustar_preset', 'yellow', (int)$USER->id);
@@ -728,6 +728,27 @@ if (class_exists('\local_ustar\employment') && !empty($USER->id)
         'label' => 'Мой профиль', 'short' => 'Профиль', 'url' => $homeurl->out(false),
         'icon' => $icons['home'], 'active' => true,
     ]];
+}
+
+// One employee Library entry; authoring tools retain their own existing destinations.
+if (get_config('local_ustar','library_rail') && class_exists('\\local_ustar\\library_access')
+        && \local_ustar\library_access::eligible((int)$USER->id)) {
+    $unified=[];$inserted=false;
+    $libraryactive=in_array($pagepath,['/local/ustar/library.php','/local/ustar/library_check.php','/local/ustar/library_manage.php'],true);
+    foreach ($navitems as $item) {
+        $target=parse_url($item['url'],PHP_URL_PATH);
+        if (in_array($target,['/local/ustar/knowledge.php','/local/ustar/catalog.php'],true)
+                && !str_contains($item['url'],'editor=')) {
+            if (!$inserted) { $unified[]=['label'=>'Библиотека','short'=>'Библиотека','url'=>(new moodle_url('/local/ustar/library.php'))->out(false),
+                'icon'=>$icons['knowledge'],'active'=>$libraryactive];$inserted=true; }
+            continue;
+        }
+        $unified[]=$item;
+    }
+    if (!$inserted) { $unified[]=['label'=>'Библиотека','short'=>'Библиотека','url'=>(new moodle_url('/local/ustar/library.php'))->out(false),
+        'icon'=>$icons['knowledge'],'active'=>$libraryactive]; }
+    if ($libraryactive) { foreach ($unified as &$item) { if ($item['label']!=='Библиотека') { $item['active']=false; } }unset($item); }
+    $navitems=$unified;
 }
 
 $mobilenavitems = array_values(array_filter($navitems, static function(array $item): bool {

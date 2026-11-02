@@ -43,3 +43,9 @@ $string['privacy:metadata:connect:bot'] = 'Краткоживущие черно
 
 $string['task_route_access'] = 'Закрывать истёкшие окна повторения маршрута';
 $string['privacy:metadata:route_access'] = 'Окна повторения учебной точки: сотрудник, версия, срок и подтверждённое закрытие доступа.';
+
+$string['libraryerror'] = 'Ошибка Библиотеки: {$a}';
+$string['librarypublish'] = 'Manage Library offers';
+$string['librarygrant'] = 'Grant Library access within scope';
+$string['libraryassess'] = 'Author optional Library checks';
+$string['privacy:metadata:library'] = 'Library access history and optional assessment attempts.';

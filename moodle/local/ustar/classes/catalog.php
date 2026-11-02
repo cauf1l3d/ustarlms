@@ -256,6 +256,7 @@ final class catalog {
             }
             self::snapshot($record, $actorid);
             self::audit((int)$record->id, 'catalog_saved', $actorid, ['itemtype' => $type]);
+            if ($type === self::TYPE_PRODUCT) { library_quick_sync::queue((int)$record->id); }
             $tx->allow_commit();
             return $record;
         } finally {

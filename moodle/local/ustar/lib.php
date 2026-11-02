@@ -208,19 +208,16 @@ function local_ustar_pluginfile(
 
 
     if (in_array($filearea, ['catalog_image', 'catalog_source'], true)) {
-        if (!is_siteadmin((int)$USER->id) && !\local_ustar\catalog::can_manage((int)$USER->id)) {
-            if (!\local_ustar\capabilities::has((int)$USER->id, \local_ustar\capabilities::LEARNING_USE)
-                    || !\local_ustar\catalog_mastery::has_access((int)$USER->id)) {
-                return false;
-            }
-        }
-
         if (!$args) {
             return false;
         }
 
         $itemid = (int)array_shift($args);
         if ($itemid <= 0 || !$args || !\local_ustar\catalog::get($itemid)) {
+            return false;
+        }
+
+        if (!\local_ustar\library_runtime::catalog_allowed($itemid, (int)$USER->id, $filearea === 'catalog_image')) {
             return false;
         }
 
@@ -552,6 +549,9 @@ function local_ustar_after_require_login($courseorid, $autologinguest, $cm, $set
     $checking = true;
     try {
         $modname = $cm->modname ?? get_coursemodule_from_id(null, (int)$cm->id)->modname;
+        if (!\local_ustar\library_runtime::native_allowed((int)$cm->id,(int)$USER->id)) {
+            \local_ustar\library_access::fail('Доступ к материалу можно открыть в Библиотеке.');
+        }
         if ($modname !== 'scorm') { return; }
         // Remediation has its own independently authorised lifecycle window.
         $launch = $SESSION->ustar_scorm_route ?? [];
@@ -559,7 +559,8 @@ function local_ustar_after_require_login($courseorid, $autologinguest, $cm, $set
             \local_ustar\assessment_lifecycle::validate_remediation_context((int)$USER->id,$launch);
             return;
         }
-        if (\local_ustar\route_point_access::allowed_cmid((int)$USER->id,(int)$cm->id) === false) {
+        if (\local_ustar\route_point_access::allowed_cmid((int)$USER->id,(int)$cm->id) === false
+                && !\local_ustar\library_runtime::independent_native_grant((int)$cm->id,(int)$USER->id)) {
             throw new moodle_exception('Повторный доступ к материалу закрыт. Продолжите обучение в своём маршруте.');
         }
     } finally { $checking = false; }

@@ -15,8 +15,7 @@ Owner1Nov разрешил merge110/111; объединены после FullRC.
 App2900/theme2700 и worker267e5587 уже установлены владельцем; merge не deploy.
 Задачи/возврат/фото/читаемость приняты. Owner принял прямой SCORM запуск51332a21;
 Owner2Nov: app1100/2150affe, toolb5 active; SCORM/переходы приняты.
-[Receipt](context/runtime/scorm_tracking_owner_20261102.json). Теперь LEARN-ASSESS-01:
-course30 → конкретный Quiz в точке; затем PERF-01: пассивный рабочий день. Остальные процессы с руководством
+[Receipt](context/runtime/scorm_tracking_owner_20261102.json). Quiz из точки принят владельцем2Nov. Сейчас LIBRARY-01: объединение Библиотеки; затем PERF-01. Остальные процессы с руководством
 с2Nov; HTTPS/Mini App ждут согласования. Старые cron19/failed2 не сбрасывать.
 
 Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,

@@ -743,4 +743,36 @@ class assignment {
 
         return $plan;
     }
+
+    /** Enrol only after an independently authorised optional Library launch. Keeps existing suspensions. */
+    public static function enrol_library_content(int $contentid,int $userid): void {
+        global $DB,$CFG;
+        library_access::require_actor($userid);
+        $content=$DB->get_record('local_ustar_content',['id'=>$contentid,'sourcekind'=>content::SOURCE_MOODLE],'*',MUST_EXIST);
+        if (!content::can_access_record($content,$userid)) { library_access::fail('Доступ к материалу закрыт.'); }
+        require_once($CFG->libdir.'/enrollib.php');
+        $cm=get_coursemodule_from_id(null,(int)$content->cmid,0,false,MUST_EXIST);
+        if ((int)$cm->course!==(int)$content->courseid) { library_access::fail('Материал требует проверки настройки курса.'); }
+        if ($cm->modname==='scorm') {
+            scorm_route_launch::ensure_tracking($cm,$DB->get_record('user',['id'=>$userid],'*',MUST_EXIST));return;
+        }
+        $manual=enrol_get_plugin('manual');$instance=null;$disabled=false;
+        if (!$manual) { library_access::fail('Ручное зачисление Moodle отключено.'); }
+        foreach (enrol_get_instances((int)$cm->course,false) as $candidate) {
+            if ($candidate->enrol!=='manual') { continue; }
+            if ((int)$candidate->status===ENROL_INSTANCE_ENABLED) { $instance=$candidate;break; }
+            $disabled=true;
+        }
+        if (!$instance && $disabled) { library_access::fail('Зачисление на этот курс отключено.'); }
+        $enrolment=$instance ? $DB->get_record('user_enrolments',['enrolid'=>$instance->id,'userid'=>$userid]) : null;
+        if ($enrolment && ((int)$enrolment->status!==ENROL_USER_ACTIVE || (int)$enrolment->timestart>time()
+                || ($enrolment->timeend && (int)$enrolment->timeend<=time()))) { library_access::fail('Зачисление приостановлено или срок доступа не действует.'); }
+        $role=(int)$DB->get_field('role','id',['shortname'=>'student']);
+        if (!$role) { library_access::fail('Не найдена учебная роль Moodle.'); }
+        if (!$instance) { $id=$manual->add_instance(get_course((int)$cm->course),['status'=>ENROL_INSTANCE_ENABLED,'roleid'=>$role]);$instance=$DB->get_record('enrol',['id'=>$id],'*',MUST_EXIST); }
+        if (!$enrolment || !is_enrolled(\context_course::instance((int)$cm->course),$userid,'',true)) {
+            $manual->enrol_user($instance,$userid,$role,$enrolment->timestart??time(),$enrolment->timeend??0,ENROL_USER_ACTIVE);
+            reload_all_capabilities();
+        }
+    }
 }

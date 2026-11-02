@@ -747,14 +747,26 @@ tasks:
   owner_receipt: context/runtime/scorm_tracking_owner_20261102.json
 - id: LEARN-ASSESS-01
   title: Прямой запуск аттестации Студии из точки маршрута
-  status: in_progress
+  status: done
   depends_on: [LEARN-SCORM-02]
   progress: context/runtime/studio_assessment_route_20261102.json
   acceptance:
   - Published point opens the concrete native quiz activity
   - Authoritative quiz pass closes the point; opening alone grants no assessment credit
   - Owner verifies access, submission and continuation
-  current_summary: Course30 menu has no visible assessment. Existing activity_launch/bridge supports direct quiz; configure the native activity selector and verify before changing source. Exact production module/roles not queried.
+  current_summary: Owner2Nov confirmed the test works; direct native Quiz launch accepted.
+
+- id: LIBRARY-01
+  title: Единая Библиотека, доступ и дополнительные проверки знаний
+  status: in_progress
+  depends_on: [LEARN-ASSESS-01]
+  progress: context/runtime/library_integration_progress_20261102.md
+  acceptance:
+  - One Library navigation entry preserves existing catalog, saved files and mandatory route
+  - Purchases and scoped grants cannot bypass employment, publication or content audience
+  - Optional checks write marks only; current route/rewards and native results preserved
+  - Exact1100 to0200 upgrade, repeat, actual PG schema and guarded archive qualified
+  current_summary: Imported identical lib01 archives; confirmed and repaired access/store/assessment/schema blockers. Native qualification pending.
 
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade

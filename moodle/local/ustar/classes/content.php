@@ -140,7 +140,13 @@ class content {
      *
      * That prevents accidental publication to the whole company.
      */
-    public static function can_access_record(
+    public static function can_access_record(\stdClass $record, int $userid): bool {
+        return self::audience_allows_record($record, $userid)
+            && library_runtime::content_entitled((int)$record->id, $userid);
+    }
+
+    /** Publication and audience alone; route requirements must not depend on optional purchases. */
+    public static function audience_allows_record(
         \stdClass $record,
         int $userid
     ): bool {

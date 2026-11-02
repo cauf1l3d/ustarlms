@@ -5011,5 +5011,16 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         if (!$dbman->table_exists($access)) { $dbman->create_table($access); }
         upgrade_plugin_savepoint(true, 2026110100, 'local', 'ustar');
     }
+    if ($oldversion < 2026110200) {
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load Library schema'); }
+        foreach (['offer','grant','assessment','attempt'] as $suffix) {
+            $table = $schema->getStructure()->getTable('local_ustar_library_' . $suffix);
+            if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
+        }
+        require_once(__DIR__ . '/library_defaults.php');
+        local_ustar_library_defaults();
+        upgrade_plugin_savepoint(true, 2026110200, 'local', 'ustar');
+    }
 return true;
 }

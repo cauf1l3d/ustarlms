@@ -1669,7 +1669,7 @@ final class route_model {
                 $result['detail'] = 'Текущая опубликованная версия материала USTAR не найдена';
                 return $result;
             }
-            if (!content::can_access_record($item, $userid)) {
+            if (!content::audience_allows_record($item, $userid)) {
                 $result['configured'] = false;
                 $result['detail'] = 'Правила доступа материала не включают этого сотрудника';
                 return $result;

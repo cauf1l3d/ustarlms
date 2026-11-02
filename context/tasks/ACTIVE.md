@@ -1,13 +1,14 @@
 # Активная работа —02.11.2026
 
-## LEARN-ASSESS-01: запуск аттестации Студии
+## LIBRARY-01: единая Библиотека
 
-Owner2Nov установил app2150affe/toolb5ead9cb: active/exit0/active. SCORM открывается,
-завершается и переводит дальше по настройкам. [Принято](../runtime/scorm_tracking_owner_20261102.json).
-Новая проблема: точка открывает /course/view.php?id=30, теста не видно.
-В Студии выбрать конкретный тест в «Учебная активность или тест», убрать курс/дубль
-материала и опубликовать новую версию. Этот native CM путь уже поддерживается.
-[Факты/проверка](../runtime/studio_assessment_route_20261102.json); owner outcome ещё не получен.
+Owner2Nov принял native Quiz и поручил проверить/исправить внешние lib01 архивы,
+объединить знания/каталог/маркетплейс/доступ/мини-проверки, подготовить один архив.
+[План](../../docs/superpowers/plans/2026-11-02-library-unification.md),
+[ход работы](../runtime/library_integration_progress_20261102.md).
+Candidate local/theme0200,108 таблиц; production остаётся app2150affe/1100/theme2700.
+Store выключен по умолчанию, новые награды не вводятся; контент без ACL не раскрывается.
+Ручные фрагменты не устанавливать. Нужны native/infra/дизайн и guarded archive checks.
 
 ## PERF-01: производительность и стабильность обычного рабочего дня
 
@@ -16,7 +17,7 @@ PR110/111 объединены в main после единой FullRC по
 Main5cc02944/app2900; production2150affe/app1100/theme2700, worker267e5587.
 Приложение/worker уже установлены владельцем; merge не означает новый deploy.
 
-После проверки аттестации — пассивное наблюдение: latency, SQL, cron lag и нагрузка
+После Библиотеки — пассивное наблюдение: latency, SQL, cron lag и нагрузка
 в обычный рабочий день. observe.py из frozen9a поддерживает2900; для1100 сначала
 нужен проверенный вариант сборщика. [Builder](../../scripts/infra/build_connect_role_bot_update.py).
 Исходный workday_observer.py остаётся frozen2802/2803. Фактический8h отчёт ещё

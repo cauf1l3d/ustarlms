@@ -2,7 +2,7 @@
   "schema": 1,
   "date_msk": "2026-11-02",
   "task": "LEARN-ASSESS-01",
-  "status": "native_quiz_route_configuration_proposed_owner_verification_pending",
+  "status": "owner_accepted_native_quiz_route",
   "source": "owner screenshot and current-source review",
   "owner_observation": {
     "opened_url": "/course/view.php?id=30",
@@ -31,5 +31,10 @@
   "expected": "The route targets native Quiz; only its authoritative result closes the required assessment. Owner pass/retry/next-step acceptance pending.",
   "source_changes": false,
   "new_archive_required_for_this_configuration": false,
-  "not_proven": "Exact production module visibility/roles and requirement selection need owner verification if the existing direct-CM path does not resolve the issue."
+  "not_proven": "Exact production module visibility/roles and requirement selection need owner verification if the existing direct-CM path does not resolve the issue.",
+  "owner_acceptance": {
+    "date_msk": "2026-11-02",
+    "quote": "да тест работает, отлично переходим дальше",
+    "scope": "Owner accepted the configured test launch. Other assessment edge cases were not separately reported."
+  }
 }

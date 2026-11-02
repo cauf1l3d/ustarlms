@@ -1,0 +1,5 @@
+{{#selectedoffer}}<article class="u-library__section"><p class="u-pagehead__eyebrow">Материал Библиотеки</p><h2>{{title}}</h2><p>{{summary}}</p>
+{{#canlaunch}}<form method="post" action="{{libraryurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="launch"><input type="hidden" name="offerid" value="{{id}}"><button type="submit" class="u-btn u-btn--primary">Открыть материал</button></form>{{/canlaunch}}
+{{^open}}<p class="u-muted">{{lockedtext}}</p>{{/open}}
+{{#canpurchase}}{{#writable}}<form method="post" action="{{libraryurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="purchase"><input type="hidden" name="offerid" value="{{id}}"><input type="hidden" name="price" value="{{price}}"><input type="hidden" name="revision" value="{{revision}}"><input type="hidden" name="nonce" value="{{nonce}}"><button class="u-btn u-btn--primary" type="submit">Открыть за {{price}} USCOIN</button><p class="u-muted">Доступ без ограничения срока. USCOIN спишутся один раз.</p></form>{{/writable}}{{/canpurchase}}
+</article>{{/selectedoffer}}

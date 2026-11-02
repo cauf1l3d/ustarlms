@@ -743,7 +743,7 @@ tasks:
   - Per-point manual/timed advancement and finish destination are versioned
   - Deadline and stale URLs are enforced server-side; assessments keep real results
   qualification: context/runtime/scorm_tracking_20261102.json
-  current_summary: Owner CM104/user132 has savetrack=false and no native result. Scoped Student repair app2150affe/toolb5ead9cb passed all4CI and both native389 suites; exact bounded1100 archive verified; owner install/reopen pending. See context/runtime/scorm_tracking_20261102.json.
+  current_summary: Owner CM104/user132 has savetrack=false and no native result. Scoped Student repair app2150affe/toolb5ead9cb passed all4CI and both native389 suites; exact bounded1100 archive hashes pass on host; owner --check refused generically; readonly exception trace pending, upgrade not run. See context/runtime/scorm_tracking_20261102.json.
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

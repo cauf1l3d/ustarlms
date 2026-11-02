@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "date_msk": "2026-11-02",
-  "status": "qualified_archive_ready_owner_installation_pending",
+  "status": "owner_preflight_refused_pending_readonly_exception_trace",
   "source": "owner_console_and_readonly_CM104_diagnostic_in_current_dialogue",
   "PR": 113,
   "previous_application": "b9f170d89cead30021b0acbfba6ee681cec024f8",
@@ -81,7 +81,8 @@
     "PHP_tracking": "RED missing savetrack -> GREEN scoped role/replay/denials/disabled instance",
     "PHP_direct_launch": "PASS",
     "operator_transactions": "11 current focused tests PASS; actual UID33 root-group case PASS in mandatory sudo CI",
-    "qualification_limit": "An earlier running local full suite imported the old test before the companion signature changed: one stale-import TypeError. Fresh focused suite and clean full CI checkout passed; runtime sources were not changed for that environment artifact."
+    "qualification_limit": "An earlier running local full suite imported the old test before the companion signature changed: one stale-import TypeError. Fresh focused suite and clean full CI checkout passed; runtime sources were not changed for that environment artifact.",
+    "diagnostic_wrapper": "PASS on unchanged delivered envelope: deliberately absent predecessor journal captured as FileNotFoundError/errno2/path; this fixture is not evidence of the production cause."
   },
   "native_CI": {
     "head": "b5ead9cb705cf538fe2134f332cfe5ccd055aa06",
@@ -142,5 +143,20 @@
   "merge_authorized": false,
   "tool_commit": "b5ead9cb705cf538fe2134f332cfe5ccd055aa06",
   "qualification_commit": "b5ead9cb705cf538fe2134f332cfe5ccd055aa06",
-  "owner_retest": "Close the old player; reopen through the authorised route, finish SCORM again, and verify the next eligible point under its published advance policy. No previously unsaved result is credited."
+  "owner_retest": "Close the old player; reopen through the authorised route, finish SCORM again, and verify the next eligible point under its published advance policy. No previously unsaved result is credited.",
+  "owner_preflight": {
+    "archive_checksum": "PASS",
+    "member_checksums": [
+      "INSTALL.json: OK",
+      "finish.py: OK",
+      "update.py: OK"
+    ],
+    "mode": "--check",
+    "phase": "refused",
+    "reason": "scorm_tracking_operation_failed",
+    "upgrade_run": false,
+    "exception_type": null,
+    "cause_confirmed": false,
+    "next": "Verified read-only wrapper traces the caught main exception using type/errno/path/frames only; no secret/config values or source lines."
+  }
 }

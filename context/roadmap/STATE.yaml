@@ -1,11 +1,12 @@
 schema_version: 2
 updated_at: '2026-11-02'
 project: USTAR Academy
-stage: scorm_tracking_preflight_diagnosis
-stage_label: Owner archive hashes pass; readonly preflight refused with a hidden exception
+stage: scorm_tracking_runtime_lock_repair_pending
+stage_label: Owner trace confirms missing runtime install lock; safe recreation and check pending
 current_activity: Owner CM104/course29/user132 has savetrack=false and no native result.
   Scoped Student repair app2150affe/toolb5ead9cb passed all4CI and both native389 suites;
-  owner archive hashes pass but --check refused generically. Trace required before install.
+  owner trace confirms missing /run/ustar-connect-install.lock. Safe atomic creation verified;
+  owner check/upgrade/reopen pending, archive unchanged.
   See context/runtime/scorm_tracking_20261102.json.
 entrypoint: START_HERE.md
 next_task: LEARN-SCORM-02
@@ -355,7 +356,7 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: owner_preflight_refused_pending_readonly_exception_trace
+  status: missing_runtime_lock_confirmed_safe_creation_pending
   branch: feat/route-review-access-20261101
   PR: https://github.com/cauf1l3d/ustarlms/pull/113
   deployed: false

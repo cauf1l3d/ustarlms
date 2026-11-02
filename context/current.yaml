@@ -104,8 +104,9 @@ production:
 current_work:
   activity: Owner CM104/course29/user132 has savetrack=false and no native result.
     Scoped Student repair app2150affe/toolb5ead9cb passed all4CI and both native389
-    suites; owner archive hashes pass but --check refused generically. Trace required
-    before install. See context/runtime/scorm_tracking_20261102.json.
+    suites; owner trace confirms missing /run/ustar-connect-install.lock. Safe atomic
+    creation verified; owner check/upgrade/reopen pending, archive unchanged. See
+    context/runtime/scorm_tracking_20261102.json.
   next_task: LEARN-SCORM-02
   ready_tasks: []
   task_statuses:

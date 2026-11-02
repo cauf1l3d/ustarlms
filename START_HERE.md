@@ -26,7 +26,7 @@ Owner принял прямое открытие51332; точного apply rece
 Выпускf879/app1100 квалифицирован: all4CI, native387/1812; архив и сохранённая
 копия сверены. [Квалификация](context/runtime/route_scorm_access_qualification_20261102.json).
 Owner CM104/user132: savetrack=false, native результата нет. Исправление
-app2150affe/toolb5ead9cb: CI/native389; owner SHA OK, --check refused. Ждём трассу.
+app2150affe/toolb5ead9cb: CI/native389; owner trace: нет runtime lock. Ждём check/apply.
 [Текущее состояние](context/runtime/scorm_tracking_20261102.json). Worker267 сохраняется.
 
 ## После исправления — PERF-01

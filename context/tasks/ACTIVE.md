@@ -7,7 +7,7 @@ Helper active/HTTP200/ready=false. [Факты и выпуск](../runtime/scorm
 Исправление app2150affe выдаёт штатную учебную роль только в доступном курсе,
 сохраняет запреты и сроки. Toolb5ead9cb: all4CI/native389; точный архив готов.
 Поставка —2 файла поверх1100, без схемы/worker/egress. [План](scorm_tracking_fix_20261102.md).
-Owner SHA OK, --check refused общей ошибкой. Ждём безопасную трассу; upgrade не запускался.
+Owner trace: нет /run/ustar-connect-install.lock. Безопасное создание проверено; ждём check/apply.
 
 ## PERF-01: производительность и стабильность обычного рабочего дня
 

@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "date_msk": "2026-11-02",
-  "status": "owner_preflight_refused_pending_readonly_exception_trace",
+  "status": "owner_missing_runtime_lock_confirmed_safe_create_then_check_pending",
   "source": "owner_console_and_readonly_CM104_diagnostic_in_current_dialogue",
   "PR": 113,
   "previous_application": "b9f170d89cead30021b0acbfba6ee681cec024f8",
@@ -75,14 +75,16 @@
     "downloaded_saved_archive_byte_identical": true,
     "CI_artifact": 13131413457,
     "CI_zip_crc": "PASS",
-    "operator_check": "new update.py --check, not the original f879 checker after overlay"
+    "operator_check": "new update.py --check, not the original f879 checker after overlay",
+    "archive_changed_after_owner_trace": false
   },
   "local_checks": {
     "PHP_tracking": "RED missing savetrack -> GREEN scoped role/replay/denials/disabled instance",
     "PHP_direct_launch": "PASS",
     "operator_transactions": "11 current focused tests PASS; actual UID33 root-group case PASS in mandatory sudo CI",
     "qualification_limit": "An earlier running local full suite imported the old test before the companion signature changed: one stale-import TypeError. Fresh focused suite and clean full CI checkout passed; runtime sources were not changed for that environment artifact.",
-    "diagnostic_wrapper": "PASS on unchanged delivered envelope: deliberately absent predecessor journal captured as FileNotFoundError/errno2/path; this fixture is not evidence of the production cause."
+    "diagnostic_wrapper": "PASS on unchanged delivered envelope: deliberately absent predecessor journal captured as FileNotFoundError/errno2/path; this fixture is not evidence of the production cause.",
+    "missing_runtime_lock_repair": "PASS: reproduce FileNotFoundError on final fixture lock, atomic create -> ready; actual held flock still returns managed_operation_busy_retry_later, inode and existing bytes preserved, zero service calls."
   },
   "native_CI": {
     "head": "b5ead9cb705cf538fe2134f332cfe5ccd055aa06",
@@ -155,8 +157,18 @@
     "phase": "refused",
     "reason": "scorm_tracking_operation_failed",
     "upgrade_run": false,
-    "exception_type": null,
-    "cause_confirmed": false,
-    "next": "Verified read-only wrapper traces the caught main exception using type/errno/path/frames only; no secret/config values or source lines."
+    "exception_type": "FileNotFoundError",
+    "cause_confirmed": true,
+    "next": "Owner atomically opens/creates only the missing runtime sentinel with native flags, without truncation/replacement, then reruns unchanged update.py --check. Upgrade only on ready.",
+    "errno": 2,
+    "path": "/run/ustar-connect-install.lock",
+    "frames": [
+      "<ustar-scorm-tracking/scorm_tracking_patch.py>:141:main",
+      "<qualified-route-scorm-overlay>:190:check",
+      "/usr/lib/python3.12/contextlib.py:137:__enter__",
+      "<qualified-route-scorm-overlay>:146:locks"
+    ],
+    "cause": "The last shared managed lock path is absent. Read-only check opens existing locks without O_CREAT; the native Connect installer creates this sentinel with O_CREAT|O_RDWR|O_NOFOLLOW mode0600. No source update has run.",
+    "why_file_disappeared": "Not confirmed; /run is runtime storage. Do not assert a reboot from this trace alone."
   }
 }

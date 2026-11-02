@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 10202,
-      "sha256": "2e7d5c6732f73f521733d73e922e4b37da967358cba2381fe7eadb39c57d374f"
+      "size": 10183,
+      "sha256": "7d472118080934c477aaec65c5a8629ac8d591bada77459128a3a3b86a328afe"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -1464,8 +1464,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 41357,
-      "sha256": "49ef48311b009ac1d96d80d660a783ceca1fadf9b34a958447085c9a253be260"
+      "size": 41465,
+      "sha256": "f0fe8ae3ace67f887e104eddf458050f921e82ebe8087b97f19cb1a8d442ed0f"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1518,8 +1518,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 19976,
-      "sha256": "4503247ada0792692ccb46237f9b1104e8f6211c1bf76b67f733176d011450bf"
+      "size": 20039,
+      "sha256": "ca6e3c0ef393c51046527ba3c9c0c310ab7b0bcfd54edf850ef20262720c2104"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3042,8 +3042,14 @@
     {
       "path": "context/runtime/library_integration_progress_20261102.md",
       "domain": "runtime",
-      "size": 8925,
-      "sha256": "90c98450a23d7231f5c82b378a8e14a8569eaccc7c531c21d279684c9dec1f13"
+      "size": 9738,
+      "sha256": "5acd53d9bef23ad7c343382bffc2afb3d886ec31f4a0eb4d42cd091cab29b7c0"
+    },
+    {
+      "path": "context/runtime/library_parent_recovery_20261103.json",
+      "domain": "runtime",
+      "size": 2348,
+      "sha256": "ae8094ba429a9fdabbc06077099bec17facd74896927edd8078ecf87442365fc"
     },
     {
       "path": "context/runtime/library_qualification_20261102.json",
@@ -3768,8 +3774,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3268,
-      "sha256": "6d216ad7f92f2c2ab0ef3a29abeb8c4de1b298b87308c3b01f8fc4fed6712392"
+      "size": 3535,
+      "sha256": "439d011614d1f5312d803c53cbfb8e0da7adb31828398925d4a04fa833876ae3"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

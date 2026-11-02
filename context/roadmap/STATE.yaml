@@ -1,11 +1,11 @@
 schema_version: 2
-updated_at: '2026-11-02'
+updated_at: '2026-11-03'
 project: USTAR Academy
-stage: library_qualified_owner_deploy_pending
-stage_label: Unified Library qualified; owner installation and real-account acceptance pending
-current_activity: Library0200 app26bd4fe0/tool6ee71123 passed full native, source, infra
-  and design qualification. Deliver one guarded archive from accepted production1100.
-  Owner already accepted SCORM and native Quiz; no new production deployment or merge.
+stage: library_owner_parent_preparation_retry
+stage_label: Owner1100 still ready; provision missing fixture directory before retry
+current_activity: Owner upgrade6ee failed in prepare before the journal; missing
+  local/ustar/tests/fixtures confirmed. Exact directory provisioning followed by the
+  unchanged updater passed a local root filesystem fixture. Owner retry pending.
 entrypoint: START_HERE.md
 next_task: LIBRARY-01
 ready_tasks: []
@@ -362,7 +362,7 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   application_commit: 26bd4fe05a7e1c81bdb4b83992c16d4b4c0a0971
-  status: library_qualified_owner_deploy_pending
+  status: owner_retry_pending_missing_fixture_parent
   branch: feat/library-unification-20261102
   deployed: false
   local_ustar_version: 2026110200
@@ -377,3 +377,4 @@ development_candidate:
     production installation pending
   tool_commit: 6ee7112318b672779f84a801e27a8da0c2f94898
   qualification: context/runtime/library_qualification_20261102.json
+  owner_preparation_recovery: context/runtime/library_parent_recovery_20261103.json

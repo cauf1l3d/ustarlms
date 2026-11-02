@@ -767,7 +767,8 @@ tasks:
   - Optional checks write marks only; current route/rewards and native results preserved
   - Exact1100 to0200 upgrade, repeat, actual PG schema and guarded archive qualified
   qualification: context/runtime/library_qualification_20261102.json
-  current_summary: Code, fullRC and guarded archive qualified on6ee71123. Owner installation and real-account Library acceptance pending; production stays1100.
+  owner_preparation_recovery: context/runtime/library_parent_recovery_20261103.json
+  current_summary: Owner confirmed missing tests/fixtures before any journal; check stays ready1100. Exact mkdir and frozen-updater retry pass local root fixture; owner retry pending.
 
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade

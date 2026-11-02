@@ -98,3 +98,15 @@ readback byte-identical. Three private regular members only. No production opera
 merge, provider send or change to worker267. Receipt: library_qualification_20261102.json.
 All code/qualification tasks complete; owner delivery, installation and real-account
 acceptance remain. Do not rebuild or alter this delivered tool; future code needs a successor.
+
+
+03Nov owner attempt6ee: archive/checksums/locks PASS and baseline2150 ready, but
+prepare273 raised FileNotFoundError before journal. Owner safe trace confirms missing
+local/ustar/tests/fixtures, state_exists:false; subsequent check remains ready1100.
+This is an installer preparation defect omitted from the existing parent-only fixture;
+prior native qualification must not be described as proving this case. No delivered
+operator/archive edits. Local actual-root filesystem reproduction fails identically
+before outage, then exact install -d root:root0755 and the same frozen updater reach
+active and idempotent active. Docker/SQL use the existing controlled Host boundary.
+Owner directory preparation/retry is pending; do not mark Library deployed or accepted.
+Receipt: library_parent_recovery_20261103.json.

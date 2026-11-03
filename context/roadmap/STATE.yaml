@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-11-03'
 project: USTAR Academy
-stage: studio_scorm_edit_qualification
-stage_label: Static SCORM and archived route editing qualification
-current_activity: Owner requests editing existing route SCORM and attached nested
-  export ZIP. Static HTML converter and archived author draft bridge implemented;
-  native CI and exact successor qualification pending. Production remains accepted
-  marketplace4715383b.
+stage: studio_scorm_edit_qualified_owner_install_pending
+stage_label: SCORM editing qualified; owner installation pending
+current_activity: 'Exact app5e61c0d2/toola8d44b20 qualified: all4 CI and8 FullRC jobs
+  passed; both Moodle423 tests/1957 assertions. Package/CI bytes/readback verified,
+  owner commands issued. Production remains accepted marketplace4715383b pending new
+  owner install evidence.'
 entrypoint: START_HERE.md
 next_task: STUDIO-SCORM-01
 ready_tasks: []
@@ -393,7 +393,7 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   application_commit: 5e61c0d2566e8103d01121968d56852e26da99fa
-  status: static_scorm_archive_source_implemented_qualification_pending
+  status: qualified_not_deployed_owner_package_issued
   branch: feat/library-unification-20261102
   deployed: false
   local_ustar_version: 2026110200
@@ -409,3 +409,7 @@ development_candidate:
   qualification: context/runtime/studio_scorm_edit_20261103.json
   runbook: docs/STUDIO_SCORM_EDIT_INSTALL_RU.md
   previous_tool_commit: 59f482ee2f086e5df202235880e376b1d25a7b1a
+  tool_commit: a8d44b206154343f49627f8b773f2633b2cd8802
+  full_RC_run: 41626487399
+  archive_sha256: 6baaab0d91bdbfac683fc95e3a8cabb0ca09bafd12d4d8e59c7ef92cbcba4ded
+  retained_copy_verified: true

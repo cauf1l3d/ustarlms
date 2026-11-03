@@ -6,7 +6,8 @@
 App5e61c0d2: статический HTML → обычные экраны студии; вложенный ZIP поддержан.
 Архивные/опубликованные источники открывают отдельный общий черновик автора.
 Локально:20 экранов/82 изображения, полный текст/байты и editable roundtrip PASS.
-[Квалификация](../runtime/studio_scorm_edit_20261103.json) и native CI пока pending.
+[Квалификация](../runtime/studio_scorm_edit_20261103.json): all4 CI/8FullRC PASS,
+обе Moodle423tests/1957assertions; toola8d44b20 выдан.
 Production остаётся4715383b; новый пакет ещё не установлен.
 
 ## LIBRARY-01 установлена и общая работа принята

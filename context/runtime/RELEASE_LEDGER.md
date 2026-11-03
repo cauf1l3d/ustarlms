@@ -1028,3 +1028,17 @@ business_data_changed=false/schema_changed=false. Повтор/recovery не н�
 Worker/cron/workday не измерялись заново; конкретные department/URL/purchase cases
 общей фразой не подтверждены. Текущий заказ — сводка за октябрь и1–3Nov.
 Main2900 и PR112/113/114 остаются отдельно; новых слияний не выполнено.
+
+
+## 03Nov — редактирование статического SCORM и архивных источников
+
+App5e61c0d2/toola8d44b20 qualified, not deployed. All4 CI/8 FullRC jobs SUCCESS;
+обе Moodle423tests/1957assertions, PHP8.2/8.3 source, Chromium и rollback PASS.
+Приложенный статический курс:20 экранов/82 изображения, полный текст/байты сохранены.
+Новые native cases проверяют авторский черновик архива, Moodle FileAPI и отказ learner;
+исходная активность сохраняется. Script-only/proprietary interactive требует исходник.
+Пакет172338bytes, SHA6baaab0d91bdbfac683fc95e3a8cabb0ca09bafd12d4d8e59c7ef92cbcba4ded;
+CI ZIP CRC/members/local build/saved readback PASS. Шесть existing source files,
+649 fixed profile/108tables/0200, worker267 прежний. Production остаётся4715383b.
+[Квитанция](studio_scorm_edit_20261103.json), [команды](../../docs/STUDIO_SCORM_EDIT_INSTALL_RU.md).
+Owner installation/browser acceptance pending; agent SSH/merge не выполнены.

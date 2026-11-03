@@ -136,9 +136,10 @@ production:
   latest_library_navigation_owner_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
 current_work:
-  activity: Owner requests editing existing route SCORM and attached nested export
-    ZIP. Static HTML converter and archived author draft bridge implemented; native
-    CI and exact successor qualification pending. Production remains accepted marketplace4715383b.
+  activity: 'Exact app5e61c0d2/toola8d44b20 qualified: all4 CI and8 FullRC jobs passed;
+    both Moodle423 tests/1957 assertions. Package/CI bytes/readback verified, owner
+    commands issued. Production remains accepted marketplace4715383b pending new owner
+    install evidence.'
   next_task: STUDIO-SCORM-01
   ready_tasks: []
   task_statuses:

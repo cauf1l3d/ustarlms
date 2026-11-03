@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "date": "2026-11-03",
-  "status": "application_implemented_native_and_package_qualification_pending",
+  "status": "qualified_exact_tool_package_issued_owner_installation_pending",
   "owner_request": "Edit existing route SCORM and attached export ZIP in Studio",
   "application_commit": "5e61c0d2566e8103d01121968d56852e26da99fa",
   "installed_baseline": "4715383b8f6ec4b48fef855944be13a51c3cad61",
@@ -28,9 +28,9 @@
     "supplied_project_php_validation": "PASS",
     "archived_contract": "PASS",
     "material_dom_including_scorm_conversion_and_save": "PASS",
-    "npm_full": "PASS; initial preexisting asynchronous JSDOM teardown failed once, baseline/current isolated checks and full rerun passed",
+    "npm_full": "PASS including SCORM bridge DOM; initial preexisting async teardown failed once, isolated baseline/current and repeated full run passed; exact tool CI both PHP passed",
     "source_checks": "PASS php445/js34/tables108/templates69",
-    "operator_tests": "10PASS/1actualUID33 pending CI; local sudo unavailable"
+    "operator_tests": "10 PASS/1 actualUID33 skipped locally; actual UID33 passed mandatory sudo CI; local sudo unavailable"
   },
   "compatibility": {
     "supported": [
@@ -45,7 +45,77 @@
       "forms and proprietary interactive objects",
       "video/audio embedded players"
     ],
-    "original_activity_and_attempts": "not overwritten by author draft; native CI pending"
+    "original_activity_and_attempts": "Author draft path never replaces original; native tests verify original record/activity unchanged. No production attempt census performed."
   },
-  "owner_installation": "pending"
+  "owner_installation": "pending",
+  "tool_commit": "a8d44b206154343f49627f8b773f2633b2cd8802",
+  "package": {
+    "filename": "ustar-studio-scorm-edit-a8d44b20.tar.gz",
+    "bytes": 172338,
+    "sha256": "6baaab0d91bdbfac683fc95e3a8cabb0ca09bafd12d4d8e59c7ef92cbcba4ded",
+    "script_sha256": "89f3925f22eccac1523e5ab70be6cbf3279873a770cdadb52708f558acf61e1c",
+    "ci_artifact_id": 13226750330,
+    "ci_zip_sha256": "d75e5d61a0c66c0168ba3f1274da595115925c5db5bf3ca467a28d0ba0fc135a",
+    "zip_crc": "PASS",
+    "inner_members": "INSTALL.json/SHA256SUMS/update.py, all compared to CI",
+    "independent_build_byte_identical": true,
+    "library_file_id": "libfile_d347129c0134819190b379ae2765ada0",
+    "saved_download_readback_verified": true
+  },
+  "ci": {
+    "commit": "a8d44b206154343f49627f8b773f2633b2cd8802",
+    "review_run": 41626487399,
+    "infra_run": 41626487224,
+    "context_run": 41626487234,
+    "console_run": 41626487350,
+    "operator_job": 125885030247,
+    "operator_tests": "11 PASS including actualUID33/root group/mode/xattrs",
+    "full_rc_status": "SUCCESS all8 jobs",
+    "workflow_conclusions": {
+      "review": "success",
+      "context": "success",
+      "infra": "success",
+      "console": "success"
+    },
+    "moodle": {
+      "versions": [
+        "5.1.1",
+        "5.1.8"
+      ],
+      "tests_each": 423,
+      "assertions_each": 1957,
+      "result": "PASS; fresh install, upgrade, repeat, authenticated shell, PostgreSQL and retained legacy profiles"
+    },
+    "source": {
+      "php": [
+        "8.2",
+        "8.3"
+      ],
+      "python_tests_each": 1578,
+      "python_skips_each": 269,
+      "javascript": "PASS including new SCORM importer and canonical material open/convert/save DOM",
+      "browser": "Chromium PASS existing Studio Word/PDF/viewport and Materials; Library36 synthetic views; new SCORM specific flow uses DOM codec/bridge tests, not live server browser"
+    },
+    "rollback": "PASS isolated full restore drill",
+    "native_new_tests": [
+      "archived SCORM reusable author draft; original catalogue row unchanged",
+      "Moodle SCORM package FileAPI and source-token conversion; original activity unchanged",
+      "archived source refuses learner"
+    ],
+    "production_acceptance": "not performed by CI; awaiting owner installation and browser check"
+  },
+  "delivery_scope": {
+    "fixed_addon_profile_files": 649,
+    "changed_existing_addon_files": 6,
+    "schema_tables": 108,
+    "versions_preserved": {
+      "local_ustar": 2026110200,
+      "theme_ustar": 2026110200
+    },
+    "new_journal": "/var/lib/ustar-studio-scorm-edit-5e61c0d2566e/state.json",
+    "previous_marketplace_journal_preserved": "/var/lib/ustar-library-marketplace-4715383b8f6e/state.json",
+    "business_database_restore": false,
+    "cache_purge_as_uid33": true,
+    "outage_required": true
+  }
 }

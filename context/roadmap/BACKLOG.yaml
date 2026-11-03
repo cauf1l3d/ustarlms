@@ -799,6 +799,9 @@ tasks:
     execute
   - Native CI and exact source-only successor on installed471 baseline; owner installation
     separately recorded
+  phase: qualified_owner_installation_and_browser_acceptance_pending
+  qualification_evidence: context/runtime/studio_scorm_edit_20261103.json
+  deployment_evidence: pending; current production remains marketplace4715383b
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

@@ -25,12 +25,17 @@ The original user archive stays outside Git; CI uses synthetic non-private fixtu
 - [x] Add native regressions for archived author copy, learner refusal, Moodle SCORM
   package source and unchanged original publication/attempts; implement source bridge.
 - [x] Bust browser asset cache from model content; update actual editor help and guide.
-- [ ] Verify supplied archive locally (20 screens/82 images, text/asset preservation,
+- [x] Verify supplied archive locally (20 screens/82 images, text/asset preservation,
   validation, re-export), full applicable JS/PHP/native/browser CI and self-review.
-- [ ] Publish exact application and separate guarded source-only successor on installed
+- [x] Publish exact application and separate guarded source-only successor on installed
   app4715383b/tool59f, preserving all prior journals/worker/schema/business data.
-- [ ] Verify CI archive and saved readback, document owner commands and current context.
+- [x] Verify CI archive and saved readback, document owner commands and current context.
 
 Review focus: no empty apparent import of script-only proprietary packages; no external
 fetch/execution; multiple SCO ordering and duplicate references; resource paths relative
 to the HTML file; archived source remains archived and original attempts are untouched.
+
+Qualified app5e61c0d2/toola8d44b20: review41626487399, infra41626487224,
+context41626487234, console41626487350 SUCCESS. Both Moodle423/1957; package SHA
+6baaab0d91bdbfac683fc95e3a8cabb0ca09bafd12d4d8e59c7ef92cbcba4ded,172338bytes,
+CI/local/saved-readback identical. Owner installation/functional acceptance pending.

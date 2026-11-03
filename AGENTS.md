@@ -16,7 +16,7 @@ App2900/theme2700 и worker267e5587 уже установлены владель
 Owner2Nov: app1100/2150affe, toolb5 active; SCORM/переходы приняты.
 [Receipt](context/runtime/scorm_tracking_owner_20261102.json). Quiz из точки принят владельцем2Nov. Owner сообщает Библиотека0200 active/открывается; missing-parent закрыт.
 [Report](context/runtime/library_owner_navigation_20261103.json). Сейчас LIBRARY-01:
-отдельный «Центр управления», затем ролевая приёмка и PERF-01. Остальные процессы с руководством
+Центр управления5131 установлен active/exit0/postcheck active. Далее browser/ролевая приёмка, PERF-01. Остальные процессы с руководством
 с2Nov; HTTPS/Mini App ждут согласования. Старые cron19/failed2 не сбрасывать.
 
 Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,

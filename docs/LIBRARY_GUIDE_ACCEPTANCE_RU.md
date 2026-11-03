@@ -4,6 +4,9 @@
 [Owner-подтверждение и границы](../context/runtime/library_owner_navigation_20261103.json).
 Администратор подтвердил установку и открытие Библиотеки; подробные сценарии ниже
 ещё предстоит принять на реальных учётках.
+Навигационное исправление5131 также установлено: systemd success/exit0, postcheck active.
+[Owner terminal](../context/runtime/library_navigation_owner_deploy_20261103.json).
+Команды ниже — история установки; повторять их после этого active не нужно.
 
 ## Как попасть в нужный раздел
 

@@ -2,8 +2,8 @@
 
 Текущий owner report: Библиотека0200 active и открывается;
 [квитанция/границы](library_owner_navigation_20261103.json),
-[dated evidence](evidence_library0200_20261103.yaml). Навигационный successor
-и подробная ролевая приёмка ожидаются. Main остаётся2900; merge не deploy.
+[dated evidence](evidence_library0200_20261103.yaml). Навигационный successor установлен active/exit0/postcheck active:
+[owner terminal](library_navigation_owner_deploy_20261103.json). Browser и ролевая приёмка ожидаются. Main остаётся2900; merge не deploy.
 
 Приложение2900: [dated evidence](evidence_connect2900_20261029.yaml).
 Текущий worker267, восстановление Telegram и принятые задачи/фото/читаемость:

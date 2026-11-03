@@ -1,6 +1,6 @@
 # Активная работа —03.11.2026
 
-## LIBRARY-01: вернуть вход в управление и провести приёмку
+## LIBRARY-01: browser и ролевая приёмка
 
 Owner сообщает6ee71123 active/local0200: Библиотека работает и открывается.
 [Report и границы](../runtime/library_owner_navigation_20261103.json).
@@ -11,8 +11,10 @@ App26bd4fe0/local+theme0200:649 файлов/108 таблиц — фиксиро
 Отдельная кнопка «Центр управления» возвращает прежний elevated переход knowledge
 → materials; «Модели должностей» остаются внутри центра. Candidatef89dde49:
 один layout, прежние capability/eligible/view-as boundaries; schema/версии прежние.
-[Работа и приёмка](../../docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md). Установка исправления
-и реальные role/purchase/grant/check scenarios ожидаются; общее открытие их не доказывает.
+Owner установил5131: ready → active, systemd success/exit0, postcheck active.
+[Receipt](../runtime/library_navigation_owner_deploy_20261103.json). Повтор установки не нужен.
+[Работа и приёмка](../../docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md): browser и реальные
+role/purchase/grant/check scenarios ещё ожидаются.
 Worker267/egress/cron сохраняют прежние evidence dates. Main2900, merge не выполнен.
 
 ## PERF-01 после Библиотеки

@@ -19,4 +19,5 @@ Native UI — local_ustar/theme_ustar; frontend/legacy не входит в те
 отдельный вход «Центр управления» → materials, сохранить Библиотеку;
 [инструкция/приёмка](../../docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md).
 Не повторять закрытую missing-parent установку. Main2900, prod report0200,
-nav candidatef89dde49 не установлен; подробная ролевая приёмка ожидается.
+navf89dde49/tool5131 установлен: active/exit0/postcheck active.
+[Receipt](../runtime/library_navigation_owner_deploy_20261103.json). Browser и ролевая приёмка ожидаются.

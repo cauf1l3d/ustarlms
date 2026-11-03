@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "date_msk": "2026-11-03",
+  "task": "LIBRARY-01",
+  "evidence_kind": "owner_supplied_terminal_transcript",
+  "independent_server_probe": false,
+  "archive": {
+    "name": "ustar-library-navigation-5131c552.tar.gz",
+    "sha256": "8ed2c915e3b984ef54e69dea056fd3e029357dc1bf9dc62463069c69fa7a0b79",
+    "archive_check": "OK",
+    "members_check": {
+      "INSTALL.json": "OK",
+      "update.py": "OK"
+    }
+  },
+  "application": {
+    "payload_commit": "f89dde49cf22225653349fa519c00b1c0aaf1358",
+    "payload_files": 649,
+    "tables": 108,
+    "counts_basis": "fixed_controller_payload_not_a_new_whole_host_manifest",
+    "table_count_basis": "Qualified fixed schema inventory; source-only successor does not run a fresh SQL census.",
+    "tool_commit": "5131c552ca5bc14ef1f1372640654696b1886577",
+    "baseline_commit": "26bd4fe05a7e1c81bdb4b83992c16d4b4c0a0971",
+    "versions": {
+      "local_ustar": 2026110200,
+      "theme_ustar": 2026110200
+    },
+    "phase": "active",
+    "schema_changed": false,
+    "database_changed": false,
+    "worker_changed": false
+  },
+  "service": {
+    "unit": "ustar-library-nav-20261103-01.service",
+    "Result": "success",
+    "ExecMainStatus": 0,
+    "ActiveState": "inactive",
+    "SubState": "dead",
+    "journal_start_raw": "ноя 03 08:36:57",
+    "journal_finish_raw": "ноя 03 08:37:01",
+    "journal_timezone": "not_reported_do_not_infer",
+    "oneshot_inactive_after_success": true
+  },
+  "precheck": {
+    "database_changed": false,
+    "host_changes": false,
+    "local_ustar": "2026110200",
+    "phase": "ready",
+    "schema_changed": false,
+    "theme_ustar": "2026110200",
+    "worker_changed": false
+  },
+  "upgrade_output": {
+    "database_changed": false,
+    "local_ustar": "2026110200",
+    "phase": "active",
+    "schema_changed": false,
+    "theme_ustar": "2026110200",
+    "worker_changed": false
+  },
+  "postcheck": {
+    "database_changed": false,
+    "host_changes": false,
+    "local_ustar": "2026110200",
+    "phase": "active",
+    "schema_changed": false,
+    "theme_ustar": "2026110200",
+    "worker_changed": false
+  },
+  "paste_error": {
+    "command_fragment": "r-library-navigation-5131c552/update.py --check",
+    "reason": "Truncated pasted command; full python3 invocation was subsequently executed and returned active.",
+    "recovery_required": false
+  },
+  "acceptance": {
+    "installer_and_postcheck": "accepted_owner_terminal",
+    "control_center_visible_and_opens": "pending_owner_browser_confirmation",
+    "detailed_library_roles_purchases_grants_checks": "pending_owner",
+    "guide": "docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md"
+  },
+  "previous_receipt": "context/runtime/library_owner_navigation_20261103.json",
+  "limits": [
+    "Do not repeat the installation or run recovery after this successful active check.",
+    "The initial old b5ead9cb check is not treated as the current Library0200 state; the final current navigation postcheck is authoritative for this overlay.",
+    "Existing worker controls were preserved, but no new live Telegram functionality, cron or performance measurement is claimed.",
+    "Main remains2900; PR113/114 remain open and no new merge is authorized."
+  ],
+  "ci_status_checked_after_owner_install": {
+    "commit": "2c918a054cf70572a5fe701385df00b80ded425a",
+    "runtime_and_tool_trees_equal_qualified5131": true,
+    "context": {
+      "run": 41603416888,
+      "conclusion": "success"
+    },
+    "infra": {
+      "run": 41603416822,
+      "conclusion": "success"
+    },
+    "console": {
+      "run": 41603416831,
+      "conclusion": "success"
+    },
+    "review_gate": {
+      "run": 41603416912,
+      "status": "in_progress"
+    },
+    "all4_success_claimed": false
+  }
+}

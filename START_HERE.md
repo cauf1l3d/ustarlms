@@ -23,12 +23,12 @@ Merge не меняет production.
 
 Owner подтвердил установку6ee71123: active/local0200, Библиотека открывается.
 [Owner report и границы](context/runtime/library_owner_navigation_20261103.json).
-Целевой комплект26bd4fe0:649 файлов/108 таблиц, local/theme0200; числа из
-фиксированной квалификации, новой whole-host проверки нет. Worker267 сохранён.
+Комплект0200:649 файлов/108 таблиц; whole-host census не выполнялся. Worker267 сохранён.
 Ранний missing tests/fixtures — история. Установку Библиотеки не повторять.
-Новая задача — отдельная кнопка «Центр управления» с прежним входом в «Материалы».
-Candidatef89dde49 меняет только layout; его установка и подробная ролевая приёмка
-ожидаются. [Работа и приёмка](docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md).
+«Центр управления» ведёт в «Материалы».
+Owner установилf89dde49/tool5131: active/exit0/postcheck active.
+[Квитанция](context/runtime/library_navigation_owner_deploy_20261103.json).
+Повтор установки не нужен; browser и подробная ролевая приёмка ожидаются. [Работа и приёмка](docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md).
 SCORM/Quiz приняты; main остаётся2900, PR113/114 открыты, merge не разрешён.
 
 ## PERF-01 после Библиотеки

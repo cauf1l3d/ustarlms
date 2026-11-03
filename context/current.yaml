@@ -32,56 +32,55 @@ production:
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
   latest_cron_contract: context/runtime/feed2803_owner_deploy_20261029.json
   previous_scheduled_cron_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  latest_addon_preflight: context/runtime/library_owner_navigation_20261103.json
+  latest_addon_preflight: context/runtime/library_navigation_owner_deploy_20261103.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   latest_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
   latest_worker_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   effective_addon_deployment:
-    receipt: context/runtime/library_owner_navigation_20261103.json
+    receipt: context/runtime/library_navigation_owner_deploy_20261103.json
     reported_date_msk: '2026-11-03'
-    status: owner_reported_library0200_active
-    installer_commit: 6ee7112318b672779f84a801e27a8da0c2f94898
-    payload_commit: 26bd4fe05a7e1c81bdb4b83992c16d4b4c0a0971
+    status: owner_installed_library0200_navigation_active
+    installer_commit: 5131c552ca5bc14ef1f1372640654696b1886577
+    payload_commit: f89dde49cf22225653349fa519c00b1c0aaf1358
     versions: &id001
       local_ustar: 2026110200
       theme_ustar: 2026110200
     files: 649
     tables: 108
-    counts_basis: fixed_controller_payload_inferred_from_owner_active_report_not_new_whole_host_manifest
+    counts_basis: fixed_controller_payload_not_a_new_whole_host_manifest
     independent_probe: false
     worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
     worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
     worker_rollout: true
     previous_exact_terminal_receipt: context/runtime/feed2803_owner_deploy_20261029.json
     previous_2801_preflight_in_same_receipt: false
-    post_deploy_receipt: context/runtime/library_owner_navigation_20261103.json
+    post_deploy_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
     browser_receipt: context/runtime/library_owner_navigation_20261103.json
     role_bot_enabled: true
     runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
-    post_check: active_reported_no_raw_transcript
+    post_check: active
     live_role_acceptance: owner accepted tasks, return/execution, photos and visual
       readability; remaining processes with leadership from2Nov
     latest_functional_receipt: context/runtime/library_owner_navigation_20261103.json
-    previous_receipt: context/runtime/scorm_tracking_owner_20261102.json
+    previous_receipt: context/runtime/library_owner_navigation_20261103.json
     role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh
       service query in2Nov SCORM receipt
-  status: owner_reported_library0200_active_detailed_acceptance_pending
+  status: owner_installed_library0200_navigation_active_role_acceptance_pending
   observed_at: '2026-11-03'
-  source: context/runtime/evidence_library0200_20261103.yaml
+  source: context/runtime/evidence_library_navigation0200_20261103.yaml
   independently_measured: false
-  current_source_commit: 26bd4fe05a7e1c81bdb4b83992c16d4b4c0a0971
-  current_source_commit_scope: Owner-reported active frozen6ee target;649 fixed addon
-    files inferred from qualification, not a fresh source census.
+  current_source_commit: f89dde49cf22225653349fa519c00b1c0aaf1358
+  current_source_commit_scope: Owner navigation5131 active postcheck verifies all649
+    fixed addon source files and preserved controls; not a new whole-host or database
+    census.
   current_versions: *id001
   last_exact_source_manifest:
-    commit: 26bd4fe05a7e1c81bdb4b83992c16d4b4c0a0971
+    commit: f89dde49cf22225653349fa519c00b1c0aaf1358
     date: '2026-11-03'
     matching_files: 649
-    kind: owner_reported_active_fixed_installer_not_fresh_manifest
-    evidence: context/runtime/library_owner_navigation_20261103.json
-    counts_basis: Fixed target of frozen6ee; active reported by owner, no independent
-      remeasurement.
+    kind: owner_verified_controller_payload_not_fresh_manifest
+    evidence: context/runtime/library_navigation_owner_deploy_20261103.json
   cron: completed29Oct03_37MSK_exit0_1_282s_no_new_failures; current_adhoc1_overdue56_failed2_not_yet_drained
   cron_current_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
@@ -97,7 +96,7 @@ production:
     Docker: 29.9.0
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
-  post_deploy_receipt: context/runtime/scorm_tracking_owner_20261102.json
+  post_deploy_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
   previous_addon_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
   post2900_cron_run_receipt: pending; last supplied scheduled cron remains pre2900
   current_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
@@ -135,10 +134,11 @@ production:
     previous_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
     role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh
       service query in2Nov SCORM receipt
+  latest_library_navigation_owner_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
 current_work:
-  activity: Owner reports Library6ee active and opening. Prepare one-file navigation
-    successor and usage/acceptance guide; live navigation and detailed role acceptance
-    pending.
+  activity: 'Owner installed navigation5131: ready -> active, service success/exit0,
+    readonly postcheck active. Do not repeat installation. Confirm Control Center
+    in browser, then Library role/grant/purchase/check acceptance.'
   next_task: LIBRARY-01
   ready_tasks: []
   task_statuses:

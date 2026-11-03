@@ -1,5 +1,9 @@
 # Редактирование SCORM —03Nov2026
 
+**Установщик a8d44b20 заменён:** owner получил отказ до замены файлов; PHP lint
+ошибочно разбирает JS/XML. Команды ниже — история, повторять их не нужно.
+Исправленный пакет: [актуальная инструкция](STUDIO_SCORM_EDIT_LINT_INSTALL_RU.md).
+
 Application `5e61c0d2566e8103d01121968d56852e26da99fa`.
 Immutable operator `a8d44b206154343f49627f8b773f2633b2cd8802`.
 Baseline: принятый marketplace4715383b/tool59f и его active journal.

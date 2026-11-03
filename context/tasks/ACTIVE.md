@@ -5,10 +5,10 @@
 Владелец просит редактировать SCORM маршрутов и приложенный ZIP экспорта.
 App5e61c0d2: статический HTML → обычные экраны студии; вложенный ZIP поддержан.
 Архивные/опубликованные источники открывают отдельный общий черновик автора.
-Локально:20 экранов/82 изображения, полный текст/байты и editable roundtrip PASS.
-[Квалификация](../runtime/studio_scorm_edit_20261103.json): all4 CI/8FullRC PASS,
-обе Moodle423tests/1957assertions; toola8d44b20 выдан.
-Production остаётся4715383b; новый пакет ещё не установлен.
+Курс20экранов/82изображения: текст/байты/roundtrip PASS.
+Toola8: owner отказ host_command_failed, postcheck ready; исходники471 сохранены.
+PHP lint ошибочно разбирал JS/XML. [Исправленный установщик](../runtime/studio_scorm_edit_lint_recovery_20261103.json)
+проверен локально реальным PHP; CI пока pending. App5e61 прежний.
 
 ## LIBRARY-01 установлена и общая работа принята
 

@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "date": "2026-11-03",
+  "status": "corrected_operator_local_pass_CI_pending",
+  "application_commit": "5e61c0d2566e8103d01121968d56852e26da99fa",
+  "baseline_commit": "4715383b8f6ec4b48fef855944be13a51c3cad61",
+  "supersedes_operator": "a8d44b206154343f49627f8b773f2633b2cd8802",
+  "owner_failure_receipt": "context/runtime/studio_scorm_edit_20261103.json",
+  "root_cause": "Frozen transaction applied php -n -l to every payload value, including model.js. Default short_open_tag=1 parsed its embedded <?xml version declaration as PHP and failed before backups/web stop/source writes.",
+  "reproduction": "Exact qualified model.js on actual PHP stdin with short tags enabled fails unexpected identifier version on line27; old operator transaction regression failed host_command_failed.",
+  "test_gap": "Old source PHP checks tested PHP paths, while transaction Host.lint was mocked. Native addon/browser tests did not exercise the mixed-type installer PHP stdin loop.",
+  "fix": "Separate immutable successor routes qualified payload bytes by their manifest file path; only .php reaches unchanged PHP linter, .js/.html use retained application CI. Unknown/ambiguous types refused; PHP lint failure identifies the source path. Frozen prior operators unchanged.",
+  "journal": "/var/lib/ustar-studio-scorm-edit-lint-5e61c0d2566e/state.json",
+  "deployed": false,
+  "agent_SSH": false,
+  "merge_performed": false,
+  "addon_source_changed": false,
+  "schema_changed": false,
+  "worker_changed": false,
+  "business_database_restore": false,
+  "local_tests": "13 run, 12 PASS / actualUID33 skipped locally; new tests use actual PHP -n short_open_tag=1 stdin for all six exact application files and invalid PHP refusal before outage",
+  "retained_application_qualification": {
+    "commit": "a8d44b206154343f49627f8b773f2633b2cd8802",
+    "review_run": 41626487399,
+    "moodle_each": {
+      "tests": 423,
+      "assertions": 1957
+    },
+    "application_trees_unchanged": true,
+    "scope": "Application/native/browser qualification retained. It did not prove the old mixed-file installer lint integration."
+  },
+  "owner_installation": "pending corrected package"
+}

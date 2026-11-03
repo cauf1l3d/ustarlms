@@ -11,7 +11,7 @@ Generated: [manifest](generated/source_manifest.json), [классы](generated/
 [таблицы](generated/database_tables.md), [API](generated/web_services.md).
 Обновление: bash scripts/build_code_map.sh EXACT_SOURCE_COMMIT.
 [Токены](../design/tokens.yaml), [capability references](../architecture/access_matrix.yaml),
-[домены](../domains). Unmerged PR114/app4715383b — development_source.json:649файлов/108таблиц.
+[домены](../domains). Unmerged PR114/app5e61c0d2 — development_source.json:649файлов/108таблиц; not deployed.
 Owner3Nov установил marketplace4715383b/tool59f и подтвердил работу:
 [receipt](../runtime/library_marketplace_owner_deploy_20261103.json).
 Generated/source_manifest.json и STATE.code_baseline описывают main2900;

@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: studio_scorm_edit_qualified_owner_install_pending
+  stage: studio_scorm_installer_lint_fix_qualification
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -39,7 +39,7 @@ current_operator_handoff:
 current_work:
   task: STUDIO-SCORM-01
   related_task: PERF-01
-  status: qualified_owner_package_issued_not_deployed
+  status: owner_preflight_failed_new_lint_operator_qualification
   spec: docs/COURSE_STUDIO_RU.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py

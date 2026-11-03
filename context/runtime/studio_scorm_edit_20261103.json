@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "date": "2026-11-03",
-  "status": "qualified_exact_tool_package_issued_owner_installation_pending",
+  "status": "superseded_operator_after_owner_preflight_failure_application_qualification_retained",
   "owner_request": "Edit existing route SCORM and attached export ZIP in Studio",
   "application_commit": "5e61c0d2566e8103d01121968d56852e26da99fa",
   "installed_baseline": "4715383b8f6ec4b48fef855944be13a51c3cad61",
@@ -47,7 +47,7 @@
     ],
     "original_activity_and_attempts": "Author draft path never replaces original; native tests verify original record/activity unchanged. No production attempt census performed."
   },
-  "owner_installation": "pending",
+  "owner_installation": "refused host_command_failed, final readonly ready; no active receipt",
   "tool_commit": "a8d44b206154343f49627f8b773f2633b2cd8802",
   "package": {
     "filename": "ustar-studio-scorm-edit-a8d44b20.tar.gz",
@@ -117,5 +117,23 @@
     "business_database_restore": false,
     "cache_purge_as_uid33": true,
     "outage_required": true
+  },
+  "operator_successor_receipt": "context/runtime/studio_scorm_edit_lint_recovery_20261103.json",
+  "owner_failed_attempt": {
+    "reported_date_msk": "2026-11-03",
+    "raw_journal_time": "Nov03 12:23:53–12:23:54 server1 timezone not established",
+    "unit": "ustar-studio-scorm-edit-20261103-01.service",
+    "archive_and_inner_checks": "OK",
+    "precheck": "ready",
+    "result": "exit-code",
+    "exit_status": 2,
+    "output": {
+      "phase": "refused",
+      "reason": "host_command_failed"
+    },
+    "postcheck": "ready",
+    "baseline_source_still_verified": true,
+    "independent_host_probe": false,
+    "source_switch_or_outage": "not reached according to frozen transaction order and ready postcheck"
   }
 }

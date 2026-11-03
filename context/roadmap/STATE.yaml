@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-11-03'
 project: USTAR Academy
-stage: studio_scorm_edit_qualified_owner_install_pending
-stage_label: SCORM editing qualified; owner installation pending
-current_activity: 'Exact app5e61c0d2/toola8d44b20 qualified: all4 CI and8 FullRC jobs
-  passed; both Moodle423 tests/1957 assertions. Package/CI bytes/readback verified,
-  owner commands issued. Production remains accepted marketplace4715383b pending new
-  owner install evidence.'
+stage: studio_scorm_installer_lint_fix_qualification
+stage_label: Correct mixed-type installer lint; owner original source ready
+current_activity: Owner a8d44b20 installation refused host_command_failed, readonly
+  postcheck ready. Reproduced PHP -n parsing XML inside model.js. New isolated PHP-path
+  lint successor locally passes actual parser regression; CI qualification pending.
+  Application5e61c0d2 unchanged; production remains4715383b.
 entrypoint: START_HERE.md
 next_task: STUDIO-SCORM-01
 ready_tasks: []
@@ -143,9 +143,9 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original infrastructure audit immutable; current verification in context/reviews/20261026/VERIFIED_REVIEW_RU.md
 next_agent_read:
-- context/runtime/studio_scorm_edit_20261103.json
+- context/runtime/studio_scorm_edit_lint_recovery_20261103.json
 - context/tasks/ACTIVE.md
-- docs/COURSE_STUDIO_RU.md
+- docs/STUDIO_SCORM_EDIT_LINT_INSTALL_RU.md
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'
@@ -393,7 +393,7 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   application_commit: 5e61c0d2566e8103d01121968d56852e26da99fa
-  status: qualified_not_deployed_owner_package_issued
+  status: application_qualified_corrected_installer_pending_CI
   branch: feat/library-unification-20261102
   deployed: false
   local_ustar_version: 2026110200
@@ -402,14 +402,13 @@ development_candidate:
   worker_rollout: false
   preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
   deployment_baseline: 4715383b8f6ec4b48fef855944be13a51c3cad61
-  progress: context/runtime/studio_scorm_edit_20261103.json
+  progress: context/runtime/studio_scorm_edit_lint_recovery_20261103.json
   previous_accepted_delivery: context/runtime/library_marketplace_owner_deploy_20261103.json
   scope: Bounded static HTML SCORM import, nested export ZIP, author-only archived
     material draft; six existing addon files; unchanged original source/attempts.
-  qualification: context/runtime/studio_scorm_edit_20261103.json
-  runbook: docs/STUDIO_SCORM_EDIT_INSTALL_RU.md
+  qualification: context/runtime/studio_scorm_edit_lint_recovery_20261103.json
+  runbook: docs/STUDIO_SCORM_EDIT_LINT_INSTALL_RU.md
   previous_tool_commit: 59f482ee2f086e5df202235880e376b1d25a7b1a
-  tool_commit: a8d44b206154343f49627f8b773f2633b2cd8802
   full_RC_run: 41626487399
-  archive_sha256: 6baaab0d91bdbfac683fc95e3a8cabb0ca09bafd12d4d8e59c7ef92cbcba4ded
-  retained_copy_verified: true
+  superseded_tool_commit: a8d44b206154343f49627f8b773f2633b2cd8802
+  owner_failed_attempt: context/runtime/studio_scorm_edit_20261103.json

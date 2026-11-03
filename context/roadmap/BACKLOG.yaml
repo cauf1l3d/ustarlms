@@ -326,11 +326,11 @@ tasks:
   - G07
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   PR: 109
-  current_summary: >-
-    App2900 and visual worker267 installed; task/return/photo and readability accepted.
-    Feed/Connect source integrated in main. Next unblocked work: ordinary-workday passive
-    baseline; actual8h report, SQL/page, Web-SAPI OPcache, concurrency/SLO remain unmeasured.
-    Other role processes start with leadership from2Nov; public HTTPS/Mini App await approval.
+  current_summary: 'App2900 and visual worker267 installed; task/return/photo and
+    readability accepted. Feed/Connect source integrated in main. Next unblocked work:
+    ordinary-workday passive baseline; actual8h report, SQL/page, Web-SAPI OPcache,
+    concurrency/SLO remain unmeasured. Other role processes start with leadership
+    from2Nov; public HTTPS/Mini App await approval.'
   deployment_evidence: context/runtime/perf2802_owner_deploy_20261029.json
   validation_evidence:
   - context/runtime/perf2802_owner_deploy_20261029.json
@@ -518,22 +518,22 @@ tasks:
   depends_on: []
   phase: source_integrated_remaining_roles_with_leadership
   owner_priority: complete_Telegram_role_bot_before_MiniApp_public_HTTPS
-  current_summary: >-
-    Owner29Oct installed app2900/theme2700 and directly enabled worker5cc02944
+  current_summary: 'Owner29Oct installed app2900/theme2700 and directly enabled worker5cc02944
     with fixed tool9a68246b. Successful systemd completion, runtime_active/ACK true,
-    role_bot_ready/role_bot_enabled true confirmed. All4CI onfe2f05d pass.
-    Six private scope denial checks passed in preceding trace. Its diagnostic wrapper
-    rejected the legitimate second probe; unchanged original controller enabled successfully.
+    role_bot_ready/role_bot_enabled true confirmed. All4CI onfe2f05d pass. Six private
+    scope denial checks passed in preceding trace. Its diagnostic wrapper rejected
+    the legitimate second probe; unchanged original controller enabled successfully.
     App/worker retain prior FullRC evidence; archive0860a867/21082058bytes verified.
     Owner30Oct accepted buttons, task exchange between2accounts and Academy synchronization.
     Owner1Nov restored Telegram egress (CONNECT200/HTTP302/TLS0), both bots answered.
-    Worker267e5587 then installed after transient busy refusal: visuals_active,
-    visuals_ready/recovery_required false. All4CI18c83925 PASS. Owner1Nov accepted live graphical UI and readability.
+    Worker267e5587 then installed after transient busy refusal: visuals_active, visuals_ready/recovery_required
+    false. All4CI18c83925 PASS. Owner1Nov accepted live graphical UI and readability.
     Owner also accepted task execution/return/photo display. Remaining processes are
     tested with leadership from2Nov; public HTTPS/Mini App await leadership approval.
-    Owner authorized merge110/111, now integrated after combined FullRC. Next: PERF-01. Owner instructions must be directly in chat.
-    Report review/HRD, fresh scheduled cron and workday report pending.
-    Native LAN confirmation/first password remain explicit; Mini App/public HTTPS follow.
+    Owner authorized merge110/111, now integrated after combined FullRC. Next: PERF-01.
+    Owner instructions must be directly in chat. Report review/HRD, fresh scheduled
+    cron and workday report pending. Native LAN confirmation/first password remain
+    explicit; Mini App/public HTTPS follow.'
   visual_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   visual_order: context/runtime/connect_role_bot_visual_owner_order_20261030.json
   role_bot_owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
@@ -730,11 +730,14 @@ tasks:
   - Existing packages, published route versions and result history unchanged
   - Guarded owner source overlay qualified; actual production apply recorded separately
   progress: context/runtime/route_scorm_launch_20261101.json
-  current_summary: Qualified51332a21 passed all4CI and native374/1762; owner now accepts direct launch. Exact server apply output absent; continuation issue tracked separately in LEARN-SCORM-02.
+  current_summary: Qualified51332a21 passed all4CI and native374/1762; owner now accepts
+    direct launch. Exact server apply output absent; continuation issue tracked separately
+    in LEARN-SCORM-02.
 - id: LEARN-SCORM-02
   title: Завершение SCORM и настройки доступа/перехода точки
   status: done
-  depends_on: [LEARN-SCORM-01]
+  depends_on:
+  - LEARN-SCORM-01
   progress: context/runtime/route_scorm_access_owner_order_20261101.json
   design: context/tasks/route_scorm_access_20261101.md
   acceptance:
@@ -743,26 +746,29 @@ tasks:
   - Per-point manual/timed advancement and finish destination are versioned
   - Deadline and stale URLs are enforced server-side; assessments keep real results
   qualification: context/runtime/scorm_tracking_20261102.json
-  current_summary: "Owner2Nov installed app2150affe/toolb5ead9cb: active/exit0/active; SCORM opening, completion and configured transitions accepted."
+  current_summary: 'Owner2Nov installed app2150affe/toolb5ead9cb: active/exit0/active;
+    SCORM opening, completion and configured transitions accepted.'
   owner_receipt: context/runtime/scorm_tracking_owner_20261102.json
 - id: LEARN-ASSESS-01
   title: Прямой запуск аттестации Студии из точки маршрута
   status: done
-  depends_on: [LEARN-SCORM-02]
+  depends_on:
+  - LEARN-SCORM-02
   progress: context/runtime/studio_assessment_route_20261102.json
   acceptance:
   - Published point opens the concrete native quiz activity
   - Authoritative quiz pass closes the point; opening alone grants no assessment credit
   - Owner verifies access, submission and continuation
   current_summary: Owner2Nov confirmed the test works; direct native Quiz launch accepted.
-
 - id: LIBRARY-01
   title: Единая Библиотека, доступ и дополнительные проверки знаний
   status: in_progress
-  depends_on: [LEARN-ASSESS-01]
+  depends_on:
+  - LEARN-ASSESS-01
   progress: context/runtime/library_integration_progress_20261102.md
   acceptance:
-  - One Library navigation entry preserves existing catalog, saved files and mandatory route
+  - One Library navigation entry preserves existing catalog, saved files and mandatory
+    route
   - Purchases and scoped grants cannot bypass employment, publication or content audience
   - Optional checks write marks only; current route/rewards and native results preserved
   - Exact1100 to0200 upgrade, repeat, actual PG schema and guarded archive qualified
@@ -770,11 +776,29 @@ tasks:
   owner_preparation_recovery: context/runtime/library_parent_recovery_20261103.json
   owner_receipt: context/runtime/library_owner_navigation_20261103.json
   runbook: docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md
-  current_summary: "Owner3Nov installed app4715383b/tool59f: success/exit0/postcheck active; general works acceptance. Detailed department, grant, purchase and source-URL real-account scenarios remain separate. Management report covers October and1–3November."
+  current_summary: 'Owner3Nov installed app4715383b/tool59f: success/exit0/postcheck
+    active; general works acceptance. Detailed department, grant, purchase and source-URL
+    real-account scenarios remain separate. Management report covers October and1–3November.'
   marketplace_fix: context/runtime/marketplace_department_fix_20261103.json
   navigation_owner_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
   marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
-
+- id: STUDIO-SCORM-01
+  title: Редактирование статического SCORM и архивных материалов маршрутов
+  status: in_progress
+  depends_on:
+  - LIBRARY-01
+  implementation_commit: 5e61c0d2566e8103d01121968d56852e26da99fa
+  spec: docs/COURSE_STUDIO_RU.md
+  progress: context/runtime/studio_scorm_edit_20261103.json
+  acceptance:
+  - Attached nested ZIP preserves20 screens and82 image assets; editable SCORM export
+    roundtrip
+  - Archived/published source opens reusable author draft; original activity/status/attempts
+    unchanged
+  - Learner/view-as denied; source token/revision/locks retained; source scripts never
+    execute
+  - Native CI and exact source-only successor on installed471 baseline; owner installation
+    separately recorded
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

@@ -1,10 +1,10 @@
 {
   "kind": "unmerged_development_source",
-  "deployed": true,
-  "deployment_evidence": "context/runtime/library_marketplace_owner_deploy_20261103.json",
+  "deployed": false,
+  "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "40674ea59ace48977c618d99a5ce0f59de47548c",
+    "moodle/local/ustar": "b0cccfafb2369dc6224a236e54d96644b5f86293",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
@@ -414,7 +414,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/course_studio_material.php",
-      "sha256": "8cd203800bc221278b7da7cf34777b219203f76bfdb2f0bb3b5d24afc52c907b"
+      "sha256": "ddac8754f8539389c05720c8369e167d1b15071eadb615ee4d501dfd9f6e7100"
     },
     {
       "path": "moodle/local/ustar/classes/course_studio_package.php",
@@ -1238,11 +1238,11 @@
     },
     {
       "path": "moodle/local/ustar/course_studio.php",
-      "sha256": "440928bff42b4a69d861878024a9465bba2d3e905f07c2cfdb504a4014b82941"
+      "sha256": "306dbef7d1832ccfd6b46c2901bd1ffced80ec6fdb8f1ce5d0e7b1ba3c7aaebf"
     },
     {
       "path": "moodle/local/ustar/course_studio/app.js",
-      "sha256": "f102a5514fc639d73b8716e291495f1c4e33c8a3daaada840633cee36627ed88"
+      "sha256": "510092563e3396b2b6053659d941f08c8d96be882aedb57f58805f63d71ba16d"
     },
     {
       "path": "moodle/local/ustar/course_studio/cloud.js",
@@ -1250,7 +1250,7 @@
     },
     {
       "path": "moodle/local/ustar/course_studio/editor.html",
-      "sha256": "93ab44e274d2db0a7d0142c50b447718d2a08d4486a33d06173b4018601968e8"
+      "sha256": "2e4deaaed3c9fbb209aa8124b14fd834546ef8c493c92857234607e3ecd350ae"
     },
     {
       "path": "moodle/local/ustar/course_studio/material.js",
@@ -1258,7 +1258,7 @@
     },
     {
       "path": "moodle/local/ustar/course_studio/model.js",
-      "sha256": "9dd3e64be87d50683455f0a01eac89ea638b4ad467fa576eff475c94b600d8d3"
+      "sha256": "0fee3069fd5dabcd39d3c13e623c5b433b186f2b3057d3fe2a7f58b78a779107"
     },
     {
       "path": "moodle/local/ustar/course_studio/pdf.js",
@@ -2202,7 +2202,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/course_studio_material_test.php",
-      "sha256": "b3e678db2aa20a6a75752cba1dca17c721e602338c61a8e875ed7c54129937d6"
+      "sha256": "c6a977835e2a5eb59e4950f01998aa04fe5a08caa82c8e014d051f73c5b4faed"
     },
     {
       "path": "moodle/local/ustar/tests/course_studio_project_test.php",

@@ -19,5 +19,7 @@ Native UI — local_ustar/theme_ustar; frontend/legacy не входит в те
 Production0200,649 fixed files/108tables; main2900 remains separate, PR112/113/114 open.
 Marketplace default hidden; admin enables exact departments; source files editor-only.
 Previous grants/mandatory route retained. No repeat installation/recovery.
-Current order: [October plus1–3Nov management summary](../../docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md).
+Current order: static SCORM/archived route editing; app5e61c0d2 not deployed.
+[Progress](../runtime/studio_scorm_edit_20261103.json); qualification and owner install pending.
+[Management summary](../../docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md) delivered.
 Detailed real-account department/purchase/URL acceptance and PERF-01 remain separate.

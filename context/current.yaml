@@ -136,10 +136,10 @@ production:
   latest_library_navigation_owner_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
 current_work:
-  activity: Owner3Nov verified marketplace59f active/exit0/postcheck active and reports
-    works. Current production recorded; management summary for October and1–3November
-    prepared. Detailed role acceptance and PERF-01 remain separate.
-  next_task: LIBRARY-01
+  activity: Owner requests editing existing route SCORM and attached nested export
+    ZIP. Static HTML converter and archived author draft bridge implemented; native
+    CI and exact successor qualification pending. Production remains accepted marketplace4715383b.
+  next_task: STUDIO-SCORM-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -181,6 +181,7 @@ current_work:
     PRIVACY-01: deferred
     RSS-01: done
     STUDIO-01: done
+    STUDIO-SCORM-01: in_progress
     TECH-01: planned
 server_facts:
   status: partial

@@ -18,6 +18,30 @@ concurrency:
   group: ustar-infra-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  studio-scorm-edit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Studio SCORM edit contracts and actual owner metadata
+        run: |
+          python3 -m unittest tests.r16.test_studio_scorm_edit_patch.Contract -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_studio_scorm_edit_patch.Transaction -v
+      - name: Build and verify the exact bounded Studio SCORM edit successor offline
+        run: |
+          SCORM_EDIT_TOOL=$(git log -1 --format=%H -- scripts/infra/studio_scorm_edit_patch.py scripts/infra/build_studio_scorm_edit_patch.py)
+          python3 scripts/infra/build_studio_scorm_edit_patch.py --tool-commit "$SCORM_EDIT_TOOL" --output artifacts/studio-scorm-edit
+          tar --no-same-owner -xzf artifacts/studio-scorm-edit/ustar-studio-scorm-edit-*.tar.gz -C artifacts/studio-scorm-edit
+          cd artifacts/studio-scorm-edit
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: studio-scorm-edit
+          path: artifacts/studio-scorm-edit/
   library-marketplace:
     runs-on: ubuntu-24.04
     timeout-minutes: 10

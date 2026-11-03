@@ -27,10 +27,9 @@ Owner3Nov установил app4715383b/tool59f: success/exit0/postcheck active
 Маркетплейс скрыт по умолчанию; admin выбирает отделы. Исходники товаров доступны
 редактору. «Центр управления» → «Материалы», Библиотека — читательский раздел.
 [Инструкция](docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
-SCORM/Quiz приняты. Детальные роли/grants/purchases/checks отдельно не перечислены
-в общей приёмке. Main2900 и установленный0200 — разные source pointers;
+SCORM/Quiz приняты. Детальные роли/URL/purchases ещё не приняты. Main2900 и установленный0200 — разные source pointers;
 PR112/113/114 открыты, автоматический merge не разрешён.
-[Сводка за октябрь и1–3Nov](docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md).
+Сейчас SCORM/архивы студии; app5e61c0d2 не установлен. [Статус](context/tasks/ACTIVE.md).
 
 ## PERF-01 после Библиотеки
 

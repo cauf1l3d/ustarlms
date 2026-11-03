@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: marketplace0200_owner_accepted_monthly_report_ready
+  stage: studio_scorm_edit_qualification
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -14,14 +14,14 @@ stack:
   deployment: Docker29.9.0 on Ubuntu24.04.5/kernel6.8.0-147; owner14Oct boot acceptance
   native_ui: PHP + Mustache + JS/AMD + SCSS
   theme: theme_ustar extends boost
-  secondary_frontend: Legacy Next.js source retained, excluded from active CI and release
-    since16Oct
+  secondary_frontend: Legacy Next.js source retained, excluded from active CI and
+    release since16Oct
 components:
   business: moodle/local/ustar
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
-  context_harness: harness/ustar-contextd; local stdio tested; production/session installation
-    unverified
+  context_harness: harness/ustar-contextd; local stdio tested; production/session
+    installation unverified
   connect_worker: connect-worker; owner1Nov installed267e5587, visuals_ready; tasks/return/photo/readability
     accepted, other role processes with leadership from2Nov
 state: context/roadmap/STATE.yaml
@@ -37,10 +37,10 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: LIBRARY-01
+  task: STUDIO-SCORM-01
   related_task: PERF-01
-  status: owner_installed_marketplace0200_monthly_report_ready
-  spec: docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md
+  status: implemented_qualification_pending
+  spec: docs/COURSE_STUDIO_RU.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py
   observation_sha256: ee883caff5be0b391db583bb4deeb795c1dbd3c1bba0c4127faa02f9cd444f92

@@ -17,14 +17,14 @@ Evidence: user outer ZIP contains one SCORM ZIP; inner SHA256
 editor.json/data.js or scorm/*.zip. supported()/record() also reject archived content.
 The original user archive stays outside Git; CI uses synthetic non-private fixtures.
 
-- [ ] Add failing JS regression for root/nested/folder SCORM, manifest-ordered HTML,
+- [x] Add failing JS regression for root/nested/folder SCORM, manifest-ordered HTML,
   section and image preservation, editable export roundtrip, inert script handling,
   unsafe archive/resource paths, missing images and bounded recursion/expansion.
-- [ ] Implement bounded static HTML import in existing model.js, preserving safe
+- [x] Implement bounded static HTML import in existing model.js, preserving safe
   declarative formatting and local assets. Retain embedded USTAR import behaviour.
-- [ ] Add native regressions for archived author copy, learner refusal, Moodle SCORM
+- [x] Add native regressions for archived author copy, learner refusal, Moodle SCORM
   package source and unchanged original publication/attempts; implement source bridge.
-- [ ] Bust browser asset cache from model content; update actual editor help and guide.
+- [x] Bust browser asset cache from model content; update actual editor help and guide.
 - [ ] Verify supplied archive locally (20 screens/82 images, text/asset preservation,
   validation, re-export), full applicable JS/PHP/native/browser CI and self-review.
 - [ ] Publish exact application and separate guarded source-only successor on installed

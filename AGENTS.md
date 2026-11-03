@@ -17,7 +17,7 @@ Owner2Nov: app1100/2150affe, toolb5 active; SCORM/переходы принят�
 [Report](context/runtime/library_owner_navigation_20261103.json). Owner3Nov установил
 marketplace4715383b/tool59f: success/exit0/postcheck active, «Отлично работает».
 [Receipt](context/runtime/library_marketplace_owner_deploy_20261103.json).
-Отделы включает admin, исходники только редактору. Детальная ролевая приёмка и
+Текущее: SCORM/архивы в студии, app5e61c0d2 не установлен. Детальные роли и
 PERF-01 остаются; HTTPS/Mini App ждут руководства. Старые cron19/failed2 не сбрасывать.
 
 Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,

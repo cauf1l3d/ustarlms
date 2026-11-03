@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "date": "2026-11-03",
+  "status": "application_implemented_native_and_package_qualification_pending",
+  "owner_request": "Edit existing route SCORM and attached export ZIP in Studio",
+  "application_commit": "5e61c0d2566e8103d01121968d56852e26da99fa",
+  "installed_baseline": "4715383b8f6ec4b48fef855944be13a51c3cad61",
+  "deployed": false,
+  "agent_SSH": false,
+  "merge_performed": false,
+  "schema_changed": false,
+  "worker_changed": false,
+  "addon_files": 649,
+  "addon_tables": 108,
+  "changed_addon_files": 6,
+  "source_evidence": {
+    "inner_zip_sha256": "9b51de6e6408ffd96e7e4f38c5542ad14cd35d17364e229b6f13c6da2cb33e73",
+    "screens": 20,
+    "image_occurrences": 82,
+    "unique_assets": 82,
+    "whole_screen_text_preserved": true,
+    "image_bytes_preserved": true,
+    "source_scripts_executed": false,
+    "private_content_committed": false
+  },
+  "local_validation": {
+    "synthetic_scorm_and_supplied_archive": "PASS",
+    "supplied_project_php_validation": "PASS",
+    "archived_contract": "PASS",
+    "material_dom_including_scorm_conversion_and_save": "PASS",
+    "npm_full": "PASS; initial preexisting asynchronous JSDOM teardown failed once, baseline/current isolated checks and full rerun passed",
+    "source_checks": "PASS php445/js34/tables108/templates69",
+    "operator_tests": "10PASS/1actualUID33 pending CI; local sudo unavailable"
+  },
+  "compatibility": {
+    "supported": [
+      "embedded USTAR editor.json/window.COURSE",
+      "static HTML SCORM manifest ordered resources",
+      "one nested export ZIP",
+      "archived/published FileAPI source author draft"
+    ],
+    "requires_original_author_source": [
+      "script-only rendering",
+      "canvas",
+      "forms and proprietary interactive objects",
+      "video/audio embedded players"
+    ],
+    "original_activity_and_attempts": "not overwritten by author draft; native CI pending"
+  },
+  "owner_installation": "pending"
+}

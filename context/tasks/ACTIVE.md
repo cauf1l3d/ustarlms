@@ -1,5 +1,14 @@
 # Активная работа —03.11.2026
 
+## STUDIO-SCORM-01 — текущая работа
+
+Владелец просит редактировать SCORM маршрутов и приложенный ZIP экспорта.
+App5e61c0d2: статический HTML → обычные экраны студии; вложенный ZIP поддержан.
+Архивные/опубликованные источники открывают отдельный общий черновик автора.
+Локально:20 экранов/82 изображения, полный текст/байты и editable roundtrip PASS.
+[Квалификация](../runtime/studio_scorm_edit_20261103.json) и native CI пока pending.
+Production остаётся4715383b; новый пакет ещё не установлен.
+
 ## LIBRARY-01 установлена и общая работа принята
 
 Owner03Nov установил app4715383b/tool59f: архив/inner SHA OK,
@@ -14,8 +23,8 @@ ready → active, success/exit0, конечный readonly postcheck active.
 [Работа и приёмка](../../docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
 Main2900, PR112/113/114 открыты. Worker267/cron сохраняют прежние dates.
 
-GitHub актуализирован; подготовлена
-[сводку руководству за октябрь и1–3Nov](../../docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md).
+Подготовлена
+[сводка руководству за октябрь и1–3Nov](../../docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md).
 
 ## PERF-01 после Библиотеки
 

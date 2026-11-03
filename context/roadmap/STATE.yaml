@@ -1,14 +1,14 @@
 schema_version: 2
 updated_at: '2026-11-03'
 project: USTAR Academy
-stage: marketplace0200_owner_accepted_monthly_report_ready
-stage_label: Marketplace departments installed and generally accepted; October management
-  summary
-current_activity: Owner3Nov verified marketplace59f active/exit0/postcheck active and reports
-  works. Current production recorded; management summary for October and1–3November prepared.
-  Detailed role acceptance and PERF-01 remain separate.
+stage: studio_scorm_edit_qualification
+stage_label: Static SCORM and archived route editing qualification
+current_activity: Owner requests editing existing route SCORM and attached nested
+  export ZIP. Static HTML converter and archived author draft bridge implemented;
+  native CI and exact successor qualification pending. Production remains accepted
+  marketplace4715383b.
 entrypoint: START_HERE.md
-next_task: LIBRARY-01
+next_task: STUDIO-SCORM-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -61,19 +61,19 @@ production:
     role_bot_enabled: true
     runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
     post_check: active
-    live_role_acceptance: owner accepted tasks, return/execution, photos and visual readability;
-      remaining processes with leadership from2Nov
+    live_role_acceptance: owner accepted tasks, return/execution, photos and visual
+      readability; remaining processes with leadership from2Nov
     latest_functional_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
     previous_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
-    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh service
-      query in2Nov SCORM receipt
+    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh
+      service query in2Nov SCORM receipt
   status: owner_installed_marketplace0200_general_functional_acceptance
   observed_at: '2026-11-03'
   source: context/runtime/evidence_marketplace0200_20261103.yaml
   independently_measured: false
   current_source_commit: 4715383b8f6ec4b48fef855944be13a51c3cad61
-  current_source_commit_scope: Owner marketplace59f active postcheck verifies649 fixed addon
-    source files and preserved controls; no new whole-host or SQL census.
+  current_source_commit_scope: Owner marketplace59f active postcheck verifies649 fixed
+    addon source files and preserved controls; no new whole-host or SQL census.
   current_versions: *id001
   last_exact_source_manifest:
     commit: 4715383b8f6ec4b48fef855944be13a51c3cad61
@@ -128,12 +128,12 @@ production:
     role_bot_enabled: true
     runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
     post_check: active
-    live_role_acceptance: owner accepted tasks, return/execution, photos and visual readability;
-      remaining processes with leadership from2Nov
+    live_role_acceptance: owner accepted tasks, return/execution, photos and visual
+      readability; remaining processes with leadership from2Nov
     latest_functional_receipt: context/runtime/library_owner_navigation_20261103.json
     previous_receipt: context/runtime/library_owner_navigation_20261103.json
-    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh service
-      query in2Nov SCORM receipt
+    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh
+      service query in2Nov SCORM receipt
   latest_library_navigation_owner_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
 audit:
@@ -143,9 +143,9 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original infrastructure audit immutable; current verification in context/reviews/20261026/VERIFIED_REVIEW_RU.md
 next_agent_read:
-- context/runtime/library_marketplace_owner_deploy_20261103.json
+- context/runtime/studio_scorm_edit_20261103.json
 - context/tasks/ACTIVE.md
-- docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md
+- docs/COURSE_STUDIO_RU.md
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'
@@ -193,17 +193,17 @@ server_facts:
   followup: context/runtime/server_facts_followup_20261017.json
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
-  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening
-    still separate
-  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test
-    failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live overrides
-    remain unverified
-  - 18 component skips explained by DB/source; effective runtime overrides/cache and native
-    full-cycle acceptance not checked
-  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy
-    not confirmed
-  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor
-    provenance remain separate; native restore/RTO awaited
+  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance
+    and hardening still separate
+  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019
+    test failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live
+    overrides remain unverified
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and
+    native full-cycle acceptance not checked
+  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware
+    redundancy not confirmed
+  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded
+    plugin/vendor provenance remain separate; native restore/RTO awaited
   additional_observations:
     provenance: context/runtime/core_extra_received_20261017.json
     review: context/reviews/20261017/core_extra_reconciliation.md
@@ -392,26 +392,20 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  application_commit: 4715383b8f6ec4b48fef855944be13a51c3cad61
-  status: owner_installed_unmerged_marketplace0200
+  application_commit: 5e61c0d2566e8103d01121968d56852e26da99fa
+  status: static_scorm_archive_source_implemented_qualification_pending
   branch: feat/library-unification-20261102
-  deployed: true
+  deployed: false
   local_ustar_version: 2026110200
   theme_ustar_version: 2026110200
   schema_changed: false
   worker_rollout: false
   preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
-  deployment_baseline: f89dde49cf22225653349fa519c00b1c0aaf1358
-  progress: context/runtime/marketplace_department_fix_20261103.json
-  previous_accepted_delivery: context/runtime/library_owner_navigation_20261103.json
-  scope: Department-controlled Marketplace, source download denial, new seed draft/assigned;13
-    existing files; versions/schema preserved.
-  qualification: context/runtime/marketplace_department_fix_20261103.json
-  previous_library_qualification: context/runtime/library_qualification_20261102.json
-  owner_preparation_recovery: context/runtime/library_parent_recovery_20261103.json
-  owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
-  runbook: docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md
-  previous_library_tool_commit: 6ee7112318b672779f84a801e27a8da0c2f94898
-  previous_navigation_tool: 5131c552ca5bc14ef1f1372640654696b1886577
-  tool_commit: 59f482ee2f086e5df202235880e376b1d25a7b1a
-  previous_deployment_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
+  deployment_baseline: 4715383b8f6ec4b48fef855944be13a51c3cad61
+  progress: context/runtime/studio_scorm_edit_20261103.json
+  previous_accepted_delivery: context/runtime/library_marketplace_owner_deploy_20261103.json
+  scope: Bounded static HTML SCORM import, nested export ZIP, author-only archived
+    material draft; six existing addon files; unchanged original source/attempts.
+  qualification: context/runtime/studio_scorm_edit_20261103.json
+  runbook: docs/STUDIO_SCORM_EDIT_INSTALL_RU.md
+  previous_tool_commit: 59f482ee2f086e5df202235880e376b1d25a7b1a

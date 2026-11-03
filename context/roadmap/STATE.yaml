@@ -411,3 +411,4 @@ development_candidate:
   owner_receipt: context/runtime/library_owner_navigation_20261103.json
   runbook: docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md
   previous_library_tool_commit: 6ee7112318b672779f84a801e27a8da0c2f94898
+  tool_commit: 5131c552ca5bc14ef1f1372640654696b1886577

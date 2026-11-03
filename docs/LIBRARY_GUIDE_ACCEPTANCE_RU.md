@@ -115,3 +115,53 @@ USCOIN за материал не списываются. Прохождение
 Старый6ee проверяет прежний layout, поэтому его отказ `application_source_changed`
 после исправления ожидаем: это исторический установщик. Не удаляйте и не меняйте
 старый журнал и не запускайте старый `--upgrade` поверх нового исправления.
+
+Текущая поставка: `ustar-library-navigation-5131c552.tar.gz`, 118398 байт.
+SHA256: `8ed2c915e3b984ef54e69dea056fd3e029357dc1bf9dc62463069c69fa7a0b79`.
+Application `f89dde49cf22225653349fa519c00b1c0aaf1358`, tool
+`5131c552ca5bc14ef1f1372640654696b1886577`.
+[Профильный CI](https://github.com/cauf1l3d/ustarlms/actions/runs/41602749061/job/125805135631)
+прошёл все 8 тестов, включая настоящий UID33/root и xattrs. Архив и все три члена
+побайтно равны скачанному CI artifact13214802481; ZIP CRC и автономный PLAN_ONLY
+проверены. Сохранённая копия скачана и также совпала побайтно.
+
+Скопируйте архив в `/home/aduk`, выполните:
+
+```bash
+sudo bash <<'ROOT'
+set -euo pipefail
+umask 077
+ustar_nav_archive=/home/aduk/ustar-library-navigation-5131c552.tar.gz
+ustar_nav_dir=/root/ustar-library-navigation-5131c552
+printf '%s  %s\n' \
+  8ed2c915e3b984ef54e69dea056fd3e029357dc1bf9dc62463069c69fa7a0b79 \
+  "$ustar_nav_archive" | sha256sum --check --strict -
+test ! -L "$ustar_nav_dir"
+install -d -o root -g root -m 700 "$ustar_nav_dir"
+tar --no-same-owner -xzf "$ustar_nav_archive" -C "$ustar_nav_dir"
+cd "$ustar_nav_dir"
+sha256sum --check --strict SHA256SUMS
+python3 -I -B update.py --check
+systemd-run --no-block --unit=ustar-library-nav-20261103-01 \
+  --property=Type=oneshot --property=TimeoutStartSec=180 \
+  /usr/bin/python3 -I -B "$ustar_nav_dir/update.py" \
+  --upgrade --acknowledge-outage
+ROOT
+```
+
+До запуска ожидается `ready`. Этот запуск кратко остановит/запустит web. Затем:
+
+```bash
+sudo systemctl show ustar-library-nav-20261103-01.service \
+  -p ActiveState -p SubState -p Result -p ExecMainStatus
+sudo journalctl -u ustar-library-nav-20261103-01.service -n 30 --no-pager
+sudo python3 -I -B /root/ustar-library-navigation-5131c552/update.py --check
+```
+
+После завершения ожидаются `Result=success`, `ExecMainStatus=0`, `phase=active`.
+Одноразовая служба после успеха обычно `inactive/dead` — это нормально.
+Если результат `refused`, передайте причину; не удаляйте блокировки и журналы.
+При `recovery_required` используйте этот же новый скрипт с
+`--recover --acknowledge-outage`, затем его `--check`. Если обновление уже active,
+повторный `--upgrade` идемпотентен. Повторное создание той же systemd unit обычно
+не требуется: сначала проверьте её результат.

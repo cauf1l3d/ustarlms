@@ -1518,8 +1518,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 21890,
-      "sha256": "b443298cfed966d44f827af37c789e9cad82c86313a11da5a16a9b863228b362"
+      "size": 21946,
+      "sha256": "9b9e8278b28773d119580487dd75993dfdda8240e332bb3c7e11a0996e5c85c8"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3054,8 +3054,8 @@
     {
       "path": "context/runtime/library_owner_navigation_20261103.json",
       "domain": "runtime",
-      "size": 2825,
-      "sha256": "15deab0ae570ec2e9782decd18138903f30d5b7db3acf9e7fe812914764c4d28"
+      "size": 4007,
+      "sha256": "279a04763f0aabdbb5e64db33150bfdfd84b059f0a90cf0a89ee52263d9d2e82"
     },
     {
       "path": "context/runtime/library_parent_recovery_20261103.json",

@@ -11,13 +11,13 @@ Generated: [manifest](generated/source_manifest.json), [классы](generated/
 [таблицы](generated/database_tables.md), [API](generated/web_services.md).
 Обновление: bash scripts/build_code_map.sh EXACT_SOURCE_COMMIT.
 [Токены](../design/tokens.yaml), [capability references](../architecture/access_matrix.yaml),
-[домены](../domains). PR114/app4715383b — development_source.json:649файлов/108таблиц.
-Owner3Nov установил navigationf89dde49/tool5131 поверх Библиотеки0200:
-[receipt](../runtime/library_navigation_owner_deploy_20261103.json).
+[домены](../domains). Unmerged PR114/app4715383b — development_source.json:649файлов/108таблиц.
+Owner3Nov установил marketplace4715383b/tool59f и подтвердил работу:
+[receipt](../runtime/library_marketplace_owner_deploy_20261103.json).
 Generated/source_manifest.json и STATE.code_baseline описывают main2900;
-STATE.production — установленный0200. Маркетплейс по отделам — отдельный
-[candidate](../runtime/marketplace_department_fix_20261103.json), ещё не установлен.
-PR113/114 ещё не объединены.
+STATE.production — установленный0200. Флаг deployed в отдельном unmerged manifest
+берётся из STATE и ссылается на owner receipt; это не новый независимый серверный probe.
+PR112/113/114 ещё не объединены.
 connect_role_bot_development_source.json сохраняет исторический snapshot.
 
 [Connect](../domains/connect.yaml) использует текущие Academy writers/права/историю.

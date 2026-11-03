@@ -14,10 +14,11 @@ App2900/theme2700 и worker267e5587 уже установлены владель
 Задачи/возврат/фото/читаемость приняты. Owner принял прямой SCORM запуск51332a21;
 Owner2Nov: app1100/2150affe, toolb5 active; SCORM/переходы приняты.
 [Receipt](context/runtime/scorm_tracking_owner_20261102.json). Quiz из точки принят владельцем2Nov. Owner сообщает Библиотека0200 active/открывается; missing-parent закрыт.
-[Report](context/runtime/library_owner_navigation_20261103.json). Сейчас LIBRARY-01:
-5131 установлен active. Сейчас Маркетплейс: скрыт по умолчанию, admin allowlist отделов,
-исходники только редактору; затем приёмка/PERF-01. Остальные процессы с руководством
-с2Nov; HTTPS/Mini App ждут согласования. Старые cron19/failed2 не сбрасывать.
+[Report](context/runtime/library_owner_navigation_20261103.json). Owner3Nov установил
+marketplace4715383b/tool59f: success/exit0/postcheck active, «Отлично работает».
+[Receipt](context/runtime/library_marketplace_owner_deploy_20261103.json).
+Отделы включает admin, исходники только редактору. Детальная ролевая приёмка и
+PERF-01 остаются; HTTPS/Mini App ждут руководства. Старые cron19/failed2 не сбрасывать.
 
 Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,
 все роли через существующую Академию; Mini App и внешний HTTPS в конце.

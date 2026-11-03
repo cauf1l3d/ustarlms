@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "date_msk": "2026-11-03",
+  "task": "LIBRARY-01",
+  "evidence_kind": "owner_supplied_terminal_and_general_browser_acceptance",
+  "independent_server_probe": false,
+  "owner_quote": "Отлично работает",
+  "archive": {
+    "name": "ustar-library-marketplace-59f482ee.tar.gz",
+    "sha256": "08f397c57f5481edb1e997852bb6e33d89b1d6957c316cea6e7dd703c87639ca",
+    "archive_check": "OK",
+    "members_check": {
+      "INSTALL.json": "OK",
+      "update.py": "OK"
+    }
+  },
+  "application": {
+    "payload_commit": "4715383b8f6ec4b48fef855944be13a51c3cad61",
+    "tool_commit": "59f482ee2f086e5df202235880e376b1d25a7b1a",
+    "baseline_commit": "f89dde49cf22225653349fa519c00b1c0aaf1358",
+    "payload_files": 649,
+    "changed_files": 13,
+    "tables": 108,
+    "counts_basis": "fixed_controller_payload_not_a_new_whole_host_manifest",
+    "table_count_basis": "qualified fixed schema inventory; source-only updater does not run a new SQL census",
+    "versions": {
+      "local_ustar": 2026110200,
+      "theme_ustar": 2026110200
+    },
+    "phase": "active",
+    "schema_changed": false,
+    "business_data_changed": false,
+    "worker_changed": false
+  },
+  "service": {
+    "unit": "ustar-marketplace-20261103-01.service",
+    "Result": "success",
+    "ExecMainStatus": 0,
+    "ActiveState": "inactive",
+    "SubState": "dead",
+    "journal_start_raw": "ноя 03 09:52:52",
+    "journal_finish_raw": "ноя 03 09:52:57",
+    "journal_timezone": "not_reported_do_not_infer",
+    "oneshot_inactive_after_success": true
+  },
+  "precheck": {
+    "business_data_changed": false,
+    "cache_purged": false,
+    "database_changed": false,
+    "host_changes": false,
+    "local_ustar": "2026110200",
+    "phase": "ready",
+    "schema_changed": false,
+    "theme_ustar": "2026110200",
+    "worker_changed": false
+  },
+  "upgrade_output": {
+    "business_data_changed": false,
+    "cache_purged": true,
+    "database_changed": true,
+    "local_ustar": "2026110200",
+    "phase": "active",
+    "schema_changed": false,
+    "theme_ustar": "2026110200",
+    "worker_changed": false
+  },
+  "postcheck": {
+    "business_data_changed": false,
+    "cache_purged": false,
+    "database_changed": false,
+    "host_changes": false,
+    "local_ustar": "2026110200",
+    "phase": "active",
+    "schema_changed": false,
+    "theme_ustar": "2026110200",
+    "worker_changed": false
+  },
+  "acceptance": {
+    "installer_and_postcheck": "accepted_owner_terminal",
+    "general_functional_use": "accepted_owner_report",
+    "specific_enabled_foreign_department_source_URL_and_purchase_cases": "not individually enumerated; native CI remains separate"
+  },
+  "cache_note": "database_changed=true during upgrade is the required Moodle purge_caches; business_data_changed=false and schema_changed=false. Final readonly check changes nothing.",
+  "qualification": "context/runtime/marketplace_department_fix_20261103.json",
+  "previous_receipt": "context/runtime/library_navigation_owner_deploy_20261103.json",
+  "followup_order": "Update GitHub and prepare management summary for October2026 and1–3November2026.",
+  "limits": [
+    "Do not repeat installation or run recovery after successful active check.",
+    "No new cron/workday/worker/provider/whole-host measurement.",
+    "Git main remains a separately recorded source baseline; no automatic source merge inferred."
+  ]
+}

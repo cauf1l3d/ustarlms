@@ -1015,3 +1015,16 @@ No SSH, worker rollout or PR107 merge.
 Owner: «отлично всё работает» after81118e39 handoff. Basic working acceptance recorded;
 no new exact terminal inventory supplied. STUDIO-01 closed, PERF-01/PR109 active.
 [Receipt](studio_viewport_owner_acceptance_20261028.json). PR107 remains open; no automatic main merge.
+
+
+## 03Nov — Маркетплейс по отделам установлен и общая работа принята
+
+Owner terminal: archive/inner SHA OK, ready → active, systemd success/exit0,
+финальный readonly postcheck active; owner «Отлично работает».
+[Receipt](library_marketplace_owner_deploy_20261103.json). Application4715383b,
+tool59f482ee, local/theme0200,649 fixed files/108tables;13 source replacements.
+cache_purged=true/database_changed=true при применении — служебный кеш;
+business_data_changed=false/schema_changed=false. Повтор/recovery не нужны.
+Worker/cron/workday не измерялись заново; конкретные department/URL/purchase cases
+общей фразой не подтверждены. Текущий заказ — сводка за октябрь и1–3Nov.
+Main2900 и PR112/113/114 остаются отдельно; новых слияний не выполнено.

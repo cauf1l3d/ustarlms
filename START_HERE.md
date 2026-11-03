@@ -19,19 +19,18 @@ visuals_ready/recovery_required:false. Оба бота отвечают; PNG/к�
 Merge не меняет production.
 Старые контроллеры/архивы не переписывать и не применять повторно по датированной истории.
 
-## Текущее состояние — Библиотека0200
+## Текущее состояние Библиотеки0200
 
-Owner подтвердил установку6ee71123: active/local0200, Библиотека открывается.
-[Owner report и границы](context/runtime/library_owner_navigation_20261103.json).
-Комплект0200:649файлов/108таблиц, не whole-host census.
-Установку Библиотеки не повторять.
-«Центр управления» ведёт в «Материалы».
-Owner установилf89dde49/tool5131: active/exit0/postcheck active.
-[Квитанция](context/runtime/library_navigation_owner_deploy_20261103.json).
-Повтор установки не нужен; browser и подробная ролевая приёмка ожидаются. [Работа и приёмка](docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md).
-Owner03Nov: скрыть Маркетплейс, открывать отделам из админки; убрать исходники.
-[Текущий fix](context/runtime/marketplace_department_fix_20261103.json), qualification pending.
-SCORM/Quiz приняты; main2900, PR113/114 открыты, merge не разрешён.
+Owner3Nov установил app4715383b/tool59f: success/exit0/postcheck active и
+подтвердил «Отлично работает». [Квитанция](context/runtime/library_marketplace_owner_deploy_20261103.json).
+649файлов/108таблиц — fixed payload, не whole-host census. Повторять установку не нужно.
+Маркетплейс скрыт по умолчанию; admin выбирает отделы. Исходники товаров доступны
+редактору. «Центр управления» → «Материалы», Библиотека — читательский раздел.
+[Инструкция](docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
+SCORM/Quiz приняты. Детальные роли/grants/purchases/checks отдельно не перечислены
+в общей приёмке. Main2900 и установленный0200 — разные source pointers;
+PR112/113/114 открыты, автоматический merge не разрешён.
+[Сводка за октябрь и1–3Nov](docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md).
 
 ## PERF-01 после Библиотеки
 

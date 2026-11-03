@@ -1,22 +1,21 @@
 # Активная работа —03.11.2026
 
-## LIBRARY-01: Маркетплейс по отделам и запрет скачивания исходников
+## LIBRARY-01 установлена и общая работа принята
 
-Owner03Nov: «полностью скрыт с возможностью открывать по отделам с админки»;
-убрать скачивание исходников в Маркетплейсе. Причина235 открытых предложений:
-seed6ee использовал free/published. [Fix receipt](../runtime/marketplace_department_fix_20261103.json).
+Owner03Nov установил app4715383b/tool59f: архив/inner SHA OK,
+ready → active, success/exit0, конечный readonly postcheck active.
+[Квитанция](../runtime/library_marketplace_owner_deploy_20261103.json).
+«Отлично работает» — общая приёмка; отдельные cases отделов/URL/grants/purchases
+не перечислены. Повтор установки и recovery не нужны.
 
-Candidate4715383b: пустой allowlist закрывает вкладку, прямые ссылки и покупку;
-администратор выбирает exact department IDs. Источники Word/PDF — только редактору,
-проверка UI+pluginfile. Новые seed draft/assigned; старые офферы/права/результаты не
-переписываются. Выданные/купленные «Мои материалы», каталог и маршрут сохраняются.
-13 существующих файлов, schema/версии0200 прежние. All4CI/FullRC59f482ee SUCCESS; owner deploy pending.
+Маркетплейс скрыт до включения отделов администратором; Word/PDF исходники
+сотруднику закрыты. Прежние назначения, каталог и обязательный маршрут сохранены.
+649файлов/108таблиц fixed payload,13 заменённых файлов; schema/версии0200 прежние.
 [Работа и приёмка](../../docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
+Main2900, PR112/113/114 открыты. Worker267/cron сохраняют прежние dates.
 
-Production f89dde49/tool5131 уже active/exit0/postcheck active:
-[Owner receipt](../runtime/library_navigation_owner_deploy_20261103.json).
-Повтор старых установок не нужен. 649файлов/108таблиц — fixed payload, не whole-host census.
-Main2900, PR113/114 открыты, merge не разрешён. Worker267/cron — прежние dated receipts.
+GitHub актуализирован; подготовлена
+[сводку руководству за октябрь и1–3Nov](../../docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md).
 
 ## PERF-01 после Библиотеки
 

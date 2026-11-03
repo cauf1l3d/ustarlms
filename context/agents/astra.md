@@ -14,17 +14,10 @@ Moodle5.2/PG17/Docker rotation отложены; agent SSH/subagents/provider se
 
 Native UI — local_ustar/theme_ustar; frontend/legacy не входит в текущий CI/release. Не создавать вторые stores сотрудников/completion/rewards/messages. Сохранять историю и реальные роли, current scope, view-as read-only и install/upgrade parity.
 
-03Nov: owner reports Library6ee active/local0200 and opening.
-[Текущее поручение](../runtime/library_owner_navigation_20261103.json): вернуть
-отдельный вход «Центр управления» → materials, сохранить Библиотеку;
-[инструкция/приёмка](../../docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md).
-Не повторять закрытую missing-parent установку. Main2900, prod report0200,
-navf89dde49/tool5131 установлен: active/exit0/postcheck active.
-[Receipt](../runtime/library_navigation_owner_deploy_20261103.json). Browser и ролевая приёмка ожидаются.
-
-Следующее поручение03Nov: полностью скрыть Маркетплейс, включать по отделам из админки,
-убрать скачивание исходников сотрудником. Candidate4715383b/tool59f482ee;
-[квалификация и поставка](../runtime/marketplace_department_fix_20261103.json),
-[инструкция](../../docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
-Пустой allowlist закрыт; прежние grants/обязательный маршрут сохраняются.
-Новая установка владельцем ещё не подтверждена; production f89 не подменять candidate.
+03Nov: owner installed marketplace app4715383b/tool59f, success/exit0/postcheck active,
+«Отлично работает». [Receipt](../runtime/library_marketplace_owner_deploy_20261103.json).
+Production0200,649 fixed files/108tables; main2900 remains separate, PR112/113/114 open.
+Marketplace default hidden; admin enables exact departments; source files editor-only.
+Previous grants/mandatory route retained. No repeat installation/recovery.
+Current order: [October plus1–3Nov management summary](../../docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md).
+Detailed real-account department/purchase/URL acceptance and PERF-01 remain separate.

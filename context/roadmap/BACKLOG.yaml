@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-11-02'
+updated_at: '2026-11-03'
 canonical_branch: main
 source_baseline: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -770,9 +770,10 @@ tasks:
   owner_preparation_recovery: context/runtime/library_parent_recovery_20261103.json
   owner_receipt: context/runtime/library_owner_navigation_20261103.json
   runbook: docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md
-  current_summary: Owner requests Marketplace hidden by default with admin department allowlist and no source downloads. Candidate4715383b changes13 files without schema/version delta; qualification and owner deploy pending.
+  current_summary: "Owner3Nov installed app4715383b/tool59f: success/exit0/postcheck active; general works acceptance. Detailed department, grant, purchase and source-URL real-account scenarios remain separate. Management report covers October and1–3November."
   marketplace_fix: context/runtime/marketplace_department_fix_20261103.json
   navigation_owner_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
+  marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
 
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade

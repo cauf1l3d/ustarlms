@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-11-03'
 project: USTAR Academy
-stage: library_marketplace_department_fix
-stage_label: Hide Marketplace by default; administrator department allowlist; editor-only
-  source files
-current_activity: Owner requests hidden Marketplace with administrator-enabled departments
-  and no employee source downloads. Candidate4715383b implements exact department
-  gates and file boundary checks; qualified59f482ee; owner deployment pending.
+stage: marketplace0200_owner_accepted_monthly_report_ready
+stage_label: Marketplace departments installed and generally accepted; October management
+  summary
+current_activity: Owner3Nov verified marketplace59f active/exit0/postcheck active and reports
+  works. Current production recorded; management summary for October and1–3November prepared.
+  Detailed role acceptance and PERF-01 remain separate.
 entrypoint: START_HERE.md
 next_task: LIBRARY-01
 ready_tasks: []
@@ -28,23 +28,90 @@ code_baseline:
 production:
   latest_SCORM_tracking_evidence: context/runtime/scorm_tracking_owner_20261102.json
   latest_SCORM_functional_acceptance: context/runtime/scorm_tracking_owner_20261102.json
-  latest_owner_browser_acceptance: context/runtime/scorm_tracking_owner_20261102.json
+  latest_owner_browser_acceptance: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
   latest_cron_contract: context/runtime/feed2803_owner_deploy_20261029.json
   previous_scheduled_cron_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  latest_addon_preflight: context/runtime/library_navigation_owner_deploy_20261103.json
+  latest_addon_preflight: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   latest_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
   latest_worker_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   effective_addon_deployment:
+    receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+    reported_date_msk: '2026-11-03'
+    status: owner_installed_marketplace0200_general_functional_acceptance
+    installer_commit: 59f482ee2f086e5df202235880e376b1d25a7b1a
+    payload_commit: 4715383b8f6ec4b48fef855944be13a51c3cad61
+    versions: &id001
+      local_ustar: 2026110200
+      theme_ustar: 2026110200
+    files: 649
+    tables: 108
+    counts_basis: fixed_controller_payload_not_a_new_whole_host_manifest
+    independent_probe: false
+    worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
+    worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+    worker_rollout: true
+    previous_exact_terminal_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+    previous_2801_preflight_in_same_receipt: false
+    post_deploy_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+    browser_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+    role_bot_enabled: true
+    runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
+    post_check: active
+    live_role_acceptance: owner accepted tasks, return/execution, photos and visual readability;
+      remaining processes with leadership from2Nov
+    latest_functional_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+    previous_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
+    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh service
+      query in2Nov SCORM receipt
+  status: owner_installed_marketplace0200_general_functional_acceptance
+  observed_at: '2026-11-03'
+  source: context/runtime/evidence_marketplace0200_20261103.yaml
+  independently_measured: false
+  current_source_commit: 4715383b8f6ec4b48fef855944be13a51c3cad61
+  current_source_commit_scope: Owner marketplace59f active postcheck verifies649 fixed addon
+    source files and preserved controls; no new whole-host or SQL census.
+  current_versions: *id001
+  last_exact_source_manifest:
+    commit: 4715383b8f6ec4b48fef855944be13a51c3cad61
+    date: '2026-11-03'
+    matching_files: 649
+    kind: owner_verified_controller_payload_not_fresh_manifest
+    evidence: context/runtime/library_marketplace_owner_deploy_20261103.json
+  cron: completed29Oct03_37MSK_exit0_1_282s_no_new_failures; current_adhoc1_overdue56_failed2_not_yet_drained
+  cron_current_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
+  regular_backup_current_receipt: context/runtime/infra_readonly_owner_20261023.json
+  later_observations: context/runtime/RELEASE_LEDGER.md
+  platform:
+    moodle: 5.1.8
+    core_database_version: '2025100608.00'
+    PHP: 8.3.33
+    PostgreSQL: '16.15'
+    Ubuntu: 24.04.5 LTS
+    kernel: 6.8.0-147-generic
+    Docker: 29.9.0
+    containerd: 2.4.1
+    version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
+  post_deploy_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+  previous_addon_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
+  post2900_cron_run_receipt: pending; last supplied scheduled cron remains pre2900
+  current_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
+  current_worker_observed_at: '2026-11-01'
+  current_worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+  latest_assessment_issue: context/runtime/studio_assessment_route_20261102.json
+  historical_incomplete_update_attempt: context/runtime/route_review_recovery_20261102.json
+  latest_library_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+  previous_effective_addon_deployment:
     receipt: context/runtime/library_navigation_owner_deploy_20261103.json
     reported_date_msk: '2026-11-03'
     status: owner_installed_library0200_navigation_active
     installer_commit: 5131c552ca5bc14ef1f1372640654696b1886577
     payload_commit: f89dde49cf22225653349fa519c00b1c0aaf1358
-    versions: &id001
+    versions:
       local_ustar: 2026110200
       theme_ustar: 2026110200
     files: 649
@@ -61,81 +128,14 @@ production:
     role_bot_enabled: true
     runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
     post_check: active
-    live_role_acceptance: owner accepted tasks, return/execution, photos and visual
-      readability; remaining processes with leadership from2Nov
+    live_role_acceptance: owner accepted tasks, return/execution, photos and visual readability;
+      remaining processes with leadership from2Nov
     latest_functional_receipt: context/runtime/library_owner_navigation_20261103.json
     previous_receipt: context/runtime/library_owner_navigation_20261103.json
-    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh
-      service query in2Nov SCORM receipt
-  status: owner_installed_library0200_navigation_active_role_acceptance_pending
-  observed_at: '2026-11-03'
-  source: context/runtime/evidence_library_navigation0200_20261103.yaml
-  independently_measured: false
-  current_source_commit: f89dde49cf22225653349fa519c00b1c0aaf1358
-  current_source_commit_scope: Owner navigation5131 active postcheck verifies all649
-    fixed addon source files and preserved controls; not a new whole-host or database
-    census.
-  current_versions: *id001
-  last_exact_source_manifest:
-    commit: f89dde49cf22225653349fa519c00b1c0aaf1358
-    date: '2026-11-03'
-    matching_files: 649
-    kind: owner_verified_controller_payload_not_fresh_manifest
-    evidence: context/runtime/library_navigation_owner_deploy_20261103.json
-  cron: completed29Oct03_37MSK_exit0_1_282s_no_new_failures; current_adhoc1_overdue56_failed2_not_yet_drained
-  cron_current_receipt: context/runtime/feed2803_owner_deploy_20261029.json
-  regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
-  regular_backup_current_receipt: context/runtime/infra_readonly_owner_20261023.json
-  later_observations: context/runtime/RELEASE_LEDGER.md
-  platform:
-    moodle: 5.1.8
-    core_database_version: '2025100608.00'
-    PHP: 8.3.33
-    PostgreSQL: '16.15'
-    Ubuntu: 24.04.5 LTS
-    kernel: 6.8.0-147-generic
-    Docker: 29.9.0
-    containerd: 2.4.1
-    version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
-  post_deploy_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
-  previous_addon_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
-  post2900_cron_run_receipt: pending; last supplied scheduled cron remains pre2900
-  current_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
-  current_worker_observed_at: '2026-11-01'
-  current_worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
-  latest_assessment_issue: context/runtime/studio_assessment_route_20261102.json
-  historical_incomplete_update_attempt: context/runtime/route_review_recovery_20261102.json
-  latest_library_owner_receipt: context/runtime/library_owner_navigation_20261103.json
-  previous_effective_addon_deployment:
-    receipt: context/runtime/scorm_tracking_owner_20261102.json
-    reported_date_msk: '2026-11-02'
-    status: owner_installed1100_SCORM_functional_accepted
-    installer_commit: b5ead9cb705cf538fe2134f332cfe5ccd055aa06
-    payload_commit: 2150affe7e2964a1056468cce0e438f9e2f91dcb
-    versions:
-      local_ustar: 2026110100
-      theme_ustar: 2026102700
-    files: 614
-    tables: 104
-    counts_basis: fixed_controller_payload_not_new_whole_host_manifest
-    independent_probe: false
-    worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
-    worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
-    worker_rollout: true
-    previous_exact_terminal_receipt: context/runtime/feed2803_owner_deploy_20261029.json
-    previous_2801_preflight_in_same_receipt: false
-    post_deploy_receipt: context/runtime/scorm_tracking_owner_20261102.json
-    browser_receipt: context/runtime/scorm_tracking_owner_20261102.json
-    role_bot_enabled: true
-    runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
-    post_check: active
-    live_role_acceptance: owner accepted tasks, return/execution, photos and visual
-      readability; remaining processes with leadership from2Nov
-    latest_functional_receipt: context/runtime/scorm_tracking_owner_20261102.json
-    previous_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
-    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh
-      service query in2Nov SCORM receipt
+    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh service
+      query in2Nov SCORM receipt
   latest_library_navigation_owner_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
+  latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
@@ -143,10 +143,9 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original infrastructure audit immutable; current verification in context/reviews/20261026/VERIFIED_REVIEW_RU.md
 next_agent_read:
-- context/runtime/connect_bot_owner_order_20261029.json
-- context/runtime/connect_role_bot_owner_deploy_20261029.json
+- context/runtime/library_marketplace_owner_deploy_20261103.json
 - context/tasks/ACTIVE.md
-- context/decisions/0015-ustar-connect.md
+- docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'
@@ -194,17 +193,17 @@ server_facts:
   followup: context/runtime/server_facts_followup_20261017.json
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
-  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance
-    and hardening still separate
-  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019
-    test failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live
-    overrides remain unverified
-  - 18 component skips explained by DB/source; effective runtime overrides/cache and
-    native full-cycle acceptance not checked
-  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware
-    redundancy not confirmed
-  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded
-    plugin/vendor provenance remain separate; native restore/RTO awaited
+  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening
+    still separate
+  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test
+    failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live overrides
+    remain unverified
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and native
+    full-cycle acceptance not checked
+  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy
+    not confirmed
+  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor
+    provenance remain separate; native restore/RTO awaited
   additional_observations:
     provenance: context/runtime/core_extra_received_20261017.json
     review: context/reviews/20261017/core_extra_reconciliation.md
@@ -394,9 +393,9 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   application_commit: 4715383b8f6ec4b48fef855944be13a51c3cad61
-  status: marketplace_department_fix_qualified_owner_deploy_pending
+  status: owner_installed_unmerged_marketplace0200
   branch: feat/library-unification-20261102
-  deployed: false
+  deployed: true
   local_ustar_version: 2026110200
   theme_ustar_version: 2026110200
   schema_changed: false
@@ -410,8 +409,9 @@ development_candidate:
   qualification: context/runtime/marketplace_department_fix_20261103.json
   previous_library_qualification: context/runtime/library_qualification_20261102.json
   owner_preparation_recovery: context/runtime/library_parent_recovery_20261103.json
-  owner_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
+  owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   runbook: docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md
   previous_library_tool_commit: 6ee7112318b672779f84a801e27a8da0c2f94898
   previous_navigation_tool: 5131c552ca5bc14ef1f1372640654696b1886577
   tool_commit: 59f482ee2f086e5df202235880e376b1d25a7b1a
+  previous_deployment_receipt: context/runtime/library_navigation_owner_deploy_20261103.json

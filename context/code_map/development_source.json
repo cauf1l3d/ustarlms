@@ -4,7 +4,7 @@
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
     "moodle/local/ustar": "cf7ba6004fc4792e6a4f5f676aa3a3158fce0df2",
-    "moodle/theme/ustar": "d7de53fc6658e81c7b41e7478ba960ac0f9d2b68"
+    "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
     "local_ustar": 2026110200,
@@ -2409,7 +2409,7 @@
     },
     {
       "path": "moodle/theme/ustar/layout/ustar.php",
-      "sha256": "8e79de1280b73f944dabf2a529a4b5c5bb2bfde2001993ed91ca28915e7165ce"
+      "sha256": "3f82bc4ff3dafa05a7133e08f7861728098bf30da3791e5ab7b4d2690a485199"
     },
     {
       "path": "moodle/theme/ustar/lib.php",

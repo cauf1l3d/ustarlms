@@ -13,3 +13,10 @@ Moodle5.2/PG17/Docker rotation отложены; agent SSH/subagents/provider se
 Перед изменением смотреть реальные entrypoints/services/readers/writers/XMLDB/ACL/tasks/тесты. Код описывает реализацию, ADR — решения, owner receipts — датированные наблюдения, CI — результат определённого runtime/synthetic scope. Не объявлять отсутствие evidence дефектом или synthetic PASS production-приёмкой.
 
 Native UI — local_ustar/theme_ustar; frontend/legacy не входит в текущий CI/release. Не создавать вторые stores сотрудников/completion/rewards/messages. Сохранять историю и реальные роли, current scope, view-as read-only и install/upgrade parity.
+
+03Nov: owner reports Library6ee active/local0200 and opening.
+[Текущее поручение](../runtime/library_owner_navigation_20261103.json): вернуть
+отдельный вход «Центр управления» → materials, сохранить Библиотеку;
+[инструкция/приёмка](../../docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md).
+Не повторять закрытую missing-parent установку. Main2900, prod report0200,
+nav candidatef89dde49 не установлен; подробная ролевая приёмка ожидается.

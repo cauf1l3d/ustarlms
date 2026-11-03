@@ -16,26 +16,25 @@ visuals_ready/recovery_required:false. Оба бота отвечают; PNG/к�
 задачи/возврат/исполнение/фото приняты владельцем. Остальные процессы проверяет
 руководство с2Nov; публичный HTTPS и Mini App ожидают согласования.
 
-Payload606/103 — комплект, не whole-host инвентаризация.
-Приложение и worker имеют разные SHA; merge не меняет production.
+Merge не меняет production.
 Старые контроллеры/архивы не переписывать и не применять повторно по датированной истории.
 
-## Текущее состояние — app1100 и аттестация
+## Текущее состояние — Библиотека0200
 
-Owner2Nov: app2150affe/toolb5ead9cb установлен, active/exit0/active; SCORM и переходы
-по настройкам приняты. [Receipt](context/runtime/scorm_tracking_owner_20261102.json).
-Production614/104, worker267; main остаётся2900, PR113 открыт, merge не разрешён.
-Owner2Nov подтвердил: тест работает. Прямой native Quiz принят.
-Текущая работа — LIBRARY-01: проверка и интеграция импортированного патча единой
-Библиотеки. Candidate0200/108 таблиц прошёл FullRC6ee71123, ещё не установлен; production1100.
-[Квалификация/архив](context/runtime/library_qualification_20261102.json).
-Owner deploy остановился до journal: отсутствует tests/fixtures.
-[Подготовка и retry](context/runtime/library_parent_recovery_20261103.json); затем PERF-01.
+Owner подтвердил установку6ee71123: active/local0200, Библиотека открывается.
+[Owner report и границы](context/runtime/library_owner_navigation_20261103.json).
+Целевой комплект26bd4fe0:649 файлов/108 таблиц, local/theme0200; числа из
+фиксированной квалификации, новой whole-host проверки нет. Worker267 сохранён.
+Ранний missing tests/fixtures — история. Установку Библиотеки не повторять.
+Новая задача — отдельная кнопка «Центр управления» с прежним входом в «Материалы».
+Candidatef89dde49 меняет только layout; его установка и подробная ролевая приёмка
+ожидаются. [Работа и приёмка](docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md).
+SCORM/Quiz приняты; main остаётся2900, PR113/114 открыты, merge не разрешён.
 
 ## PERF-01 после Библиотеки
 
 Пассивный отчёт обычного рабочего дня ещё не получен. Сборщик2900 требует адаптации
-для1100. Нет вывода о SLO, SQL/page или Web-SAPI OPcache из одного статуса служб.
+для0200. Нет вывода о SLO, SQL/page или Web-SAPI OPcache из одного статуса служб.
 
 ## Правила продолжения
 

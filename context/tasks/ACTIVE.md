@@ -1,29 +1,25 @@
 # Активная работа —03.11.2026
 
-## LIBRARY-01: подготовка папки и повтор установки
+## LIBRARY-01: вернуть вход в управление и провести приёмку
 
-Owner принял native Quiz и поручил проверить внешние lib01 архивы, объединить
-знания/каталог/маркетплейс/назначения/мини-проверки и подготовить один выпуск.
-[Квалификация](../runtime/library_qualification_20261102.json),
-[план](../../docs/superpowers/plans/2026-11-02-library-unification.md),
-[ход работы](../runtime/library_integration_progress_20261102.md).
+Owner сообщает6ee71123 active/local0200: Библиотека работает и открывается.
+[Report и границы](../runtime/library_owner_navigation_20261103.json).
+Missing tests/fixtures закрыт последующей установкой; старую установку не повторять.
+App26bd4fe0/local+theme0200:649 файлов/108 таблиц — фиксированный target6ee,
+не новая инвентаризация сервера. [Квалификация](../runtime/library_qualification_20261102.json).
 
-App26bd4fe0/tool6ee71123, local/theme0200,649 файлов/108 таблиц. FullRC:415 native
-тестов/1916assertions на5.1.1 и5.1.8,36 browser views, actual PG16 upgrade/repeat.
-Архив6ee71123/db2f51a1 совпал с CI и скачанной сохранённой копией.
-Продажи выключены, source ACL не расширены, мини-проверки дают только отметку.
-Owner retry: [missing-parent receipt](../runtime/library_parent_recovery_20261103.json).
-prepare273 упал до journal: нет tests/fixtures. Check всё ещё ready1100.
-Локальный root fixture: install -d root:root0755 → тот же updater → active/replay.
-Далее owner создаёт эту папку и повторяет установку; реальная приёмка ожидается.
-Production остаётся app2150affe/1100/theme2700, worker267e5587. Merge не выполнялся.
-SCORM и Quiz приняты владельцем; их диагностику не повторять.
+Отдельная кнопка «Центр управления» возвращает прежний elevated переход knowledge
+→ materials; «Модели должностей» остаются внутри центра. Candidatef89dde49:
+один layout, прежние capability/eligible/view-as boundaries; schema/версии прежние.
+[Работа и приёмка](../../docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md). Установка исправления
+и реальные role/purchase/grant/check scenarios ожидаются; общее открытие их не доказывает.
+Worker267/egress/cron сохраняют прежние evidence dates. Main2900, merge не выполнен.
 
 ## PERF-01 после Библиотеки
 
 Нужен пассивный отчёт обычного рабочего дня: latency, SQL, cron lag, нагрузка.
 Сборщик frozen9a поддерживает2900; сначала адаптировать для фактически установленной
-версии. Фактический8h отчёт не получен. SQL/page, Web-SAPI OPcache и concurrency/SLO
+0200. Фактический8h отчёт не получен. SQL/page, Web-SAPI OPcache и concurrency/SLO
 не выводить из Apache aggregate или одного статуса служб. Старые cron19/failed2 и
 историю backoff не сбрасывать. Изменения выбирать по измерениям.
 

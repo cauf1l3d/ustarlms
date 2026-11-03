@@ -1,5 +1,10 @@
 # Runtime evidence
 
+Текущий owner report: Библиотека0200 active и открывается;
+[квитанция/границы](library_owner_navigation_20261103.json),
+[dated evidence](evidence_library0200_20261103.yaml). Навигационный successor
+и подробная ролевая приёмка ожидаются. Main остаётся2900; merge не deploy.
+
 Приложение2900: [dated evidence](evidence_connect2900_20261029.yaml).
 Текущий worker267, восстановление Telegram и принятые задачи/фото/читаемость:
 [owner1Nov](connect_visual_owner_deploy_20261101.json).

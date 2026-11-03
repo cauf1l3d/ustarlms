@@ -1,10 +1,10 @@
 schema_version: 2
-updated_at: '2026-11-02'
+updated_at: '2026-11-03'
 project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: studio_assessment_route_configuration
+  stage: library_control_center_navigation
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -14,16 +14,18 @@ stack:
   deployment: Docker29.9.0 on Ubuntu24.04.5/kernel6.8.0-147; owner14Oct boot acceptance
   native_ui: PHP + Mustache + JS/AMD + SCSS
   theme: theme_ustar extends boost
-  secondary_frontend: Legacy Next.js source retained, excluded from active CI and release since16Oct
+  secondary_frontend: Legacy Next.js source retained, excluded from active CI and
+    release since16Oct
 components:
   business: moodle/local/ustar
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
-  context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
-  connect_worker: connect-worker; owner1Nov installed267e5587, visuals_ready; tasks/return/photo/readability accepted,
-    other role processes with leadership from2Nov
+  context_harness: harness/ustar-contextd; local stdio tested; production/session
+    installation unverified
+  connect_worker: connect-worker; owner1Nov installed267e5587, visuals_ready; tasks/return/photo/readability
+    accepted, other role processes with leadership from2Nov
 state: context/roadmap/STATE.yaml
-runtime_evidence: context/runtime/evidence_scorm1100_20261102.yaml
+runtime_evidence: context/runtime/evidence_library0200_20261103.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: PR110_PR111_merged_no_server_mutation_management_gates_pending_Docker_deferred
 latest_connect_owner_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
@@ -35,19 +37,21 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: LEARN-ASSESS-01
+  task: LIBRARY-01
   related_task: PERF-01
-  status: native_quiz_target_selection_owner_verification_pending
-  spec: context/runtime/studio_assessment_route_20261102.json
+  status: library_active_navigation_successor_and_role_acceptance_pending
+  spec: docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py
   observation_sha256: ee883caff5be0b391db583bb4deeb795c1dbd3c1bba0c4127faa02f9cd444f92
   expected_server_observer: /root/ustar-connect-role-bot-install-9a68246b/observe.py
   observer_path_check_on_server: pending
-  application_version: 2026110100
-  application_receipt: context/runtime/scorm_tracking_owner_20261102.json
+  application_version: 2026110200
+  application_receipt: context/runtime/library_owner_navigation_20261103.json
   worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
-  integrated_PRs: [110, 111]
+  integrated_PRs:
+  - 110
+  - 111
   integration_receipt: context/runtime/connect_feed_integration_order_20261101.json
   owner_acceptance: context/runtime/connect_visual_owner_deploy_20261101.json
   remaining_role_acceptance_from: '2026-11-02'

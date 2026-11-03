@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "date_msk": "2026-11-03",
+  "task": "LIBRARY-01",
+  "evidence_kind": "owner_report_from_resumed_project_chat",
+  "independent_server_probe": false,
+  "raw_terminal_transcript_available_in_this_checkout": false,
+  "owner_report": {
+    "installer": "ustar-library-6ee71123",
+    "phase": "active",
+    "local_ustar": "2026110200",
+    "functional": "Библиотека работает и открывается",
+    "request": "Вернуть прежнюю панель управления отдельной кнопкой навпанели; дать инструкцию работы и приёмки."
+  },
+  "application": {
+    "payload_commit": "26bd4fe05a7e1c81bdb4b83992c16d4b4c0a0971",
+    "payload_files": 649,
+    "tables": 108,
+    "versions": {"local_ustar": 2026110200, "theme_ustar": 2026110200},
+    "counts_basis": "fixed_controller_payload_not_a_new_whole_host_manifest",
+    "identity_basis": "Qualified frozen installer6ee active reported by owner; theme version and inventory follow that fixed target, not a fresh server query.",
+    "qualification": "context/runtime/library_qualification_20261102.json"
+  },
+  "navigation_regression": {
+    "cause": "library_rail replaces knowledge.php; its former elevated GET redirected to materials.php. The control workspace was not deleted.",
+    "destination": "/local/ustar/materials.php",
+    "label": "Центр управления",
+    "visibility": "Eligible administrator with existing local/ustar:hr, outside view-as and the existing control workspace",
+    "existing_workspace": ["Сотрудники", "Модели должностей", "Материалы", "Контроль"],
+    "application_commit": "f89dde49cf22225653349fa519c00b1c0aaf1358",
+    "changed_files": ["moodle/theme/ustar/layout/ustar.php"],
+    "deployed": false,
+    "guide": "docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md"
+  },
+  "verification": {
+    "local_layout_navigation_assertions": 32,
+    "layout_verification": "Actual PHP layout evaluated for admin, siteadmin, employee, manager, executive, HR, preview, ineligible/pending and legacy-rail states; existing workspace and mobile full-menu composition checked.",
+    "live_role_acceptance": "pending_owner",
+    "all_library_scenarios_accepted": false
+  },
+  "limits": [
+    "Earlier missing tests/fixtures is historical; owner reports successful installation after retry.",
+    "No agent SSH, production writes, merge or new platform upgrade.",
+    "This successor changes one layout file only; DB/schema/plugin versions and old operators stay unchanged.",
+    "After successor use its --check; old frozen Library checker describes pre-successor layout and must not be re-applied.",
+    "Worker267/egress/cron/learning results retain their previous evidence dates; not freshly measured here."
+  ]
+}

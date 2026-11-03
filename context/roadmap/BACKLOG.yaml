@@ -768,7 +768,9 @@ tasks:
   - Exact1100 to0200 upgrade, repeat, actual PG schema and guarded archive qualified
   qualification: context/runtime/library_qualification_20261102.json
   owner_preparation_recovery: context/runtime/library_parent_recovery_20261103.json
-  current_summary: Owner confirmed missing tests/fixtures before any journal; check stays ready1100. Exact mkdir and frozen-updater retry pass local root fixture; owner retry pending.
+  owner_receipt: context/runtime/library_owner_navigation_20261103.json
+  runbook: docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md
+  current_summary: Owner reports Library0200 active and opening. Independent Control Center entry prepared; one-file successor installation and detailed role acceptance pending.
 
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade

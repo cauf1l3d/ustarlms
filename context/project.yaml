@@ -39,7 +39,7 @@ current_operator_handoff:
 current_work:
   task: LIBRARY-01
   related_task: PERF-01
-  status: marketplace_department_fix_qualification_pending
+  status: marketplace_department_fix_qualified_owner_deploy_pending
   spec: docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py

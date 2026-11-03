@@ -10,7 +10,7 @@ Candidate4715383b: пустой allowlist закрывает вкладку, п�
 администратор выбирает exact department IDs. Источники Word/PDF — только редактору,
 проверка UI+pluginfile. Новые seed draft/assigned; старые офферы/права/результаты не
 переписываются. Выданные/купленные «Мои материалы», каталог и маршрут сохраняются.
-13 существующих файлов, schema/версии0200 прежние. Qualification/deploy pending.
+13 существующих файлов, schema/версии0200 прежние. All4CI/FullRC59f482ee SUCCESS; owner deploy pending.
 [Работа и приёмка](../../docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
 
 Production f89dde49/tool5131 уже active/exit0/postcheck active:

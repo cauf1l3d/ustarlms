@@ -12,8 +12,8 @@
     {
       "path": "context/agents/astra.md",
       "domain": "agents",
-      "size": 2775,
-      "sha256": "d5b8e4075638bfa17f6a49847fb69d777c3ec4e69c1b0ca836dc9105ab428391"
+      "size": 3482,
+      "sha256": "094b96a977430e8c45450533cbb46bef19111fa04f717473671f8dee24b90da8"
     },
     {
       "path": "context/architecture/access_matrix.yaml",
@@ -528,8 +528,8 @@
     {
       "path": "context/code_map/README.md",
       "domain": "code_map",
-      "size": 1605,
-      "sha256": "1b32a0edad73fc688abba8270af2a768eadffe008f79aa47e3c42d769ffcc94b"
+      "size": 1809,
+      "sha256": "cd713d4a94950b6cb2d98171e201de1533c16ebe133d6590b12de271d75fb496"
     },
     {
       "path": "context/code_map/backend.yaml",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 11981,
-      "sha256": "92f1d4e86a500df92d84817eafe2245086144ee0afa1a79dc25b3ca2221b61d0"
+      "size": 11982,
+      "sha256": "379943b310f72c426887881447343e9ed14f5c5bb98baf14c1acbdd3a87792c5"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -894,8 +894,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 3221,
-      "sha256": "4184f248d92558df0d301c5fcc41b39ae876ae12a17095d5cc06f4c92b6bdc68"
+      "size": 3230,
+      "sha256": "ec37425bd26d07c11ea7d964f78318b4c2f0c4ed6dd64524513b1d2de506868f"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1518,8 +1518,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22121,
-      "sha256": "faab12614087ca9c4bd51a35506d5ffccc946785ba5d69cc226a92ecc9bf4730"
+      "size": 22274,
+      "sha256": "6df3c4af4c7ba5146a4e984f5ec9de4d8057e9794af7a76383a583adbbe25db4"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3084,8 +3084,8 @@
     {
       "path": "context/runtime/marketplace_department_fix_20261103.json",
       "domain": "runtime",
-      "size": 2636,
-      "sha256": "36bd0a6a97d5ecdbef2c72b9c6b583c2beee57351031e3e451b70f2e24eee73c"
+      "size": 6783,
+      "sha256": "f539d55a94d171c1696b8b8b2f4cd21195ba17e7c18ff863dad53c58ba73c37c"
     },
     {
       "path": "context/runtime/moodle.yaml",
@@ -3804,8 +3804,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3518,
-      "sha256": "06ee9ef63892e632fb8af0df95f883d4783048ed7bbc7772f87fc43bb70963e2"
+      "size": 3541,
+      "sha256": "7cddcdc207bd01412c557eaded7268ecf56d17aa01042ee0d450581e5445f152"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

@@ -11,10 +11,13 @@ Generated: [manifest](generated/source_manifest.json), [классы](generated/
 [таблицы](generated/database_tables.md), [API](generated/web_services.md).
 Обновление: bash scripts/build_code_map.sh EXACT_SOURCE_COMMIT.
 [Токены](../design/tokens.yaml), [capability references](../architecture/access_matrix.yaml),
-[домены](../domains). PR113/app2150affe — development_source.json:614файлов/104таблицы.
-Owner2Nov установил1100 и принял SCORM/переходы: [receipt](../runtime/scorm_tracking_owner_20261102.json).
+[домены](../domains). PR114/app4715383b — development_source.json:649файлов/108таблиц.
+Owner3Nov установил navigationf89dde49/tool5131 поверх Библиотеки0200:
+[receipt](../runtime/library_navigation_owner_deploy_20261103.json).
 Generated/source_manifest.json и STATE.code_baseline описывают main2900;
-STATE.production — установленный1100. PR113 ещё не объединён.
+STATE.production — установленный0200. Маркетплейс по отделам — отдельный
+[candidate](../runtime/marketplace_department_fix_20261103.json), ещё не установлен.
+PR113/114 ещё не объединены.
 connect_role_bot_development_source.json сохраняет исторический snapshot.
 
 [Connect](../domains/connect.yaml) использует текущие Academy writers/права/историю.

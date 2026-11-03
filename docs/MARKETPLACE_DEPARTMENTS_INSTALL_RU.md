@@ -66,3 +66,61 @@ purge_caches обновляет шаблоны: изменяется служе�
 не откатываются. Восстановление возвращает исходные файлы с повторной очисткой кеша.
 Старые операторы и журналы не изменяются. Текущий контроль после этого обновления —
 новый update.py --check; предыдущий navigation checker описывает предыдущий payload.
+
+## Комплект и команды владельцу
+
+Application: `4715383b8f6ec4b48fef855944be13a51c3cad61`.
+Tool: `59f482ee2f086e5df202235880e376b1d25a7b1a`.
+Архив: `ustar-library-marketplace-59f482ee.tar.gz`, 152207 байт.
+SHA256: `08f397c57f5481edb1e997852bb6e33d89b1d6957c316cea6e7dd703c87639ca`.
+Степень квалификации и сохранённая копия — в
+[квитанции](../context/runtime/marketplace_department_fix_20261103.json).
+
+Загрузите архив в `/home/aduk/`, затем выполните один блок. Ожидается краткий
+перерыв работы web. `--check` перед запуском должен показать `phase=ready`.
+
+```bash
+sudo bash <<'ROOT'
+set -euo pipefail
+umask 077
+ustar_market_archive=/home/aduk/ustar-library-marketplace-59f482ee.tar.gz
+ustar_market_dir=/root/ustar-library-marketplace-59f482ee
+printf '%s  %s\n' \
+  08f397c57f5481edb1e997852bb6e33d89b1d6957c316cea6e7dd703c87639ca \
+  "$ustar_market_archive" | sha256sum --check --strict -
+test ! -L "$ustar_market_dir"
+install -d -o root -g root -m 700 "$ustar_market_dir"
+tar --no-same-owner -xzf "$ustar_market_archive" -C "$ustar_market_dir"
+cd "$ustar_market_dir"
+sha256sum --check --strict SHA256SUMS
+python3 -I -B update.py --check
+systemd-run --no-block --unit=ustar-marketplace-20261103-01 \
+  --property=Type=oneshot --property=TimeoutStartSec=240 \
+  /usr/bin/python3 -I -B "$ustar_market_dir/update.py" \
+  --upgrade --acknowledge-outage
+ROOT
+```
+
+После завершения выполните по очереди:
+
+```bash
+sudo systemctl show ustar-marketplace-20261103-01.service \
+  -p ActiveState -p SubState -p Result -p ExecMainStatus
+```
+
+```bash
+sudo journalctl -u ustar-marketplace-20261103-01.service -n 30 --no-pager
+```
+
+```bash
+sudo python3 -I -B /root/ustar-library-marketplace-59f482ee/update.py --check
+```
+
+Успех: `Result=success`, `ExecMainStatus=0`, итоговый `phase=active`.
+`inactive/dead` после успешного oneshot нормально. Применение сообщает
+`cache_purged=true`, `database_changed=true` из-за служебных кешей, при этом
+`business_data_changed=false`, `schema_changed=false`. Последующий readonly check
+ничего не меняет. Не запускайте старый updater для проверки нового payload.
+Автоматически повторять upgrade или recovery после отказа не нужно: сохраните
+вывод команды и журнала. Recovery откатывает исходники к прежнему поведению
+Маркетплейса, поэтому это аварийное восстановление, не штатный следующий шаг.

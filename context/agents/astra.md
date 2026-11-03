@@ -21,3 +21,10 @@ Native UI — local_ustar/theme_ustar; frontend/legacy не входит в те
 Не повторять закрытую missing-parent установку. Main2900, prod report0200,
 navf89dde49/tool5131 установлен: active/exit0/postcheck active.
 [Receipt](../runtime/library_navigation_owner_deploy_20261103.json). Browser и ролевая приёмка ожидаются.
+
+Следующее поручение03Nov: полностью скрыть Маркетплейс, включать по отделам из админки,
+убрать скачивание исходников сотрудником. Candidate4715383b/tool59f482ee;
+[квалификация и поставка](../runtime/marketplace_department_fix_20261103.json),
+[инструкция](../../docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
+Пустой allowlist закрыт; прежние grants/обязательный маршрут сохраняются.
+Новая установка владельцем ещё не подтверждена; production f89 не подменять candidate.

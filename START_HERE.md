@@ -17,19 +17,20 @@ visuals_ready/recovery_required:false. Оба бота отвечают; PNG/к�
 руководство с2Nov; публичный HTTPS и Mini App ожидают согласования.
 
 Merge не меняет production.
-Старые контроллеры/архивы не переписывать и не применять повторно по датированной истории.
+Старые операторы неизменны.
 
 ## Текущее состояние Библиотеки0200
 
 Owner3Nov установил app4715383b/tool59f: success/exit0/postcheck active и
 подтвердил «Отлично работает». [Квитанция](context/runtime/library_marketplace_owner_deploy_20261103.json).
-649файлов/108таблиц — fixed payload, не whole-host census. Повторять установку не нужно.
+649файлов/108таблиц — fixed payload, не whole-host census. 
 Маркетплейс скрыт по умолчанию; admin выбирает отделы. Исходники товаров доступны
 редактору. «Центр управления» → «Материалы», Библиотека — читательский раздел.
 [Инструкция](docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
 SCORM/Quiz приняты. Детальные роли/URL/purchases ещё не приняты. Main2900 и установленный0200 — разные source pointers;
 PR112/113/114 открыты, автоматический merge не разрешён.
-Сейчас SCORM/архивы студии; app5e61c0d2 не установлен. [Статус](context/tasks/ACTIVE.md).
+SCORM app5e61c0d2/tool4aee установлен: exit0/postcheck active.
+[Квитанция](context/runtime/studio_scorm_edit_owner_deploy_20261103.json). Сейчас тройной аудит. [Статус](context/tasks/ACTIVE.md).
 
 ## PERF-01 после Библиотеки
 

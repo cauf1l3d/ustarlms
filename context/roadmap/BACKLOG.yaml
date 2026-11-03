@@ -799,9 +799,18 @@ tasks:
     execute
   - Native CI and exact source-only successor on installed471 baseline; owner installation
     separately recorded
-  phase: corrected_operator4aee_qualified_owner_install_pending
+  phase: owner_installed_general_report_detailed_browser_cases_pending
   qualification_evidence: context/runtime/studio_scorm_edit_lint_recovery_20261103.json
-  deployment_evidence: a8 refused host_command_failed; final ready; production remains4715383b
+  deployment_evidence: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
+- id: AUDIT-20261103
+  title: Продуктовый, UX/UI и инженерный аудит по фактическому коду
+  status: in_progress
+  depends_on: []
+  acceptance:
+  - Evidence on exact application/worker source; confirmed defects separate from risks
+    and missing evidence
+  - Plan with priorities, scope, tests and rollout gates; no subagents, no server
+    mutation
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

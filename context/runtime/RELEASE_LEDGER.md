@@ -1056,3 +1056,7 @@ Application5e61 и её native/browser квалификация прежние; 
 CI CRC/all3members/local build/saved readback PASS. Новая установка owner pending.
 [Квитанция](studio_scorm_edit_lint_recovery_20261103.json),
 [команды](../../docs/STUDIO_SCORM_EDIT_LINT_INSTALL_RU.md). Старый a8 не повторять.
+
+## 03Nov2026 — SCORM corrected installer owner accepted
+
+Tool4aee/app5e61: checksums OK, initial busy refusal then ready → active; unit02 success/exit0, final readonly active. General owner report; detailed browser cases not enumerated. [Receipt](studio_scorm_edit_owner_deploy_20261103.json). No merge or independent host probe.

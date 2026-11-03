@@ -19,9 +19,10 @@ Native UI — local_ustar/theme_ustar; frontend/legacy не входит в те
 Production0200,649 fixed files/108tables; main2900 remains separate, PR112/113/114 open.
 Marketplace default hidden; admin enables exact departments; source files editor-only.
 Previous grants/mandatory route retained. No repeat installation/recovery.
-Current order: static SCORM/archived route editing; app5e61c0d2 not deployed.
+Current order: product, UX/UI and engineering audit; app5e61c0d2 installed3Nov.
 [Progress](../runtime/studio_scorm_edit_20261103.json); app all4 CI/8FullRC PASS; a8 owner failed PHP lint on model.js, postcheck ready.
-Successor4aee:13 operator CI PASS, real PHP/UID33; app unchanged, install pending.
+Successor4aee:13 operator CI PASS; owner exit0/postcheck active, general works report.
+Owner receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json.
 Receipt: context/runtime/studio_scorm_edit_lint_recovery_20261103.json.
 [Management summary](../../docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md) delivered.
 Detailed real-account department/purchase/URL acceptance and PERF-01 remain separate.

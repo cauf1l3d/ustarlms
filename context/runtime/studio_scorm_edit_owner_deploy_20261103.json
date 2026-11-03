@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "date": "2026-11-03",
+  "source": "owner_terminal_and_message",
+  "independent_server_probe": false,
+  "application_commit": "5e61c0d2566e8103d01121968d56852e26da99fa",
+  "tool_commit": "4aee12968ceefe6189143f3c40f59976831f6513",
+  "archive_sha256": "d558a90a1bfbe8952c8482567f63e53f15887b4d650afd90a650c4d680c654e2",
+  "checksums": "archive, INSTALL.json, update.py OK",
+  "initial_refusal": "managed_operation_busy_retry_later; later check ready; lock holder not identified",
+  "unit": "ustar-studio-scorm-edit-20261103-02.service",
+  "journal_time_raw": {
+    "start": "Nov 03 14:30:47",
+    "end": "Nov 03 14:30:51",
+    "timezone": "not supplied; no conversion inferred"
+  },
+  "systemd": {
+    "Result": "success",
+    "ExecMainStatus": 0,
+    "ActiveState": "inactive",
+    "SubState": "dead"
+  },
+  "apply": {
+    "phase": "active",
+    "database_changed": true,
+    "cache_purged": true,
+    "business_data_changed": false,
+    "schema_changed": false,
+    "worker_changed": false,
+    "local_ustar": "2026110200",
+    "theme_ustar": "2026110200"
+  },
+  "postcheck": {
+    "phase": "active",
+    "database_changed": false,
+    "cache_purged": false,
+    "business_data_changed": false,
+    "host_changes": false,
+    "schema_changed": false,
+    "worker_changed": false,
+    "local_ustar": "2026110200",
+    "theme_ustar": "2026110200"
+  },
+  "owner_comment": "все вроде ок, актуализируй гитхаб",
+  "acceptance_scope": "installation and general owner report; no enumerated browser/role/edit/export acceptance; no new whole-host or SQL census",
+  "preserved_worker": "267e55874eb8f6c36259d748f28a2c636adc9810",
+  "merge_performed": false,
+  "next_order": "Product, UX/UI, backend/architecture/code/infrastructure audit with evidence and remediation plan; no subagents.",
+  "application": {
+    "payload_commit": "5e61c0d2566e8103d01121968d56852e26da99fa",
+    "payload_files": 649,
+    "counts_basis": "fixed_controller_payload_not_a_new_whole_host_manifest",
+    "phase": "active"
+  }
+}

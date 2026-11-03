@@ -1,7 +1,7 @@
 {
   "kind": "unmerged_development_source",
-  "deployed": false,
-  "deployment_evidence": null,
+  "deployed": true,
+  "deployment_evidence": "context/runtime/studio_scorm_edit_owner_deploy_20261103.json",
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
     "moodle/local/ustar": "b0cccfafb2369dc6224a236e54d96644b5f86293",

@@ -1,21 +1,22 @@
 # Активная работа —03.11.2026
 
-## LIBRARY-01: browser и ролевая приёмка
+## LIBRARY-01: Маркетплейс по отделам и запрет скачивания исходников
 
-Owner сообщает6ee71123 active/local0200: Библиотека работает и открывается.
-[Report и границы](../runtime/library_owner_navigation_20261103.json).
-Missing tests/fixtures закрыт последующей установкой; старую установку не повторять.
-App26bd4fe0/local+theme0200:649 файлов/108 таблиц — фиксированный target6ee,
-не новая инвентаризация сервера. [Квалификация](../runtime/library_qualification_20261102.json).
+Owner03Nov: «полностью скрыт с возможностью открывать по отделам с админки»;
+убрать скачивание исходников в Маркетплейсе. Причина235 открытых предложений:
+seed6ee использовал free/published. [Fix receipt](../runtime/marketplace_department_fix_20261103.json).
 
-Отдельная кнопка «Центр управления» возвращает прежний elevated переход knowledge
-→ materials; «Модели должностей» остаются внутри центра. Candidatef89dde49:
-один layout, прежние capability/eligible/view-as boundaries; schema/версии прежние.
-Owner установил5131: ready → active, systemd success/exit0, postcheck active.
-[Receipt](../runtime/library_navigation_owner_deploy_20261103.json). Повтор установки не нужен.
-[Работа и приёмка](../../docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md): browser и реальные
-role/purchase/grant/check scenarios ещё ожидаются.
-Worker267/egress/cron сохраняют прежние evidence dates. Main2900, merge не выполнен.
+Candidate4715383b: пустой allowlist закрывает вкладку, прямые ссылки и покупку;
+администратор выбирает exact department IDs. Источники Word/PDF — только редактору,
+проверка UI+pluginfile. Новые seed draft/assigned; старые офферы/права/результаты не
+переписываются. Выданные/купленные «Мои материалы», каталог и маршрут сохраняются.
+13 существующих файлов, schema/версии0200 прежние. Qualification/deploy pending.
+[Работа и приёмка](../../docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
+
+Production f89dde49/tool5131 уже active/exit0/postcheck active:
+[Owner receipt](../runtime/library_navigation_owner_deploy_20261103.json).
+Повтор старых установок не нужен. 649файлов/108таблиц — fixed payload, не whole-host census.
+Main2900, PR113/114 открыты, merge не разрешён. Worker267/cron — прежние dated receipts.
 
 ## PERF-01 после Библиотеки
 

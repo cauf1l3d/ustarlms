@@ -559,7 +559,7 @@
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
       "size": 104037,
-      "sha256": "df3875b783ab25dd2e5c9f6d125e0122431e36f5c1c501bb542883efd1e0ffb3"
+      "sha256": "220f44fe284bd56564d6bc0198232cd02e7584acc8883983c6e13c831dc6c97b"
     },
     {
       "path": "context/code_map/feed_media_development_source.json",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 11967,
-      "sha256": "6cc8170543c8793a48f33909a40f8f3a52926c4ebeb443b515068bff6f02e1f4"
+      "size": 11981,
+      "sha256": "92f1d4e86a500df92d84817eafe2245086144ee0afa1a79dc25b3ca2221b61d0"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -720,8 +720,8 @@
     {
       "path": "context/decisions/0019-library-unified-domain.md",
       "domain": "decisions",
-      "size": 5341,
-      "sha256": "f19b7b702624701662ab9e4a26d36a285ca7cfc4fcf0d7c76238637e2ed17f6a"
+      "size": 7621,
+      "sha256": "907a91be4062304cdcd008546cdb279f6fbdac46c676fac57a8a6aa8e5431156"
     },
     {
       "path": "context/decisions/ADR-0001-git-source-of-truth.md",
@@ -894,8 +894,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 3208,
-      "sha256": "d756327078c47214fcb48df9ce41e34d262b5470e60969eda1d818cf67be69c3"
+      "size": 3221,
+      "sha256": "4184f248d92558df0d301c5fcc41b39ae876ae12a17095d5cc06f4c92b6bdc68"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1464,8 +1464,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 41691,
-      "sha256": "70ecfc3578040a08e263ef64fa663ac1ba3409707e560b7db6252c083fddcdf7"
+      "size": 41791,
+      "sha256": "8dbc08dcd6933f90540bc0a354990d385f1c35842bc6138dd0b6157c68c5148b"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1518,8 +1518,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22044,
-      "sha256": "ab5802053606c7f65d74cfddfa1a49d0a776325c444746068bc0270334a7e607"
+      "size": 22121,
+      "sha256": "faab12614087ca9c4bd51a35506d5ffccc946785ba5d69cc226a92ecc9bf4730"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3082,6 +3082,12 @@
       "sha256": "35c6066d7d21f9c64da1d8ab804317a3c05cb54b2d7f60da6b10239c3541ca22"
     },
     {
+      "path": "context/runtime/marketplace_department_fix_20261103.json",
+      "domain": "runtime",
+      "size": 2636,
+      "sha256": "36bd0a6a97d5ecdbef2c72b9c6b583c2beee57351031e3e451b70f2e24eee73c"
+    },
+    {
       "path": "context/runtime/moodle.yaml",
       "domain": "runtime",
       "size": 1204,
@@ -3798,8 +3804,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3363,
-      "sha256": "daf8845182546903ba896546fcba6582fca184ca8e32b878c95c5a00737014a0"
+      "size": 3518,
+      "sha256": "06ee9ef63892e632fb8af0df95f883d4783048ed7bbc7772f87fc43bb70963e2"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

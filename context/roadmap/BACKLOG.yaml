@@ -770,7 +770,8 @@ tasks:
   owner_preparation_recovery: context/runtime/library_parent_recovery_20261103.json
   owner_receipt: context/runtime/library_owner_navigation_20261103.json
   runbook: docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md
-  current_summary: Owner installed navigation5131 ready -> active, systemd success/exit0 and postcheck active. Browser Control Center and detailed Library roles/grants/purchases/checks remain pending.
+  current_summary: Owner requests Marketplace hidden by default with admin department allowlist and no source downloads. Candidate4715383b changes13 files without schema/version delta; qualification and owner deploy pending.
+  marketplace_fix: context/runtime/marketplace_department_fix_20261103.json
   navigation_owner_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
 
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md

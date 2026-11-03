@@ -13,6 +13,7 @@ namespace local_ustar {
     class library_access {
         const POLICY_PAID='paid'; const REASON_PURCHASE='purchase_required';
         public static function eligible($userid) { return true; }
+        public static function can_view_marketplace($userid) { return true; }
         public static function require_actor($id) { if($id!==10) {throw new \required_capability_exception('real actor');} }
         public static function active_grant($offer,$userid) { return null; }
         public static function resolve(...$args) {return ['canview'=>true,'canopen'=>false,'reason'=>'purchase_required'];}

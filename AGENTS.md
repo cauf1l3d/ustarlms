@@ -2,7 +2,6 @@
 
 Актуально03.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
 Main2900/source5cc02944; PR110/111 слиты.
-Owner1Nov восстановил egress (CONNECT200/HTTP302/TLS0), оба бота отвечают.
 Worker267e5587 установлен: visuals_active/visuals_ready, recovery_required:false.
 [Owner receipt](context/runtime/connect_visual_owner_deploy_20261101.json); PNG/читаемость и задачи/возврат/фото приняты.
 Инструкции владельцу — прямо в чат короткими блоками команд.
@@ -16,7 +15,8 @@ App2900/theme2700 и worker267e5587 уже установлены владель
 Owner2Nov: app1100/2150affe, toolb5 active; SCORM/переходы приняты.
 [Receipt](context/runtime/scorm_tracking_owner_20261102.json). Quiz из точки принят владельцем2Nov. Owner сообщает Библиотека0200 active/открывается; missing-parent закрыт.
 [Report](context/runtime/library_owner_navigation_20261103.json). Сейчас LIBRARY-01:
-Центр управления5131 установлен active/exit0/postcheck active. Далее browser/ролевая приёмка, PERF-01. Остальные процессы с руководством
+5131 установлен active. Сейчас Маркетплейс: скрыт по умолчанию, admin allowlist отделов,
+исходники только редактору; затем приёмка/PERF-01. Остальные процессы с руководством
 с2Nov; HTTPS/Mini App ждут согласования. Старые cron19/failed2 не сбрасывать.
 
 Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,

@@ -81,6 +81,7 @@ jobs:
           php tests/release_20260912/library_store_contract.php
           php tests/release_20260912/library_assessment_contract.php
           php tests/release_20260912/library_generator_contract.php
+          php tests/release_20260912/library_marketplace_contract.php
       - name: Verify production paired copy with exact reported Unix owners
         if: matrix.php == '8.3'
         run: >-

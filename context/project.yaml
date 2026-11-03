@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: library_role_acceptance
+  stage: library_marketplace_department_fix
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -39,8 +39,8 @@ current_operator_handoff:
 current_work:
   task: LIBRARY-01
   related_task: PERF-01
-  status: navigation_active_browser_and_role_acceptance_pending
-  spec: docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md
+  status: marketplace_department_fix_qualification_pending
+  spec: docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py
   observation_sha256: ee883caff5be0b391db583bb4deeb795c1dbd3c1bba0c4127faa02f9cd444f92

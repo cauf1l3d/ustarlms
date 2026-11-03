@@ -23,13 +23,15 @@ Merge не меняет production.
 
 Owner подтвердил установку6ee71123: active/local0200, Библиотека открывается.
 [Owner report и границы](context/runtime/library_owner_navigation_20261103.json).
-Комплект0200:649 файлов/108 таблиц; whole-host census не выполнялся. Worker267 сохранён.
-Ранний missing tests/fixtures — история. Установку Библиотеки не повторять.
+Комплект0200:649файлов/108таблиц, не whole-host census.
+Установку Библиотеки не повторять.
 «Центр управления» ведёт в «Материалы».
 Owner установилf89dde49/tool5131: active/exit0/postcheck active.
 [Квитанция](context/runtime/library_navigation_owner_deploy_20261103.json).
 Повтор установки не нужен; browser и подробная ролевая приёмка ожидаются. [Работа и приёмка](docs/LIBRARY_GUIDE_ACCEPTANCE_RU.md).
-SCORM/Quiz приняты; main остаётся2900, PR113/114 открыты, merge не разрешён.
+Owner03Nov: скрыть Маркетплейс, открывать отделам из админки; убрать исходники.
+[Текущий fix](context/runtime/marketplace_department_fix_20261103.json), qualification pending.
+SCORM/Quiz приняты; main2900, PR113/114 открыты, merge не разрешён.
 
 ## PERF-01 после Библиотеки
 

@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "date_msk": "2026-11-03",
+  "task": "LIBRARY-01",
+  "status": "candidate_qualification_in_progress",
+  "owner_order": "полностью скрыт с возможностью открывать по отделам с админки",
+  "source_download_order": "убрать возможность скачивания в маркетплейсе",
+  "baseline_application": "f89dde49cf22225653349fa519c00b1c0aaf1358",
+  "application_commit": "4715383b8f6ec4b48fef855944be13a51c3cad61",
+  "deployed": false,
+  "schema_changed": false,
+  "versions": {
+    "local_ustar": 2026110200,
+    "theme_ustar": 2026110200
+  },
+  "source_files": 649,
+  "changed_files": 13,
+  "tables": 108,
+  "default_departments": [],
+  "department_source": "structure/content canonical user scope; exact IDs, no implied subtree",
+  "marketplace_config": "local_ustar/library_marketplace_departments",
+  "settings_writer": "library_access::save_marketplace_departments; actor/admin/sesskey/lock/DB revision/audit",
+  "access_boundaries": [
+    "hidden tab",
+    "direct shop entry",
+    "unowned offer GET/launch",
+    "purchase service",
+    "storefront service",
+    "catalog source URLs and filename presenter",
+    "catalog_source pluginfile; images unchanged"
+  ],
+  "independent_entitlements": "Existing assignments/purchases from My materials and mandatory-route access preserved. Marketplace visibility does not grant content access.",
+  "seed_change": "New seed entries draft/assigned; existing offers/grants/attempts/coins are not rewritten.",
+  "finding": "Installer6ee called seed which used free/published for all existing published sources, producing broad open storefront. Source file links were exposed by catalog presenter and allowed by pluginfile whenever product body was open.",
+  "verification": {
+    "php_contract_assertions": 27,
+    "current_source_lint": "445PHP/34JS/108tables/69templates PASS before tool qualification",
+    "native_tests_added": 5,
+    "native_tests_status": "pending_CI",
+    "operator_tests_local": "11 tests;10passed,actualUID33 delegated to CI",
+    "all4CI_success_claimed": false
+  },
+  "guide": "docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md",
+  "previous_owner_receipt": "context/runtime/library_navigation_owner_deploy_20261103.json",
+  "runtime_limits": [
+    "Source-only successor on f89/active nav5131; old archives/operators unchanged.",
+    "No schema/core/plugin version upgrade, no seed or business-data restoration.",
+    "Native cache purge after restart updates Mustache caches and cache metadata.",
+    "Owner applies; no agent SSH, provider sends, subagents or merge."
+  ]
+}

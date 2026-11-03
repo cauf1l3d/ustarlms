@@ -752,6 +752,14 @@ if (get_config('local_ustar','library_rail') && class_exists('\\local_ustar\\lib
         'icon'=>$icons['knowledge'],'active'=>$libraryactive]; }
     if ($libraryactive) { foreach ($unified as &$item) { if ($item['label']!=='Библиотека') { $item['active']=false; } }unset($item); }
     $navitems=$unified;
+
+    // Knowledge used to lead administrators to Materials. Keep that entrance
+    // separate from the employee Library; the workspace already has its own rail.
+    if ($canadmin && $canhr && !$viewasactive && !$ishrworkspace) {
+        $navitems[] = ['label' => 'Центр управления', 'short' => 'Управление',
+            'url' => (new moodle_url('/local/ustar/materials.php'))->out(false),
+            'icon' => $icons['admin'], 'active' => false];
+    }
 }
 
 $mobilenavitems = array_values(array_filter($navitems, static function(array $item): bool {

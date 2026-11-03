@@ -22,6 +22,10 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             $id=required_param('grantid',PARAM_INT);$reason=optional_param('comment','',PARAM_TEXT);
             if ($action==='refund') { library_grant::refund($id,$uid,$reason);$notice='Покупка возвращена. USCOIN восстановлены.'; }
             else { library_grant::revoke($id,$uid,$reason);$notice='Доступ отозван. История сохранена.'; }
+        } else if ($action==='marketplace') {
+            library_access::save_marketplace_departments(
+                optional_param_array('marketdept',[],PARAM_ALPHANUMEXT),$uid,required_param('settingsrevision',PARAM_INT));
+            $notice='Доступ отделов к Маркетплейсу сохранён.';
         } else if ($action==='settings') {
             if (!$admin) { library_access::fail('Настройка продаж доступна администратору.'); }
             $min=required_param('pricemin',PARAM_INT);$max=required_param('pricemax',PARAM_INT);
@@ -29,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             $lock=\core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('library-settings',10);
             if (!$lock) { library_access::fail('Настройки сейчас изменяются. Повторите действие.'); }
             try {
-                if (required_param('settingsrevision',PARAM_INT)!==(int)get_config('local_ustar','library_settings_revision')) { library_access::fail('Настройки изменились. Обновите страницу.'); }
+                if (required_param('settingsrevision',PARAM_INT)!==(int)$DB->get_field('config_plugins','value',['plugin'=>'local_ustar','name'=>'library_settings_revision'])) { library_access::fail('Настройки изменились. Обновите страницу.'); }
                 $tx=$DB->start_delegated_transaction();
                 try {
                     set_config('library_pricemin',$min,'local_ustar');set_config('library_pricemax',$max,'local_ustar');
@@ -61,7 +65,7 @@ if ($author) {
     }
 }
 $choices=static function(array $values,string $current): array { $out=[];foreach($values as $value=>$label){$out[]=['value'=>$value,'label'=>$label,'selected'=>(string)$value===$current];}return $out; };
-$policies=$choices(['free'=>'Открыто для аудитории материала','assigned'=>'По назначению','paid'=>'За USCOIN','gated'=>'После точки маршрута'],$record->accesspolicy??'free');
+$policies=$choices(['free'=>'Открыто для аудитории материала','assigned'=>'По назначению','paid'=>'За USCOIN','gated'=>'После точки маршрута'],$record->accesspolicy??'assigned');
 $visibilities=$choices(['draft'=>'Черновик','published'=>'Опубликовано','archived'=>'Архив'],$record->visibility??'draft');
 $gates=[['value'=>0,'label'=>'Не требуется','selected'=>empty($record->gatepointid)]];
 if ($author) { foreach ($DB->get_records('local_ustar_route_points',['active'=>1],'id','id',0,500) as $point) {
@@ -119,8 +123,16 @@ foreach (($skilldata['skills']??$skilldata) as $skill) {
     $targetrefs[]=['value'=>'skill:'.$skill['id'],'label'=>'Навык · '.($skill['name']??$skill['id']),
         'selected'=>$bank && $bank->targettype==='skill' && $bank->targetkey===(string)$skill['id']];
 }
+$marketdepartments=[];
+if ($admin) {
+    $allowed=library_access::marketplace_departments();
+    foreach (\local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE)['departments']??[] as $department) {
+        $marketdepartments[]=['id'=>(string)$department['id'],'name'=>(string)$department['name'],
+            'selected'=>in_array((string)$department['id'],$allowed,true)];
+    }
+}
 $bounds=library_store::price_bounds();
-$data=['notice'=>$notice,'writable'=>!view_as::active(),'author'=>$author,'grantor'=>$grantor,'assessor'=>$assessor,'admin'=>$admin,
+$data=['marketdepartments'=>$marketdepartments,'hasmarketdepartments'=>(bool)$marketdepartments,'notice'=>$notice,'writable'=>!view_as::active(),'author'=>$author,'grantor'=>$grantor,'assessor'=>$assessor,'admin'=>$admin,
     'libraryurl'=>(new moodle_url('/local/ustar/library.php'))->out(false),'actionurl'=>(new moodle_url('/local/ustar/library_manage.php'))->out(false),
     'materialsurl'=>(new moodle_url('/local/ustar/materials.php'))->out(false),'catalogediturl'=>(new moodle_url('/local/ustar/catalog.php',['editor'=>1]))->out(false),
     'sesskey'=>sesskey(),'id'=>$record->id??0,'expectedmodified'=>$record->timemodified??0,'title'=>$record->title??'','summary'=>$record->summary??'',

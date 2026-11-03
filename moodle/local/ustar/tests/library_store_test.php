@@ -5,7 +5,22 @@ defined('MOODLE_INTERNAL') || die();require_once(__DIR__.'/fixtures/library_fixt
 #[\PHPUnit\Framework\Attributes\CoversClass(library_grant::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(library_offer::class)]
 final class library_store_test extends \advanced_testcase {
-    use library_fixture;
+    use library_fixture {employee as original_employee;}
+    private function employee(): \stdClass {
+        global $DB;
+        $tree=structure::get(structure::NAME_STRUCTURE);
+        if (!in_array('library_shop_fixture',array_column($tree['departments'],'id'),true)) {
+            $tree['departments'][]=['id'=>'library_shop_fixture','name'=>'Library shop fixture'];
+            $tree['positions'][]=['id'=>'library_shop_fixture_job','name'=>'Library shop job','department'=>'library_shop_fixture','level'=>1];
+            structure::save(structure::NAME_STRUCTURE,$tree);
+        }
+        if (!$DB->record_exists('user_info_field',['shortname'=>'ustar_position'])) {
+            $this->getDataGenerator()->create_custom_profile_field(['shortname'=>'ustar_position','name'=>'Position','datatype'=>'text']);
+        }
+        $u=$this->original_employee();people::set_position_id($u->id,'library_shop_fixture_job');
+        set_config('library_marketplace_departments','["library_shop_fixture"]','local_ustar');return $u;
+    }
+
     protected function setUp(): void {parent::setUp();$this->resetAfterTest(true);$this->setAdminUser();accounts::ensure_profile_field();set_config('library_store_enabled',1,'local_ustar');}
     private function buy(object $o,object $u,string $nonce=''): array {return library_store::purchase($o->id,$u->id,(int)$o->pricecoin,(int)$o->timemodified,$nonce?:bin2hex(random_bytes(16)));}
     private function fund(object $u,int $amount=25): void {economy::post($u->id,$amount,'fixture','fixture:'.random_string(20),'fixture','1','Fixture',get_admin()->id);}

@@ -15,6 +15,7 @@ final class library_store {
         global $DB;
         library_access::require_actor($userid);
         $fail=static fn($reason,$balance=0)=>['ok'=>false,'reason'=>$reason,'grantid'=>0,'balance'=>$balance,'spent'=>0];
+        if (!library_access::can_view_marketplace($userid)) { return $fail('marketplace_hidden'); }
         if (!self::enabled()) { return $fail('store_disabled'); }
         if (!library_access::eligible($userid)) { return $fail('employment'); }
         if (!economy::available()) { return $fail('economy_unavailable'); }
@@ -48,6 +49,10 @@ final class library_store {
     public static function storefront(int $userid,string $q='',int $page=0,int $perpage=24): array {
         global $DB;
         $page=max(0,$page);$perpage=max(1,min(48,$perpage));
+        if (!library_access::can_view_marketplace($userid)) {
+            return ['items'=>[], 'total'=>0, 'balance'=>0, 'storeenabled'=>false,
+                'hasmore'=>false, 'page'=>$page];
+        }
         $where='visibility=:vis';$params=['vis'=>'published'];
         if ($q!=='') {
             $where.=' AND ('.$DB->sql_like('title',':q1',false).' OR '.$DB->sql_like('summary',':q2',false).')';

@@ -43,7 +43,7 @@ final class library_offer {
         if (!library_access::is_authoring($actorid)) { library_access::fail('Недостаточно прав для настройки предложений.'); }
         $type=(string)($input['itemtype']??'content');
         $itemid=(int)($input['itemid']??0);
-        $policy=(string)($input['accesspolicy']??'free');
+        $policy=(string)($input['accesspolicy']??'assigned');
         $visibility=(string)($input['visibility']??'draft');
         if (!in_array($type,['content','catalog','assessment'],true) || $itemid<=0
                 || !in_array($policy,['free','paid','gated','assigned'],true)
@@ -112,7 +112,7 @@ final class library_offer {
                 if (self::for_subject($type,(int)$row->id)) { $result['skipped']++;continue; }
                 if (!$dryrun) {
                     self::save(0,['itemtype'=>$type,'itemid'=>$row->id,'title'=>$row->title,
-                        'summary'=>$row->summary??'','accesspolicy'=>'free','visibility'=>'published'],$actorid);
+                        'summary'=>$row->summary??'','accesspolicy'=>'assigned','visibility'=>'draft'],$actorid);
                 }
                 $result['created']++;
             }

@@ -52,6 +52,60 @@ final class library_access {
             || has_capability('local/ustar:libraryassess', \context_system::instance(), $userid, false));
     }
 
+    /** Marketplace is opt-in for exact canonical departments, independently of sales. */
+    public static function marketplace_departments(): array {
+        $configured = json_decode((string)get_config('local_ustar', 'library_marketplace_departments'), true);
+        if (!is_array($configured) || !array_is_list($configured)) { return []; }
+        $known = array_map(static fn($row) => (string)$row['id'],
+            structure::get(structure::NAME_STRUCTURE)['departments'] ?? []);
+        return array_values(array_unique(array_filter($configured,
+            static fn($id) => is_string($id) && in_array($id, $known, true))));
+    }
+
+    public static function can_view_marketplace(int $userid): bool {
+        if (!self::eligible($userid)) { return false; }
+        if (!view_as::active() && self::is_admin($userid)) { return true; }
+        $allowed = self::marketplace_departments();
+        if (!$allowed) { return false; }
+        $department = (string)(content::user_scope($userid)['departmentid'] ?? '');
+        return $department !== '' && in_array($department, $allowed, true);
+    }
+
+    /** Existing assignments/purchases remain reachable from My materials. */
+    public static function can_view_offer_page(int $offerid, int $userid): bool {
+        return self::eligible($userid) && (self::can_view_marketplace($userid)
+            || (!view_as::active() && self::active_grant($offerid, $userid) !== null));
+    }
+
+    public static function save_marketplace_departments(array $ids, int $actorid, int $expectedrevision): void {
+        global $DB;
+        self::require_actor($actorid);
+        if (!self::is_admin($actorid)) { self::fail('Доступ отделов настраивает администратор.'); }
+        $known = array_map(static fn($row) => (string)$row['id'],
+            structure::get(structure::NAME_STRUCTURE)['departments'] ?? []);
+        foreach ($ids as $id) {
+            if (!is_string($id) || !in_array($id, $known, true)) {
+                self::fail('Отдел изменился или не найден. Обновите страницу.');
+            }
+        }
+        $ids = array_values(array_unique($ids));
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('library-settings', 10);
+        if (!$lock) { self::fail('Настройки сейчас изменяются. Повторите действие.'); }
+        try {
+            if ($expectedrevision !== (int)$DB->get_field('config_plugins', 'value',
+                    ['plugin'=>'local_ustar', 'name'=>'library_settings_revision'])) {
+                self::fail('Настройки изменились. Обновите страницу.');
+            }
+            $tx = $DB->start_delegated_transaction();
+            try {
+                set_config('library_marketplace_departments', json_encode($ids, JSON_THROW_ON_ERROR), 'local_ustar');
+                set_config('library_settings_revision', max(time(), $expectedrevision + 1), 'local_ustar');
+                library_offer::audit(0, 'marketplace_departments_changed', $actorid, ['departmentids' => $ids]);
+                $tx->allow_commit();
+            } catch (\Throwable $e) { $tx->rollback($e); throw $e; }
+        } finally { $lock->release(); }
+    }
+
     /** Domain commands authenticate the real actor even when called outside an HTTP controller. */
     public static function require_actor(int $actorid): void {
         global $USER;

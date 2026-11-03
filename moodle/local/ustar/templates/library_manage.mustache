@@ -3,6 +3,14 @@
 {{#notice}}<div class="u-alert" role="status">{{notice}}</div>{{/notice}}
 {{^writable}}<p>В режиме просмотра изменения недоступны.</p>{{/writable}}
 {{#writable}}
+{{#admin}}<details class="u-library__section"><summary>Доступ отделов к Маркетплейсу</summary>
+<p class="u-muted">Маркетплейс скрыт от сотрудников, пока вы не выберете их отдел. Выбор отдела открывает витрину; условия каждого материала и аудитория сохраняются. Покупки включаются отдельно.</p>
+<form class="u-library__checksedit" method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="marketplace"><input type="hidden" name="settingsrevision" value="{{settingsrevision}}">
+<fieldset><legend>Отделы, которым виден Маркетплейс</legend>
+{{#marketdepartments}}<label class="u-choice"><input type="checkbox" name="marketdept[]" value="{{id}}" {{#selected}}checked{{/selected}}>{{name}}</label>{{/marketdepartments}}
+{{^hasmarketdepartments}}<p class="u-muted">Сначала добавьте отделы в оргструктуре.</p>{{/hasmarketdepartments}}
+</fieldset><p class="u-muted">Если ничего не выбрано, Маркетплейс виден только администратору. Вложенные отделы выбираются отдельно.</p>
+<button class="u-btn u-btn--primary" type="submit">Сохранить доступ отделов</button></form></details>{{/admin}}
 {{#author}}<section class="u-library__section"><h2>Условия доступа к материалу</h2><p class="u-muted">Правила аудитории сохраняются. Назначение или покупка не публикуют материал для всей компании.</p>
 <form class="u-library__checksedit" method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="save"><input type="hidden" name="id" value="{{id}}"><input type="hidden" name="expectedmodified" value="{{expectedmodified}}">
 <label class="u-field">Материал<select name="subject" required>{{#subjects}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/subjects}}</select></label>

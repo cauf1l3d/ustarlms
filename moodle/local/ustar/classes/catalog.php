@@ -133,6 +133,10 @@ final class catalog {
     }
 
     public static function file_url(int $itemid, string $filearea, bool $download = false): string {
+        global $USER;
+        if ($filearea === self::FILEAREA_SOURCE && !self::can_download_source((int)($USER->id ?? 0))) {
+            return '';
+        }
         if (!in_array($filearea, [self::FILEAREA_IMAGE, self::FILEAREA_SOURCE], true) || $itemid <= 0) {
             return '';
         }
@@ -161,6 +165,8 @@ final class catalog {
     }
 
     public static function source_filename(int $itemid): string {
+        global $USER;
+        if (!self::can_download_source((int)($USER->id ?? 0))) { return ''; }
         $context = \context_system::instance();
         $files = get_file_storage()->get_area_files(
             $context->id,
@@ -179,6 +185,11 @@ final class catalog {
     /** HR authors may edit the catalog even before learner mastery is granted. */
     public static function can_manage(int $userid): bool {
         return is_siteadmin($userid) || capabilities::has($userid, capabilities::CATALOG_WRITE);
+    }
+
+    /** Uploaded Word/PDF sources are editor assets, not learner downloads. */
+    public static function can_download_source(int $userid): bool {
+        return $userid > 1 && !view_as::active() && self::can_manage($userid);
     }
 
     /** @return array<int,\stdClass> */

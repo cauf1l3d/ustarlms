@@ -73,4 +73,78 @@ final class library_access_test extends \advanced_testcase {
         $this->assertSame(0,$DB->count_records('local_ustar_library_grant',['userid'=>$u->id]));
         $this->assertSame(0,$DB->count_records('local_ustar_route_progress',['userid'=>$u->id]),'Read-only access never completes the point');
     }
+    private function marketplace_employee(string $department): \stdClass {
+        global $DB;
+        $tree=structure::get(structure::NAME_STRUCTURE);
+        foreach (['market_sales'=>'Продажи','market_stock'=>'Склад'] as $id=>$name) {
+            if (!in_array($id,array_column($tree['departments'],'id'),true)) {
+                $tree['departments'][]=['id'=>$id,'name'=>$name];
+                $tree['positions'][]=['id'=>$id.'_job','name'=>$name.' fixture','department'=>$id,'level'=>1];
+            }
+        }
+        structure::save(structure::NAME_STRUCTURE,$tree);
+        if (!$DB->record_exists('user_info_field',['shortname'=>'ustar_position'])) {
+            $this->getDataGenerator()->create_custom_profile_field(['shortname'=>'ustar_position','name'=>'Position','datatype'=>'text']);
+        }
+        $u=$this->employee();people::set_position_id($u->id,$department.'_job');return $u;
+    }
+    public function test_marketplace_default_department_transfer_and_admin_preview(): void {
+        $u=$this->marketplace_employee('market_sales');$admin=get_admin()->id;
+        $this->assertTrue(library_access::can_view_marketplace($admin));
+        $this->assertFalse(library_access::can_view_marketplace($u->id));
+        library_access::save_marketplace_departments(['market_sales'],$admin,0);
+        $this->assertTrue(library_access::can_view_marketplace($u->id));
+        people::set_position_id($u->id,'market_stock_job');
+        $this->assertFalse(library_access::can_view_marketplace($u->id),'Current canonical department, not an old allow decision');
+        view_as::set('market_stock_job');
+        try {
+            $this->assertFalse(library_access::can_view_marketplace($admin),'Preview cannot borrow admin bypass');
+            $this->assertFalse(catalog::can_download_source($admin));
+        } finally {view_as::clear();}
+    }
+    public function test_marketplace_settings_reject_stale_unknown_and_employee_writes(): void {
+        $u=$this->marketplace_employee('market_sales');$admin=get_admin()->id;
+        library_access::save_marketplace_departments(['market_sales','market_sales'],$admin,0);
+        $this->assertSame(['market_sales'],library_access::marketplace_departments());
+        $revision=(int)get_config('local_ustar','library_settings_revision');
+        foreach ([[['market_stock'],0],[['invented'],$revision]] as [$ids,$expected]) {
+            try {library_access::save_marketplace_departments($ids,$admin,$expected);$this->fail('Invalid settings accepted');}
+            catch (\moodle_exception $e) {$this->assertSame(['market_sales'],library_access::marketplace_departments());}
+        }
+        $this->setUser($u);
+        try {library_access::save_marketplace_departments(['market_stock'],$u->id,$revision);$this->fail('Employee changed access');}
+        catch (\moodle_exception $e) {$this->assertSame(['market_sales'],library_access::marketplace_departments());}
+    }
+    public function test_hidden_marketplace_never_lists_or_charges_but_keeps_owned_assignments(): void {
+        global $DB;$u=$this->marketplace_employee('market_sales');$o=$this->offer();$this->grant($o,$u);
+        $this->setUser($u);set_config('library_store_enabled',1,'local_ustar');
+        $this->assertFalse(library_access::can_view_marketplace($u->id));
+        $this->assertTrue(library_access::can_view_offer_page($o->id,$u->id));
+        $this->assertTrue(library_access::resolve($o->id,$u->id)['canopen'],'Assigned material remains a separate entitlement');
+        $this->assertSame(0,library_store::storefront($u->id)['total']);
+        $this->assertSame('marketplace_hidden',library_store::purchase($o->id,$u->id,10,$o->timemodified,bin2hex(random_bytes(16)))['reason']);
+        $this->assertSame(0,$DB->count_records('local_ustar_coin_ledger',['userid'=>$u->id]));
+    }
+    public function test_catalog_source_file_is_editor_only_even_when_product_body_is_free(): void {
+        $product=$this->product();$context=\context_system::instance();
+        get_file_storage()->create_file_from_string(['contextid'=>$context->id,'component'=>'local_ustar',
+            'filearea'=>'catalog_source','itemid'=>$product,'filepath'=>'/','filename'=>'fixture.docx'],'fixture original');
+        $this->assertNotEmpty(catalog::file_url($product,catalog::FILEAREA_SOURCE,true));
+        $u=$this->employee();$this->setUser($u);
+        $this->assertTrue(library_runtime::catalog_allowed($product,$u->id));
+        $this->assertSame('',catalog::file_url($product,catalog::FILEAREA_SOURCE,true));
+        $this->assertSame('',catalog::source_filename($product));
+        $this->assertFalse(catalog::view($product)['hassource']);
+        require_once(__DIR__.'/../lib.php');
+        $this->assertFalse(\local_ustar_pluginfile(null,null,$context,'catalog_source',[$product,'fixture.docx'],true));
+    }
+    public function test_future_seed_creates_drafts_and_preserves_existing_human_offer(): void {
+        $existing=$this->offer('free',0);$product=$this->product('New product for review');
+        library_offer::seed(get_admin()->id);
+        $new=library_offer::for_subject('catalog',$product);
+        $this->assertSame('draft',$new->visibility);$this->assertSame('assigned',$new->accesspolicy);
+        $this->assertSame('published',library_offer::get($existing->id)->visibility);
+        $this->assertSame('free',library_offer::get($existing->id)->accesspolicy);
+    }
+
 }

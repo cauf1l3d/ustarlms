@@ -208,6 +208,10 @@ function local_ustar_pluginfile(
 
 
     if (in_array($filearea, ['catalog_image', 'catalog_source'], true)) {
+        if ($filearea === 'catalog_source'
+                && !\local_ustar\catalog::can_download_source((int)$USER->id)) {
+            return false;
+        }
         if (!$args) {
             return false;
         }

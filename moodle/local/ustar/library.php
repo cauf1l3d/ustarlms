@@ -12,6 +12,8 @@ $PAGE->requires->css(new moodle_url('/local/ustar/styles/library.css'));
 if (!library_access::eligible($userid)) {
     echo $OUTPUT->header();echo $OUTPUT->render_from_template('local_ustar/library_blocked',[]);echo $OUTPUT->footer();exit;
 }
+$canmarketplace=library_access::can_view_marketplace($userid);
+if ($tab==='shop' && !$canmarketplace) { library_access::fail('Маркетплейс пока не открыт для вашего отдела.'); }
 $notice='';$noticetype='warning';
 if ($_SERVER['REQUEST_METHOD']==='POST') {
     require_sesskey();library_access::require_actor($userid);
@@ -30,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
         } else if ($action==='launch') {
             $offerid=optional_param('offerid',0,PARAM_INT);$contentid=optional_param('contentid',0,PARAM_INT);
             if ($offerid) {
+                if (!library_access::can_view_offer_page($offerid,$userid)) { library_access::fail('Доступ к предложению закрыт.'); }
                 $state=library_access::resolve($offerid,$userid);
                 if (!$state['canopen']) { library_access::fail('Доступ к материалу закрыт.'); }
                 $offer=$state['offer'];
@@ -45,19 +48,21 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
     } catch (moodle_exception $e) { $notice=$e->getMessage(); }
 }
 $names=['mine'=>'Мои материалы','catalog'=>'Каталог товаров','shop'=>'Маркетплейс','checks'=>'Проверки знаний','route'=>'Обязательный маршрут'];
+if (!$canmarketplace) { unset($names['shop']); }
 $tabs=[];foreach($names as $key=>$label) { $tabs[]=['label'=>$label,'url'=>library_view::url(['tab'=>$key]),'active'=>$tab===$key]; }
-$data=['balance'=>\local_ustar\economy::available()?\local_ustar\economy::balance($userid):0,'notice'=>$notice,'noticetype'=>$noticetype,
+$data=['canmarketplace'=>$canmarketplace,'balance'=>\local_ustar\economy::available()?\local_ustar\economy::balance($userid):0,'notice'=>$notice,'noticetype'=>$noticetype,
     'tabs'=>$tabs,'tab'=>$tab,'q'=>$q,'libraryurl'=>library_view::url(),'sesskey'=>sesskey(),
     'canmanage'=>!view_as::active() && (library_access::can_grant($userid)||library_access::is_authoring($userid)||library_access::can_assess($userid)),
     'manageurl'=>(new moodle_url('/local/ustar/library_manage.php'))->out(false)];
 $open=optional_param('open',0,PARAM_INT);
 if ($open) {
+    if (!library_access::can_view_offer_page($open,$userid)) { library_access::fail('Доступ к предложению закрыт.'); }
     $state=library_access::resolve($open,$userid);
     if (!$state['canview']) { library_access::fail('Материал недоступен.'); }
     $offer=$state['offer'];$data['showoffer']=true;
     $data['selectedoffer']=['id'=>$open,'title'=>$offer->title,'summary'=>$offer->summary,'open'=>$state['canopen'],
         'price'=>$offer->pricecoin,'revision'=>$offer->timemodified,'nonce'=>bin2hex(random_bytes(16)),
-        'canpurchase'=>!$state['canopen'] && $state['reason']==='purchase_required' && library_store::enabled(),
+        'canpurchase'=>$canmarketplace && !$state['canopen'] && $state['reason']==='purchase_required' && library_store::enabled(),
         'canlaunch'=>!view_as::active() && $state['canopen'],
         'lockedtext'=>match($state['reason']) {'gate_not_passed'=>'Доступ откроется после обязательной аттестации в маршруте.',
             'assign_required'=>'Доступ предоставляет руководитель или отдел обучения.',

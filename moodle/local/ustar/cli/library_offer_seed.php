@@ -2,8 +2,8 @@
 /**
  * USTAR Library — idempotent offer seed.
  *
- * Creates one offer per active catalog item and per published content item.
- * Safe to run repeatedly. Never sets a price, never publishes a paid offer.
+ * Creates one draft offer per active catalog item and published content item.
+ * Safe to run repeatedly. Never publishes or opens access automatically.
  *
  * Usage:
  *   php local/ustar/cli/library_offer_seed.php --dryrun
@@ -50,6 +50,6 @@ printf("%s: created %d, skipped %d (actor %d)\n",
 if ($dryrun) {
     echo "Nothing written. Re-run without --dryrun to apply.\n";
 } else {
-    echo "Offers are published with accesspolicy=free and price 0.\n";
+    echo "Offers are drafts with accesspolicy=assigned and price 0.\n";
     echo "Prices and paid policies stay a human decision in the Library editor.\n";
 }

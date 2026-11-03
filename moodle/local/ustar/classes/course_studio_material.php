@@ -6,7 +6,7 @@ defined('MOODLE_INTERNAL') || die();
 final class course_studio_material {
     /** Catalogue projection only: no per-row SQL or file reads. */
     public static function supported(\stdClass $item,string $filename=''): bool {
-        if (in_array($item->type,['folder','assessment','quiz'],true) || $item->status==='archived') { return false; }
+        if (in_array($item->type,['folder','assessment','quiz'],true)) { return false; }
         return in_array($item->type,['course','scorm'],true)
             || in_array($item->modname ?? '',['page','book'],true)
             || in_array(strtolower(pathinfo($filename,PATHINFO_EXTENSION)),
@@ -21,7 +21,7 @@ final class course_studio_material {
     private static function record(int $id,bool $lock=false): \stdClass {
         global $DB;
         $row=$DB->get_record_sql('SELECT * FROM {local_ustar_content} WHERE id=:id'.($lock?' FOR UPDATE':''),['id'=>$id]);
-        if (!$row || in_array($row->type,['folder','assessment','quiz'],true) || $row->status==='archived') {
+        if (!$row || in_array($row->type,['folder','assessment','quiz'],true)) {
             throw new \invalid_parameter_exception('Этот материал недоступен для редактирования в Студии курсов.');
         }
         return $row;

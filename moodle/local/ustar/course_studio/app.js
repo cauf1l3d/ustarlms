@@ -172,7 +172,7 @@ async function openMaterial(id){await perform('Открываем материа
   if(!local||(!entry?.dirty&&!entry?.conflict))await cloud.adopt(code,await cloud.download(code));
   if(initialPlaceholder){const blank=courses.find(c=>c.data.code===initialPlaceholder.code);if(blank&&M.snapshot(blank)===initialPlaceholder.snapshot&&!cloud.state.entries[blank.data.code]){courses=courses.filter(c=>c!==blank);if(current===blank)current=null;histories.delete(blank.data.code);}}
   await cloud.persist();renderCourses();selectCourse(code);
-  $('material-origin').hidden=false;$('material-origin-text').textContent=result.origin.editingCopy?'Редактируемый черновик материала «'+result.origin.title+'». Исходная публикация сохранена.':'Открыт материал «'+result.origin.title+'».';
+  $('material-origin').hidden=false;$('material-origin-text').textContent=result.origin.editingCopy?'Редактируемый черновик материала «'+result.origin.title+'». Исходный материал сохранён.':'Открыт материал «'+result.origin.title+'».';
   $('material-origin-link').href=window.COURSE_STUDIO.material+'?id='+result.origin.id;
  });
 });}

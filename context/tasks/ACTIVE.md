@@ -1,53 +1,45 @@
-# Активная работа —03.11.2026
+# Активная работа —04.11.2026
 
-## AUDIT-20261103 — текущая работа
+## Аудит завершён; следующий пакет запланирован
 
-Поручение владельца: продуктовый, UX/UI и инженерный аудит всего проекта;
-реальные доказательства, блокеры подразделений/внешнего продукта и план исправлений.
-Без субагентов. Код/CI/owner receipts/неизмеренное различать.
+[Аудит](../reviews/20261103/AUDIT_RU.md):30находок по продукту, UX/UI и инженерии;
+кодовые факты,3probes,пробелы измерений и принятые риски различаются.
+[План T01–T10](../../docs/superpowers/plans/2026-11-03-project-audit-remediation.md).
+AUDIT-FIX-01/T01 — U01/U02/U03: недоступный CTA,cap500,поиск/история.
+Реализация исправлений пока не начата. Аудит не разрешает новые merge/deploy.
+[Проверки](../reviews/20261103/verification.json):41receiver,7PHP scripts,JS/DOM;
+4CI/8FullRC наa1dfe: native423/1957 в каждом runtime. Нагрузка/полныйWCAG не доказаны.
 
-## STUDIO-SCORM-01 — установлено
+## Установленная Академия
 
-Owner3Nov: tool4aee/app5e61, success/exit0, конечный check active.
+Owner3Nov: SCORM tool4aee/app5e61,success/exit0,конечныйreadonly check active.
 [Квитанция](../runtime/studio_scorm_edit_owner_deploy_20261103.json).
-Первый busy отказ сменился ready; holder неизвестен. Старый a8 не повторять.
-Статический SCORM и архивные источники поддержаны; общий отзыв «все вроде ок».
+Статический SCORM/вложенный ZIP/архивные источники поддержаны; общий отзыв «все вроде ок».
+Старыйa8 не повторять,recovery не нужен. Детальные реальные edit/export/role cases
+не перечислены; CI20экранов/82assets и guards подтверждены отдельно.
 
+Ранее marketplace471/tool59f принят «Отлично работает»:
+[квитанция](../runtime/library_marketplace_owner_deploy_20261103.json).
+Маркетплейс default hidden; admin включает точные отделы; Word/PDF исходники сотруднику
+закрыты, прежние grants/обязательный маршрут сохранены. Текущийfixed payload649files/
+108tables;local/theme0200. Main2900 отдельно,PR112/113/114 открыты.
+[Сводка руководству](../../docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md).
 
-## LIBRARY-01 установлена и общая работа принята
+## PERF-01 и остальные gates
 
-Owner03Nov установил app4715383b/tool59f: архив/inner SHA OK,
-ready → active, success/exit0, конечный readonly postcheck active.
-[Квитанция](../runtime/library_marketplace_owner_deploy_20261103.json).
-«Отлично работает» — общая приёмка; отдельные cases отделов/URL/grants/purchases
-не перечислены. Повтор установки и recovery не нужны.
+Пассивный рабочий день latency/SQL/cron/concurrency не получен. Сборщик2900 требует
+successor под0200; SQL/page и Web-SAPI OPcache из systemd не выводить. Старые
+cron19/failed2/backoff не сбрасывать. Аудит T03–T05 задаёт query/queue/role evidence.
 
-Маркетплейс скрыт до включения отделов администратором; Word/PDF исходники
-сотруднику закрыты. Прежние назначения, каталог и обязательный маршрут сохранены.
-649файлов/108таблиц fixed payload,13 заменённых файлов; schema/версии0200 прежние.
-[Работа и приёмка](../../docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
-Main2900, PR112/113/114 открыты. Worker267/cron сохраняют прежние dates.
+Worker267 принят1Nov: задачи/возврат/исполнение/фото/PNG/читаемость. Остальные процессы
+проверяет руководство. Публичный HTTPS/Mini App ждут согласования;Bitrix/WhatsApp
+не включены. Копии переданы;внешнийrestore unknown по решению владельца.
 
-Подготовлена
-[сводка руководству за октябрь и1–3Nov](../../docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md).
+## Границы продолжения
 
-## PERF-01 после Библиотеки
-
-Нужен пассивный отчёт обычного рабочего дня: latency, SQL, cron lag, нагрузка.
-Сборщик frozen9a поддерживает2900; сначала адаптировать для фактически установленной
-0200. Фактический8h отчёт не получен. SQL/page, Web-SAPI OPcache и concurrency/SLO
-не выводить из Apache aggregate или одного статуса служб. Старые cron19/failed2 и
-историю backoff не сбрасывать. Изменения выбирать по измерениям.
-
-## Принятое и ожидающее руководства
-
-PR110/111 объединены по [поручению](../runtime/connect_feed_integration_order_20261101.json).
-Main5cc02944/app2900; PR113/114 открыты, новых merge разрешений нет.
-[Owner267](../runtime/connect_visual_owner_deploy_20261101.json) принял обоих ботов,
-PNG/кнопки/читаемость, задачи/возврат/исполнение/фото после восстановления egress.
-RSS и раскрытие вложений также приняты. Остальные процессы проверяет руководство;
-публичный HTTPS и Mini App ждут согласования, Bitrix/WhatsApp не включены.
-
-Инструкции владельцу — прямо в чат. Работа самостоятельная: субагенты, agent SSH,
-provider sends и новые автоматические слияния запрещены. Docker rotation/recreate
-отложены до Moodle/PHP upgrade. Существующие writers и датированные receipts сохранять.
+Работа самостоятельная:субагенты,agent SSH,provider sends запрещены.
+Новые merge требуют отдельного поручения;PR110/111 уже объединены по разрешению1Nov.
+Старые операторы/архивы неизменны. Docker rotation/recreate отложены до Moodle/PHP
+окна или abnormal growth trigger. Не повторять принятые storage/OS/DB/code/HTTPS циклы.
+Инструкции владельцу — прямо в чат короткими командами. STATE/ADR/canonical writers
+обязательны; implementation/CI/owner receipts/свежее измерение различать.

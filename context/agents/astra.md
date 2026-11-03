@@ -1,12 +1,12 @@
 # Профиль архитектурного агента USTAR
 
-Порядок входа — [START_HERE](../../START_HERE.md); правила в [AGENTS](../../AGENTS.md), [протоколе](../roadmap/AGENT_PROTOCOL.md), актуальное поручение1Nov в [STATE](../roadmap/STATE.yaml). `main` — канонический исходный код и текущий контекст.
+Порядок входа — [START_HERE](../../START_HERE.md); правила в [AGENTS](../../AGENTS.md), [протоколе](../roadmap/AGENT_PROTOCOL.md), актуальное поручение в [STATE](../roadmap/STATE.yaml). `main` — канонический исходный код и текущий контекст.
 
-Сейчас: app2900/source5cc02944 и worker267e5587 уже установлены; source PR110/111
+Main: app2900/source5cc02944; production:app5e61/local0200/theme0200,worker267. PR110/111
 объединены в main после общей FullRC. [Поручение/интеграция](../runtime/connect_feed_integration_order_20261101.json),
 [owner acceptance](../runtime/connect_visual_owner_deploy_20261101.json). Задачи/возврат/фото
 и читаемость приняты; остальные процессы с руководством с2Nov. Публичный HTTPS и
-Mini App ждут согласования. Следующий этап — PERF-01: пассивное наблюдение рабочего дня.
+Mini App ждут согласования. PERF-01: пассивное наблюдение рабочего дня не получено.
 Старые17Oct snapshots и platform receipts — история, не повод повторять принятую работу.
 Moodle5.2/PG17/Docker rotation отложены; agent SSH/subagents/provider sends запрещены.
 
@@ -19,7 +19,8 @@ Native UI — local_ustar/theme_ustar; frontend/legacy не входит в те
 Production0200,649 fixed files/108tables; main2900 remains separate, PR112/113/114 open.
 Marketplace default hidden; admin enables exact departments; source files editor-only.
 Previous grants/mandatory route retained. No repeat installation/recovery.
-Current order: product, UX/UI and engineering audit; app5e61c0d2 installed3Nov.
+Audit03–04Nov completed: context/reviews/20261103/AUDIT_RU.md.
+Next planned AUDIT-FIX-01/T01; implementation not started. app5e61 installed3Nov.
 [Progress](../runtime/studio_scorm_edit_20261103.json); app all4 CI/8FullRC PASS; a8 owner failed PHP lint on model.js, postcheck ready.
 Successor4aee:13 operator CI PASS; owner exit0/postcheck active, general works report.
 Owner receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json.

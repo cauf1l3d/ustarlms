@@ -1,7 +1,8 @@
 # Навигация по контексту
 
 - [Начало](../START_HERE.md), [STATE](roadmap/STATE.yaml), [текущие задачи](tasks/ACTIVE.md).
-- [Верификация аудитов26Oct](reviews/20261026/VERIFIED_REVIEW_RU.md).
+- [Аудит03–04Nov](reviews/20261103/AUDIT_RU.md), [план](../docs/superpowers/plans/2026-11-03-project-audit-remediation.md).
+- [Прежняя сверка26Oct](reviews/20261026/VERIFIED_REVIEW_RU.md).
 - [Принятые риски](roadmap/ACCEPTED_RISKS.yaml), [BACKLOG](roadmap/BACKLOG.yaml).
 - [Архитектура](architecture/overview.md), [границы](architecture/boundaries.md), [ADR](decisions/README.md).
 - [Карта кода](code_map/README.md), [домены](domains), [runtime](runtime/README.md).

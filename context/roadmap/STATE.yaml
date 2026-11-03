@@ -1,13 +1,14 @@
 schema_version: 2
-updated_at: '2026-11-03'
+updated_at: '2026-11-04'
 project: USTAR Academy
-stage: cross_domain_audit_in_progress
-stage_label: SCORM Studio installed; three-direction audit
-current_activity: 'Owner3Nov installed app5e61/tool4aee: success/exit0/postcheck active;
-  general works report. Product, UX/UI and engineering audit requested; no new merges
-  or server mutations.'
+stage: cross_domain_audit_completed_remediation_planned
+stage_label: Three-direction audit delivered with evidence and remediation plan
+current_activity: Audit completed4Nov on installed app5e61/worker267:30 findings,3
+  reproducible probes,per-finding remediation and ten work packages. App/worker unchanged.
+  Next planned T01 requires a new implementation task; no merges/server mutation authorized
+  by audit.
 entrypoint: START_HERE.md
-next_task: AUDIT-20261103
+next_task: AUDIT-FIX-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -138,14 +139,17 @@ production:
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
-  reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
-  remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  reconciliation: context/reviews/20261103/AUDIT_RU.md
+  remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
-  scope: Original infrastructure audit immutable; current verification in context/reviews/20261026/VERIFIED_REVIEW_RU.md
+  scope: Product, UX/UI and engineering source/CI/owner evidence audit completed4Nov;
+    no live-server pentest, performance or full accessibility certification.
+  previous_reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
 next_agent_read:
-- context/runtime/studio_scorm_edit_owner_deploy_20261103.json
+- context/reviews/20261103/AUDIT_RU.md
+- docs/superpowers/plans/2026-11-03-project-audit-remediation.md
 - context/tasks/ACTIVE.md
-- context/reviews/20261026/VERIFIED_REVIEW_RU.md
+- context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'
@@ -218,7 +222,7 @@ server_facts:
       derivative: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
       validation: context/reviews/20261017/gaps_validation.json
     external_network_receipt: context/runtime/external_network_result_20261017.json
-current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md
+current_review: context/reviews/20261103/AUDIT_RU.md
 accepted_risks: context/roadmap/ACCEPTED_RISKS.yaml
 repository_reconciliation: context/runtime/repository_reconciliation_20261026.json
 infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261026.md

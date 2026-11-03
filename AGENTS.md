@@ -1,6 +1,6 @@
 # USTAR — инструкции агентам
 
-Актуально03.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
+Актуально04.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
 Main2900/source5cc02944; PR110/111 слиты.
 Worker267e5587 установлен: visuals_active/visuals_ready, recovery_required:false.
 [Owner receipt](context/runtime/connect_visual_owner_deploy_20261101.json); PNG/читаемость и задачи/возврат/фото приняты.
@@ -17,7 +17,7 @@ Owner2Nov: app1100/2150affe, toolb5 active; SCORM/переходы принят�
 [Report](context/runtime/library_owner_navigation_20261103.json). Owner3Nov установил
 marketplace4715383b/tool59f: success/exit0/postcheck active, «Отлично работает».
 [Receipt](context/runtime/library_marketplace_owner_deploy_20261103.json).
-SCORM app5e61/tool4aee установлен: exit0/active. Текущее: тройной аудит. Детальные роли и
+SCORM app5e61/tool4aee установлен: exit0/active. Аудит завершён; T01 planned. Детальные роли и
 PERF-01 остаются; HTTPS/Mini App ждут руководства. Старые cron19/failed2 не сбрасывать.
 
 Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,
@@ -38,7 +38,7 @@ Docker rotation/health/recreate отложены до
 
 - [STATE](context/roadmap/STATE.yaml): версии/SHA/квитанции и степень уверенности.
 - [ACTIVE](context/tasks/ACTIVE.md), [BACKLOG](context/roadmap/BACKLOG.yaml): текущая работа.
-- [Ревью](context/reviews/20261026/VERIFIED_REVIEW_RU.md): факты и гипотезы.
+- [Аудит](context/reviews/20261103/AUDIT_RU.md): факты и гипотезы.
 - [Риски](context/roadmap/ACCEPTED_RISKS.yaml), [ADR](context/decisions/README.md).
 - Датированные runtime receipts и archive сохраняют историю; входные документы краткие.
 

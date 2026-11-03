@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально03.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
+Актуально04.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
 PR110 (RSS2803) и PR111 (ролевой Connect/графика) объединены после единой FullRC.
 [Интеграция](context/runtime/connect_feed_integration_order_20261101.json).
 
@@ -30,7 +30,7 @@ Owner3Nov установил app4715383b/tool59f: success/exit0/postcheck active
 SCORM/Quiz приняты. Детальные роли/URL/purchases ещё не приняты. Main2900 и установленный0200 — разные source pointers;
 PR112/113/114 открыты, автоматический merge не разрешён.
 SCORM app5e61c0d2/tool4aee установлен: exit0/postcheck active.
-[Квитанция](context/runtime/studio_scorm_edit_owner_deploy_20261103.json). Сейчас тройной аудит. [Статус](context/tasks/ACTIVE.md).
+[Квитанция](context/runtime/studio_scorm_edit_owner_deploy_20261103.json). [Аудит](context/reviews/20261103/AUDIT_RU.md) завершён; T01 planned.
 
 ## PERF-01 после Библиотеки
 

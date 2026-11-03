@@ -1,6 +1,6 @@
 # Архитектура USTAR
 
-Актуально01Nov: main application5cc02944/local2900/theme2700; worker267e5587.
+Актуально04Nov: main app5cc02944/local2900/theme2700; owner-installed app5e61/local0200/theme0200,worker267.
 [Границы](boundaries.md), [ADR](../decisions/README.md), [интеграция](../runtime/connect_feed_integration_order_20261101.json).
 
 - Moodle5.1.8 владеет пользователями, auth/sessions, курсами, File API, SCORM/Quiz и native messaging.
@@ -15,9 +15,9 @@
 - scripts/infra — owner-executed инструменты с check/guards/recovery и отдельными
   журналами. Старые операторы frozen. Новая запись Git не меняет сервер автоматически.
 
-[Карта кода](../code_map/README.md) фиксирует606файлов/103таблицы приложения;
+[Карта кода](../code_map/README.md) фиксируетmain606файлов/103таблицы; installed development_source649/108;
 [STATE](../roadmap/STATE.yaml) разделяет source, CI и owner receipts. Payload не
 является whole-host census. frontend — неактивный legacy, вне native release.
 
 Приняты задачи/возврат/фото/PNG/читаемость. Остальные процессы с руководством с2Nov;
-публичный HTTPS/Mini App — после согласования. Следующий доступный этап — PERF-01.
+публичный HTTPS/Mini App — после согласования. Аудит03–04Nov завершён; [план](../../docs/superpowers/plans/2026-11-03-project-audit-remediation.md) ещё не реализован. PERF-01 остаётся.

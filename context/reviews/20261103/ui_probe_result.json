@@ -1,0 +1,17 @@
+{
+  "scope": "production Mustache + JSDOM synthetic view models; no live Moodle, visual, screen-reader or task timing test",
+  "new_bank": {
+    "question_fields": 5,
+    "buttons": [
+      "Сохранить проверку как новую версию"
+    ]
+  },
+  "catalog_search_fields": [
+    "tab",
+    "q"
+  ],
+  "pagination_links": [
+    "Следующая страница →"
+  ],
+  "checks_empty_with_query": "Проверок пока нет. Они появятся после публикации отделом обучения."
+}

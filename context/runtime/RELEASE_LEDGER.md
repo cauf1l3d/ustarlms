@@ -1060,3 +1060,7 @@ CI CRC/all3members/local build/saved readback PASS. Новая установк�
 ## 03Nov2026 — SCORM corrected installer owner accepted
 
 Tool4aee/app5e61: checksums OK, initial busy refusal then ready → active; unit02 success/exit0, final readonly active. General owner report; detailed browser cases not enumerated. [Receipt](studio_scorm_edit_owner_deploy_20261103.json). No merge or independent host probe.
+
+## 04Nov2026 — тройной аудит и план
+
+[Отчёт](../reviews/20261103/AUDIT_RU.md):30находок,app5e61/worker267,3probes,41receiver/7PHP/JS и4CI/8FullRC baseline. [План T01–T10](../../docs/superpowers/plans/2026-11-03-project-audit-remediation.md) покрывает всеID; исправления пока не внесены. Production/source/worker не менялись; merge не выполнялся.

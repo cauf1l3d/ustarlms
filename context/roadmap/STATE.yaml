@@ -1,12 +1,12 @@
 schema_version: 2
 updated_at: '2026-11-03'
 project: USTAR Academy
-stage: studio_scorm_installer_lint_fix_qualification
-stage_label: Correct mixed-type installer lint; owner original source ready
-current_activity: Owner a8d44b20 installation refused host_command_failed, readonly
-  postcheck ready. Reproduced PHP -n parsing XML inside model.js. New isolated PHP-path
-  lint successor locally passes actual parser regression; CI qualification pending.
-  Application5e61c0d2 unchanged; production remains4715383b.
+stage: studio_scorm_corrected_installer_issued_owner_pending
+stage_label: Corrected PHP lint operator qualified and issued
+current_activity: Owner originala8 refused before source switch, finalready. Corrected
+  tool4aee1296 passed13 operator CI tests including actual PHP stdin and UID33; CI
+  archive/local/saved readback identical. Application5e61 unchanged; its native/browser
+  qualification retained. Corrected installation pending; production4715383b.
 entrypoint: START_HERE.md
 next_task: STUDIO-SCORM-01
 ready_tasks: []
@@ -393,7 +393,7 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   application_commit: 5e61c0d2566e8103d01121968d56852e26da99fa
-  status: application_qualified_corrected_installer_pending_CI
+  status: corrected_operator_qualified_package_issued_not_deployed
   branch: feat/library-unification-20261102
   deployed: false
   local_ustar_version: 2026110200
@@ -409,6 +409,10 @@ development_candidate:
   qualification: context/runtime/studio_scorm_edit_lint_recovery_20261103.json
   runbook: docs/STUDIO_SCORM_EDIT_LINT_INSTALL_RU.md
   previous_tool_commit: 59f482ee2f086e5df202235880e376b1d25a7b1a
-  full_RC_run: 41626487399
   superseded_tool_commit: a8d44b206154343f49627f8b773f2633b2cd8802
   owner_failed_attempt: context/runtime/studio_scorm_edit_20261103.json
+  tool_commit: 4aee12968ceefe6189143f3c40f59976831f6513
+  operator_qualification_run: 41652846252
+  retained_application_full_RC_run: 41626487399
+  archive_sha256: d558a90a1bfbe8952c8482567f63e53f15887b4d650afd90a650c4d680c654e2
+  retained_copy_verified: true

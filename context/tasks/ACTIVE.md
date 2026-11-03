@@ -8,7 +8,7 @@ App5e61c0d2: статический HTML → обычные экраны сту�
 Курс20экранов/82изображения: текст/байты/roundtrip PASS.
 Toola8: owner отказ host_command_failed, postcheck ready; исходники471 сохранены.
 PHP lint ошибочно разбирал JS/XML. [Исправленный установщик](../runtime/studio_scorm_edit_lint_recovery_20261103.json)
-проверен локально реальным PHP; CI пока pending. App5e61 прежний.
+4aee:13 CI PASS, real PHP/UID33. App5e61 прежний; owner install pending.
 
 ## LIBRARY-01 установлена и общая работа принята
 

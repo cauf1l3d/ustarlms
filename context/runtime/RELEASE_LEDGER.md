@@ -1042,3 +1042,17 @@ CI ZIP CRC/members/local build/saved readback PASS. Шесть existing source f
 649 fixed profile/108tables/0200, worker267 прежний. Production остаётся4715383b.
 [Квитанция](studio_scorm_edit_20261103.json), [команды](../../docs/STUDIO_SCORM_EDIT_INSTALL_RU.md).
 Owner installation/browser acceptance pending; agent SSH/merge не выполнены.
+
+
+## 03Nov — исправлен PHP lint установщика SCORM
+
+Owner a8: SHA OK, ready; service exit2/refused host_command_failed; final check ready.
+Воспроизведён PHP -n short_open_tag=1 parse error в XML-строке model.js: frozen
+transaction передавал PHP lint все6 файлов. До backups/web stop/source switch не дошёл.
+Исправленный separate operator4aee проверяет только PHP по fixed manifest paths;
+13 CI tests PASS, включая real PHP stdin, invalid PHP before outage, actualUID33/xattrs.
+Application5e61 и её native/browser квалификация прежние; production471 сохраняется.
+Пакет172727bytes SHA d558a90a1bfbe8952c8482567f63e53f15887b4d650afd90a650c4d680c654e2,
+CI CRC/all3members/local build/saved readback PASS. Новая установка owner pending.
+[Квитанция](studio_scorm_edit_lint_recovery_20261103.json),
+[команды](../../docs/STUDIO_SCORM_EDIT_LINT_INSTALL_RU.md). Старый a8 не повторять.

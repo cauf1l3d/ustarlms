@@ -799,7 +799,7 @@ tasks:
     execute
   - Native CI and exact source-only successor on installed471 baseline; owner installation
     separately recorded
-  phase: corrected_installer_actual_PHP_lint_qualification
+  phase: corrected_operator4aee_qualified_owner_install_pending
   qualification_evidence: context/runtime/studio_scorm_edit_lint_recovery_20261103.json
   deployment_evidence: a8 refused host_command_failed; final ready; production remains4715383b
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md

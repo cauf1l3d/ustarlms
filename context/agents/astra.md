@@ -21,6 +21,7 @@ Marketplace default hidden; admin enables exact departments; source files editor
 Previous grants/mandatory route retained. No repeat installation/recovery.
 Current order: static SCORM/archived route editing; app5e61c0d2 not deployed.
 [Progress](../runtime/studio_scorm_edit_20261103.json); app all4 CI/8FullRC PASS; a8 owner failed PHP lint on model.js, postcheck ready.
-Successor qualification: context/runtime/studio_scorm_edit_lint_recovery_20261103.json.
+Successor4aee:13 operator CI PASS, real PHP/UID33; app unchanged, install pending.
+Receipt: context/runtime/studio_scorm_edit_lint_recovery_20261103.json.
 [Management summary](../../docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md) delivered.
 Detailed real-account department/purchase/URL acceptance and PERF-01 remain separate.

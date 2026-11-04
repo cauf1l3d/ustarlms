@@ -5,7 +5,7 @@ use local_ustar\{library_access,library_offer,library_store,library_view,library
 $userid=(int)$USER->id;$context=context_system::instance();
 $tab=optional_param('tab','mine',PARAM_ALPHA);
 if (!in_array($tab,['mine','catalog','shop','checks','route'],true)) { $tab='mine'; }
-$q=trim(optional_param('q','',PARAM_TEXT));$page=max(0,optional_param('page',0,PARAM_INT));
+$q=trim(optional_param('q','',PARAM_TEXT));$page=max(0,min(intdiv(PHP_INT_MAX,24)-1,optional_param('page',0,PARAM_INT)));
 $parent=max(0,optional_param('parent',0,PARAM_INT));
 $PAGE->set_context($context);$PAGE->set_url(new moodle_url('/local/ustar/library.php',['tab'=>$tab]));
 $PAGE->set_pagelayout('ustar');$PAGE->set_title('Библиотека | USTAR Академия');$PAGE->set_heading('Библиотека');

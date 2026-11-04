@@ -1,12 +1,14 @@
 # Активная работа —04.11.2026
 
-## Пакет исправлений на проверке
+## Первый пакет исправлений готов; установка владельцем ожидается
 
 [Аудит](../reviews/20261103/AUDIT_RU.md):30находок по продукту, UX/UI и инженерии;
 кодовые факты,3probes,пробелы измерений и принятые риски различаются.
 [План T01–T10](../../docs/superpowers/plans/2026-11-03-project-audit-remediation.md).
 AUDIT-FIX-01/T01 — U01/U02/U03: недоступный CTA,cap500,поиск/история.
-Owner04Nov разрешил исправления и архив. Пакет U01/U02/U05: app5dd12889, не установлен.
+Owner04Nov разрешил исправления и архив. Пакет U01/U02/U05: app719bf47c/toolaa61d595, не установлен.
+4CI и8FullRC jobs PASS; native426/1975 в каждом runtime.
+[Архив и команды](../../docs/LIBRARY_DISCOVERY_INSTALL_RU.md), [углубление аудита](../reviews/20261104/DEEP_AUDIT_RU.md).
 U03 scoped admin selectors остаётся. [Рабочая запись](../reviews/20261104/WORKLOG.md).
 Новые merge/agent deploy не разрешены.
 [Проверки](../reviews/20261103/verification.json):41receiver,7PHP scripts,JS/DOM;
@@ -20,12 +22,10 @@ Owner3Nov: SCORM tool4aee/app5e61,success/exit0,конечныйreadonly check a
 Старыйa8 не повторять,recovery не нужен. Детальные реальные edit/export/role cases
 не перечислены; CI20экранов/82assets и guards подтверждены отдельно.
 
-Ранее marketplace471/tool59f принят «Отлично работает»:
-[квитанция](../runtime/library_marketplace_owner_deploy_20261103.json).
-Маркетплейс default hidden; admin включает точные отделы; Word/PDF исходники сотруднику
-закрыты, прежние grants/обязательный маршрут сохранены. Текущийfixed payload649files/
-108tables;local/theme0200. Main2900 отдельно,PR112/113/114 открыты.
-[Сводка руководству](../../docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md).
+Marketplace471/tool59f принят3Nov. Default hidden, exact department allowlist,
+Word/PDF source editor-only. Grants/обязательный маршрут сохранены.
+[Квитанция](../runtime/library_marketplace_owner_deploy_20261103.json).
+Main2900 отдельно, PR112/113/114 открыты; installed0200/649files/108tables.
 
 ## PERF-01 и остальные gates
 

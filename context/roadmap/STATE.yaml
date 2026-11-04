@@ -1,7 +1,7 @@
 schema_version: 2
 updated_at: '2026-11-04'
 project: USTAR Academy
-stage: audit_remediation_package_in_verification
+stage: audit_first_fix_package_ready_owner_deploy_pending
 stage_label: Three-direction audit delivered with evidence and remediation plan
 current_activity: Audit completed4Nov on installed app5e61/worker267:30 findings,3
   reproducible probes,per-finding remediation and ten work packages. App/worker unchanged.
@@ -397,7 +397,7 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   application_commit: 719bf47c1ba5942c094a04312898890ec7de00c1
-  status: library_discovery_candidate_verifying
+  status: qualified_archive_ready_not_deployed
   branch: feat/library-unification-20261102
   deployed: false
   local_ustar_version: 2026110200
@@ -410,3 +410,8 @@ development_candidate:
   scope: 'U01/U02/U05: bounded grant reads, reachable discovery links, search context
     and pagination'
   progress: context/reviews/20261104/WORKLOG.md
+  tool_commit: aa61d5954d96c33b8de2845cf2c0891ba428c76d
+  qualification: context/reviews/20261104/verification.json
+  runbook: docs/LIBRARY_DISCOVERY_INSTALL_RU.md
+  archive_sha256: 07ae14865da94e73f02bd314819f44a715166b156ec55174e9292754534fd666
+  retained_copy_verified: true

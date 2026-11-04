@@ -1,0 +1,7 @@
+{
+    "synthetic_grants": 2000,
+    "oldest_search_count": 1,
+    "last_page_count": 8,
+    "last_page_hasmore": false,
+    "scope": "real reader, synthetic DB and ACL; no production latency claim"
+}

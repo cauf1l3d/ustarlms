@@ -12,3 +12,5 @@
 Углублённый Studio probe:6,563,690/65,637,890 sourcejson bytes для100/1000 проектов. U09/U10 отдельно, не входят в первый overlay.
 
 Final self-review: bound untrusted page integer before multiplication (719bf47c). Source-only console registration203b3337. Package app now719bf47c; intermediate archive4e70764c not delivered and superseded before qualification.
+
+Завершение:4CI/8FullRC jobs PASS наaa61d595, native426tests/1975assertions в обоихruntime. Архивaa61d595 byte-identical сCI и скачанной сохранённой копией; инструкция docs/LIBRARY_DISCOVERY_INSTALL_RU.md. Production не изменён, merge не выполнялся. Self-review выполнен самостоятельно по запрету субагентов.

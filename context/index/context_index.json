@@ -894,8 +894,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 3274,
-      "sha256": "f9ac08c9245135ac811b7a8c069f3d1ecff5ba5e080af704a2a6308adf0cc011"
+      "size": 3283,
+      "sha256": "ec136b048ab7edf301aa76762e83e06bb5b81fbffdd62d32be2ae0a79d8f8d72"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1506,14 +1506,26 @@
     {
       "path": "context/reviews/20261104/WORKLOG.md",
       "domain": "reviews",
-      "size": 2068,
-      "sha256": "805f7799581aa526a7f405fdbf3c7321811916431f303b942e8b05f4640a7690"
+      "size": 2500,
+      "sha256": "92b1dd8386ca945e2ff6d5cd2cd5f1f957ef838152eaaeb505d43ce076c0d169"
+    },
+    {
+      "path": "context/reviews/20261104/grants_2000_result.json",
+      "domain": "reviews",
+      "size": 200,
+      "sha256": "48bec800358444644f42cb45b79e0abb7080f15abfb37bd2d2b471db32dbc432"
     },
     {
       "path": "context/reviews/20261104/studio_lookup_result.json",
       "domain": "reviews",
       "size": 493,
       "sha256": "e7b5563edb606ab3fb31be4ef6d9b12f4a95bfd5cdce144e27adac7b43209217"
+    },
+    {
+      "path": "context/reviews/20261104/verification.json",
+      "domain": "reviews",
+      "size": 1268,
+      "sha256": "fbdffcf36caa5474b34e9fd9a35d6be40850a1ac159065aef4471e5ab801b6a9"
     },
     {
       "path": "context/roadmap/ACCEPTED_RISKS.yaml",
@@ -1596,8 +1608,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 21966,
-      "sha256": "09c8272c208b03056ac1a8a9965cfe897400833bfcc58025164d07cbdd85f755"
+      "size": 22252,
+      "sha256": "1309a4ca361bf3fa2f6eee28d2eac436f350187651e20053fbd294b5e2ef3341"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3924,8 +3936,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3819,
-      "sha256": "d894d969199114d715b78caf6f10dc0e8c21ea9f3084887dff21065c3f5eb12f"
+      "size": 3840,
+      "sha256": "4dc1da74bc8b8fb5fadc84e18eb3471b1b0eb32cc63ec62a341d7af3e958dcea"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

@@ -146,7 +146,7 @@ current_work:
   task_statuses:
     AUDIT-01: planned
     AUDIT-20261103: done
-    AUDIT-FIX-01: planned
+    AUDIT-FIX-01: in_progress
     B2B-01: planned
     B2B-02: planned
     DOC-01: done

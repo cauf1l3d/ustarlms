@@ -1,7 +1,7 @@
 schema_version: 2
 updated_at: '2026-11-04'
 project: USTAR Academy
-stage: cross_domain_audit_completed_remediation_planned
+stage: audit_remediation_package_in_verification
 stage_label: Three-direction audit delivered with evidence and remediation plan
 current_activity: Audit completed4Nov on installed app5e61/worker267:30 findings,3
   reproducible probes,per-finding remediation and ten work packages. App/worker unchanged.
@@ -396,28 +396,17 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  application_commit: 5e61c0d2566e8103d01121968d56852e26da99fa
-  status: owner_installed_unmerged_source
+  application_commit: 5dd1288930869ff96d301454f5c4dc4a59f122fc
+  status: library_discovery_candidate_verifying
   branch: feat/library-unification-20261102
-  deployed: true
+  deployed: false
   local_ustar_version: 2026110200
   theme_ustar_version: 2026110200
   schema_changed: false
   worker_rollout: false
   preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
-  deployment_baseline: 4715383b8f6ec4b48fef855944be13a51c3cad61
-  progress: context/runtime/studio_scorm_edit_lint_recovery_20261103.json
-  previous_accepted_delivery: context/runtime/library_marketplace_owner_deploy_20261103.json
-  scope: Bounded static HTML SCORM import, nested export ZIP, author-only archived
-    material draft; six existing addon files; unchanged original source/attempts.
-  qualification: context/runtime/studio_scorm_edit_lint_recovery_20261103.json
-  runbook: docs/STUDIO_SCORM_EDIT_LINT_INSTALL_RU.md
-  previous_tool_commit: 59f482ee2f086e5df202235880e376b1d25a7b1a
-  superseded_tool_commit: a8d44b206154343f49627f8b773f2633b2cd8802
-  owner_failed_attempt: context/runtime/studio_scorm_edit_20261103.json
-  tool_commit: 4aee12968ceefe6189143f3c40f59976831f6513
-  operator_qualification_run: 41652846252
-  retained_application_full_RC_run: 41626487399
-  archive_sha256: d558a90a1bfbe8952c8482567f63e53f15887b4d650afd90a650c4d680c654e2
-  retained_copy_verified: true
-  owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
+  deployment_baseline: 5e61c0d2566e8103d01121968d56852e26da99fa
+  previous_accepted_delivery: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
+  scope: 'U01/U02/U05: bounded grant reads, reachable discovery links, search context
+    and pagination'
+  progress: context/reviews/20261104/WORKLOG.md

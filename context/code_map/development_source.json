@@ -1,10 +1,10 @@
 {
   "kind": "unmerged_development_source",
-  "deployed": true,
-  "deployment_evidence": "context/runtime/studio_scorm_edit_owner_deploy_20261103.json",
+  "deployed": false,
+  "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "b0cccfafb2369dc6224a236e54d96644b5f86293",
+    "moodle/local/ustar": "52bd10915dddec97627238ea90046a3a1eb5476e",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
@@ -714,7 +714,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/library_grant.php",
-      "sha256": "97495c25a694a2f98ba39e26a5677287a9ccef95e73bf4b635fd256ebc3f95d3"
+      "sha256": "55b9f746efe58dfb805ecc67905b3c49b0e09bd1cd6e3df6a6bfd6d40bf20b1b"
     },
     {
       "path": "moodle/local/ustar/classes/library_offer.php",
@@ -738,7 +738,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/library_view.php",
-      "sha256": "45fe9e57161771e361cd7b88181749b5cf00c4f344acaffa48a1a841bedeb573"
+      "sha256": "4b76fe77100c080a9f108099adaa53af196545298e55d0bc5a378e7cbef9dce2"
     },
     {
       "path": "moodle/local/ustar/classes/material_catalog.php",
@@ -1498,7 +1498,7 @@
     },
     {
       "path": "moodle/local/ustar/library.php",
-      "sha256": "944d5f90ced48a40228773d022d962537fdcf6f6af1067a18dbb39315100ba59"
+      "sha256": "2a9b731cfe72544de3ac93904356cbbb2567a9e57e58287e8609e4e0a4415314"
     },
     {
       "path": "moodle/local/ustar/library_check.php",
@@ -1998,7 +1998,7 @@
     },
     {
       "path": "moodle/local/ustar/templates/library.mustache",
-      "sha256": "348340dbc5ca4ac88c1395d2b2c5bc3cd07430a152f45dd305850e47c1bca14b"
+      "sha256": "30318ec90d8b077100d4858601c900e9f4dfcbf68b3668276eafa80a637f7ef4"
     },
     {
       "path": "moodle/local/ustar/templates/library_blocked.mustache",
@@ -2018,7 +2018,7 @@
     },
     {
       "path": "moodle/local/ustar/templates/library_checks.mustache",
-      "sha256": "5e068d3a363db2a897630e7d4671bae908817f81d1378053f6e967a422dbd73c"
+      "sha256": "faf62c35d8ed704453611117eb30a2c565a86a0a646515946600e4d059371767"
     },
     {
       "path": "moodle/local/ustar/templates/library_manage.mustache",
@@ -2266,7 +2266,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/library_access_test.php",
-      "sha256": "add63c3d8be0970315cf8ca430200ea0d2afae5f59fae2dec09d379fc7b6bd56"
+      "sha256": "a34c16b4ad657132bc158f3e3985d8b061b4bbfac083a0ca2ebb081c5cb926b6"
     },
     {
       "path": "moodle/local/ustar/tests/library_assessment_test.php",

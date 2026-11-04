@@ -818,16 +818,16 @@ tasks:
   completed_on: '2026-11-04'
 - id: AUDIT-FIX-01
   title: 'T01: обнаружимость назначенных материалов и допустимые действия Библиотеки'
-  status: planned
+  status: in_progress
   depends_on:
   - AUDIT-20261103
   spec: docs/superpowers/plans/2026-11-03-project-audit-remediation.md
-  reference: context/reviews/20261103/AUDIT_RU.md
+  reference: context/reviews/20261104/WORKLOG.md
   finding_ids:
   - U01
   - U02
   - U03
-  execution_authorized: false
+  execution_authorized: true
   acceptance:
   - Oldest of501 active grants discoverable; forbidden marketplace CTA removed without
     relaxing ACL

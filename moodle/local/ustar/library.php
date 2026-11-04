@@ -5,7 +5,8 @@ use local_ustar\{library_access,library_offer,library_store,library_view,library
 $userid=(int)$USER->id;$context=context_system::instance();
 $tab=optional_param('tab','mine',PARAM_ALPHA);
 if (!in_array($tab,['mine','catalog','shop','checks','route'],true)) { $tab='mine'; }
-$q=trim(optional_param('q','',PARAM_TEXT));$page=max(0,min(500,optional_param('page',0,PARAM_INT)));
+$q=trim(optional_param('q','',PARAM_TEXT));$page=max(0,optional_param('page',0,PARAM_INT));
+$parent=max(0,optional_param('parent',0,PARAM_INT));
 $PAGE->set_context($context);$PAGE->set_url(new moodle_url('/local/ustar/library.php',['tab'=>$tab]));
 $PAGE->set_pagelayout('ustar');$PAGE->set_title('Библиотека | USTAR Академия');$PAGE->set_heading('Библиотека');
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/library.css'));
@@ -51,7 +52,7 @@ $names=['mine'=>'Мои материалы','catalog'=>'Каталог това�
 if (!$canmarketplace) { unset($names['shop']); }
 $tabs=[];foreach($names as $key=>$label) { $tabs[]=['label'=>$label,'url'=>library_view::url(['tab'=>$key]),'active'=>$tab===$key]; }
 $data=['canmarketplace'=>$canmarketplace,'balance'=>\local_ustar\economy::available()?\local_ustar\economy::balance($userid):0,'notice'=>$notice,'noticetype'=>$noticetype,
-    'tabs'=>$tabs,'tab'=>$tab,'q'=>$q,'libraryurl'=>library_view::url(),'sesskey'=>sesskey(),
+    'tabs'=>$tabs,'tab'=>$tab,'q'=>$q,'parent'=>$tab==='catalog'?$parent:0,'libraryurl'=>library_view::url(),'sesskey'=>sesskey(),
     'canmanage'=>!view_as::active() && (library_access::can_grant($userid)||library_access::is_authoring($userid)||library_access::can_assess($userid)),
     'manageurl'=>(new moodle_url('/local/ustar/library_manage.php'))->out(false)];
 $open=optional_param('open',0,PARAM_INT);
@@ -77,6 +78,8 @@ if ($open) {
         default=>['routemirrorurl'=>(new moodle_url('/local/ustar/route.php'))->out(false)],
     };
 }
+$data['hasprevious']=!$open && $tab!=='route' && $page>0;
+$data['previousurl']=library_view::url(['tab'=>$tab,'q'=>$q,'page'=>max(0,$page-1),'parent'=>$parent]);
 $data['nexturl']=library_view::url(['tab'=>$tab,'q'=>$q,'page'=>$page+1,'parent'=>optional_param('parent',0,PARAM_INT)]);
 $data['writable']=!view_as::active();
 echo $OUTPUT->header();echo $OUTPUT->render_from_template('local_ustar/library',$data);echo $OUTPUT->footer();

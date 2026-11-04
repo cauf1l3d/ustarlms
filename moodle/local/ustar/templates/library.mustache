@@ -9,12 +9,13 @@
   <nav class="u-library__tabs" aria-label="Разделы Библиотеки">{{#tabs}}<a class="u-library__tab {{#active}}is-active{{/active}}" href="{{url}}" {{#active}}aria-current="page"{{/active}}>{{label}}</a>{{/tabs}}</nav>
   {{#showoffer}}{{> local_ustar/library_offer}}{{/showoffer}}
   {{^showoffer}}
-  {{^showroute}}{{^hasdetail}}<form class="u-library__search" method="get" action="{{libraryurl}}"><input type="hidden" name="tab" value="{{tab}}"><input type="search" name="q" value="{{q}}" placeholder="Найти материал или товар" aria-label="Поиск в Библиотеке"><button class="u-btn u-btn--primary" type="submit">Найти</button></form>{{/hasdetail}}{{/showroute}}
+  {{^showroute}}{{^hasdetail}}<form class="u-library__search" method="get" action="{{libraryurl}}"><input type="hidden" name="tab" value="{{tab}}">{{#parent}}<input type="hidden" name="parent" value="{{parent}}">{{/parent}}<input type="search" name="q" value="{{q}}" placeholder="Найти материал или товар" aria-label="Поиск в Библиотеке"><button class="u-btn u-btn--primary" type="submit">Найти</button></form>{{/hasdetail}}{{/showroute}}
   {{#showmine}}{{> local_ustar/library_mine}}{{/showmine}}
   {{#showcatalog}}{{> local_ustar/library_catalog}}{{/showcatalog}}
   {{#showshop}}{{> local_ustar/library_shop}}{{/showshop}}
   {{#showchecks}}{{> local_ustar/library_checks}}{{/showchecks}}
   {{#showroute}}{{> local_ustar/library_route}}{{/showroute}}
+  {{#hasprevious}}<a class="u-btn" href="{{previousurl}}">← Предыдущая страница</a>{{/hasprevious}}
   {{#hasmore}}<a class="u-btn" href="{{nexturl}}">Следующая страница →</a>{{/hasmore}}
   {{/showoffer}}
 </div>

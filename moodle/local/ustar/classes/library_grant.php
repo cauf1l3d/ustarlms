@@ -113,6 +113,25 @@ final class library_grant {
         });
     }
 
+    /** Bounded keyset reads: no arbitrary lifetime grant cap, stable newest-first order. */
+    public static function batches_for_user(int $userid): \Generator {
+        global $DB;
+        $now=time();$last=null;
+        do {
+            $where='userid=:uid AND revokedat=0 AND validfrom<=:starts AND (validto=0 OR validto>:ends)';
+            $params=['uid'=>$userid,'starts'=>$now,'ends'=>$now];
+            if ($last) {
+                $where.=' AND (timecreated<:older OR (timecreated=:same AND id<:lastid))';
+                $params+=['older'=>(int)$last->timecreated,'same'=>(int)$last->timecreated,'lastid'=>(int)$last->id];
+            }
+            $rows=$DB->get_records_select('local_ustar_library_grant',$where,$params,
+                'timecreated DESC,id DESC','*',0,200);
+            if (!$rows) { break; }
+            yield $rows;
+            $last=end($rows);
+        } while (count($rows)===200);
+    }
+
     public static function for_user(int $userid,int $limit=100): array {
         global $DB;
         $now=time();

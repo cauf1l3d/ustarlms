@@ -73,6 +73,54 @@ final class library_access_test extends \advanced_testcase {
         $this->assertSame(0,$DB->count_records('local_ustar_library_grant',['userid'=>$u->id]));
         $this->assertSame(0,$DB->count_records('local_ustar_route_progress',['userid'=>$u->id]),'Read-only access never completes the point');
     }
+    public function test_mine_reads_past_500_and_deduplicates_before_pagination(): void {
+        global $DB;
+        $u=$this->employee();$first=null;
+        for ($i=0;$i<501;$i++) {
+            $o=$this->offer('assigned',0);
+            $DB->set_field('local_ustar_library_offer','title','Grant '.$i,['id'=>$o->id]);
+            $this->grant($o,$u,['timecreated'=>100+$i]);
+            $first ??= $o;
+        }
+        $this->setUser($u);
+        $view=library_view::mine($u->id,'Grant 0');
+        $this->assertSame(1,$view['materialcount']);
+        $this->assertSame((int)$first->id,$view['materials'][0]['offerid']);
+        $view=library_view::mine($u->id,'',20);
+        $this->assertCount(21,$view['materials']);$this->assertFalse($view['hasmore']);
+        $this->grant($first,$u,['timecreated'=>9999]);
+        $view=library_view::mine($u->id);
+        $this->assertSame(501,$view['materialcount']);$this->assertCount(24,$view['materials']);
+        $this->assertSame((int)$first->id,$view['materials'][0]['offerid']);
+        $DB->set_field('local_ustar_library_offer','visibility','draft',['id'=>$first->id]);
+        $this->assertSame(0,library_view::mine($u->id,'Grant 0')['materialcount']);
+    }
+    public function test_discovery_never_advertises_a_closed_marketplace_link(): void {
+        global $DB;
+        $u=$this->marketplace_employee('market_sales');$o=$this->offer();
+        $this->setUser($u);
+        $this->assertEmpty(library_view::catalog($u->id,0,0)['cards']);
+        set_config('library_marketplace_departments','["market_sales"]','local_ustar');
+        $cards=library_view::catalog($u->id,0,0)['cards'];
+        $this->assertCount(1,$cards);$this->assertStringContainsString('tab=shop',$cards[0]['url']);
+        set_config('library_marketplace_departments','[]','local_ustar');
+        $id=$this->grant($o,$u);
+        $cards=library_view::catalog($u->id,0,0)['cards'];
+        $this->assertCount(1,$cards);$this->assertFalse($cards[0]['locked']);
+        $DB->set_field('local_ustar_library_grant','validto',time()-1,['id'=>$id]);
+        $this->assertEmpty(library_view::catalog($u->id,0,0)['cards']);
+        $this->assertSame(0,library_view::mine($u->id)['materialcount']);
+    }
+    public function test_checks_without_access_have_no_dead_end_cta(): void {
+        global $DB;$u=$this->employee();$id=$this->definition();$o=$this->offer();
+        $DB->update_record('local_ustar_library_offer',(object)['id'=>$o->id,'itemtype'=>'assessment','itemid'=>$id]);
+        $this->setUser($u);
+        $this->assertSame(0,library_view::checks($u->id)['assessmentcount']);
+        $this->grant($o,$u);
+        $view=library_view::checks($u->id);$this->assertSame(1,$view['assessmentcount']);
+        $this->assertStringContainsString('library_check.php',$view['assessments'][0]['url']);
+    }
+
     private function marketplace_employee(string $department): \stdClass {
         global $DB;
         $tree=structure::get(structure::NAME_STRUCTURE);

@@ -12,7 +12,7 @@ import types
 from connect_con02_state import capture
 
 BASELINE='5e61c0d2566e8103d01121968d56852e26da99fa'
-APPLICATION='5dd1288930869ff96d301454f5c4dc4a59f122fc'
+APPLICATION='719bf47c1ba5942c094a04312898890ec7de00c1'
 WORKER='267e55874eb8f6c36259d748f28a2c636adc9810'
 FILES=('local/ustar/classes/library_grant.php', 'local/ustar/classes/library_view.php', 'local/ustar/library.php', 'local/ustar/templates/library.mustache', 'local/ustar/templates/library_checks.mustache', 'local/ustar/tests/library_access_test.php')
 LIBRARY_JOURNAL='var/lib/ustar-studio-scorm-edit-lint-'+BASELINE[:12]+'/state.json'

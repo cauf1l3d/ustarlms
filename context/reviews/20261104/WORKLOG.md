@@ -10,3 +10,5 @@
 
 04Nov: application5dd12889: PHP regression RED(oldest absent)→GREEN, DOM RED(parent absent)→GREEN; полный npm PASS. 13operator tests:12PASS/1actualUID33 skipped locally (chown33 unsupported); dedicated sudo CI обязателен. Initial context CI выявил stale manifest: regenerated candidate NOT_DEPLOYED, production receipt preserved.
 Углублённый Studio probe:6,563,690/65,637,890 sourcejson bytes для100/1000 проектов. U09/U10 отдельно, не входят в первый overlay.
+
+Final self-review: bound untrusted page integer before multiplication (719bf47c). Source-only console registration203b3337. Package app now719bf47c; intermediate archive4e70764c not delivered and superseded before qualification.

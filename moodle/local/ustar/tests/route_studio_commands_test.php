@@ -76,6 +76,14 @@ final class route_studio_commands_test extends \advanced_testcase {
         }
     }
 
+    public function test_employee_cannot_change_point_visibility_as_real_actor(): void {
+        [$g,$u,$route,$point,$v]=$this->fixture();
+        $this->setUser($u);
+        $this->expectException(\required_capability_exception::class);
+        route_commands::set_point_active(['routeid'=>(int)$route->id,'pointid'=>(int)$point->id,
+            'actorid'=>(int)$u->id,'expectedmodified'=>(int)$point->timemodified,'active'=>false]);
+    }
+
     /** @return array{0:local_ustar_generator,1:stdClass,2:stdClass,3:stdClass,4:stdClass} */
     private function fixture(): array {
         $generator = $this->getDataGenerator()->get_plugin_generator('local_ustar');

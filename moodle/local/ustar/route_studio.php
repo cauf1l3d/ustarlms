@@ -382,6 +382,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$previewonly) {
 
         $baseversion=null;$baserequirements=[];
         if ($action==='save_version') {
+            if (required_param('expectedmodified',PARAM_INT)<=0) { throw new invalid_parameter_exception('Форма устарела. Обновите маршрут перед сохранением.'); }
             $baseversion=\local_ustar\route_model::latest_version(required_param('pointid',PARAM_INT));
             if ((int)($baseversion->id??0)!==required_param('baseversion',PARAM_INT)) {
                 throw new moodle_exception('Содержание точки изменено другим редактором. Введённые данные сохранены в форме; обновите страницу и сверьте изменения.');

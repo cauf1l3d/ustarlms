@@ -137,9 +137,11 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Exact owner CSP/YUI errors reproduced on Moodle5.1.1/5.1.8; request-local
-    global bootstrap added with unchanged policy. Qualify one cumulative successor
-    from installed719;45e was not installed.
+  activity: Cumulative app901ac9eb/toolf4d81940 qualified on2984b066:4CI and11FullRC
+    PASS; original CSP/YUI errors absent on both pinned Moodle versions, unchanged
+    CSP and real API save/fresh mobile reload. Archive33e0 is CI/retained byte-identical.
+    Production remains719; owner install and original route invalidparameter retry
+    pending.
   next_task: STUDIO-CSP-01
   ready_tasks: []
   task_statuses:
@@ -185,7 +187,7 @@ current_work:
     ROUTE-EDITOR-01: awaiting_owner_deployment
     RSS-01: done
     STUDIO-01: done
-    STUDIO-CSP-01: in_progress
+    STUDIO-CSP-01: awaiting_owner_deployment
     STUDIO-SCORM-01: in_progress
     TECH-01: planned
 server_facts:

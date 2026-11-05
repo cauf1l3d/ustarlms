@@ -1,10 +1,12 @@
 schema_version: 2
 updated_at: '2026-11-05'
 project: USTAR Academy
-stage: studio_csp_qualification
-stage_label: Cumulative Route editor and strict Studio CSP qualification
-current_activity: Exact owner CSP/YUI errors reproduced on Moodle5.1.1/5.1.8; request-local global bootstrap
-  added with unchanged policy. Qualify one cumulative successor from installed719;45e was not installed.
+stage: studio_csp_qualified_owner_deploy_pending
+stage_label: Studio CSP and Route editor qualified; owner deployment pending
+current_activity: Cumulative app901ac9eb/toolf4d81940 qualified on2984b066:4CI and11FullRC PASS; original
+  CSP/YUI errors absent on both pinned Moodle versions, unchanged CSP and real API save/fresh mobile reload.
+  Archive33e0 is CI/retained byte-identical. Production remains719; owner install and original route invalidparameter
+  retry pending.
 entrypoint: START_HERE.md
 next_task: STUDIO-CSP-01
 ready_tasks: []
@@ -396,7 +398,7 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   application_commit: 901ac9eb9d87956e9818ab656410a1a7e63cb221
-  status: qualification_in_progress
+  status: qualified_owner_deploy_pending
   branch: feat/library-unification-20261102
   deployed: false
   local_ustar_version: 2026110200
@@ -408,5 +410,11 @@ development_candidate:
   previous_accepted_delivery: context/runtime/library_discovery_owner_deploy_20261105.json
   scope: Cumulative Route Studio fixes and request-local YUI strict CSP compatibility;10changed+4added, no
     schema/business/worker changes
-  progress: context/reviews/20261105/STUDIO_CSP_REVIEW_RU.md
+  progress: context/reviews/20261105/STUDIO_CSP_IMPLEMENTATION.md
   owner_receipt: null
+  tool_commit: f4d81940242217c48b0eaf7afd1c4d79e068b00e
+  qualification: context/runtime/studio_csp_qualification_20261105.json
+  runbook: docs/STUDIO_CSP_INSTALL_RU.md
+  archive_sha256: 33e0f16b9043bc79beddcb06ea6476b13be1323147cde956cc7e5e01f2d6f87a
+  retained_copy_verified: true
+  qualified_commit: 2984b066540c3f2e3c9dc44e74db087f4fa74d77

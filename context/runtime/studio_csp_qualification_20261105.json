@@ -1,0 +1,326 @@
+{
+  "schema": 1,
+  "date": "2026-11-05",
+  "task": "STUDIO-CSP-01",
+  "status": "qualified_owner_deploy_pending",
+  "deployed": false,
+  "merged": false,
+  "pr": 114,
+  "scope": "Cumulative uninstalled Route editor fixes plus native Course Studio YUI startup under unchanged strict CSP",
+  "application_commit": "901ac9eb9d87956e9818ab656410a1a7e63cb221",
+  "tool_commit": "f4d81940242217c48b0eaf7afd1c4d79e068b00e",
+  "qualified_commit": "2984b066540c3f2e3c9dc44e74db087f4fa74d77",
+  "accepted_deployment_baseline": {
+    "application_commit": "719bf47c1ba5942c094a04312898890ec7de00c1",
+    "tool_commit": "aa61d5954d96c33b8de2845cf2c0891ba428c76d",
+    "receipt": "context/runtime/library_discovery_owner_deploy_20261105.json",
+    "owner_45e_not_installed": "context/runtime/route_editor_owner_not_installed_20261105.json"
+  },
+  "target": {
+    "local_ustar": 2026110200,
+    "theme_ustar": 2026110200,
+    "files": 653,
+    "tables": 108,
+    "changed_existing_files": 10,
+    "added_files": 4,
+    "schema_changed": false,
+    "business_data_changed": false,
+    "worker_changed": false,
+    "preserved_worker": "267e55874eb8f6c36259d748f28a2c636adc9810"
+  },
+  "regression": {
+    "red_commit": "eb00cd1229cd3d80fd726a419bac560f5dc3a2e0",
+    "run": 42041487667,
+    "jobs": [
+      127293512865,
+      127293513317
+    ],
+    "moodle_versions": [
+      "5.1.1",
+      "5.1.8"
+    ],
+    "observed": "Exact owner YUI._afterConfig EvalError and javascript-static.js87 setup reading one on both pinned runtimes",
+    "fix": "Supported global=window in request-local additionalhtmlhead after author auth and before header",
+    "CSP_header_byte_identical": true,
+    "core_modified": false,
+    "unsafe_eval_added": false,
+    "persistent_config_write": false
+  },
+  "verification": {
+    "native_browser_status": "PASS both pinned runtimes",
+    "native_browser_jobs": [
+      127321383411,
+      127321383430
+    ],
+    "real_API": true,
+    "browser_widths": [
+      1440,
+      390
+    ],
+    "operator_tests": 14,
+    "operator_job": 127321383428,
+    "actual_php_and_uid33": true,
+    "source_and_full_RC": "PASS",
+    "provider_calls": false,
+    "production_ssh": false,
+    "workflow_status": {
+      "review": "success",
+      "infra": "success",
+      "context": "success",
+      "console": "success"
+    },
+    "source_php": [
+      "8.2",
+      "8.3"
+    ],
+    "python_tests_per_matrix": 1633,
+    "python_skipped_per_matrix": 273,
+    "source_php82_job": 127321383067,
+    "source_php83_retry_job": 127327346141,
+    "native_moodle_versions": [
+      "5.1.1",
+      "5.1.8"
+    ],
+    "postgresql": 16,
+    "route_editor_http_job": 127321383420,
+    "rollback_job": 127321383592,
+    "context_job": 127321383364,
+    "source_php83_job": 127327346141,
+    "full_rc_jobs": 11,
+    "full_rc_latest_attempt_jobs": [
+      {
+        "id": 127327346141,
+        "name": "source (8.3)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127327349190,
+        "name": "rollback",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127327349745,
+        "name": "studio-browser (patch-518, tests/stage/patch-compose.yaml)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127327406518,
+        "name": "source (8.2)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127327418045,
+        "name": "studio-browser (historical, tests/stage/compose.yaml)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127327423687,
+        "name": "route-editor-http",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127333223685,
+        "name": "prepare-rc",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127333223764,
+        "name": "connect-db",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127333425875,
+        "name": "moodle-db (historical, tests/stage/compose.yaml, moodle-db-evidence)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127333426028,
+        "name": "moodle-db (patch-518, tests/stage/patch-compose.yaml, moodle-patch-evidence)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127339904189,
+        "name": "gate",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "native_tests_per_version": 430,
+    "native_assertions_per_version": 1988,
+    "native_db_jobs": [
+      127333425875,
+      127333426028
+    ],
+    "connect_db_job": 127333223764,
+    "connect_native_tests": 172,
+    "connect_native_assertions": 875,
+    "exact_source_upgrade_repeat_and_fresh_schema_parity": true,
+    "native_browser_artifacts": [
+      {
+        "artifact_id": 13425754671,
+        "name": "studio-native-browser-historical",
+        "zip_sha256": "18d59b6ef076a10d4f5881958cad8cea21c9f80e6abfda8bdc5e355006050b74",
+        "qualification_commit": "2984b066540c3f2e3c9dc44e74db087f4fa74d77",
+        "evidence": {
+          "native": true,
+          "api": "real",
+          "policy_unchanged": true,
+          "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' blob: data:; connect-src 'self'; frame-src 'self' blob:; object-src 'none'; base-uri 'none'; frame-ancestors 'self'",
+          "yui": {
+            "one": "function",
+            "explicitGlobal": true
+          },
+          "errors": [],
+          "saved": {
+            "code": "NEW-b8ce9e323746",
+            "revision": 1
+          },
+          "preview": {
+            "parent_access": "denied",
+            "eval": "denied"
+          },
+          "status": "PASS"
+        }
+      },
+      {
+        "artifact_id": 13425654981,
+        "name": "studio-native-browser-patch-518",
+        "zip_sha256": "6585e476e602e6b991665657f27276108c93b93da71e11ba6b73610f7f9bb8e3",
+        "qualification_commit": "2984b066540c3f2e3c9dc44e74db087f4fa74d77",
+        "evidence": {
+          "native": true,
+          "api": "real",
+          "policy_unchanged": true,
+          "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' blob: data:; connect-src 'self'; frame-src 'self' blob:; object-src 'none'; base-uri 'none'; frame-ancestors 'self'",
+          "yui": {
+            "one": "function",
+            "explicitGlobal": true
+          },
+          "errors": [],
+          "saved": {
+            "code": "NEW-1142a178da7a",
+            "revision": 1
+          },
+          "preview": {
+            "parent_access": "denied",
+            "eval": "denied"
+          },
+          "status": "PASS"
+        }
+      }
+    ]
+  },
+  "archive": {
+    "file_name": "ustar-studio-csp-f4d81940.tar.gz",
+    "bytes": 194854,
+    "sha256": "33e0f16b9043bc79beddcb06ea6476b13be1323147cde956cc7e5e01f2d6f87a",
+    "script_sha256": "ad5775afa41fd5dcd21a8da0c3fe6f1c1f03560803cb2d4a4fdac31c7453655a",
+    "members": [
+      "INSTALL.json",
+      "SHA256SUMS",
+      "update.py"
+    ],
+    "regular_private_members": true,
+    "offline_PLAN_ONLY": "PASS",
+    "ci_artifact_id": 13425294665,
+    "ci_zip_sha256": "cb9854f0c14d6eec0d9a2d5316acb43e757f72f0436285f3a57a249a99f58efd",
+    "ci_byte_identical": true,
+    "zip_crc": "PASS",
+    "saved_copy_byte_identical": true,
+    "library_file_id": "libfile_15178fb0d5b08191a16674ee93f8b862",
+    "file_id": "file_000000001a84820a970a79f6899ba2a2",
+    "tool_selection": "CI selects last immutable operator/builder changef4d81940; qualification2984b066 changes CI budget only, application901 trees unchanged"
+  },
+  "workflows": {
+    "review": 42049478016,
+    "infra": 42049478066,
+    "context": 42049478476,
+    "console": 42049478060
+  },
+  "review": {
+    "method": "Author trace review, native RED/GREEN, actual PHP/UID33 and source transaction tests; full release candidate gate",
+    "subagents_used": false,
+    "independent_reviewer": false,
+    "coderabbit_run": false
+  },
+  "qualification_corrections": [
+    {
+      "commit": "277ca9adfaf7781a2af0ffa12a6b7d9d207785d5",
+      "reason": "Internal Docker test bridge prevented host browser port access; not counted as product RED",
+      "correction": "CI-only browser network overlay; exact owner errors then reproduced on eb00cd12"
+    },
+    {
+      "commit": "f4d81940242217c48b0eaf7afd1c4d79e068b00e",
+      "reason": "Original errors gone on both runtimes; synchronous CDP probe inherits default eval bypass",
+      "correction": "Real browser click probe outside evaluation; EvalError assertion retained; no product/header/operator changes"
+    },
+    {
+      "commit": "b4e2075064cffe74ee94b22e8d07cb0478f4026b",
+      "reason": "Static review identified mobile course selector in closed drawer; CI superseded before result",
+      "correction": "Native test opens/closes real mobile drawer in a28c7bb2"
+    },
+    {
+      "commit": "a28c7bb2c6a8e859baf757dcda31214ba48ae275",
+      "job": 127302809679,
+      "reason": "Source8.3 reached Chromium dependency installation after Python tests passed; operation canceled at15-minute job deadline",
+      "correction": "Re-run only source8.3 and its dependent jobs; same exact commit/artifact, no product/operator changes"
+    },
+    {
+      "commit": "a28c7bb2c6a8e859baf757dcda31214ba48ae275",
+      "job": 127311818773,
+      "reason": "Second15min timeout during slow Ubuntu font downloads (21.1MB); no product test assertion failure",
+      "correction": "2984b066 bounds source job at25min; identical tests/dependencies, application901/toolf4d unchanged"
+    },
+    {
+      "commit": "2984b066540c3f2e3c9dc44e74db087f4fa74d77",
+      "job": 127321383554,
+      "reason": "Python suite passed; Chromium Page.captureScreenshot returned Unable to capture screenshot in unchanged tests/mobile/visual.cjs106; source8.2 same static fixture suite passed",
+      "correction": "Re-run only failed source8.3 and downstream jobs on same immutable commit; no assertion, application or archive changes"
+    }
+  ],
+  "limits": [
+    "No production install or live host probe claimed; source deployment remains719 until owner receipt",
+    "Owner must retry exact route invalidparameter scenario; JS traces do not identify its original server-side cause",
+    "Broad reader/query cost, field-level error UX, unsaved guard and author pilot remain audit follow-ups"
+  ],
+  "related_route_qualification": "context/runtime/route_editor_qualification_20261105.json",
+  "local_verification": "14 new operator tests:13pass/1UID33skip; mandatory dedicated CI all14pass. Local full r16 had3 mcp import errors; installed locked prerequisites in private venv and all20 affected harness/stdio tests then passed; final full CI is authoritative.",
+  "previous_focused_native_qualification": "a28c7bb2c6a8e859baf757dcda31214ba48ae275",
+  "qualified_at_utc": "2026-11-05T15:28:23.285603+00:00",
+  "workflow_receipts": [
+    {
+      "id": 42049478476,
+      "name": "USTAR context integrity",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 42049478066,
+      "name": "USTAR infrastructure verification",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 42049478060,
+      "name": "USTAR console",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 42049478016,
+      "name": "USTAR review gate",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ]
+}

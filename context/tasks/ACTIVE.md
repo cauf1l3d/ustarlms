@@ -1,17 +1,18 @@
 # Активная работа —05.11.2026
 
-## Студия CSP + редактор маршрута: следующий cumulative пакет
+## Студия CSP + редактор маршрута: квалифицированный пакет
 
-STUDIO-CSP-01 in_progress. Owner сообщил YUI EvalError из CSP и reading one;
-подтвердил45e ещё НЕ установлен. Production остаётся719bf47c/toolaa61d595.
-[Ревью](../reviews/20261105/STUDIO_CSP_REVIEW_RU.md),
-[план](../../docs/superpowers/plans/2026-11-05-studio-csp-remediation.md).
-Native browser RED→GREEN должен проверить YUI/AMD, неизменную CSP, реальное сохранение
-и isolated preview. Request-local global=window, без core patch/unsafe-eval.
-Новый архив от719 объединит CSP-совместимость и прежний Route Studio6c4f30b6.
-45e квалифицирован на1c43377b, но owner install не было; старые архивы frozen.
-[Квитанция45e](../runtime/route_editor_qualification_20261105.json),
-[owner statement](../runtime/route_editor_owner_not_installed_20261105.json).
+STUDIO-CSP-01 / ROUTE-EDITOR-01 awaiting_owner_deployment.
+App901ac9eb/toolf4d81940 квалифицирован на2984b066:4CI/11FullRC PASS.
+Обе ошибки YUI/CSP воспроизведены и устранены на Moodle5.1.1/5.1.8;
+CSP/sandbox неизменны, настоящий API save/fresh mobile reload PASS.
+Native430/1988 на каждой версии, Connect172/875, оператор14 actual PHP/UID33 PASS.
+[Квалификация](../runtime/studio_csp_qualification_20261105.json),
+[установка](../../docs/STUDIO_CSP_INSTALL_RU.md),
+[реализация](../reviews/20261105/STUDIO_CSP_IMPLEMENTATION.md).
+Один cumulative архив от719 включает непоставленный45e Route Studio и CSP bootstrap;
+архив побайтно совпал с CI и сохранённой копией. Owner45e НЕ устанавливал.
+Production719 не менялся; точный прежний route invalidparameter требует owner retry.
 
 ## Установленная Академия
 

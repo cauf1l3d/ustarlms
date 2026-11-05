@@ -19,17 +19,19 @@
 
 Files: tests/stage/course_studio_native_browser.cjs; existing authenticated_shell_smoke.sh/route_editor_native.sh; CI review gate; moodle/local/ustar/course_studio.php.
 
-- [ ] Добавить отдельный isolated native browser job; действующий stage boot/auth переиспользовать с ограниченным test-only browser mode и localhost port. Проверять оба pinned Moodle runtime.
-- [ ] RED: открыть настоящую Студию, сохранить browser errors; ожидать готовый Y.one и отсутствие bootstrap errors. Проверить actual response CSP, сохранение custom head, реальные save/reload, preview isolation и eval denial.
-- [ ] Запустить CI RED на старом course_studio.php, прочитать точную причину.
-- [ ] Добавить request-local YUI_config.global=window через additionalhtmlhead до header; не менять CSP или core. GREEN тот же тест.
-- [ ] Source/DOM/native regression suite и отдельное авторское trace review.
+- [x] Добавить отдельный isolated native browser job; действующий stage boot/auth переиспользовать с ограниченным test-only browser mode и localhost port. Проверять оба pinned Moodle runtime.
+- [x] RED: открыть настоящую Студию, сохранить browser errors; ожидать готовый Y.one и отсутствие bootstrap errors. Проверить actual response CSP, сохранение custom head, реальные save/reload, preview isolation и eval denial.
+- [x] Запустить CI RED на старом course_studio.php, прочитать точную причину.
+- [x] Добавить request-local YUI_config.global=window через additionalhtmlhead до header; не менять CSP или core. GREEN тот же тест.
+- [x] Source/DOM/native regression suite и отдельное авторское trace review.
 
 ## Task2 — immutable cumulative owner package
 
 Files: new scripts/infra/studio_csp_patch.py, build_studio_csp_patch.py; new operator tests; context/runtime receipt and owner runbook.
 
-- [ ] Новый qualified frozen successor по существующему source-only transaction contract, baseline719bf47c,10changed+4added addon files,653files/108tables.45e/aa61 не менять.
-- [ ] Offline plan/check, drift/locks/UID33/PHP lint/cache purge/interruption/recovery tests; root preflight refuses wrong source before outage.
-- [ ] Exact app/operator pins, fullRC + native browser, deterministic build, CI byte match and downloaded retained copy match.
-- [ ] STATE/BACKLOG/ACTIVE/code map/PR114 и краткие owner команды; owner install остаётся отдельным receipt.
+- [x] Новый qualified frozen successor по существующему source-only transaction contract, baseline719bf47c,10changed+4added addon files,653files/108tables.45e/aa61 не менять.
+- [x] Offline plan/check, drift/locks/UID33/PHP lint/cache purge/interruption/recovery tests; root preflight refuses wrong source before outage.
+- [x] Exact app/operator pins, fullRC + native browser, deterministic build, CI byte match and downloaded retained copy match.
+- [x] STATE/BACKLOG/ACTIVE/code map/PR114 и краткие owner команды; owner install остаётся отдельным receipt.
+
+Qualified05Nov2026: app901ac9eb/toolf4d81940, exact2984b066,4CI/11FullRC PASS. Owner deployment remains separate and pending; original route invalidparameter must be retried.

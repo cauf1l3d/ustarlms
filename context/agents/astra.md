@@ -22,10 +22,9 @@ Previous grants/mandatory route retained. No repeat installation/recovery.
 Audit03–04Nov completed: context/reviews/20261103/AUDIT_RU.md and20261104/DEEP_AUDIT_RU.md.
 Owner5Nov installed discovery app719bf47c/toolaa61d595: exit0/postcheck active.
 Receipt: context/runtime/library_discovery_owner_deploy_20261105.json.
-Current ROUTE-EDITOR-01: implemented app6c4f30b6/tool45e9d6b7 from installed719bf47c.
-Separate visibility, lossless rows, draft/publish and input-preserving errors.
-Read context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md and docs/ROUTE_EDITOR_INSTALL_RU.md.
-Source qualification is distinct from owner installation; production remains719bf47c.
-Exact owner501 not identified without trace; do not claim universal fix from synthetic probe.
-
-Owner5Nov confirms45e not installed; STUDIO-CSP-01 active. Read STUDIO_CSP_REVIEW_RU.md and studio-csp plan. Native YUI global fallback triggers CSP EvalError; prove request-local bootstrap without weakening CSP. New archive cumulative from719; do not assume6c deployed.
+Current qualified cumulative package app901ac9eb/toolf4d81940 from installed719bf47c.
+Includes uninstalled45e Route Studio changes and supported request-local YUI global bootstrap under unchanged CSP.
+Read context/reviews/20261105/STUDIO_CSP_IMPLEMENTATION.md, context/runtime/studio_csp_qualification_20261105.json and docs/STUDIO_CSP_INSTALL_RU.md.
+Owner confirms45e NOT installed. Source qualification is distinct from owner deployment; production remains719.
+Native RED reproduced both exact CSP/YUI errors; patched5.1.8 browser passes actual save/fresh mobile reload and strict CSP/sandbox probes. Full gate2984b066:4workflows/11jobs PASS; native430/1988 each, Connect172/875, operator14 actual PHP/UID33. Owner install pending.
+Earlier server-side invalidparameter must be retried by owner; this JS trace does not identify its original cause. No independent reviewer/subagents/SSH/provider calls/merge.

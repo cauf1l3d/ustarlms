@@ -11,7 +11,7 @@ Generated: [manifest](generated/source_manifest.json), [классы](generated/
 [таблицы](generated/database_tables.md), [API](generated/web_services.md).
 Обновление: bash scripts/build_code_map.sh EXACT_SOURCE_COMMIT.
 [Токены](../design/tokens.yaml), [capability references](../architecture/access_matrix.yaml),
-[домены](../domains). Unmerged PR114/app6c4f30b6 — development_source.json:653файла/108таблиц, ещё не установлен.
+[домены](../domains). Unmerged PR114/app901ac9eb — development_source.json:653файла/108таблиц, ещё не установлен.
 Owner installed5Nov app719bf47c/toolaa61d595:649файлов/108таблиц;
 receipt library_discovery_owner_deploy_20261105.json.
 Предыдущая установка marketplace4715383b/tool59f принята3Nov:

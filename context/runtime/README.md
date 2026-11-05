@@ -5,9 +5,11 @@ ready→active,readonly postcheck active. [Квитанция](library_discovery
 [evidence](evidence_library_discovery0200_20261105.yaml). Local/theme0200,649fixed files/108tables.
 Подробные employee browser cases не перечислены; повтор/recovery не требуются.
 Предыдущий SCORM app5e61/tool4aee принят3Nov: [receipt](studio_scorm_edit_owner_deploy_20261103.json).
-Следующий пакет — app6c4f30b6/tool45e9d6b7: [реализация редактора точки](../reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md).
-[Квалификация1c43377b](route_editor_qualification_20261105.json): все4CI/9FullRC PASS.
-[Установка](../../docs/ROUTE_EDITOR_INSTALL_RU.md) ожидается владельцем. Production остаётся719bf47c.
+Квалифицированный cumulative пакет — app901ac9eb/toolf4d81940: [реализация](../reviews/20261105/STUDIO_CSP_IMPLEMENTATION.md),
+[квалификация](studio_csp_qualification_20261105.json), [установка](../../docs/STUDIO_CSP_INSTALL_RU.md).
+Route45e не установлен по owner statement; новый пакет прямо от719 включает Route Studio и strict-CSP YUI bootstrap.
+Прежняя [квалификация45e/1c](route_editor_qualification_20261105.json) сохранена как история.
+Production остаётся719bf47c; квалификация не означает установку.
 
 Предыдущие установки Библиотеки: [marketplace471/tool59f](library_marketplace_owner_deploy_20261103.json),
 [навигация5131](library_navigation_owner_deploy_20261103.json),

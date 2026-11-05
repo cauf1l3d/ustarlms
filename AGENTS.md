@@ -19,8 +19,9 @@ marketplace4715383b/tool59f: success/exit0/postcheck active, «Отлично р
 Discovery app719bf47c/toolaa61d595 установлен5Nov: exit0/active.
 [Receipt](context/runtime/library_discovery_owner_deploy_20261105.json). ROUTE-EDITOR-01:
 Owner подтвердил45e не установлен. STUDIO-CSP-01: native YUI/CSP regression и cumulative
-пакет с Route Studio от719bf47c; без unsafe-eval/core changes.
-[Реализация](context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md). Детальные роли и
+пакет app901ac9eb/toolf4d81940 (qualified2984b066) с Route Studio от719bf47c; без unsafe-eval/core changes.
+[Реализация](context/reviews/20261105/STUDIO_CSP_IMPLEMENTATION.md),
+[квалификация](context/runtime/studio_csp_qualification_20261105.json). Детальные роли и
 PERF-01 остаются; HTTPS/Mini App ждут руководства. Старые cron19/failed2 не сбрасывать.
 
 Connect: все роли через существующую Академию; Mini App и HTTPS в конце.

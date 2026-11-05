@@ -559,7 +559,7 @@
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
       "size": 104745,
-      "sha256": "7f5af3f09ba58f36c9be06ffd73054bd804c3ffca0e377255ebbceec16bfdb95"
+      "sha256": "3ba9329bd990c373721238677279b27f89e261b234243d21f1d2350092f2c63d"
     },
     {
       "path": "context/code_map/feed_media_development_source.json",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 12265,
-      "sha256": "c561a14d4fbfd0eb7379a33c4b5a865d6a1b8895149b0e76a16607da09c9d481"
+      "size": 12247,
+      "sha256": "87737944d4f1346a84937c7e81b380597ff2d2733b21c8ff35a18c3c5df5605a"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -1530,8 +1530,8 @@
     {
       "path": "context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md",
       "domain": "reviews",
-      "size": 2736,
-      "sha256": "37eb68e0563fa608077977ab68d904228f588527a59e416f7080af3603b6eb93"
+      "size": 2880,
+      "sha256": "b245de428bfb13423b22f8de5c9c14a9eb1dd0af275378d9d7e76aff8177d95a"
     },
     {
       "path": "context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md",
@@ -1632,8 +1632,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22408,
-      "sha256": "5d7474778e217b94faee8749f422e6ba163de9733e1dd12b63f8fac9f51edb48"
+      "size": 22390,
+      "sha256": "d90ee188bee327e7cc2b4b0230c5782a5d56c07152679d9d2fd228f7a0466274"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",

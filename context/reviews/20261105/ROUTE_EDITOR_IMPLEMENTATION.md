@@ -15,3 +15,5 @@ Verification so far: PHP codec RED missing class→GREEN, real Mustache/DOM PASS
 Ruling: disabling a position override would reveal the common point under ADR0004, not hide that common point. UI therefore uses existing «Вернуть общий вариант» for overrides; separate hide applies to common/local points. Restoring an already-hidden legacy override remains supported. No new per-position exclusion model introduced.
 
 Final review: valid60-second SCORM review interval rejected by old HTML min/step; DOM RED→GREEN with step=any/server min enforcement. Keyboard reordering across hidden cards RED→GREEN with active-only targets. Summary of current policy is visible outside collapsed details; hidden point publication notice explicit.
+
+Final review regression: retained the existing direct file/video upload link after extracting shared fields; actual template test RED→GREEN.

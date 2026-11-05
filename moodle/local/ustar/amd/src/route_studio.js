@@ -1,4 +1,5 @@
 export const init = () => {
+    document.querySelector('[data-u-form-error]')?.focus();
     const list = document.getElementById('u-route-list');
     if (!list) {
         return;

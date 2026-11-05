@@ -83,6 +83,7 @@ jobs:
           php tests/release_20260912/library_generator_contract.php
           php tests/release_20260912/library_marketplace_contract.php
           php tests/release_20260912/library_discovery_contract.php
+          php -d zend.assertions=1 -d assert.exception=1 tests/release_20260912/route_editor_form_contract.php
       - name: Verify production paired copy with exact reported Unix owners
         if: matrix.php == '8.3'
         run: >-

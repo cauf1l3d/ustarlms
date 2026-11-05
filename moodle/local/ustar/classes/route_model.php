@@ -463,7 +463,8 @@ final class route_model {
         bool $active,
         array $versiondata,
         int $actorid,
-        int $expectedmodified = 0
+        int $expectedmodified = 0,
+        int $expectedversion = 0
     ): \stdClass {
         global $DB;
 
@@ -505,6 +506,10 @@ final class route_model {
                     throw new \moodle_exception(
                         'Наследуемый общий шаг нельзя редактировать напрямую.'
                     );
+                }
+
+                if ($expectedversion>0 && (int)(self::latest_version($pointid)->id??0)!==$expectedversion) {
+                    throw new \moodle_exception('Содержание точки изменено другим редактором. Обновите маршрут и сверьте изменения.');
                 }
 
                 $status = self::clean_status(
@@ -663,6 +668,8 @@ final class route_model {
                     $requirements,
                     $actorid
                 );
+
+                route_point_access::validate_for_requirements(route_point_access::policy($version),$requirements);
 
                 $now = time();
                 $version->status = self::STATUS_PUBLISHED;
@@ -1052,7 +1059,7 @@ final class route_model {
 
         $accesspolicy = array_key_exists('accesspolicy', $data)
             ? route_point_access::normalize((array)$data['accesspolicy']) : null;
-        if ($accesspolicy !== null) { route_point_access::validate_for_requirements($accesspolicy, $requirements); }
+        if ($accesspolicy !== null && $status===self::STATUS_PUBLISHED) { route_point_access::validate_for_requirements($accesspolicy, $requirements); }
         $accessjson = $accesspolicy !== null
             ? json_encode($accesspolicy, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
             : ($latest->accesspolicyjson ?? null);
@@ -2965,7 +2972,7 @@ final class route_model {
      *
      * Employee runtime continues to resolve routes strictly by position.
      */
-    public static function admin_view_route(int $routeid, string $positionid = ''): array {
+    public static function admin_view_route(int $routeid, string $positionid = '', bool $includeinactive = false): array {
         global $DB;
 
         $route = $DB->get_record(
@@ -2994,7 +3001,7 @@ final class route_model {
 
         $points = [];
 
-        foreach (self::points((int)$route->id) as $point) {
+        foreach (self::points((int)$route->id,$includeinactive) as $point) {
             $versions = [];
 
             foreach (self::versions((int)$point->id) as $version) {
@@ -3117,6 +3124,7 @@ final class route_model {
             $latest = $versions[0] ?? null;
 
             $points[] = [
+                'routeid'=>(int)$route->id, 'active'=>(int)$point->active,
                 'id' =>
                     (int)$point->id,
 

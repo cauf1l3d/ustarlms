@@ -47,6 +47,45 @@ final class route_commands {
         throw new \coding_exception('Не удалось изменить область маршрута');
     }
 
+    /** Hide/restore metadata without rebuilding any immutable learning version. */
+    public static function set_point_active(array $command): \stdClass {
+        global $USER,$DB;
+        $actor=(int)($command['actorid']??0);
+        view_as::assert_writable();
+        if ($actor!==(int)$USER->id || !hr_access::can_manage_structure($actor)) {
+            throw new \required_capability_exception(\context_system::instance(),'local/ustar:hrmanage','nopermissions','');
+        }
+        $routeid=(int)($command['routeid']??0);$pointid=(int)($command['pointid']??0);
+        $revision=(int)($command['expectedmodified']??0);
+        if ($routeid<=0 || $pointid<=0 || $revision<=0) {
+            throw new \invalid_parameter_exception('Форма устарела. Обновите маршрут.');
+        }
+        return self::with_route_lock($routeid,static function() use($DB,$command,$routeid,$pointid,$revision,$actor): \stdClass {
+            $DB->get_record('local_ustar_routes',['id'=>$routeid,'active'=>1],'id',MUST_EXIST);
+            $point=$DB->get_record_sql('SELECT * FROM {local_ustar_route_points} WHERE id=:id AND routeid=:route FOR UPDATE',
+                ['id'=>$pointid,'route'=>$routeid],MUST_EXIST);
+            if ((int)$point->timemodified!==$revision) {
+                throw new \moodle_exception('Точка уже изменена в другой сессии. Обновите маршрут и повторите действие.');
+            }
+            if (($point->inheritstate??'')===route_family::INHERITED) {
+                throw new \invalid_parameter_exception('Общий шаг меняется в общем маршруте. Для должности создайте свой вариант.');
+            }
+            if (!empty($command['positionediting'])) {
+                $position=(string)($command['positionid']??'');
+                route_scope::assert_route_position($routeid,$position);
+                if (!route_scope::exclusive_to($pointid,$position) || !in_array($pointid,array_map(static fn($p)=>(int)$p->id,route_scope::points_for_position($routeid,$position,true,true)),true)) {
+                    throw new \invalid_parameter_exception('Нельзя скрыть общий шаг для всех из вкладки должности.');
+                }
+                if (!empty($point->sourcepointid)) { route_scope::assert_replaceable((int)$point->sourcepointid); }
+            } else if (!empty($point->sourcepointid)) {
+                throw new \invalid_parameter_exception('Изменяйте этот вариант во вкладке его должности.');
+            }
+            $active=!empty($command['active']);
+            if ((bool)$point->active===$active) { return $point; }
+            return route_model::update_point($routeid,$pointid,(string)$point->phase,$active,$actor,$revision);
+        });
+    }
+
     /**
      * Save one point version for the common route or one position override.
      *
@@ -112,7 +151,8 @@ final class route_commands {
             !empty($command['active']),
             $versiondata,
             $actorid,
-            (int)($command['expectedmodified'] ?? 0)
+            (int)($command['expectedmodified'] ?? 0),
+            (int)($command['baseversion'] ?? 0)
         );
     }
 

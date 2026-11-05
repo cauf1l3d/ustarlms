@@ -1,0 +1,10 @@
+<input type="hidden" name="baseversion" value="{{baseversion}}">
+<div class="u-route-editor__grid"><label><span>Название шага</span><input name="title" value="{{formtitle}}" required maxlength="255"></label><label class="u-route-editor__wide"><span>Что сотрудник должен сделать</span><textarea name="summary" rows="3">{{formsummary}}</textarea></label></div>
+{{> local_ustar/route_studio_requirements}}
+<details class="u-route-editor__advanced" {{#advancedopen}}open{{/advancedopen}}><summary>Дополнительные настройки: повторное обучение и SCORM</summary>
+<p class="u-route-editor__muted">{{accesssummary}}</p>
+{{> local_ustar/route_access_policy}}
+<fieldset><legend>Повторное обучение</legend><div class="u-route-editor__grid"><label><span>При публикации изменений</span><select name="renewalpolicy"><option value="keep" {{#keepselected}}selected{{/keepselected}}>Сохранить прошлый результат</option><option value="all" {{#allselected}}selected{{/allselected}}>Назначить повтор всем сотрудникам</option><option value="expiry" {{#expiryselected}}selected{{/expiryselected}}>Повторять после срока действия</option><option value="manual" {{#manualselected}}selected{{/manualselected}}>Назначать повтор вручную</option></select></label><label><span>Срок действия результата, дней</span><input type="number" name="validdays" min="0" max="3650" value="{{formvaliddays}}"></label></div><p>Ноль означает отсутствие срока. Назначение повтора всем применяется при публикации и требует осознанного выбора.</p></fieldset>
+</details>
+<p class="u-route-editor__muted">Черновик сохраняет изменения для редактора. Сотрудники продолжают видеть опубликованную версию. Чтобы убрать весь шаг из маршрута, используйте отдельное действие «Скрыть шаг» на карточке.</p>
+<div class="u-route-editor__save"><button class="u-btn" type="submit" name="status" value="draft">Сохранить черновик</button><button class="u-btn u-btn--primary" type="submit" name="status" value="published">Опубликовать изменения</button>{{#cancelurl}}<a class="u-btn" href="{{cancelurl}}">Отмена</a>{{/cancelurl}}</div>

@@ -12,7 +12,7 @@
       <option value="keep" {{#accesskeep}}selected{{/accesskeep}}>Оставить материал доступным</option>
     </select></label>
     <label><span>Срок повторения</span><input name="reviewduration" type="number" min="0.02" max="87600" step="0.01" value="{{#reviewduration}}{{reviewduration}}{{/reviewduration}}{{^reviewduration}}24{{/reviewduration}}"></label>
-    <label><span>Единица срока</span><select name="reviewunit"><option value="hours">Часы</option><option value="days">Дни</option></select></label>
+    <label><span>Единица срока</span><select name="reviewunit"><option value="hours" {{#reviewhours}}selected{{/reviewhours}}>Часы</option><option value="days" {{#reviewdays}}selected{{/reviewdays}}>Дни</option></select></label>
     <label><span>После завершения всего SCORM-курса</span><select name="finishaction">
       <option value="next" {{#finishnext}}selected{{/finishnext}}>Открыть следующий доступный шаг</option>
       <option value="route" {{#finishroute}}selected{{/finishroute}}>Вернуться на страницу маршрута</option>

@@ -18,6 +18,10 @@ header('X-Content-Type-Options: nosniff');
 header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' blob: data:; connect-src 'self'; frame-src 'self' blob:; object-src 'none'; base-uri 'none'; frame-ancestors 'self'");
 $version=substr(hash_file('sha256',__DIR__.'/course_studio/model.js'),0,16).'-'.filemtime(__DIR__.'/course_studio/style.css');
 $PAGE->requires->css(new moodle_url('/local/ustar/course_studio/style.css', ['v' => $version]));
+// Moodle emits YUI_config before additionalhtmlhead and loads YUI in the body.
+// Give legacy YUI its supported global without a CSP-blocked Function constructor.
+// This request-local append preserves the administrator's head and strict CSP.
+$CFG->additionalhtmlhead = ($CFG->additionalhtmlhead ?? '') . html_writer::script('YUI_config.global = window;');
 echo $OUTPUT->header();
 if (\local_ustar\view_as::active()) {
     echo $OUTPUT->notification('Для редактирования завершите просмотр от лица сотрудника.', 'info');

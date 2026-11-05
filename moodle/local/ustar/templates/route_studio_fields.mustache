@@ -1,6 +1,8 @@
 <input type="hidden" name="baseversion" value="{{baseversion}}">
 <div class="u-route-editor__grid"><label><span>Название шага</span><input name="title" value="{{formtitle}}" required maxlength="255"></label><label class="u-route-editor__wide"><span>Что сотрудник должен сделать</span><textarea name="summary" rows="3">{{formsummary}}</textarea></label></div>
 {{> local_ustar/route_studio_requirements}}
+<p class="u-route-editor__muted">Текущие правила: {{accesssummary}}</p>
+{{#hidden}}<p class="u-route-editor__muted">Шаг скрыт. Публикация новой версии сама по себе не вернёт его сотрудникам.</p>{{/hidden}}
 <details class="u-route-editor__advanced" {{#advancedopen}}open{{/advancedopen}}><summary>Дополнительные настройки: повторное обучение и SCORM</summary>
 <p class="u-route-editor__muted">{{accesssummary}}</p>
 {{> local_ustar/route_access_policy}}

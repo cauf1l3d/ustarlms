@@ -9,4 +9,5 @@ assert.equal(edit.querySelector('input[name=baseversion]').value,'5');assert.equ
 assert(edit.querySelector('button[value=draft]'));assert(edit.querySelector('button[value=published]'));assert(edit.querySelector('details:not([open]) input[name=reviewduration]'));
 const visibility=doc.querySelector('input[value=set_point_active]').form;assert.equal(visibility.querySelector('input[name=active]').value,'0');assert.equal(visibility.querySelector('input[name=expectedmodified]').value,'41');assert.equal(visibility.querySelector('[name=title]'),null);
 assert.equal(new dom.window.FormData(edit).get('rows[1][required]'),null);assert.equal(new dom.window.FormData(edit).get('reviewduration'),'24');
+const duration=edit.querySelector('input[name=reviewduration]');duration.value=String(1/60);assert(duration.checkValidity(),'A valid one-minute SCORM policy must remain editable');
 console.log('ROUTE_EDITOR_DOM PASS exact rows, distinct visibility, advanced submit, errors');

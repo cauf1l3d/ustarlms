@@ -3,9 +3,10 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 
-global $DB, $USER;
+global $DB, $USER, $PAGE;
 $context = context_system::instance();
 \local_ustar\hr_access::require_structure_manager();
+$PAGE->set_context($context);
 
 $structure = \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE);
 $departments = [];
@@ -1155,8 +1156,6 @@ if ($positionid !== '') {
     $pageparams['position'] =
         $positionid;
 }
-
-$PAGE->set_context($context);
 
 $PAGE->set_url(
     new moodle_url(

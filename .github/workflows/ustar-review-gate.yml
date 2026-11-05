@@ -46,11 +46,12 @@ jobs:
       - run: npm ci --prefix tests/mobile
       - run: cd tests/mobile && npx playwright install --with-deps chromium
       - name: Build isolated native browser runtime
-        run: docker compose -f ${{ matrix.compose }} build --pull
+        run: docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml build --pull
       - name: Start disposable native site with localhost-only browser port
         run: |
           mkdir -p artifacts
-          id=$(docker compose -f ${{ matrix.compose }} run --rm -d --publish 127.0.0.1:8087:8087 --entrypoint bash runner /source/tests/stage/route_editor_native.sh studio-browser)
+          rm -f artifacts/studio-browser-ready artifacts/studio-browser-done
+          id=$(docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml run --rm -d --publish 127.0.0.1:8087:8087 --entrypoint bash runner /source/tests/stage/route_editor_native.sh studio-browser)
           printf '%s\n' "$id" > artifacts/studio-browser-container-id
           for attempt in $(seq 1 120); do
             test ! -e artifacts/studio-browser-ready || exit 0
@@ -74,7 +75,7 @@ jobs:
             id=$(cat artifacts/studio-browser-container-id)
             [[ $id =~ ^[a-f0-9]{12,64}$ ]] && docker rm -f "$id" || true
           fi
-          docker compose -f ${{ matrix.compose }} down --volumes
+          docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml down --volumes
 
   route-editor-http:
     runs-on: ubuntu-24.04

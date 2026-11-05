@@ -1,5 +1,7 @@
 # Реестр кода, проверок и deployment evidence
 
+05.11.2026 — Route Studio app6c4f30b6/tool45e9d6b7 квалифицирован на1c43377b:4CI/9FullRC SUCCESS, native430tests/1988assertions в Moodle5.1.1/5.1.8, authenticated HTTP draft/hide/restore/invalid input PASS. Source PHP8.2/8.3, DOM/browser1440/390 и оператор13tests с actualPHP/UID33 PASS. Архив193168bytes SHA6834c161 побайтно совпал с CI и сохранённой копией.13addon файлов,653fixed files/108tables; схема/бизнес-данные/worker не меняются. Owner installation/retry pending; production719bf47c и main не менялись. [Квитанция](route_editor_qualification_20261105.json), [команды](../../docs/ROUTE_EDITOR_INSTALL_RU.md). Полная оптимизация route readers/T04, PERF-01 и реальный UX пилот не закрыты этим пакетом.
+
 01.11.2026 — PR112: прямой запуск SCORM из текущей точки квалифицирован на51332a21,
 app3f8521ec. Все4CI SUCCESS; обе native Moodle suites374tests/1762assertions,
 PHP8.2/8.3 source1499/236skips, rollback и actualUID33 file recovery PASS.

@@ -12,8 +12,8 @@
     {
       "path": "context/agents/astra.md",
       "domain": "agents",
-      "size": 3245,
-      "sha256": "6d09a480c96547aee18b958d543e5f5056569db402a50a7370dbbc81a03d769f"
+      "size": 3212,
+      "sha256": "5968846de317aab0e9b90d8f003f1c0abee7344daf630bec9da1c0627446047d"
     },
     {
       "path": "context/architecture/access_matrix.yaml",
@@ -529,7 +529,7 @@
       "path": "context/code_map/README.md",
       "domain": "code_map",
       "size": 2175,
-      "sha256": "b7b32d3f5691f2055c0a8d7235838e8904cc6cd7f06621d4ce81becbfdbc6ce5"
+      "sha256": "ffea81eb21dd52c7cc8e98300021ee769ad66626ec3c4ee96ea3640d667ef775"
     },
     {
       "path": "context/code_map/backend.yaml",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 12320,
-      "sha256": "282580ce9ec471d5c70878c4fb720df179fe998b401450d759fdf96cda24fa86"
+      "size": 12313,
+      "sha256": "c60368c802c35f10e25200e52f3c2e9459734171bfc691862bebebfa76e46690"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -1530,14 +1530,14 @@
     {
       "path": "context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md",
       "domain": "reviews",
-      "size": 4175,
-      "sha256": "2d140f8e3174c6a63b4bf363aae0040f302386e5a90ae86bf464e5ecb283fb19"
+      "size": 7388,
+      "sha256": "4f3273f8b6b4b9cb78dd97fd31e70452808226254b7d890e1d0e0fbd5bb25026"
     },
     {
       "path": "context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md",
       "domain": "reviews",
-      "size": 10187,
-      "sha256": "c9e17ad2a7d95093509c8f4d314feceb740653d69442c941fff6fd19d6693d92"
+      "size": 10351,
+      "sha256": "80511d115df93e2990afc61c015d0e51a3dfa521294cfc33b51b6aa304b6859e"
     },
     {
       "path": "context/reviews/20261105/module_names_probe_result.json",
@@ -1584,8 +1584,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 45544,
-      "sha256": "2a8e1c44e32cb2729fee81463e5282e9c95cb6a827d9d09b7bab0f89f1919ef2"
+      "size": 46042,
+      "sha256": "f5918570d60858c2a0909e2fcd901487051e491f97dba7853f7293fd65dc22a8"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1638,8 +1638,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22303,
-      "sha256": "e47579773415d67519032e99cc65d17f568311fef395c7d0c9a2ea574023482e"
+      "size": 22524,
+      "sha256": "c84e5b942a29e20ccf76d143a118a2702625316e467f479261e849c1d8818b2f"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1728,14 +1728,14 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 2638,
-      "sha256": "289c995491b65c4a01333cc372488b2f20ff65a17269bdbf96aa25eaef491316"
+      "size": 2731,
+      "sha256": "c8975a60a5d31e5ba7b5d4aa269202d83f9e104f4753615ef29fe46683fd0e87"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 101107,
-      "sha256": "3176c5dfd9b25ef09ceb21c546e9ab46c6d86f4c579e8b9a934b6c2341aab609"
+      "size": 101995,
+      "sha256": "c44142233b6bae6e27c68a6b7fec80c448fcc1e43c1b25b8f843e30c06c7eff0"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -3508,6 +3508,12 @@
       "sha256": "9c53fd98931eaecb97462c09d068e2c3b08005131b7432ff94eae3136fd4950c"
     },
     {
+      "path": "context/runtime/route_editor_qualification_20261105.json",
+      "domain": "runtime",
+      "size": 7509,
+      "sha256": "11aa0facf1be1b0f9b1ec47c616eae01b26894952e839bd6eae02e03c308b68a"
+    },
+    {
       "path": "context/runtime/route_refresh_db_result_20261014.json",
       "domain": "runtime",
       "size": 1723,
@@ -3978,8 +3984,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3194,
-      "sha256": "276b6613b3dd75fce50bdacad86b84c250f74e93b54d0a50da43ddbbcb4c824e"
+      "size": 3486,
+      "sha256": "8df2e27a700c81da96f22c1d084584d29e9f803bfcceae75dc3465867694aefb"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

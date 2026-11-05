@@ -1,15 +1,16 @@
 # Активная работа —05.11.2026
 
-## Редактор точки маршрута — пакет готовится к выдаче
+## Редактор точки маршрута — пакет квалифицирован
 
-ROUTE-EDITOR-01: app4c122d0a; оператор в квалификации от установленного719bf47c.
+ROUTE-EDITOR-01: app6c4f30b6/tool45e9d6b7 от установленного719bf47c.
 [Ревью и8находок](../reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md),
 [реализация](../reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md),
 [план и остаток](../../docs/superpowers/plans/2026-11-05-route-editor-remediation.md).
 Отдельное скрытие/возврат, все требования без потерь, draft/publish, ошибки с вводом.
 Старый путь [SCORM,Quiz]→[Quiz] воспроизведён; точный owner invalidparameter без trace
 не привязан. Проверить проблемную точку после установки владельцем.
-Production остаётся719bf47c; новая установка/merge ещё не выполнены.
+[Квалификация1c43377b](../runtime/route_editor_qualification_20261105.json):4CI и9FullRC jobs PASS, обе Moodle430/1988, настоящий HTTP draft/hide/restore/error PASS.
+Архив45e9d6b7 сохранён и побайтно совпадает с CI. Ожидается установка/повтор проблемного действия владельцем; production719bf47c и main не менялись.
 
 ## Установленная Академия
 

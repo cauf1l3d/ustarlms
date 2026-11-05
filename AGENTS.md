@@ -18,7 +18,7 @@ marketplace4715383b/tool59f: success/exit0/postcheck active, «Отлично р
 [Receipt](context/runtime/library_marketplace_owner_deploy_20261103.json).
 Discovery app719bf47c/toolaa61d595 установлен5Nov: exit0/active.
 [Receipt](context/runtime/library_discovery_owner_deploy_20261105.json). ROUTE-EDITOR-01:
-app4c122d0a; оператор в квалификации подготовлен от719bf47c; квалификация и выдача отдельно от deploy.
+app6c4f30b6/tool45e9d6b7 от719bf47c квалифицирован на1c43377b; установка владельцем ожидается.
 [Реализация](context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md). Детальные роли и
 PERF-01 остаются; HTTPS/Mini App ждут руководства. Старые cron19/failed2 не сбрасывать.
 

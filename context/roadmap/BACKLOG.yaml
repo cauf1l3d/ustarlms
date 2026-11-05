@@ -843,7 +843,7 @@ tasks:
     remaining: U03 scoped admin selectors/history remain, no false complete claim
 - id: ROUTE-EDITOR-01
   title: 'Редактор точки: отключение/черновик без потерь и простой UX'
-  status: in_progress
+  status: awaiting_owner_deployment
   depends_on:
   - AUDIT-20261103
   spec: docs/superpowers/specs/2026-11-05-route-editor-design.md
@@ -861,13 +861,20 @@ tasks:
   - R07
   - R08
   acceptance:
-  - Dedicated hide/restore, no new content version or progress/reward loss; scope/revision/ACL
-    enforced
+  - Dedicated hide/restore, no new content version or progress/reward loss; scope/revision/ACL enforced
   - Lossless ordered multi-requirement editor with required/completionmode per row
-  - Separate draft/publish actions, understandable errors preserving input, hidden
-    author list
-  - Native/DOM/browser/source/operator qualification and immutable successor from
-    installed719bf47c before archive handoff
+  - Separate draft/publish actions, understandable errors preserving input, hidden author list
+  - Native/DOM/browser/source/operator qualification and immutable successor from installed719bf47c before
+    archive handoff
+  qualification: context/runtime/route_editor_qualification_20261105.json
+  runbook: docs/ROUTE_EDITOR_INSTALL_RU.md
+  application_commit: 6c4f30b600e6353aad10e112e94f7db7930e0e48
+  tool_commit: 45e9d6b749d3eac2a018f597b3c8b9a931debd13
+  remaining_scope:
+  - Owner installation and retry of exact invalidparameter case
+  - Full route reader/query cost remains in T04/PERF-01
+  - Per-field errors, unsaved guard, accessibility and real-author pilot remain follow-up in implementation
+    plan
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

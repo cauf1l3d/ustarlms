@@ -33,3 +33,7 @@ ADR0004, route_model, route_commands, route_scope, completion/evidence/rewards �
 ## Приёмка
 
 Скрытие и возврат: active меняется, версии/прогресс/награды не меняются; stale/foreign/inherited/view-as отказы атомарны. Черновик сохраняется и не скрывает published. Round-trip сохраняет полный ordered набор из нескольких cm/course/content/assessment/native/skill/previous_adaptation, required/completionmode/primary и текущую политику. Неподдерживаемые записи не исчезают. Desktop/Android/keyboard/zoom, без JS и при validation error доступны основные действия. Производительность измерена на representative staging; production нагрузка не создаётся.
+
+## Уточнения фактического пакета05Nov
+
+[План выполнения и остаток](../plans/2026-11-05-route-editor-remediation.md) разделяет реализованное и непроверенное. Видимость override — существующий возврат общего варианта, не новая модель исключения. Ошибка — summary с фокусом и сохранённым вводом; per-field mapping и unsaved/back guard остаются последующим UX улучшением. Приёмка браузером — synthetic templates1440/390, а не полный Android/WCAG пилот. Измерен только batch module-name block100/1000; полная производительность route reader и10/100точек не заявлена.

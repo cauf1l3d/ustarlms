@@ -137,9 +137,9 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: 'Route editor application6c4f30b6 requalifying: native DB430/1988 PASS,
-    actual HTTP exposed missing PAGE context before assessment formatting. Fixed early
-    context; fast native HTTP gate added. Production remains719bf47c; no merge/deploy.'
+  activity: Route editor app6c4f30b6/tool45e9d6b7 qualified at1c43377b, immutable
+    archive verified against CI and retained copy. Owner installs and retries reported
+    point; production remains719bf47c. No merge or agent deployment.
   next_task: ROUTE-EDITOR-01
   ready_tasks: []
   task_statuses:
@@ -182,7 +182,7 @@ current_work:
     PERF-01: in_progress
     PLAT-01: deferred
     PRIVACY-01: deferred
-    ROUTE-EDITOR-01: in_progress
+    ROUTE-EDITOR-01: awaiting_owner_deployment
     RSS-01: done
     STUDIO-01: done
     STUDIO-SCORM-01: in_progress

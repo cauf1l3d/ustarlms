@@ -29,7 +29,7 @@ Discovery app719bf47c/toolaa61d595 установлен5Nov: exit0/postcheck act
 [Квитанция](context/runtime/library_discovery_owner_deploy_20261105.json).
 ROUTE-EDITOR-01: [ревью](context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md),
 [план и остаток](docs/superpowers/plans/2026-11-05-route-editor-remediation.md).
-app4c122d0a; оператор в квалификации: отдельное скрытие, требования без потерь, draft/publish.
+app6c4f30b6/tool45e9d6b7: отдельное скрытие, требования без потерь, draft/publish.
 [Установка и использование](docs/ROUTE_EDITOR_INSTALL_RU.md). Production ещё719bf47c.
 
 ## PERF-01 после Библиотеки

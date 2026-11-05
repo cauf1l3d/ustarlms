@@ -1,55 +1,36 @@
-# Следующий пакет: редактор точки маршрута
+# Пакет редактора точки маршрута — выполнение05Nov2026
 
-> Исполнение одним агентом, без субагентов. Ревью и спецификация подготовлены по поручению owner05Nov; этот план не означает готовый source fix или новый deploy.
+Исполнение одним агентом по поручению owner, без субагентов. База — установленный app719bf47c/toolaa61d595. [Спецификация](../specs/2026-11-05-route-editor-design.md), [первичное ревью](../../../context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md), [решения реализации](../../../context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md).
 
-**Цель:** исправить невозможность скрыть шаг и потерю требований, сделать редактирование понятным.
-**Архитектура:** существующие canonical route writers; новый codec/presenter внутри домена, без второй модели маршрутов.
-**Стек:** PHP8.3/Moodle5.1.8, PostgreSQL16, Mustache/AMD/SCSS.
-**Spec:** [дизайн](../specs/2026-11-05-route-editor-design.md).
-**База следующего архива:** app719bf47c/toolaa61d595, owner5Nov active.
+## Реализовано
 
-## 1. Доказательства и точный регрессионный контракт
+- [x] R01/R02: codec всех строк относительно immutable server base, индивидуальные required/completionmode/primary, точное покрытие базовых строк и явное удаление. Порядок сохраняется; чужой/повторный индекс и оборванный список отвергаются. Сервер разрешает новые источники из канонического каталога. Старый scalar controller input не поддерживается новой формой: вместо молчаливой потери списка — отказ.
+- [x] R03/R04: отдельный set_point_active с real actor/capability/view-as/scope/revision, route+row lock и транзакцией. Нет создания версии; скрытые карточки видны редактору, employee readers сохраняют прежний active-only default. Общие шаги меняются в общем маршруте; override использует существующий возврат общего варианта по ADR0004.
+- [x] R05: draft/publish/visibility разделены. Черновик оставляет прежнюю публикацию сотрудникам. Структурно корректная несовместимая SCORM-policy может храниться в черновике; обе публикационные ветки по-прежнему проверяют совместимость.
+- [x] R06: summary ошибки с фокусом, сохранение scalar input и строк, отсутствие автоматического обновления stale base/revision. Неожиданные DML/permission ошибки не маскируются успехом. Удалённый источник — понятный отказ.
+- [x] R07: основная форма — название, описание и строки; SCORM/повторение в details с резюме текущих правил. Раздельные кнопки с объяснениями. Поиск/добавление строк работают обычным POST без JS, сохранённые источники не исчезают при поиске. Сохранён direct file/video upload. Исправлены HTML min/step для минутного интервала и перемещение стрелками через скрытые карточки.
+- [x] R08 в ограниченной области: имена модулей batch по типу, форма строится только для выбранной точки, до200 совпадений нового выбора с сохранением выбранного. [Probe](../../../context/reviews/20261105/module_names_probe_result.json):100/1000модулей двух типов →2 вызова DB API,100/1000строк. Это синтетические вызовы/строки, не PostgreSQL latency.
+- [x] Новый immutable source-only successor; прежние операторы/журналы неизменны,653fixed files/108tables, схема/worker/business data не меняются. Tests: source drift/shared locks/private journal/metadata/xattrs/cache purge/interruption/recovery; actual PHP и UID33 в CI.
 
-Файлы: `context/reviews/20261105/`, `moodle/local/ustar/tests/route_studio_commands_test.php`, `tests/release_20260912/route_studio_dom.cjs`.
+- [x] R09: контекст PAGE задаётся после авторизации до форматирования каталога оценок. Подтверждённый native HTTP500 исправлен; ранний обязательный HTTP job проверяет открытие и сохранение редактора.
 
-- [x] Прочитать ADR0004 и traced controller→commands→model→policy; воспроизвести loss `[SCORM,Quiz]→[Quiz]` настоящими projection/template/policy.
-- [x] Отделить production report501 от воспроизведённого synthetic invalid_parameter; сохранить owner receipt отдельно.
-- [ ] RED native test: несколько cm/курсов и mixed required; draft и metadata edit сохраняют все поля и порядок. Сохранить fixture с policy manual/timed и последним Quiz.
-- [ ] RED HTTP/form cases: inactive POST не должен требовать пересборки source; неверный срок, отсутствующий source, stale revision, foreign point и role/view-as. Если владелец даст точный текст501, добавить его exact case; отсутствие trace не блокирует исправление уже подтверждённых дефектов.
+## Проверки и выдача
 
-## 2. Отдельная команда видимости
+- [x] Исторический RED `[SCORM,Quiz]→[Quiz]` настоящими projection/Mustache/policy; новый PHP codec RED missing class→GREEN. DOM regressions минутного интервала, hidden reorder и upload RED→GREEN.
+- [x] Реальные Mustache/DOM и browser fixtures1440/390: значения строк, независимая обязательность, advanced controls в FormData, сохранение ввода, отсутствие горизонтального выхода. Визуально просмотрены оба снимка; это не live production UI.
+- [x] Самостоятельный trace review actor→scope→codec→writer→view, draft vs published, сохранение истории, route lock/baseversion. Независимого reviewer нет по запрету субагентов.
+- [x] Итоговый native PostgreSQL5.1.1/5.1.8 + настоящий authenticated GET/POST draft/hide/restore/invalid input; полный RC на точном операторном SHA. Квитанция заполняется после завершения, не по ожиданию.
+- [x] Rebuild/CI artifact/сохранённая выдаваемая копия побайтно равны; архив/SHA/команды выданы владельцу.
+- [ ] Установка и повтор проблемного действия владельцем — отдельный runtime receipt, не вывод из CI.
 
-Modify: `classes/route_commands.php`, `route_studio.php`, `classes/route_model.php` только необходимый writer/presenter путь; tests как выше.
+## Границы и остаток
 
-- [ ] Добавить `route_commands::set_point_active(array $command): stdClass`: routeid/pointid/actorid/expectedmodified/positionid/positionediting/active. Require positive expectedmodified; тот же real actor/structure manager/view-as, route membership, inherited/override scope, route lock, row lock и transaction. Не доверять переданному route/position без серверной проверки.
-- [ ] Делегировать существующему metadata writer под lock; не вызывать create_version или требования публикации. Idempotent same-state не меняет историю; concurrent stale request даёт понятный отказ без частичной записи.
-- [ ] Контроллер принимает dedicated action со своим POST/sesskey/revision. Общая точка скрывается только из общего маршрута; положение/override сохраняются.
-- [ ] Native tests: active→inactive→active, нет новых route_versions/attempts/progress/coins; неактивная точка доступна редактору в «Скрытых», сотруднику отсутствует; возврат не публикует draft. Старые direct launch guards продолжают запрещать скрытую точку.
+Промежуточные кандидаты не выданы. Первый native прогон40c5b4a0 отвергнут: продолжение теста после Moodle delegated rollback, сравнение порядка associative keys и cookie expiry0 в HTTP harness. Fixtures исправлены. Затем реальный HTTP выявил отсутствие PAGE context перед форматированием; исправлено6c4f30b6, сценарии5.1.8 прошли45e9d6b7. Последний отказ historical5.1.1 вызван отсутствием Python3 в тестовом образе; зависимость добавлена1c43377b, финальный RC1c43377b прошёл полностью.
 
-## 3. Представление требований без потерь
+Полная стоимость route reader/admin history остаётся O(N); массовая гидратация метаданных и часть runtime_ready ещё читают весь каталог. Замеры10/100точек, bytes/SQL/latency, ordinary-workday PERF-01 и общий T04 остаются открыты. Batch двух типов не доказывает весь бюджет страницы.
 
-Create: `classes/route_studio_form.php` (input codec, без записи/публикации); modify `route_studio.php`, `templates/route_studio.mustache`, AMD src/build; tests native+DOM.
+Per-field error mapping, Escape/back/unsaved guard, arbitrary requirement drag reordering, контраст/WCAG и испытание реальными авторами не заявлены как законченные. Сохранение порядка, keyboard штатных кнопок, no-JS server preview и synthetic reflow проверяются в указанной области. Редактор не добавляет вторую модель маршрутов или должностное исключение общего шага.
 
-- [ ] `route_studio_form::rows(array $requirements): array` — стабильные строки всех supported требований; `::decode(array $input,array $base): array` — проверенные изменения относительно server-loaded base version. Точный immutable baseversion и point revision обязательны; hidden raw JSON не даёт права добавлять source.
-- [ ] Форма повторяет несколько course/cm/assessment/native; required и content completionmode хранятся на строке. Skill primary/previous_adaptation сохраняют прежний contract. Удаление явное, порядок сохраняется; unresolved источники видны и не исчезают при unrelated save.
-- [ ] Старые scalar параметры поддержать только как явный compatibility input; нельзя бесшумно заменить многозначный current набор однозначной формой. Missing/malformed array → отказ, не пустой набор.
-- [ ] Native round-trip свойства для0/1/нескольких требований, Unicode/long labels, deleted/inactive sources, optional+required, mixed completionmode; публикация по-прежнему проверяет готовность источников и compatible policy.
+Reported owner invalidparameter точно не локализован без trace. Исправлен подтверждённый сценарий потери требований и независимое скрытие; окончательное закрытие owner case — после retry. Остальные T01–T10 и исходные аудиты не отменены этим пакетом.
 
-## 4. Упростить UI и обработать ошибки
-
-Create: `classes/route_studio_presenter.php` (read-only view model), focused Mustache partials при необходимости. Modify: controller, existing styles/route_v2.css и route_access_policy partial/AMD compiled build.
-
-- [ ] Отдельные «Сохранить черновик» и «Опубликовать изменения», собственное «Скрыть/Вернуть». Текст явно объясняет published/draft/active и область воздействия.
-- [ ] Основное: название/описание/список обучения; дополнительные секции навыков/повторения/SCORM с резюме текущих отличий. Новые JS controls keyboard-operable, default progressive enhancement; no-JS формы работоспособны.
-- [ ] After rollback: error summary + inline errors + sanitized posted input; не терять title/summary/requirements. При stale revision оставить введённое для сверки и потребовать явного нового действия. Не проглатывать неожиданные exceptions под generic success.
-- [ ] DOM/browser tests реального шаблона: add/remove/reorder rows, mixed required, collapsed controls submit, invalid row opens section/focus, Escape/back/unsaved input, parent vs override labels, mobile/reflow/contrast. Проверить реальные task flows автором отдельно от synthetic tests.
-
-## 5. Стоимость чтения и готовность пакета
-
-- [ ] Characterisation:10/100точек и100/1000источников — DBcalls/rows/bytes, form creation только выбранной точки, не JSON/версии всех точек для одной формы.
-- [ ] Batch metadata/имена модулей и bounded searchable pickers; ACL до pagination/counts. Сначала измерить, затем изменить reader; writer/reconciliation не переносить в GET.
-- [ ] Запустить focused native PostgreSQL, route/completion/SCORM/Quiz/override/history contracts, real DOM/browser и полный RC на точном source SHA.
-- [ ] Самостоятельное отдельное ревью diff по trace: actor→scope→codec→writer→view, hidden point direct URL, current published vs draft, transaction/lock order, no deleted history. Зафиксировать отсутствие независимого reviewer по запрету субагентов.
-- [ ] Новый immutable source-only successor от719bf47c; старыйaa61 не менять. Test precheck/source drift/locks/owner metadata/actualPHP/cache purge/interruption/recovery. Build/rebuild/CI/сохранённая копия побайтно равны. Дать владельцу архив и короткие check/apply/postcheck команды.
-
-**Готово:** archive qualified и выдан; source implementation/CI и owner deployment остаются отдельными статусами. Нельзя закрывать reported501 как подтверждённо устранённый именно на его точке до owner retry/точного fixture. Остальные T01–T10 сохраняются; текущий запрос повышает приоритет редактора маршрута, не отменяет backlog.
+Квалифицирован app6c4f30b6/tool45e9d6b7 на1c43377b: [квитанция](../../../context/runtime/route_editor_qualification_20261105.json). Установка владельцем и точная приёмка его точки остаются открыты.

@@ -8,8 +8,12 @@ function cookies(){return fs.readFileSync(art+'/shell-cookies.txt','utf8').split
  return {domain,path:cookiepath,name,value,httpOnly,secure:secure==='TRUE'};
 });}
 async function evalDenied(frame){
- await frame.evaluate(()=>{const s=document.createElement('script');s.textContent="try{Function('return 1')();window.__ustarEvalResult='allowed'}catch(e){window.__ustarEvalResult=e.name}";document.head.append(s);});
- return frame.evaluate(()=>window.__ustarEvalResult);
+ // CDP evaluation bypasses unsafe-eval by default. Exercise CSP from a real input event,
+ // after returning from evaluation, rather than a script synchronously inserted by CDP.
+ await frame.evaluate(()=>{const b=document.createElement('button');b.id='ustar-csp-probe';b.textContent='CSP probe';b.style.cssText='position:fixed;top:4px;right:4px;z-index:2147483647';b.addEventListener('click',()=>{try{Function('return 1')();window.__ustarEvalResult='allowed'}catch(e){window.__ustarEvalResult=e.name}});document.body.append(b);});
+ await frame.locator('#ustar-csp-probe').click();
+ const result=await frame.evaluate(()=>window.__ustarEvalResult);
+ await frame.locator('#ustar-csp-probe').evaluate(el=>el.remove());return result;
 }
 (async()=>{
  const browser=await chromium.launch({headless:true});const errors=[];const evidence={native:true,api:'real',policy_unchanged:true};
@@ -45,5 +49,5 @@ async function evalDenied(frame){
   assert.deepEqual(errors,[]);evidence.errors=errors;evidence.status='PASS';
   fs.writeFileSync(art+'/studio-native-browser.json',JSON.stringify(evidence,null,2));
   console.log('STUDIO_NATIVE_BROWSER=PASS actual Moodle/YUI/API, strict CSP, isolated preview, save/fresh reload');
- }finally{await browser.close();}
+ }finally{evidence.errors=errors;fs.writeFileSync(art+'/studio-native-browser.json',JSON.stringify(evidence,null,2));await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

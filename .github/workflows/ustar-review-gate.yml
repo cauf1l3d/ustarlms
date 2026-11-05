@@ -100,7 +100,8 @@ jobs:
 
   source:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    # Full regression suite plus cold-runner browser dependencies; every check remains required.
+    timeout-minutes: 25
     outputs:
       connect_db: ${{ steps.connect-scope.outputs.connect_db }}
     strategy:

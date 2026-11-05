@@ -1,9 +1,9 @@
 const fs=require('node:fs'),assert=require('node:assert/strict'),Mustache=require('mustache'),{JSDOM}=require('jsdom');
 const base=__dirname+'/../../moodle/local/ustar/templates/';const tpl=n=>fs.readFileSync(base+n+'.mustache','utf8');
 const partials={};for(const n of ['route_studio_fields','route_studio_requirements','route_access_policy'])partials['local_ustar/'+n]=tpl(n);
-const model={formerror:'Проверьте срок',routeexists:true,route:{haspoints:true,points:[{id:1,editing:true,canvisibility:true,visible:true,expectedmodified:41,baseversion:5,formtitle:'Курс',requirementrows:[{index:0,base:'0',existing:true,label:'SCORM',required:true},{index:1,base:'1',existing:true,label:'Quiz',required:false}],keepselected:true,accessmanual:true,finishnext:true,reviewduration:24}]}};
+const model={formerror:'Проверьте срок',routeexists:true,route:{haspoints:true,points:[{id:1,editing:true,canupload:true,uploadurl:'/upload-fixture',canvisibility:true,visible:true,expectedmodified:41,baseversion:5,formtitle:'Курс',requirementrows:[{index:0,base:'0',existing:true,label:'SCORM',required:true},{index:1,base:'1',existing:true,label:'Quiz',required:false}],keepselected:true,accessmanual:true,finishnext:true,reviewduration:24}]}};
 const dom=new JSDOM(Mustache.render(tpl('route_studio'),model,partials));const doc=dom.window.document;
-assert(doc.querySelector('[data-u-form-error]'));const edit=doc.querySelector('input[value=save_version]').form;
+assert(doc.querySelector('a[href="/upload-fixture"]'),'Existing direct upload action must remain available');assert(doc.querySelector('[data-u-form-error]'));const edit=doc.querySelector('input[value=save_version]').form;
 assert.equal(edit.querySelectorAll('input[name$="[base]"]').length,2);assert.equal(edit.querySelectorAll('input[name$="[required]"]:checked').length,1);
 assert.equal(edit.querySelector('input[name=baseversion]').value,'5');assert.equal(edit.querySelector('input[name=active]'),null);
 assert(edit.querySelector('button[value=draft]'));assert(edit.querySelector('button[value=published]'));assert(edit.querySelector('details:not([open]) input[name=reviewduration]'));

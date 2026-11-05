@@ -559,7 +559,7 @@
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
       "size": 104745,
-      "sha256": "890b8408ec2f4fe93e18fb671526b043a36af5698a66d8c1c4d268ab1d5e2593"
+      "sha256": "8b79f6b25ccb35e71743c0ec2f25efce35fafedb9dba9cb9048b671fa6dd2129"
     },
     {
       "path": "context/code_map/feed_media_development_source.json",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 12211,
-      "sha256": "999e5f488f416e67394a0acea9a602f956b8b601430fe623f1ce065c0c9b3e8c"
+      "size": 12320,
+      "sha256": "282580ce9ec471d5c70878c4fb720df179fe998b401450d759fdf96cda24fa86"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -1530,8 +1530,8 @@
     {
       "path": "context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md",
       "domain": "reviews",
-      "size": 3479,
-      "sha256": "5f3ded5cfe94b39405b5ca18f945057fe23c14c99a30c1e17a853c4d521eab9f"
+      "size": 4175,
+      "sha256": "2d140f8e3174c6a63b4bf363aae0040f302386e5a90ae86bf464e5ecb283fb19"
     },
     {
       "path": "context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md",
@@ -1544,6 +1544,12 @@
       "domain": "reviews",
       "size": 447,
       "sha256": "c67755f494a67158ad96ad9810aeb03f5189c448c341e49409bbff644e72dfa8"
+    },
+    {
+      "path": "context/reviews/20261105/page_context_http_failure.json",
+      "domain": "reviews",
+      "size": 1234,
+      "sha256": "a16095f160c0c844ac1e811c67dda6b591d37c5fa5701dc08203165109b1b55c"
     },
     {
       "path": "context/reviews/20261105/route_editor_probe_result.json",
@@ -1632,8 +1638,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22196,
-      "sha256": "420ce75f824749dbf10b8bc599d616edbc7dae33fa4e29cc75cc4425c55c2010"
+      "size": 22303,
+      "sha256": "e47579773415d67519032e99cc65d17f568311fef395c7d0c9a2ea574023482e"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",

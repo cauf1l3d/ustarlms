@@ -43,7 +43,7 @@ async function evalDenied(frame){
   evidence.preview={parent_access:'denied',eval:'denied'};await page.locator('[data-close="preview-dialog"]').click();
   const fresh=await browser.newContext({viewport:{width:390,height:844}});await fresh.addCookies(cookies());const reloaded=await fresh.newPage();
   reloaded.on('pageerror',e=>errors.push({message:e.message,stack:e.stack}));await reloaded.goto(url);await reloaded.waitForFunction(()=>document.querySelector('.workspace')?.inert===false);
-  await reloaded.locator('#course-select').selectOption(source.data.code);assert((await reloaded.locator('#editor-content').innerText()).includes('Native CSP lesson'),'Fresh browser must reload real server save');
+  await reloaded.locator('#outline-button').click();await reloaded.locator('#course-select').selectOption(source.data.code);await reloaded.locator('#outline-close').click();assert((await reloaded.locator('#editor-content').innerText()).includes('Native CSP lesson'),'Fresh browser must reload real server save');
   const home=await fresh.newPage();await home.goto(base+'/local/ustar/home.php');
   assert.equal(await home.evaluate(()=>Object.hasOwn(window.YUI_config||{},'global')),false,'Request-local bootstrap must not persist into another page');
   assert.deepEqual(errors,[]);evidence.errors=errors;evidence.status='PASS';

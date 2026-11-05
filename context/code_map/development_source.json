@@ -4,7 +4,7 @@
   "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "4eb6b0305a2d2b414ad1154a52c5b53a8140ed5d",
+    "moodle/local/ustar": "91d78a5ff091a38aba35ec315ad9482ca9be8fb8",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
@@ -1246,7 +1246,7 @@
     },
     {
       "path": "moodle/local/ustar/course_studio.php",
-      "sha256": "306dbef7d1832ccfd6b46c2901bd1ffced80ec6fdb8f1ce5d0e7b1ba3c7aaebf"
+      "sha256": "7b2279cffd3988aa2a85070a3dc4df949d0212dce72c4e78845423b99a1c9582"
     },
     {
       "path": "moodle/local/ustar/course_studio/app.js",

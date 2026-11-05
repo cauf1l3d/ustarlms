@@ -1,11 +1,10 @@
 schema_version: 2
 updated_at: '2026-11-05'
 project: USTAR Academy
-stage: studio_csp_regression_reproducing
-stage_label: Studio CSP native-browser regression; cumulative successor planned
-current_activity: Owner reports YUI CSP EvalError;45e route-editor package NOT installed. Production remains719bf47c.
-  Reproduce with actual Moodle browser, use request-local YUI global bootstrap without relaxing CSP; cumulative
-  source successor includes route editor.
+stage: studio_csp_qualification
+stage_label: Cumulative Route editor and strict Studio CSP qualification
+current_activity: Exact owner CSP/YUI errors reproduced on Moodle5.1.1/5.1.8; request-local global bootstrap
+  added with unchanged policy. Qualify one cumulative successor from installed719;45e was not installed.
 entrypoint: START_HERE.md
 next_task: STUDIO-CSP-01
 ready_tasks: []
@@ -200,14 +199,12 @@ server_facts:
   followup: context/runtime/server_facts_followup_20261017.json
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
-  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still
-    separate
+  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still separate
   - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test failed. Other
     external sources/IPv6/NAT/API identity and full SSH admission/live overrides remain unverified
-  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle
-    acceptance not checked
-  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not
-    confirmed
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle acceptance
+    not checked
+  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not confirmed
   - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance
     remain separate; native restore/RTO awaited
   additional_observations:
@@ -398,8 +395,8 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  application_commit: 6c4f30b600e6353aad10e112e94f7db7930e0e48
-  status: qualified_owner_deploy_pending
+  application_commit: 901ac9eb9d87956e9818ab656410a1a7e63cb221
+  status: qualification_in_progress
   branch: feat/library-unification-20261102
   deployed: false
   local_ustar_version: 2026110200
@@ -409,13 +406,7 @@ development_candidate:
   preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
   deployment_baseline: 719bf47c1ba5942c094a04312898890ec7de00c1
   previous_accepted_delivery: context/runtime/library_discovery_owner_deploy_20261105.json
-  scope: Lossless Route Studio rows, separate visibility, draft/publish and input-preserving errors; new4
-    existing9 addon files; no schema or worker
-  progress: context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md
-  tool_commit: 45e9d6b749d3eac2a018f597b3c8b9a931debd13
-  qualification: context/runtime/route_editor_qualification_20261105.json
-  runbook: docs/ROUTE_EDITOR_INSTALL_RU.md
-  archive_sha256: 6834c16184978218e377c92381dfb8d4f7ba0590f37a6eb544f03c473d5d7f71
-  retained_copy_verified: true
+  scope: Cumulative Route Studio fixes and request-local YUI strict CSP compatibility;10changed+4added, no
+    schema/business/worker changes
+  progress: context/reviews/20261105/STUDIO_CSP_REVIEW_RU.md
   owner_receipt: null
-  qualified_commit: 1c43377bda481b15b40ad2e95907778588bda88c

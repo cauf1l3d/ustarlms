@@ -137,10 +137,9 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Owner reports YUI CSP EvalError;45e route-editor package NOT installed.
-    Production remains719bf47c. Reproduce with actual Moodle browser, use request-local
-    YUI global bootstrap without relaxing CSP; cumulative source successor includes
-    route editor.
+  activity: Exact owner CSP/YUI errors reproduced on Moodle5.1.1/5.1.8; request-local
+    global bootstrap added with unchanged policy. Qualify one cumulative successor
+    from installed719;45e was not installed.
   next_task: STUDIO-CSP-01
   ready_tasks: []
   task_statuses:

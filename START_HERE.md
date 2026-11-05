@@ -27,10 +27,10 @@ SCORM/Quiz приняты; детальные роли/URL/purchases ещё не
 Main2900 отдельно; PR112/113/114 открыты без разрешения merge.
 Discovery app719bf47c/toolaa61d595 установлен5Nov: exit0/postcheck active.
 [Квитанция](context/runtime/library_discovery_owner_deploy_20261105.json).
-ROUTE-EDITOR-01: [ревью](context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md),
-[план и остаток](docs/superpowers/plans/2026-11-05-route-editor-remediation.md).
-app6c4f30b6/tool45e9d6b7: отдельное скрытие, требования без потерь, draft/publish.
-[Установка и использование](docs/ROUTE_EDITOR_INSTALL_RU.md). Production ещё719bf47c.
+STUDIO-CSP-01: [YUI/CSP ревью](context/reviews/20261105/STUDIO_CSP_REVIEW_RU.md),
+[план](docs/superpowers/plans/2026-11-05-studio-csp-remediation.md).
+Owner подтвердил45e ещё не установлен. Новый cumulative пакет от719 объединит
+Route Studio и request-local YUI bootstrap при строгой CSP. Production719 не менялся.
 
 ## PERF-01 после Библиотеки
 

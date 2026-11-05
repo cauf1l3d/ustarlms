@@ -24,6 +24,58 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  studio-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runtime: historical
+            compose: tests/stage/compose.yaml
+          - runtime: patch-518
+            compose: tests/stage/patch-compose.yaml
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: npm ci --prefix tests/mobile
+      - run: cd tests/mobile && npx playwright install --with-deps chromium
+      - name: Build isolated native browser runtime
+        run: docker compose -f ${{ matrix.compose }} build --pull
+      - name: Start disposable native site with localhost-only browser port
+        run: |
+          mkdir -p artifacts
+          id=$(docker compose -f ${{ matrix.compose }} run --rm -d --publish 127.0.0.1:8087:8087 --entrypoint bash runner /source/tests/stage/route_editor_native.sh studio-browser)
+          printf '%s\n' "$id" > artifacts/studio-browser-container-id
+          for attempt in $(seq 1 120); do
+            test ! -e artifacts/studio-browser-ready || exit 0
+            test "$(docker inspect -f '{{.State.Running}}' "$id")" = true
+            sleep 2
+          done
+          exit 1
+      - name: Native Studio CSP and save regression
+        run: |
+          trap 'touch artifacts/studio-browser-done' EXIT
+          node tests/stage/course_studio_native_browser.cjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: studio-native-browser-${{ matrix.runtime }}
+          path: artifacts/
+      - name: Dispose only isolated browser site
+        if: always()
+        run: |
+          if test -f artifacts/studio-browser-container-id; then
+            id=$(cat artifacts/studio-browser-container-id)
+            [[ $id =~ ^[a-f0-9]{12,64}$ ]] && docker rm -f "$id" || true
+          fi
+          docker compose -f ${{ matrix.compose }} down --volumes
+
   route-editor-http:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -340,11 +392,12 @@ jobs:
 
   gate:
     if: ${{ always() && ((github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'full-rc'))) }}
-    needs: [route-editor-http, source, rollback, prepare-rc, moodle-db, connect-db]
+    needs: [studio-browser, route-editor-http, source, rollback, prepare-rc, moodle-db, connect-db]
     runs-on: ubuntu-24.04
     steps:
       - name: Require every check to pass
         env:
+          STUDIO_BROWSER: ${{ needs.studio-browser.result }}
           ROUTE_EDITOR_HTTP: ${{ needs.route-editor-http.result }}
           SOURCE: ${{ needs.source.result }}
           MOODLE: ${{ needs.moodle-db.result }}
@@ -353,6 +406,7 @@ jobs:
           CONNECT: ${{ needs.connect-db.result }}
           CONNECT_REQUIRED: ${{ needs.source.outputs.connect_db }}
         run: |
+          test "$STUDIO_BROWSER" = success
           test "$ROUTE_EDITOR_HTTP" = success
           test "$SOURCE" = success
           test "$MOODLE" = success

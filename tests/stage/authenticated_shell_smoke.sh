@@ -5,13 +5,18 @@ test "$PWD" = /stage/moodle
 test "${USTAR_STAGE_PREFIX:-}" = stage_
 WEBROOT=http://127.0.0.1:8087
 MODE=${1:-candidate}
-[[ $MODE = candidate || $MODE = broken-baseline || $MODE = route-editor ]]
+[[ $MODE = candidate || $MODE = broken-baseline || $MODE = route-editor || $MODE = studio-browser ]]
 COOKIE=/artifacts/shell-cookies.txt
 SERVER_PID=
 cleanup() { if [[ -n $SERVER_PID ]]; then kill "$SERVER_PID" 2>/dev/null || true; wait "$SERVER_PID" 2>/dev/null || true; fi; rm -f "$COOKIE"; }
 trap cleanup EXIT
 php /source/tests/stage/authenticated_shell_fixture.php
-USTAR_STAGE_HTTP_ROOT="$WEBROOT" php -d display_errors=1 -S 127.0.0.1:8087 -t /stage/moodle/public > /artifacts/shell-http-server.log 2>&1 &
+LISTEN=127.0.0.1:8087
+if [[ $MODE = studio-browser ]]; then
+    LISTEN=0.0.0.0:8087
+    php -r 'define("CLI_SCRIPT",true);require "/stage/moodle/config.php";set_config("additionalhtmlhead","<meta name=\"ustar-head-sentinel\" content=\"preserved\">");'
+fi
+USTAR_STAGE_HTTP_ROOT="$WEBROOT" php -d display_errors=1 -S "$LISTEN" -t /stage/moodle/public > /artifacts/shell-http-server.log 2>&1 &
 SERVER_PID=$!
 for attempt in $(seq 1 30); do
     if curl -sS --max-time 2 -c "$COOKIE" "$WEBROOT/login/index.php" -o /artifacts/shell-login.html; then break; fi
@@ -24,6 +29,16 @@ curl -fsS --max-time 30 -b "$COOKIE" -c "$COOKIE" \
 if [[ $MODE = route-editor ]]; then
     bash /source/tests/stage/route_editor_http_smoke.sh
     exit 0
+fi
+if [[ $MODE = studio-browser ]]; then
+    touch /artifacts/studio-browser-ready
+    for attempt in $(seq 1 300); do
+        if test -e /artifacts/studio-browser-done; then exit 0; fi
+        kill -0 "$SERVER_PID"
+        sleep 1
+    done
+    echo 'STUDIO_BROWSER_HOST_TIMEOUT' >&2
+    exit 1
 fi
 if [[ $MODE = broken-baseline ]]; then
     curl -sS --max-time 60 -b "$COOKIE" "$WEBROOT/local/ustar/home.php" -o /artifacts/shell-broken-baseline.html

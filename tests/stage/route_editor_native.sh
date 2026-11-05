@@ -3,6 +3,8 @@
 set -Eeuo pipefail
 test "$PWD" = /stage
 test ! -e /stage/moodle
+mode=${1:-route-editor}
+[[ $mode = route-editor || $mode = studio-browser ]]
 mkdir -p /artifacts /stage/data/stage_
 cp -a /opt/moodle /stage/moodle
 cp /source/tests/stage/config.php /stage/moodle/config.php
@@ -12,5 +14,5 @@ cd /stage/moodle
 php admin/cli/install_database.php --agree-license --adminpass='Fixture-Only-Password1!' \
     --adminemail=stage@example.invalid --fullname='Route editor synthetic stage' --shortname=route-editor \
     > /artifacts/route-editor-install.log 2>&1
-USTAR_STAGE_PREFIX=stage_ bash /source/tests/stage/authenticated_shell_smoke.sh route-editor \
+USTAR_STAGE_PREFIX=stage_ bash /source/tests/stage/authenticated_shell_smoke.sh "$mode" \
     2>&1 | tee /artifacts/route-editor-native.log

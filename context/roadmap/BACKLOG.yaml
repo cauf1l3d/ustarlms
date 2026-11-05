@@ -875,6 +875,21 @@ tasks:
   - Full route reader/query cost remains in T04/PERF-01
   - Per-field errors, unsaved guard, accessibility and real-author pilot remain follow-up in implementation
     plan
+- id: STUDIO-CSP-01
+  title: 'Студия: YUI при строгой CSP и native browser gate'
+  status: in_progress
+  depends_on: []
+  related_task: ROUTE-EDITOR-01
+  spec: docs/superpowers/specs/2026-11-05-studio-csp-design.md
+  implementation_plan: docs/superpowers/plans/2026-11-05-studio-csp-remediation.md
+  reference: context/reviews/20261105/STUDIO_CSP_REVIEW_RU.md
+  execution_authorized: true
+  owner_order_date: '2026-11-05'
+  acceptance:
+  - Native YUI/AMD initialise under unchanged CSP without unsafe-eval
+  - Existing head preserved; request-local bootstrap never persists to other pages
+  - Actual API save/fresh reload; preview parent/eval denial
+  - One qualified cumulative source-only archive from installed719bf47c;45e not installed
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

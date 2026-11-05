@@ -137,10 +137,11 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Route editor app6c4f30b6/tool45e9d6b7 qualified at1c43377b, immutable
-    archive verified against CI and retained copy. Owner installs and retries reported
-    point; production remains719bf47c. No merge or agent deployment.
-  next_task: ROUTE-EDITOR-01
+  activity: Owner reports YUI CSP EvalError;45e route-editor package NOT installed.
+    Production remains719bf47c. Reproduce with actual Moodle browser, use request-local
+    YUI global bootstrap without relaxing CSP; cumulative source successor includes
+    route editor.
+  next_task: STUDIO-CSP-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -185,6 +186,7 @@ current_work:
     ROUTE-EDITOR-01: awaiting_owner_deployment
     RSS-01: done
     STUDIO-01: done
+    STUDIO-CSP-01: in_progress
     STUDIO-SCORM-01: in_progress
     TECH-01: planned
 server_facts:

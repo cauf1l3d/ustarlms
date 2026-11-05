@@ -1,16 +1,17 @@
 # Активная работа —05.11.2026
 
-## Редактор точки маршрута — пакет квалифицирован
+## Студия CSP + редактор маршрута: следующий cumulative пакет
 
-ROUTE-EDITOR-01: app6c4f30b6/tool45e9d6b7 от установленного719bf47c.
-[Ревью и8находок](../reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md),
-[реализация](../reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md),
-[план и остаток](../../docs/superpowers/plans/2026-11-05-route-editor-remediation.md).
-Отдельное скрытие/возврат, все требования без потерь, draft/publish, ошибки с вводом.
-Старый путь [SCORM,Quiz]→[Quiz] воспроизведён; точный owner invalidparameter без trace
-не привязан. Проверить проблемную точку после установки владельцем.
-[Квалификация1c43377b](../runtime/route_editor_qualification_20261105.json):4CI и9FullRC jobs PASS, обе Moodle430/1988, настоящий HTTP draft/hide/restore/error PASS.
-Архив45e9d6b7 сохранён и побайтно совпадает с CI. Ожидается установка/повтор проблемного действия владельцем; production719bf47c и main не менялись.
+STUDIO-CSP-01 in_progress. Owner сообщил YUI EvalError из CSP и reading one;
+подтвердил45e ещё НЕ установлен. Production остаётся719bf47c/toolaa61d595.
+[Ревью](../reviews/20261105/STUDIO_CSP_REVIEW_RU.md),
+[план](../../docs/superpowers/plans/2026-11-05-studio-csp-remediation.md).
+Native browser RED→GREEN должен проверить YUI/AMD, неизменную CSP, реальное сохранение
+и isolated preview. Request-local global=window, без core patch/unsafe-eval.
+Новый архив от719 объединит CSP-совместимость и прежний Route Studio6c4f30b6.
+45e квалифицирован на1c43377b, но owner install не было; старые архивы frozen.
+[Квитанция45e](../runtime/route_editor_qualification_20261105.json),
+[owner statement](../runtime/route_editor_owner_not_installed_20261105.json).
 
 ## Установленная Академия
 

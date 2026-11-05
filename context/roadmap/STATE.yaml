@@ -1,13 +1,13 @@
 schema_version: 2
 updated_at: '2026-11-05'
 project: USTAR Academy
-stage: route_editor_archive_ready_owner_deploy_pending
-stage_label: Route Studio qualified; owner installation pending
-current_activity: Route editor app6c4f30b6/tool45e9d6b7 qualified at1c43377b, immutable archive verified
-  against CI and retained copy. Owner installs and retries reported point; production remains719bf47c.
-  No merge or agent deployment.
+stage: studio_csp_regression_reproducing
+stage_label: Studio CSP native-browser regression; cumulative successor planned
+current_activity: Owner reports YUI CSP EvalError;45e route-editor package NOT installed. Production remains719bf47c.
+  Reproduce with actual Moodle browser, use request-local YUI global bootstrap without relaxing CSP; cumulative
+  source successor includes route editor.
 entrypoint: START_HERE.md
-next_task: ROUTE-EDITOR-01
+next_task: STUDIO-CSP-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:

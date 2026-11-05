@@ -27,3 +27,5 @@ Separate visibility, lossless rows, draft/publish and input-preserving errors.
 Read context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md and docs/ROUTE_EDITOR_INSTALL_RU.md.
 Source qualification is distinct from owner installation; production remains719bf47c.
 Exact owner501 not identified without trace; do not claim universal fix from synthetic probe.
+
+Owner5Nov confirms45e not installed; STUDIO-CSP-01 active. Read STUDIO_CSP_REVIEW_RU.md and studio-csp plan. Native YUI global fallback triggers CSP EvalError; prove request-local bootstrap without weakening CSP. New archive cumulative from719; do not assume6c deployed.

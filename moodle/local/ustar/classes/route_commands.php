@@ -81,6 +81,9 @@ final class route_commands {
                 throw new \invalid_parameter_exception('Изменяйте этот вариант во вкладке его должности.');
             }
             $active=!empty($command['active']);
+            if (!$active && !empty($point->sourcepointid)) {
+                throw new \invalid_parameter_exception('Для отмены варианта должности используйте «Вернуть общий вариант». Общий шаг при этом остаётся в маршруте.');
+            }
             if ((bool)$point->active===$active) { return $point; }
             return route_model::update_point($routeid,$pointid,(string)$point->phase,$active,$actor,$revision);
         });

@@ -982,7 +982,7 @@ if ($routeexists) {
 
         $point['hidden']=empty($point['active']);
         $point['visible']=!$point['hidden'];
-        $point['canvisibility']=$point['canedit'];
+        $point['canvisibility']=$point['canedit'] && (empty($point['sourcepointid']) || $point['hidden']);
         if ($point['hidden']) { $point['canmove']=false;$point['draggable']='false';$point['draggableflag']='0'; }
         $point['expectedmodified'] = (int)$DB->get_field('local_ustar_route_points', 'timemodified', ['id' => (int)$point['id']], MUST_EXIST);
         $point['formtitle'] = $latest ? (string)$latest->title : '';

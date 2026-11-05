@@ -25,13 +25,15 @@ final class route_studio_commands_test extends \advanced_testcase {
         $hidden=route_commands::set_point_active($command);
         $this->assertSame(0,(int)$hidden->active);
         $this->assertSame($before,$DB->count_records('local_ustar_route_versions'));
-        try { route_commands::set_point_active($command);$this->fail('Stale command accepted'); }
-        catch (\moodle_exception $e) { $this->assertSame(0,(int)$DB->get_field('local_ustar_route_points','active',['id'=>$point->id])); }
         $command['expectedmodified']=(int)$hidden->timemodified;$command['active']=true;
         $restored=route_commands::set_point_active($command);$this->assertSame(1,(int)$restored->active);
         $this->assertSame($before,$DB->count_records('local_ustar_route_versions'));
         $command['actorid']=(int)$u->id;
-        $this->expectException(\required_capability_exception::class);
+        try { route_commands::set_point_active($command);$this->fail('Forged actor accepted'); }
+        catch (\required_capability_exception $e) { /* Actor rejection occurs before a transaction. */ }
+        $command['actorid']=(int)$USER->id;
+        // A Moodle delegated rollback poisons the enclosing test transaction: reject last.
+        $this->expectException(\moodle_exception::class);
         route_commands::set_point_active($command);
     }
 
@@ -45,6 +47,7 @@ final class route_studio_commands_test extends \advanced_testcase {
             ['type'=>'cm','sourceid'=>(int)$quiz->cmid,'required'=>false,'label'=>'Quiz']];
         $v=route_model::create_version((int)$point->id,['requirements'=>$base,'status'=>'draft',
             'accesspolicy'=>['advance'=>'manual','repeat'=>'close','finish'=>'next']],(int)$USER->id);
+        $base=route_model::requirements_for_version($v);
         $decoded=route_studio_form::decode(['rows'=>[['base'=>'0','required'=>1],['base'=>'1']]],$base,[]);
         $this->assertSame($base,$decoded);
         $command=['routeid'=>(int)$route->id,'pointid'=>(int)$point->id,'actorid'=>(int)$USER->id,

@@ -19,5 +19,6 @@ $DB->set_field('local_ustar_route_families','parentrouteid',$route,['id'=>$famil
 $point=(int)$DB->insert_record('local_ustar_route_points',(object)['routeid'=>$route,'pointkey'=>'http_route_editor','phase'=>'adaptation','sortorder'=>10,'active'=>1,'timecreated'=>$now,'timemodified'=>$now]);
 $requirements=[['type'=>'native','sourcekey'=>\local_ustar\native_learning::TEAM_STRUCTURE,'required'=>true,'label'=>'Команда'],['type'=>'previous_adaptation','required'=>false,'label'=>'Предыдущие шаги']];
 $v=\local_ustar\route_model::create_version($point,['title'=>'HTTP editor point','status'=>'published','requirements'=>$requirements],$actor);
+$requirements=\local_ustar\route_model::requirements_for_version($v);
 file_put_contents($path,json_encode(['family'=>$family,'point'=>$point,'published'=>(int)$v->id,'requirements'=>$requirements]));
 echo "$family $point";

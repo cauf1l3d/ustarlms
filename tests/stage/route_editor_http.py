@@ -30,22 +30,32 @@ class Forms(HTMLParser):
         if tag=='form':self.current=None
     def action(self,name):return next(f for f in self.forms if ('action',name) in f)
 
-fixture=json.loads(Path('/artifacts/route-editor-fixture.json').read_text())
-jar=http.cookiejar.MozillaCookieJar('/artifacts/shell-cookies.txt');jar.load(ignore_discard=True,ignore_expires=True)
-client=build_opener(HTTPCookieProcessor(jar))
-url='http://127.0.0.1:8087/local/ustar/route_studio.php?'+urlencode({'family':fixture['family'],'view':'parent','point':fixture['point']})
-def get():
-    with client.open(url,timeout=60) as r:return r.read().decode()
-def post(fields):
-    with client.open(url,data=urlencode(fields).encode(),timeout=60) as r:
-        assert r.status==200;return r.read().decode()
-def state(mode):subprocess.run(['php','/source/tests/stage/route_editor_http_fixture.php',mode],check=True)
-html=get();assert 'rows[1][base]' in html and 'Debug info:' not in html
-fields=Forms(html).action('save_version');fields.append(('status','draft'));post(fields);state('draft')
-html=get();form=Forms(html).action('set_point_active');post(form);state('hidden')
-html=get();form=Forms(html).action('set_point_active');assert ('active','1') in form;post(form);state('restored')
-fields=Forms(get()).action('save_version');updates={'advancepolicy':'timed','reviewduration':'0','title':'HTTP retained input'}
-fields=[(k,updates.get(k,v)) for k,v in fields];fields.append(('status','draft'))
-html=post(fields);assert 'Изменения не сохранены' in html and 'HTTP retained input' in html;state('error')
-Path('/artifacts/route-editor-http.html').write_text(html)
-print('ROUTE_EDITOR_HTTP=PASS draft/hidden/restore/validation-input; immutable published requirements retained')
+def load_curl_cookie_jar(path):
+    jar=http.cookiejar.MozillaCookieJar(str(path));jar.load(ignore_discard=True,ignore_expires=True)
+    # curl's Netscape format writes session expiry as 0; CookieJar treats it as expired.
+    for cookie in jar:
+        if cookie.expires==0:cookie.expires=None;cookie.discard=True
+    return jar
+
+def main():
+    fixture=json.loads(Path('/artifacts/route-editor-fixture.json').read_text())
+    client=build_opener(HTTPCookieProcessor(load_curl_cookie_jar('/artifacts/shell-cookies.txt')))
+    url='http://127.0.0.1:8087/local/ustar/route_studio.php?'+urlencode({'family':fixture['family'],'view':'parent','point':fixture['point']})
+    def request(fields=None):
+        data=None if fields is None else urlencode(fields).encode()
+        with client.open(url,data=data,timeout=60) as r:
+            assert r.status==200 and '/login/' not in r.geturl(),'Authenticated editor session required'
+            html=r.read().decode()
+            Path('/artifacts/route-editor-http.html').write_text(html)
+            return html
+    def state(mode):subprocess.run(['php','/source/tests/stage/route_editor_http_fixture.php',mode],check=True)
+    html=request();assert 'rows[1][base]' in html and 'Debug info:' not in html
+    fields=Forms(html).action('save_version');fields.append(('status','draft'));request(fields);state('draft')
+    html=request();form=Forms(html).action('set_point_active');request(form);state('hidden')
+    html=request();form=Forms(html).action('set_point_active');assert ('active','1') in form;request(form);state('restored')
+    fields=Forms(request()).action('save_version');updates={'advancepolicy':'timed','reviewduration':'0','title':'HTTP retained input'}
+    fields=[(k,updates.get(k,v)) for k,v in fields];fields.append(('status','draft'))
+    html=request(fields);assert 'Изменения не сохранены' in html and 'HTTP retained input' in html;state('error')
+    print('ROUTE_EDITOR_HTTP=PASS draft/hidden/restore/validation-input; immutable published requirements retained')
+
+if __name__=='__main__':main()

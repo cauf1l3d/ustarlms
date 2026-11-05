@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the Library discovery successor on accepted SCORM0200."""
+"""Build the Route Studio editor successor on accepted Library discovery0200."""
 import argparse
 import base64
 import gzip

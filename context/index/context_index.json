@@ -559,7 +559,7 @@
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
       "size": 104745,
-      "sha256": "91f7ae50548c1e3dc699c357b24ca10adc9e82de1bcb500bbd1605f5a8eb2642"
+      "sha256": "7f5af3f09ba58f36c9be06ffd73054bd804c3ffca0e377255ebbceec16bfdb95"
     },
     {
       "path": "context/code_map/feed_media_development_source.json",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 12229,
-      "sha256": "bc24d729e408de4561f8ff9eabd14fcd8884c92a5b6e0b18b980aceec849d0ff"
+      "size": 12265,
+      "sha256": "c561a14d4fbfd0eb7379a33c4b5a865d6a1b8895149b0e76a16607da09c9d481"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -1530,14 +1530,20 @@
     {
       "path": "context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md",
       "domain": "reviews",
-      "size": 2415,
-      "sha256": "e2e80a0e9e2ea170d507202b592238e6a936b584d31341be539dc4cf1b641b01"
+      "size": 2736,
+      "sha256": "37eb68e0563fa608077977ab68d904228f588527a59e416f7080af3603b6eb93"
     },
     {
       "path": "context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md",
       "domain": "reviews",
       "size": 10187,
       "sha256": "c9e17ad2a7d95093509c8f4d314feceb740653d69442c941fff6fd19d6693d92"
+    },
+    {
+      "path": "context/reviews/20261105/module_names_probe_result.json",
+      "domain": "reviews",
+      "size": 447,
+      "sha256": "c67755f494a67158ad96ad9810aeb03f5189c448c341e49409bbff644e72dfa8"
     },
     {
       "path": "context/reviews/20261105/route_editor_probe_result.json",
@@ -1626,8 +1632,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22374,
-      "sha256": "0d54f2b32396d012ca4b95d35343b8293637e1b926adeb00eae230f371f30441"
+      "size": 22408,
+      "sha256": "5d7474778e217b94faee8749f422e6ba163de9733e1dd12b63f8fac9f51edb48"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",

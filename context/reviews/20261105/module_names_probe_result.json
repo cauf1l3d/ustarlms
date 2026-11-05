@@ -1,0 +1,17 @@
+{
+    "scope": "actual module-name hydration block with synthetic catalogue; API calls\/rows, not PostgreSQL latency or all Route Studio reads",
+    "samples": [
+        {
+            "modules": 100,
+            "types": 2,
+            "name_db_calls": 2,
+            "metadata_rows": 100
+        },
+        {
+            "modules": 1000,
+            "types": 2,
+            "name_db_calls": 2,
+            "metadata_rows": 1000
+        }
+    ]
+}

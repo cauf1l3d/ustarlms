@@ -3,8 +3,9 @@ updated_at: '2026-11-05'
 project: USTAR Academy
 stage: route_editor_implementation_verifying
 stage_label: Discovery installed; Route Studio next package reviewed and specified
-current_activity: Route editor implementation9ac12fc0 verifying; owner-installed source
-  remains719bf47c. New source operator under qualification. No deployment or merge.
+current_activity: Route editor final applicationf7bfe501 verifying; owner-installed
+  source remains719bf47c. Minute duration and hidden-card reorder corrected during
+  self-review. No deployment or merge.
 entrypoint: START_HERE.md
 next_task: ROUTE-EDITOR-01
 ready_tasks: []
@@ -396,7 +397,7 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  application_commit: 9ac12fc0a837b021ad396dedf52b02c8f8850cbb
+  application_commit: f7bfe50177d52efb7a81809aa47a64e8cff9d8e7
   status: route_editor_source_verifying
   branch: feat/library-unification-20261102
   deployed: false

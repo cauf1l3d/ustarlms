@@ -11,3 +11,5 @@ Ruling: per-row source is server-loaded immutable base; submitted new choice res
 Ruling: primary source/module chooser uses at most200 matches in rendered rows with server-side filter; selected value retained. Full metadata batch remains bounded only by current installation size; broader query budget remains unclaimed.
 
 Verification so far: PHP codec RED missing class→GREEN, real Mustache/DOM PASS, full npm PASS before final refinements; native tests queued for visibility/version preservation/stale actor/base/mixed SCORM+Quiz/incomplete draft rejection on publish. No subagents per owner; final review by author. Screenshot and Moodle docs identify generic invalidparameter, not unique debug detail; no claim HTTP501 measured.
+
+Ruling: disabling a position override would reveal the common point under ADR0004, not hide that common point. UI therefore uses existing «Вернуть общий вариант» for overrides; separate hide applies to common/local points. Restoring an already-hidden legacy override remains supported. No new per-position exclusion model introduced.

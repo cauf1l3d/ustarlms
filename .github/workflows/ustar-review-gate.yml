@@ -116,6 +116,7 @@ jobs:
           name: library-browser-${{ matrix.php }}
           path: artifacts/library-browser/
           if-no-files-found: ignore
+      - run: node tests/release_20260912/route_editor_browser.cjs
       - run: node tests/release_20260912/course_studio_browser.cjs
       - name: Studio viewport resize handoff preserves compact canvas height
         run: USTAR_STUDIO_DELAY_RESIZE=1 node tests/release_20260912/course_studio_browser.cjs

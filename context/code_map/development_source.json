@@ -1,10 +1,10 @@
 {
   "kind": "unmerged_development_source",
-  "deployed": true,
-  "deployment_evidence": "context/runtime/library_discovery_owner_deploy_20261105.json",
+  "deployed": false,
+  "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "2a62dbc692b8f4040ae9f2ce90a2e793e07a26de",
+    "moodle/local/ustar": "4607d31c31f0f6fedc046bf096a248bba420d0d5",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
@@ -12,7 +12,7 @@
     "theme_ustar": 2026110200
   },
   "counts": {
-    "files": 649,
+    "files": 653,
     "tables": 108
   },
   "files": [
@@ -58,7 +58,7 @@
     },
     {
       "path": "moodle/local/ustar/amd/build/route_studio.min.js",
-      "sha256": "4c3fb2d4a142b9a7058955bd1e0380a5bc44f5e36f85b6aa6ee2977f0a75e300"
+      "sha256": "715daa2a7423a04dda01a73584597ca0d71064363e5f50c51535853de668e198"
     },
     {
       "path": "moodle/local/ustar/amd/src/brand_studio.js",
@@ -74,7 +74,7 @@
     },
     {
       "path": "moodle/local/ustar/amd/src/route_studio.js",
-      "sha256": "80c66a7648bd1dc488db34d925ee8dc0129206f104bea0ede2a8ca8f73e821ae"
+      "sha256": "3fd301d22bf3bccee36934be60a99c57a1235d104baaee04b9418ec452daa305"
     },
     {
       "path": "moodle/local/ustar/app.js",
@@ -846,7 +846,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/route_commands.php",
-      "sha256": "15ed7a26a2e1d7f8485b877d36d5f94e0d84faecf9c046c8dbd490752cfe8b40"
+      "sha256": "e1d96aaf87699139e500c6fbe97df12c36ea81ed120d1d1ee27c64dfa71e76f9"
     },
     {
       "path": "moodle/local/ustar/classes/route_continue.php",
@@ -862,7 +862,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/route_model.php",
-      "sha256": "3e4ef6036b79adba25ad50489ce9461e564932706393bf4775923186d942b688"
+      "sha256": "4d3623d1b8e127fbd303f15a441235aa2e905c3904b09b03ca3fce200d91655c"
     },
     {
       "path": "moodle/local/ustar/classes/route_point_access.php",
@@ -883,6 +883,14 @@
     {
       "path": "moodle/local/ustar/classes/route_scope.php",
       "sha256": "37ebf40f0051343adf57f04b979c0670cd5032f6d84ec2135336d064a1bc18bd"
+    },
+    {
+      "path": "moodle/local/ustar/classes/route_studio_form.php",
+      "sha256": "84a00a17c8ddd0ccc4c31e095f8a28117ff410d33751b842108dd942b9cb1a53"
+    },
+    {
+      "path": "moodle/local/ustar/classes/route_studio_presenter.php",
+      "sha256": "27432cff8a4eb35af2fa4f23242050dae731f37bce812491ffbc309782dab733"
     },
     {
       "path": "moodle/local/ustar/classes/route_tester.php",
@@ -1710,7 +1718,7 @@
     },
     {
       "path": "moodle/local/ustar/route_studio.php",
-      "sha256": "311a6e854a8f3809ad8c36dcd58f53e6577217000329206db79dc2a8f352ab8d"
+      "sha256": "d7e7fe0f6519cf7707cda9c3efcba96aa23fcf97d5496ff18158ce02bb0c21a2"
     },
     {
       "path": "moodle/local/ustar/route_team.php",
@@ -1838,7 +1846,7 @@
     },
     {
       "path": "moodle/local/ustar/styles/route_v2.css",
-      "sha256": "c69699142db7e1f92ef707c58a6bbe8cd094958e5537a0f5e4e01c66fec58b5f"
+      "sha256": "9fbeda85119fc461753a2a8734c0b51f8509faf86e338b770a6657c196fcab17"
     },
     {
       "path": "moodle/local/ustar/styles/staffing.css",
@@ -2102,7 +2110,7 @@
     },
     {
       "path": "moodle/local/ustar/templates/route_access_policy.mustache",
-      "sha256": "c40d839fa76408c3c6bb7004a0871bccc377eddc452ceb25db14736c7e56e476"
+      "sha256": "371068464256be8d9dd5789c2c2da0ede35faccefe736b90b2cf9b92ada9a968"
     },
     {
       "path": "moodle/local/ustar/templates/route_career.mustache",
@@ -2110,7 +2118,15 @@
     },
     {
       "path": "moodle/local/ustar/templates/route_studio.mustache",
-      "sha256": "9eba9105c5255a7dec7efa2701230c1fd641e0241c4df719605674e5525b1ea0"
+      "sha256": "6d096399a0f51f2599cc81d4e1ca080ec7e869427ba0f9c4ccf860b17fcae895"
+    },
+    {
+      "path": "moodle/local/ustar/templates/route_studio_fields.mustache",
+      "sha256": "3b9557288e9d79027093df83dce9d0287bbc14d0774139e8f694878529cd33a5"
+    },
+    {
+      "path": "moodle/local/ustar/templates/route_studio_requirements.mustache",
+      "sha256": "28933cbe994c32b249974f67f386c6e78cea7c20aebceb6e995c4d9cc25595fa"
     },
     {
       "path": "moodle/local/ustar/templates/route_tester.mustache",
@@ -2330,7 +2346,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/route_studio_commands_test.php",
-      "sha256": "b68940f55abfc12aced533dc8b12b488e7a3efa1345f3923d5c57ae16d08d745"
+      "sha256": "aa166a53600e965603b7ef73460a66244494074550d4b413a9ff789a8d10072e"
     },
     {
       "path": "moodle/local/ustar/tests/scorm_route_launch_test.php",

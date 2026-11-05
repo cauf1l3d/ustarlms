@@ -843,7 +843,7 @@ tasks:
     remaining: U03 scoped admin selectors/history remain, no false complete claim
 - id: ROUTE-EDITOR-01
   title: 'Редактор точки: отключение/черновик без потерь и простой UX'
-  status: ready
+  status: in_progress
   depends_on:
   - AUDIT-20261103
   spec: docs/superpowers/specs/2026-11-05-route-editor-design.md

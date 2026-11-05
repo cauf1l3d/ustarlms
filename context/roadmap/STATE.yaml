@@ -3,9 +3,8 @@ updated_at: '2026-11-05'
 project: USTAR Academy
 stage: route_editor_implementation_verifying
 stage_label: Discovery installed; Route Studio next package reviewed and specified
-current_activity: Route editor final application7168e30e verifying; owner-installed
-  source remains719bf47c. Direct upload shortcut retained during self-review. No deployment
-  or merge.
+current_activity: Route editor application4c122d0a requalifying after native fixture fixes; installed
+  source719bf47c unchanged. No deployment or merge.
 entrypoint: START_HERE.md
 next_task: ROUTE-EDITOR-01
 ready_tasks: []
@@ -60,19 +59,19 @@ production:
     role_bot_enabled: true
     runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
     post_check: active
-    live_role_acceptance: owner accepted tasks, return/execution, photos and visual
-      readability; remaining processes with leadership from2Nov
+    live_role_acceptance: owner accepted tasks, return/execution, photos and visual readability; remaining
+      processes with leadership from2Nov
     latest_functional_receipt: context/runtime/library_discovery_owner_deploy_20261105.json
     previous_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
-    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh
-      service query in2Nov SCORM receipt
+    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh service query in2Nov
+      SCORM receipt
   status: owner_installed_library_discovery0200
   observed_at: '2026-11-05'
   source: context/runtime/evidence_library_discovery0200_20261105.yaml
   independently_measured: false
   current_source_commit: 719bf47c1ba5942c094a04312898890ec7de00c1
-  current_source_commit_scope: Owner aa61 active postcheck verifies fixed649 addon
-    payload; no independent probe.
+  current_source_commit_scope: Owner aa61 active postcheck verifies fixed649 addon payload; no independent
+    probe.
   current_versions: *id001
   last_exact_source_manifest:
     commit: 719bf47c1ba5942c094a04312898890ec7de00c1
@@ -127,12 +126,12 @@ production:
     role_bot_enabled: true
     runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
     post_check: active
-    live_role_acceptance: owner accepted tasks, return/execution, photos and visual
-      readability; remaining processes with leadership from2Nov
+    live_role_acceptance: owner accepted tasks, return/execution, photos and visual readability; remaining
+      processes with leadership from2Nov
     latest_functional_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
     previous_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
-    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh
-      service query in2Nov SCORM receipt
+    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh service query in2Nov
+      SCORM receipt
   latest_library_navigation_owner_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
@@ -141,8 +140,8 @@ audit:
   reconciliation: context/reviews/20261103/AUDIT_RU.md
   remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
-  scope: Product, UX/UI and engineering source/CI/owner evidence audit completed4Nov;
-    no live-server pentest, performance or full accessibility certification.
+  scope: Product, UX/UI and engineering source/CI/owner evidence audit completed4Nov; no live-server pentest,
+    performance or full accessibility certification.
   previous_reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
 next_agent_read:
 - context/reviews/20261103/AUDIT_RU.md
@@ -198,17 +197,16 @@ server_facts:
   followup: context/runtime/server_facts_followup_20261017.json
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
-  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance
-    and hardening still separate
-  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019
-    test failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live
-    overrides remain unverified
-  - 18 component skips explained by DB/source; effective runtime overrides/cache and
-    native full-cycle acceptance not checked
-  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware
-    redundancy not confirmed
-  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded
-    plugin/vendor provenance remain separate; native restore/RTO awaited
+  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still
+    separate
+  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test failed. Other
+    external sources/IPv6/NAT/API identity and full SSH admission/live overrides remain unverified
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle
+    acceptance not checked
+  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not
+    confirmed
+  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance
+    remain separate; native restore/RTO awaited
   additional_observations:
     provenance: context/runtime/core_extra_received_20261017.json
     review: context/reviews/20261017/core_extra_reconciliation.md
@@ -397,7 +395,7 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  application_commit: 7168e30ecfc22fa17fc6d3c7c9094cef79cec51e
+  application_commit: 4c122d0a3710bde1f291514c40413f3dda9a89e1
   status: route_editor_source_verifying
   branch: feat/library-unification-20261102
   deployed: false
@@ -407,13 +405,13 @@ development_candidate:
   worker_rollout: false
   preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
   deployment_baseline: 719bf47c1ba5942c094a04312898890ec7de00c1
-  previous_accepted_delivery: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
-  scope: Lossless Route Studio rows, separate visibility, draft/publish and input-preserving
-    errors; new4 existing9 addon files; no schema or worker
+  previous_accepted_delivery: context/runtime/library_discovery_owner_deploy_20261105.json
+  scope: Lossless Route Studio rows, separate visibility, draft/publish and input-preserving errors; new4
+    existing9 addon files; no schema or worker
   progress: context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md
-  tool_commit: aa61d5954d96c33b8de2845cf2c0891ba428c76d
+  tool_commit: null
   qualification: context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md
-  runbook: docs/LIBRARY_DISCOVERY_INSTALL_RU.md
-  archive_sha256: 07ae14865da94e73f02bd314819f44a715166b156ec55174e9292754534fd666
-  retained_copy_verified: true
-  owner_receipt: context/runtime/library_discovery_owner_deploy_20261105.json
+  runbook: docs/ROUTE_EDITOR_INSTALL_RU.md
+  archive_sha256: null
+  retained_copy_verified: false
+  owner_receipt: null

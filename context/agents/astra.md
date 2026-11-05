@@ -22,6 +22,8 @@ Previous grants/mandatory route retained. No repeat installation/recovery.
 Audit03–04Nov completed: context/reviews/20261103/AUDIT_RU.md and20261104/DEEP_AUDIT_RU.md.
 Owner5Nov installed discovery app719bf47c/toolaa61d595: exit0/postcheck active.
 Receipt: context/runtime/library_discovery_owner_deploy_20261105.json.
-Current ROUTE-EDITOR-01: reviewed multi-requirement loss and UX; spec/plan ready,
-implementation pending. Read context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md.
+Current ROUTE-EDITOR-01: implemented app4c122d0a; оператор в квалификации from installed719bf47c.
+Separate visibility, lossless rows, draft/publish and input-preserving errors.
+Read context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md and docs/ROUTE_EDITOR_INSTALL_RU.md.
+Source qualification is distinct from owner installation; production remains719bf47c.
 Exact owner501 not identified without trace; do not claim universal fix from synthetic probe.

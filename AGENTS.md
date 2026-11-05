@@ -12,18 +12,17 @@ Owner1Nov разрешил merge110/111; объединены после FullRC.
 [Основание/проверки](context/runtime/connect_feed_integration_order_20261101.json).
 App2900/theme2700 и worker267e5587 уже установлены владельцем; merge не deploy.
 Задачи/возврат/фото/читаемость приняты. Owner принял прямой SCORM запуск51332a21;
-Owner2Nov: app1100/2150affe, toolb5 active; SCORM/переходы приняты.
-[Receipt](context/runtime/scorm_tracking_owner_20261102.json). Quiz из точки принят владельцем2Nov. Owner сообщает Библиотека0200 active/открывается; missing-parent закрыт.
+SCORM/Quiz и первичная Библиотека приняты2–3Nov.
 [Report](context/runtime/library_owner_navigation_20261103.json). Owner3Nov установил
 marketplace4715383b/tool59f: success/exit0/postcheck active, «Отлично работает».
 [Receipt](context/runtime/library_marketplace_owner_deploy_20261103.json).
 Discovery app719bf47c/toolaa61d595 установлен5Nov: exit0/active.
-[Receipt](context/runtime/library_discovery_owner_deploy_20261105.json). Следующий ROUTE-EDITOR-01:
-ревью/план в context/reviews/20261105, source fix ещё не реализован. Детальные роли и
+[Receipt](context/runtime/library_discovery_owner_deploy_20261105.json). ROUTE-EDITOR-01:
+app4c122d0a; оператор в квалификации подготовлен от719bf47c; квалификация и выдача отдельно от deploy.
+[Реализация](context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md). Детальные роли и
 PERF-01 остаются; HTTPS/Mini App ждут руководства. Старые cron19/failed2 не сбрасывать.
 
-Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,
-все роли через существующую Академию; Mini App и внешний HTTPS в конце.
+Connect: все роли через существующую Академию; Mini App и HTTPS в конце.
 [Поручение](context/runtime/connect_bot_owner_order_20261029.json).
 Самостоятельная реализация, без субагентов, соразмерные проверки, один целый выпуск.
 [Квалификация2803](context/runtime/feed2803_qualification_20261029.json) сохраняет

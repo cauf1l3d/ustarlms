@@ -1,15 +1,15 @@
 # Активная работа —05.11.2026
 
-## Следующий пакет: редактор точки маршрута
+## Редактор точки маршрута — пакет готовится к выдаче
 
-ROUTE-EDITOR-01 ready, owner разрешил ревью/аудит/рефакторинг05Nov.
+ROUTE-EDITOR-01: app4c122d0a; оператор в квалификации от установленного719bf47c.
 [Ревью и8находок](../reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md),
-[дизайн](../../docs/superpowers/specs/2026-11-05-route-editor-design.md),
-[план](../../docs/superpowers/plans/2026-11-05-route-editor-remediation.md).
-Реальная projection/Mustache/policy: несколько cm превращаются в последнюю,
-SCORM-policy затем даёт invalid_parameter. Точный owner501 без trace не привязан.
-Нужны отдельные hide/restore, lossless requirements, draft/publish и простой UX.
-Реализация редактора ещё не начата; следующий архив от установленного719bf47c.
+[реализация](../reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md),
+[план и остаток](../../docs/superpowers/plans/2026-11-05-route-editor-remediation.md).
+Отдельное скрытие/возврат, все требования без потерь, draft/publish, ошибки с вводом.
+Старый путь [SCORM,Quiz]→[Quiz] воспроизведён; точный owner invalidparameter без trace
+не привязан. Проверить проблемную точку после установки владельцем.
+Production остаётся719bf47c; новая установка/merge ещё не выполнены.
 
 ## Установленная Академия
 

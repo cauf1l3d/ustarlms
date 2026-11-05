@@ -16,22 +16,21 @@ visuals_ready/recovery_required:false. Оба бота отвечают; PNG/к�
 руководство с2Nov; публичный HTTPS и Mini App ожидают согласования.
 
 Merge не меняет production.
-Старые операторы неизменны.
-
 ## Текущее состояние Библиотеки0200
 
 Owner3Nov установил app4715383b/tool59f: success/exit0/postcheck active и
 подтвердил «Отлично работает». [Квитанция](context/runtime/library_marketplace_owner_deploy_20261103.json).
-649файлов/108таблиц — fixed payload, не whole-host census. 
 Маркетплейс скрыт по умолчанию; admin выбирает отделы. Исходники товаров доступны
 редактору. «Центр управления» → «Материалы», Библиотека — читательский раздел.
 [Инструкция](docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
-SCORM/Quiz приняты. Детальные роли/URL/purchases ещё не приняты. Main2900 и установленный0200 — разные source pointers;
-PR112/113/114 открыты, автоматический merge не разрешён.
+SCORM/Quiz приняты; детальные роли/URL/purchases ещё не приняты.
+Main2900 отдельно; PR112/113/114 открыты без разрешения merge.
 Discovery app719bf47c/toolaa61d595 установлен5Nov: exit0/postcheck active.
 [Квитанция](context/runtime/library_discovery_owner_deploy_20261105.json).
-Следующий ROUTE-EDITOR-01: [ревью](context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md),
-[план](docs/superpowers/plans/2026-11-05-route-editor-remediation.md). Route fix ещё не реализован.
+ROUTE-EDITOR-01: [ревью](context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md),
+[план и остаток](docs/superpowers/plans/2026-11-05-route-editor-remediation.md).
+app4c122d0a; оператор в квалификации: отдельное скрытие, требования без потерь, draft/publish.
+[Установка и использование](docs/ROUTE_EDITOR_INSTALL_RU.md). Production ещё719bf47c.
 
 ## PERF-01 после Библиотеки
 

@@ -5,7 +5,8 @@ ready→active,readonly postcheck active. [Квитанция](library_discovery
 [evidence](evidence_library_discovery0200_20261105.yaml). Local/theme0200,649fixed files/108tables.
 Подробные employee browser cases не перечислены; повтор/recovery не требуются.
 Предыдущий SCORM app5e61/tool4aee принят3Nov: [receipt](studio_scorm_edit_owner_deploy_20261103.json).
-Следующий пакет — [редактор точки](../reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md), ещё не реализован.
+Следующий пакет — app4c122d0a; оператор в квалификации: [реализация редактора точки](../reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md).
+Он не заменяет owner receipt установленного719bf47c до новой установки.
 
 Предыдущие установки Библиотеки: [marketplace471/tool59f](library_marketplace_owner_deploy_20261103.json),
 [навигация5131](library_navigation_owner_deploy_20261103.json),

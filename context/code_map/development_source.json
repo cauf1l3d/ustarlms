@@ -4,7 +4,7 @@
   "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "755da01c29cf658fe2e33ede279b8772d92efcae",
+    "moodle/local/ustar": "7350ee0f9557d0b168de7a34f827853b09f46c8b",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
@@ -2346,7 +2346,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/route_studio_commands_test.php",
-      "sha256": "cace5f172f2899863091eb9fd00993939de56a719064bd352d1a7c96f28d973a"
+      "sha256": "118671e9f5fd7d8e1e92c3c8577e41283eb002254488eb9a1f60725942ae969d"
     },
     {
       "path": "moodle/local/ustar/tests/scorm_route_launch_test.php",

@@ -17,3 +17,5 @@ Ruling: disabling a position override would reveal the common point under ADR000
 Final review: valid60-second SCORM review interval rejected by old HTML min/step; DOM RED→GREEN with step=any/server min enforcement. Keyboard reordering across hidden cards RED→GREEN with active-only targets. Summary of current policy is visible outside collapsed details; hidden point publication notice explicit.
 
 Final review regression: retained the existing direct file/video upload link after extracting shared fields; actual template test RED→GREEN.
+
+Native qualification first run40c5b4a0 rejected: tests resumed writes after expected delegated rollback, compared associative key order before canonical normalization, and Python discarded curl's Netscape session expiry0 as expired. Reproduced CookieJar failure locally; added session-cookie/expired-cookie regression tests, canonicalized fixtures, moved expected stale rollback last. Product runtime code unchanged in this correction. Native HTTP now explicitly refuses login redirects and retains its last synthetic HTML for diagnosis. Requalification required; no failed candidate is delivered.

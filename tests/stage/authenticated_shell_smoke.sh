@@ -42,6 +42,7 @@ for page in home notebook catalog messages; do
     ' "/artifacts/shell-$page.html" "$page"
 done
 bash /source/tests/stage/library_http_smoke.sh
+bash /source/tests/stage/route_editor_http_smoke.sh
 bash /source/tests/stage/chat_http_smoke.sh
 bash /source/tests/stage/adaptation_reset_http_smoke.sh
 bash /source/tests/stage/course_studio_http_smoke.sh

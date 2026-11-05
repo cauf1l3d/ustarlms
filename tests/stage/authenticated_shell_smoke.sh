@@ -5,7 +5,7 @@ test "$PWD" = /stage/moodle
 test "${USTAR_STAGE_PREFIX:-}" = stage_
 WEBROOT=http://127.0.0.1:8087
 MODE=${1:-candidate}
-[[ $MODE = candidate || $MODE = broken-baseline ]]
+[[ $MODE = candidate || $MODE = broken-baseline || $MODE = route-editor ]]
 COOKIE=/artifacts/shell-cookies.txt
 SERVER_PID=
 cleanup() { if [[ -n $SERVER_PID ]]; then kill "$SERVER_PID" 2>/dev/null || true; wait "$SERVER_PID" 2>/dev/null || true; fi; rm -f "$COOKIE"; }
@@ -21,6 +21,10 @@ token=$(php -r '$s=file_get_contents("/artifacts/shell-login.html"); if (!preg_m
 curl -fsS --max-time 30 -b "$COOKIE" -c "$COOKIE" \
     --data-urlencode 'username=admin' --data-urlencode 'password=Fixture-Only-Password1!' \
     --data-urlencode "logintoken=$token" "$WEBROOT/login/index.php" -o /artifacts/shell-login-result.html
+if [[ $MODE = route-editor ]]; then
+    bash /source/tests/stage/route_editor_http_smoke.sh
+    exit 0
+fi
 if [[ $MODE = broken-baseline ]]; then
     curl -sS --max-time 60 -b "$COOKIE" "$WEBROOT/local/ustar/home.php" -o /artifacts/shell-broken-baseline.html
     php -r '$s=file_get_contents("/artifacts/shell-broken-baseline.html"); if (strpos($s,"Cannot call moodle_page::add_body_class after output has been started")===false) {fwrite(STDERR,"BASELINE_DEFECT_NOT_REPRODUCED\n");exit(1);}echo "PR71_BODY_CLASS_DEFECT=REPRODUCED\n";'

@@ -4,6 +4,7 @@ import json
 from html.parser import HTMLParser
 from urllib.parse import urlencode
 from urllib.request import HTTPCookieProcessor,build_opener
+from urllib.error import HTTPError
 from pathlib import Path
 import subprocess
 
@@ -43,7 +44,12 @@ def main():
     url='http://127.0.0.1:8087/local/ustar/route_studio.php?'+urlencode({'family':fixture['family'],'view':'parent','point':fixture['point']})
     def request(fields=None):
         data=None if fields is None else urlencode(fields).encode()
-        with client.open(url,data=data,timeout=60) as r:
+        try:r=client.open(url,data=data,timeout=60)
+        except HTTPError as error:
+            body=error.read().decode(errors='replace')
+            Path('/artifacts/route-editor-http-error.html').write_text(body)
+            raise
+        with r:
             assert r.status==200 and '/login/' not in r.geturl(),'Authenticated editor session required'
             html=r.read().decode()
             Path('/artifacts/route-editor-http.html').write_text(html)

@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально04.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
+Актуально05.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
 PR110 (RSS2803) и PR111 (ролевой Connect/графика) объединены после единой FullRC.
 [Интеграция](context/runtime/connect_feed_integration_order_20261101.json).
 
@@ -10,8 +10,7 @@ PR110 (RSS2803) и PR111 (ролевой Connect/графика) объедин�
 
 ## Подтверждённое состояние
 
-Owner29Oct установил app2900/theme2700 и включил роли tool9a68246b. Owner1Nov
-восстановил общий Telegram egress и установил worker267e5587: visuals_active,
+Owner1Nov восстановил egress и установил worker267e5587: visuals_active,
 visuals_ready/recovery_required:false. Оба бота отвечают; PNG/кнопки/читаемость и
 задачи/возврат/исполнение/фото приняты владельцем. Остальные процессы проверяет
 руководство с2Nov; публичный HTTPS и Mini App ожидают согласования.
@@ -29,8 +28,10 @@ Owner3Nov установил app4715383b/tool59f: success/exit0/postcheck active
 [Инструкция](docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
 SCORM/Quiz приняты. Детальные роли/URL/purchases ещё не приняты. Main2900 и установленный0200 — разные source pointers;
 PR112/113/114 открыты, автоматический merge не разрешён.
-SCORM app5e61c0d2/tool4aee установлен: exit0/postcheck active.
-[Квитанция](context/runtime/studio_scorm_edit_owner_deploy_20261103.json). [Аудит](context/reviews/20261103/AUDIT_RU.md) завершён; T01 planned.
+Discovery app719bf47c/toolaa61d595 установлен5Nov: exit0/postcheck active.
+[Квитанция](context/runtime/library_discovery_owner_deploy_20261105.json).
+Следующий ROUTE-EDITOR-01: [ревью](context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md),
+[план](docs/superpowers/plans/2026-11-05-route-editor-remediation.md). Route fix ещё не реализован.
 
 ## PERF-01 после Библиотеки
 

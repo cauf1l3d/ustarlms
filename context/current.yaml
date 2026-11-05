@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-04'
+updated_at: '2026-11-05'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -32,17 +32,17 @@ production:
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
   latest_cron_contract: context/runtime/feed2803_owner_deploy_20261029.json
   previous_scheduled_cron_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  latest_addon_preflight: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
+  latest_addon_preflight: context/runtime/library_discovery_owner_deploy_20261105.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   latest_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
   latest_worker_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   effective_addon_deployment:
-    receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
-    reported_date_msk: '2026-11-03'
-    status: owner_installed_studio_scorm0200_general_report
-    installer_commit: 4aee12968ceefe6189143f3c40f59976831f6513
-    payload_commit: 5e61c0d2566e8103d01121968d56852e26da99fa
+    receipt: context/runtime/library_discovery_owner_deploy_20261105.json
+    reported_date_msk: '2026-11-05'
+    status: owner_installed_library_discovery0200
+    installer_commit: aa61d5954d96c33b8de2845cf2c0891ba428c76d
+    payload_commit: 719bf47c1ba5942c094a04312898890ec7de00c1
     versions: &id001
       local_ustar: 2026110200
       theme_ustar: 2026110200
@@ -55,31 +55,31 @@ production:
     worker_rollout: false
     previous_exact_terminal_receipt: context/runtime/feed2803_owner_deploy_20261029.json
     previous_2801_preflight_in_same_receipt: false
-    post_deploy_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
+    post_deploy_receipt: context/runtime/library_discovery_owner_deploy_20261105.json
     browser_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
     role_bot_enabled: true
     runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
     post_check: active
     live_role_acceptance: owner accepted tasks, return/execution, photos and visual
       readability; remaining processes with leadership from2Nov
-    latest_functional_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
-    previous_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+    latest_functional_receipt: context/runtime/library_discovery_owner_deploy_20261105.json
+    previous_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
     role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh
       service query in2Nov SCORM receipt
-  status: owner_installed_studio_scorm0200_general_report
-  observed_at: '2026-11-03'
-  source: context/runtime/evidence_studio_scorm0200_20261103.yaml
+  status: owner_installed_library_discovery0200
+  observed_at: '2026-11-05'
+  source: context/runtime/evidence_library_discovery0200_20261105.yaml
   independently_measured: false
-  current_source_commit: 5e61c0d2566e8103d01121968d56852e26da99fa
-  current_source_commit_scope: Owner corrected4aee active postcheck verifies fixed649
-    addon payload; no independent server probe.
+  current_source_commit: 719bf47c1ba5942c094a04312898890ec7de00c1
+  current_source_commit_scope: Owner aa61 active postcheck verifies fixed649 addon
+    payload; no independent probe.
   current_versions: *id001
   last_exact_source_manifest:
-    commit: 5e61c0d2566e8103d01121968d56852e26da99fa
-    date: '2026-11-03'
+    commit: 719bf47c1ba5942c094a04312898890ec7de00c1
+    date: '2026-11-05'
     matching_files: 649
     kind: owner_verified_controller_payload_not_fresh_manifest
-    evidence: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
+    evidence: context/runtime/library_discovery_owner_deploy_20261105.json
   cron: completed29Oct03_37MSK_exit0_1_282s_no_new_failures; current_adhoc1_overdue56_failed2_not_yet_drained
   cron_current_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
@@ -137,12 +137,13 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Audit completed4Nov on installed app5e61/worker267:30 findings,3 reproducible
-    probes,per-finding remediation and ten work packages. App/worker unchanged. Next
-    planned T01 requires a new implementation task; no merges/server mutation authorized
-    by audit.
-  next_task: AUDIT-FIX-01
-  ready_tasks: []
+  activity: 'Owner5Nov installed app719bf47c/toolaa61d595: exit0 and readonly active.
+    Route editor report501 reviewed; real projection/template/policy reproduces multi-requirement
+    loss and invalid_parameter on synthetic fixture. Next package spec/plan ready;
+    route fixes not implemented.'
+  next_task: ROUTE-EDITOR-01
+  ready_tasks:
+  - ROUTE-EDITOR-01
   task_statuses:
     AUDIT-01: planned
     AUDIT-20261103: done
@@ -183,6 +184,7 @@ current_work:
     PERF-01: in_progress
     PLAT-01: deferred
     PRIVACY-01: deferred
+    ROUTE-EDITOR-01: ready
     RSS-01: done
     STUDIO-01: done
     STUDIO-SCORM-01: in_progress

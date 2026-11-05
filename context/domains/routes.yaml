@@ -42,3 +42,5 @@ scenarios:
 coverage_limit: Selected command/read paths only; complete endpoint, file access and
   actor/scope negative-path audit remains open
 source_reconciled_at: '2026-11-01'
+current_review: context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md
+next_fix_spec: docs/superpowers/specs/2026-11-05-route-editor-design.md

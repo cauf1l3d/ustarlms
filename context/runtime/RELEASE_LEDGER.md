@@ -1064,3 +1064,11 @@ Tool4aee/app5e61: checksums OK, initial busy refusal then ready → active; unit
 ## 04Nov2026 — тройной аудит и план
 
 [Отчёт](../reviews/20261103/AUDIT_RU.md):30находок,app5e61/worker267,3probes,41receiver/7PHP/JS и4CI/8FullRC baseline. [План T01–T10](../../docs/superpowers/plans/2026-11-03-project-audit-remediation.md) покрывает всеID; исправления пока не внесены. Production/source/worker не менялись; merge не выполнялся.
+
+## 05Nov2026 — discovery owner installed; Route Studio next package
+
+app719bf47c/toolaa61d595: SHA OK, ready→active, unit success/exit0, readonly active.
+[Receipt](library_discovery_owner_deploy_20261105.json). Business/schema/worker unchanged,cache purged.
+Owner reported Route Studio501 on inactive/draft; [review/probe](../reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md)
+reproduces lossy requirement projection, exact production exception remains unconfirmed.
+ROUTE-EDITOR-01 spec/plan ready; no route code changed/no merge.

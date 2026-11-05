@@ -1,6 +1,6 @@
 # Карта кода
 
-Актуально04Nov: source `5cc02944e1059ba015afcc7c5e8068ca56c34a92`, main local2900/theme2700.
+Актуально05Nov: source `5cc02944e1059ba015afcc7c5e8068ca56c34a92`, main local2900/theme2700.
 Приложение: 606файлов, 103 XMLDB tables.
 Worker267e5587 имеет отдельную поставку. Это Git inventory, не свежий whole-host manifest.
 [Интеграция](../runtime/connect_feed_integration_order_20261101.json),
@@ -11,7 +11,7 @@ Generated: [manifest](generated/source_manifest.json), [классы](generated/
 [таблицы](generated/database_tables.md), [API](generated/web_services.md).
 Обновление: bash scripts/build_code_map.sh EXACT_SOURCE_COMMIT.
 [Токены](../design/tokens.yaml), [capability references](../architecture/access_matrix.yaml),
-[домены](../domains). Unmerged PR114/app5e61c0d2 — development_source.json:649файлов/108таблиц; owner installed3Nov, receipt studio_scorm_edit_owner_deploy_20261103.json.
+[домены](../domains). Unmerged PR114/app719bf47c — development_source.json:649файлов/108таблиц; owner installed5Nov, receipt library_discovery_owner_deploy_20261105.json.
 Предыдущая установка marketplace4715383b/tool59f принята3Nov:
 [receipt](../runtime/library_marketplace_owner_deploy_20261103.json).
 Generated/source_manifest.json и STATE.code_baseline описывают main2900;

@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "date": "2026-11-05",
+  "source": "owner_terminal_and_message",
+  "independent_server_probe": false,
+  "application_commit": "719bf47c1ba5942c094a04312898890ec7de00c1",
+  "tool_commit": "aa61d5954d96c33b8de2845cf2c0891ba428c76d",
+  "archive_sha256": "07ae14865da94e73f02bd314819f44a715166b156ec55174e9292754534fd666",
+  "checksums": "archive, INSTALL.json, update.py OK",
+  "precheck": {
+    "phase": "ready",
+    "business_data_changed": false,
+    "cache_purged": false,
+    "database_changed": false,
+    "host_changes": false,
+    "schema_changed": false,
+    "worker_changed": false,
+    "local_ustar": "2026110200",
+    "theme_ustar": "2026110200"
+  },
+  "unit": "ustar-library-discovery-20261104-01.service",
+  "journal_time_raw": {
+    "start": "Nov 05 07:48:05",
+    "end": "Nov 05 07:48:09",
+    "timezone": "not supplied; no conversion inferred"
+  },
+  "systemd": {
+    "Result": "success",
+    "ExecMainStatus": 0,
+    "ActiveState": "inactive",
+    "SubState": "dead"
+  },
+  "apply": {
+    "phase": "active",
+    "business_data_changed": false,
+    "cache_purged": true,
+    "database_changed": true,
+    "schema_changed": false,
+    "worker_changed": false,
+    "local_ustar": "2026110200",
+    "theme_ustar": "2026110200"
+  },
+  "postcheck": {
+    "phase": "active",
+    "business_data_changed": false,
+    "cache_purged": false,
+    "database_changed": false,
+    "host_changes": false,
+    "schema_changed": false,
+    "worker_changed": false,
+    "local_ustar": "2026110200",
+    "theme_ustar": "2026110200"
+  },
+  "owner_comment": "сделал; next package should include route point editing error501 and usability review/audit/refactor",
+  "acceptance_scope": "Successful installation and exact readonly active postcheck. No enumerated employee Library/browser acceptance; reported Route Studio error is a separate next-package item.",
+  "preserved_worker": "267e55874eb8f6c36259d748f28a2c636adc9810",
+  "merge_performed": false,
+  "application": {
+    "payload_commit": "719bf47c1ba5942c094a04312898890ec7de00c1",
+    "payload_files": 649,
+    "counts_basis": "fixed_controller_payload_not_a_new_whole_host_manifest",
+    "phase": "active"
+  }
+}

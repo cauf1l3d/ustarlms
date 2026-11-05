@@ -1,6 +1,6 @@
 # USTAR — инструкции агентам
 
-Актуально04.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
+Актуально05.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
 Main2900/source5cc02944; PR110/111 слиты.
 Worker267e5587 установлен: visuals_active/visuals_ready, recovery_required:false.
 [Owner receipt](context/runtime/connect_visual_owner_deploy_20261101.json); PNG/читаемость и задачи/возврат/фото приняты.
@@ -17,7 +17,9 @@ Owner2Nov: app1100/2150affe, toolb5 active; SCORM/переходы принят�
 [Report](context/runtime/library_owner_navigation_20261103.json). Owner3Nov установил
 marketplace4715383b/tool59f: success/exit0/postcheck active, «Отлично работает».
 [Receipt](context/runtime/library_marketplace_owner_deploy_20261103.json).
-SCORM app5e61/tool4aee установлен: exit0/active. Аудит завершён; T01 planned. Детальные роли и
+Discovery app719bf47c/toolaa61d595 установлен5Nov: exit0/active.
+[Receipt](context/runtime/library_discovery_owner_deploy_20261105.json). Следующий ROUTE-EDITOR-01:
+ревью/план в context/reviews/20261105, source fix ещё не реализован. Детальные роли и
 PERF-01 остаются; HTTPS/Mini App ждут руководства. Старые cron19/failed2 не сбрасывать.
 
 Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,
@@ -53,9 +55,7 @@ server-console имеет отдельную ops-авторизацию, не Ac
 обязательна; исторические миграции не переписывать ради форматирования.
 Не публиковать config.php, токены, дампы, moodledata, private logs и ключи.
 
-Различать Git source, CI, owner receipt и свежую проверку сервера. Payload590/100
-не является whole-host manifest. Общая browser-приёмка не доказывает все роли,
-PDF/conflict/employee edge cases, производительность или полное восстановление.
+Различать Git source, CI, owner receipt и свежую проверку сервера. Payload не whole-host census; browser-приёмка не доказывает все роли, нагрузку и restore.
 Принятые SSD/Moodle5.1.8/OS/reboot/DB-role/code/HTTPS/Connect циклы не повторять.
 SSH/firewall — перед внешним доступом. Копии переданы, внешний restore unknown по
 решению владельца. ИБП есть, автоматический shutdown не проверен. Остаточные

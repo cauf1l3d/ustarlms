@@ -1,12 +1,11 @@
 # Runtime evidence
 
-Последняя установка: SCORM Studio app5e61/tool4aee,owner3Nov — success/exit0,
-readonly postcheck active,общий отзыв «все вроде ок».
-[Квитанция](studio_scorm_edit_owner_deploy_20261103.json),
-[dated evidence](evidence_studio_scorm0200_20261103.yaml).
-Local/theme0200,649fixed addon files/108tables по inventory;это не whole-host census.
-Детальная приёмка реальных edit/export/roles отдельно не перечислена.
-Старыйa8 не повторять;recovery после active не нужен.
+Последняя установка: discovery app719bf47c/toolaa61d595,owner5Nov — success/exit0,
+ready→active,readonly postcheck active. [Квитанция](library_discovery_owner_deploy_20261105.json),
+[evidence](evidence_library_discovery0200_20261105.yaml). Local/theme0200,649fixed files/108tables.
+Подробные employee browser cases не перечислены; повтор/recovery не требуются.
+Предыдущий SCORM app5e61/tool4aee принят3Nov: [receipt](studio_scorm_edit_owner_deploy_20261103.json).
+Следующий пакет — [редактор точки](../reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md), ещё не реализован.
 
 Предыдущие установки Библиотеки: [marketplace471/tool59f](library_marketplace_owner_deploy_20261103.json),
 [навигация5131](library_navigation_owner_deploy_20261103.json),
@@ -23,7 +22,7 @@ Worker267,восстановление Telegram и принятые задачи
 
 [Аудит03–04Nov](../reviews/20261103/AUDIT_RU.md),
 [план](../../docs/superpowers/plans/2026-11-03-project-audit-remediation.md).
-Исправления из плана ещё не внесены.
+Первый пакет U01/U02/U05 установлен; остальные исправления остаются в плане.
 [Операции](OPERATIONS.md),[backup/restore](BACKUP_RESTORE.md),[реестр](RELEASE_LEDGER.md),
 [принятые риски](../roadmap/ACCEPTED_RISKS.yaml).
 Docker successor [заморожен](docker_runtime_successor_20261026.md);старые команды

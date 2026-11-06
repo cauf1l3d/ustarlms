@@ -1,5 +1,9 @@
 # Runtime evidence
 
+06Nov: owner подтвердил скрытие точек; затем сообщил пропажу images Preview.
+Точный installed901 SHA не подтверждён терминалом. [Исправление ресурсов](../reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md)
+квалифицируется отдельно; последний полный deployment receipt ниже сохраняется.
+
 Последняя установка: discovery app719bf47c/toolaa61d595,owner5Nov — success/exit0,
 ready→active,readonly postcheck active. [Квитанция](library_discovery_owner_deploy_20261105.json),
 [evidence](evidence_library_discovery0200_20261105.yaml). Local/theme0200,649fixed files/108tables.

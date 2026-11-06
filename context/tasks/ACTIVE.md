@@ -1,18 +1,17 @@
-# Активная работа —05.11.2026
+# Активная работа —06.11.2026
 
-## Студия CSP + редактор маршрута: квалифицированный пакет
+## Предпросмотр Студии: исправление ресурсов
 
-STUDIO-CSP-01 / ROUTE-EDITOR-01 awaiting_owner_deployment.
-App901ac9eb/toolf4d81940 квалифицирован на2984b066:4CI/11FullRC PASS.
-Обе ошибки YUI/CSP воспроизведены и устранены на Moodle5.1.1/5.1.8;
-CSP/sandbox неизменны, настоящий API save/fresh mobile reload PASS.
-Native430/1988 на каждой версии, Connect172/875, оператор14 actual PHP/UID33 PASS.
-[Квалификация](../runtime/studio_csp_qualification_20261105.json),
-[установка](../../docs/STUDIO_CSP_INSTALL_RU.md),
-[реализация](../reviews/20261105/STUDIO_CSP_IMPLEMENTATION.md).
-Один cumulative архив от719 включает непоставленный45e Route Studio и CSP bootstrap;
-архив побайтно совпал с CI и сохранённой копией. Owner45e НЕ устанавливал.
-Production719 не менялся; точный прежний route invalidparameter требует owner retry.
+STUDIO-PREVIEW-01 in_progress. Owner: точки скрываются, но изображения Preview не видны;
+Chromium блокирует parent blob URLs в opaque iframe. Терминальной квитанции901 нет.
+App2cb233d9 создаёт ресурсы внутри самого iframe и учитывает app.js в cache identity.
+Локальный real browser RED→GREEN: PNG/font/reopen,24повтора файла без дублирования,
+literal $ replacement tokens; sandbox/CSP прежние. Native/API и owner successor проходят квалификацию.
+[Реализация](../reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md),
+[план](../../docs/superpowers/plans/2026-11-06-studio-preview-assets.md).
+Новый пакет2files/0added поверх901 проверит полный source profile и active CSP journal.
+[Предыдущая квалификация901/f4d](../runtime/studio_csp_qualification_20261105.json):4CI/11FullRC PASS;
+это не exact deployment receipt. Production.last_full_receipt719 сохранён.
 
 ## Установленная Академия
 

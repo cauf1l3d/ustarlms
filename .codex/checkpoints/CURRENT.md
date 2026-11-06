@@ -4,6 +4,6 @@ Entry point and reading order: [START_HERE](../../START_HERE.md).
 Canonical state: [STATE](../../context/roadmap/STATE.yaml).
 Machine view: [current.yaml](../../context/current.yaml).
 
-Updated: 2026-11-05. Next task: STUDIO-CSP-01.
+Updated: 2026-11-06. Next task: STUDIO-PREVIEW-01.
 Application baseline: 5cc02944e1059ba015afcc7c5e8068ca56c34a92.
 This is not a deployment receipt. Do not edit this generated file.

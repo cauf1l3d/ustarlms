@@ -4,7 +4,7 @@
   "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "91d78a5ff091a38aba35ec315ad9482ca9be8fb8",
+    "moodle/local/ustar": "22a81fbc2a5d31e9ba7c04feaa0fa63f9f9c0b51",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
@@ -1246,11 +1246,11 @@
     },
     {
       "path": "moodle/local/ustar/course_studio.php",
-      "sha256": "7b2279cffd3988aa2a85070a3dc4df949d0212dce72c4e78845423b99a1c9582"
+      "sha256": "bf3fc385ff349d1cabf5e199d1d56abcf657fbbfb5ba229513c0911a2c935558"
     },
     {
       "path": "moodle/local/ustar/course_studio/app.js",
-      "sha256": "510092563e3396b2b6053659d941f08c8d96be882aedb57f58805f63d71ba16d"
+      "sha256": "debb8b79e723a6845656d9dc2edf5ad74e8215fcef8ce5cc14070d967a22d69e"
     },
     {
       "path": "moodle/local/ustar/course_studio/cloud.js",

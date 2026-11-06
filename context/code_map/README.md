@@ -1,6 +1,6 @@
 # Карта кода
 
-Актуально05Nov: source `5cc02944e1059ba015afcc7c5e8068ca56c34a92`, main local2900/theme2700.
+Актуально06Nov: source `5cc02944e1059ba015afcc7c5e8068ca56c34a92`, main local2900/theme2700.
 Приложение: 606файлов, 103 XMLDB tables.
 Worker267e5587 имеет отдельную поставку. Это Git inventory, не свежий whole-host manifest.
 [Интеграция](../runtime/connect_feed_integration_order_20261101.json),
@@ -11,7 +11,7 @@ Generated: [manifest](generated/source_manifest.json), [классы](generated/
 [таблицы](generated/database_tables.md), [API](generated/web_services.md).
 Обновление: bash scripts/build_code_map.sh EXACT_SOURCE_COMMIT.
 [Токены](../design/tokens.yaml), [capability references](../architecture/access_matrix.yaml),
-[домены](../domains). Unmerged PR114/app901ac9eb — development_source.json:653файла/108таблиц, ещё не установлен.
+[домены](../domains). Unmerged PR114/app2cb233d9 — development_source.json:653файла/108таблиц, квалификация исправления Preview, не deployment receipt.
 Owner installed5Nov app719bf47c/toolaa61d595:649файлов/108таблиц;
 receipt library_discovery_owner_deploy_20261105.json.
 Предыдущая установка marketplace4715383b/tool59f принята3Nov:

@@ -1,14 +1,14 @@
 schema_version: 2
-updated_at: '2026-11-05'
+updated_at: '2026-11-06'
 project: USTAR Academy
-stage: studio_csp_qualified_owner_deploy_pending
-stage_label: Studio CSP and Route editor qualified; owner deployment pending
-current_activity: Cumulative app901ac9eb/toolf4d81940 qualified on2984b066:4CI and11FullRC PASS; original
-  CSP/YUI errors absent on both pinned Moodle versions, unchanged CSP and real API save/fresh mobile reload.
-  Archive33e0 is CI/retained byte-identical. Production remains719; owner install and original route invalidparameter
-  retry pending.
+stage: studio_preview_assets_qualification
+stage_label: Isolated Studio preview assets fix; qualification in progress
+current_activity: Owner confirms route hiding, then reports Preview images unavailable with parent blob URL errors.
+  Local real Chromium RED reproduced with a valid PNG and font; child-owned resources pass image/font/reopen,
+  repeated asset size and literal lesson tests. Exact deployed901 profile still requires guarded owner check;
+  last full terminal deployment receipt remains719. Native/API and immutable successor qualification in progress.
 entrypoint: START_HERE.md
-next_task: STUDIO-CSP-01
+next_task: STUDIO-PREVIEW-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -397,8 +397,8 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  application_commit: 901ac9eb9d87956e9818ab656410a1a7e63cb221
-  status: qualified_owner_deploy_pending
+  application_commit: 2cb233d994c0e4588973cfce0577c9d466027ce2
+  status: qualification_in_progress
   branch: feat/library-unification-20261102
   deployed: false
   local_ustar_version: 2026110200
@@ -406,15 +406,11 @@ development_candidate:
   schema_changed: false
   worker_rollout: false
   preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
-  deployment_baseline: 719bf47c1ba5942c094a04312898890ec7de00c1
+  deployment_baseline: 901ac9eb9d87956e9818ab656410a1a7e63cb221
   previous_accepted_delivery: context/runtime/library_discovery_owner_deploy_20261105.json
-  scope: Cumulative Route Studio fixes and request-local YUI strict CSP compatibility;10changed+4added, no
-    schema/business/worker changes
-  progress: context/reviews/20261105/STUDIO_CSP_IMPLEMENTATION.md
+  previous_qualified_delivery: context/runtime/studio_csp_qualification_20261105.json
+  scope: Preview resource ownership and app cache identity;2changed/0added,653fixed
+    files/108tables; no schema/business/worker changes
+  progress: context/reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md
   owner_receipt: null
-  tool_commit: f4d81940242217c48b0eaf7afd1c4d79e068b00e
-  qualification: context/runtime/studio_csp_qualification_20261105.json
-  runbook: docs/STUDIO_CSP_INSTALL_RU.md
-  archive_sha256: 33e0f16b9043bc79beddcb06ea6476b13be1323147cde956cc7e5e01f2d6f87a
-  retained_copy_verified: true
-  qualified_commit: 2984b066540c3f2e3c9dc44e74db087f4fa74d77
+  execution_authorized: true

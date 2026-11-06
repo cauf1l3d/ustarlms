@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-11-05'
+updated_at: '2026-11-06'
 canonical_branch: main
 source_baseline: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -816,6 +816,21 @@ tasks:
   runbook: docs/STUDIO_CSP_INSTALL_RU.md
   application_commit: 901ac9eb9d87956e9818ab656410a1a7e63cb221
   tool_commit: f4d81940242217c48b0eaf7afd1c4d79e068b00e
+- id: STUDIO-PREVIEW-01
+  title: 'Студия: изображения и шрифты в изолированном предпросмотре'
+  status: in_progress
+  depends_on: []
+  related_task: STUDIO-CSP-01
+  spec: docs/superpowers/specs/2026-11-06-studio-preview-assets-design.md
+  implementation_plan: docs/superpowers/plans/2026-11-06-studio-preview-assets.md
+  reference: context/reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md
+  execution_authorized: true
+  acceptance:
+  - Uploaded image and custom font render in opaque preview; close/reopen preserves editor assets
+  - Shared resource embedded once; literal lesson text safe; unchanged parent/preview CSP and sandbox
+  - Native real API save and fresh reload, eval and parent access remain denied
+  - Immutable two-file successor requires exact901 source and active CSP journal before outage; qualified archive/commands
+  application_commit: 2cb233d994c0e4588973cfce0577c9d466027ce2
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-05'
+updated_at: '2026-11-06'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -137,12 +137,13 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Cumulative app901ac9eb/toolf4d81940 qualified on2984b066:4CI and11FullRC
-    PASS; original CSP/YUI errors absent on both pinned Moodle versions, unchanged
-    CSP and real API save/fresh mobile reload. Archive33e0 is CI/retained byte-identical.
-    Production remains719; owner install and original route invalidparameter retry
-    pending.
-  next_task: STUDIO-CSP-01
+  activity: Owner confirms route hiding, then reports Preview images unavailable with
+    parent blob URL errors. Local real Chromium RED reproduced with a valid PNG and
+    font; child-owned resources pass image/font/reopen, repeated asset size and literal
+    lesson tests. Exact deployed901 profile still requires guarded owner check; last
+    full terminal deployment receipt remains719. Native/API and immutable successor
+    qualification in progress.
+  next_task: STUDIO-PREVIEW-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -188,6 +189,7 @@ current_work:
     RSS-01: done
     STUDIO-01: done
     STUDIO-CSP-01: awaiting_owner_deployment
+    STUDIO-PREVIEW-01: in_progress
     STUDIO-SCORM-01: in_progress
     TECH-01: planned
 server_facts:

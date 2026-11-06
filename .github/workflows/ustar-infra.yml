@@ -18,6 +18,35 @@ concurrency:
   group: ustar-infra-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  studio-preview:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Isolated Studio preview resources contracts and actual owner metadata
+        run: |
+          php -n -r 'if (!ini_get("short_open_tag")) { exit(1); }'
+          python3 -m unittest tests.r16.test_studio_preview_patch.Delivery tests.r16.test_studio_preview_patch.Contract tests.r16.test_studio_preview_patch.RealPhp -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_studio_preview_patch.Transaction -v
+      - name: Build and verify the exact bounded Isolated Studio preview resources successor offline
+        run: |
+          STUDIO_PREVIEW_TOOL=$(git log -1 --format=%H -- scripts/infra/studio_preview_patch.py scripts/infra/build_studio_preview_patch.py)
+          python3 scripts/infra/build_studio_preview_patch.py --tool-commit "$STUDIO_PREVIEW_TOOL" --output artifacts/studio-preview
+          tar --no-same-owner -xzf artifacts/studio-preview/ustar-studio-preview-*.tar.gz -C artifacts/studio-preview
+          cd artifacts/studio-preview
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: studio-preview
+          path: artifacts/studio-preview/
   studio-csp:
     runs-on: ubuntu-24.04
     timeout-minutes: 10

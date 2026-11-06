@@ -56,6 +56,7 @@ async function evalDenied(frame){
   await reloaded.waitForFunction(()=>{const im=document.querySelector('#editor-content img');return im?.complete&&im.naturalWidth===1;});
   const home=await fresh.newPage();await home.goto(base+'/local/ustar/home.php');
   assert.equal(await home.evaluate(()=>Object.hasOwn(window.YUI_config||{},'global')),false,'Request-local bootstrap must not persist into another page');
+  evidence.library_management=await require('./library_manage_native_browser.cjs')(context,base);
   assert.deepEqual(errors,[]);evidence.errors=errors;evidence.status='PASS';
   fs.writeFileSync(art+'/studio-native-browser.json',JSON.stringify(evidence,null,2));
   console.log('STUDIO_NATIVE_BROWSER=PASS actual Moodle/YUI/API, strict CSP, isolated preview, save/fresh reload');

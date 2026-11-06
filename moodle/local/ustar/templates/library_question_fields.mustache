@@ -1,0 +1,15 @@
+<fieldset class="u-library__questionedit" data-library-question="{{index}}">
+    <legend data-library-number>Вопрос {{number}}</legend>
+    <div class="u-library__questionactions">
+        <button class="u-btn" type="button" data-library-question-action="up" aria-label="Переместить вопрос вверх">Выше</button>
+        <button class="u-btn" type="button" data-library-question-action="down" aria-label="Переместить вопрос вниз">Ниже</button>
+        <button class="u-btn" type="button" data-library-question-action="remove" aria-label="Удалить вопрос">Удалить</button>
+    </div>
+    <label class="u-field">Текст вопроса<textarea name="questions[{{index}}][text]" rows="2" maxlength="4000">{{text}}</textarea></label>
+    {{#options}}
+    <div class="u-library__answeredit">
+        <label><input type="radio" name="questions[{{question}}][correct]" value="{{index}}" {{#checked}}checked{{/checked}}>Верный</label>
+        <input type="text" aria-label="Ответ {{number}}" name="questions[{{question}}][options][{{index}}]" value="{{value}}" maxlength="1000">
+    </div>
+    {{/options}}
+</fieldset>

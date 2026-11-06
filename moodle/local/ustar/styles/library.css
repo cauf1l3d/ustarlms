@@ -493,3 +493,5 @@ html[data-ustar-theme="dark"] .u-library__tab.is-active {
 .u-library .u-checkrow strong,.u-library .u-lcard__title { overflow-wrap:anywhere; }
 .u-library summary { cursor:pointer;font-weight:650;min-height:44px; }
 @media(max-width:640px) { .u-library__fields{grid-template-columns:1fr;} .u-library__head,.u-library__section{padding:16px;} .u-library__search .u-btn{padding-inline:12px;} .u-library__wallet{align-self:flex-start;} }
+
+.u-library__questionactions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0 12px}.u-library__questionactions p{margin:0}.u-library__questionedit{min-width:0}.u-library__questionedit textarea{width:100%}

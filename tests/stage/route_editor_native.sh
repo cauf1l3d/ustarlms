@@ -14,5 +14,12 @@ cd /stage/moodle
 php admin/cli/install_database.php --agree-license --adminpass='Fixture-Only-Password1!' \
     --adminemail=stage@example.invalid --fullname='Route editor synthetic stage' --shortname=route-editor \
     > /artifacts/route-editor-install.log 2>&1
+if [[ $mode = studio-browser ]]; then
+    php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/library-management-phpunit-init.log 2>&1
+    php vendor/bin/phpunit --display-notices --fail-on-notice \
+        --log-junit /artifacts/library-management-unit.xml \
+        public/local/ustar/tests/library_management_test.php \
+        2>&1 | tee /artifacts/library-management-unit.log
+fi
 USTAR_STAGE_PREFIX=stage_ bash /source/tests/stage/authenticated_shell_smoke.sh "$mode" \
     2>&1 | tee /artifacts/route-editor-native.log

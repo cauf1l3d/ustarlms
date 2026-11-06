@@ -1,10 +1,14 @@
 # Runtime evidence
 
-06Nov: owner подтвердил скрытие точек; затем сообщил пропажу images Preview.
-Точный installed901 SHA не подтверждён терминалом. [Исправление ресурсов](../reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md)
-квалифицируется отдельно; последний полный deployment receipt ниже сохраняется.
+06Nov: app2cb233d9/tool ed292313 квалифицирован на exacted292313:4CI/11FullRC PASS.
+Исправлены images/fonts в opaque Preview, source2files/0added,653files/108tables,0200.
+[Квалификация](studio_preview_qualification_20261106.json), [установка](../../docs/STUDIO_PREVIEW_INSTALL_RU.md),
+[реализация](../reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md).
+Owner подтвердил скрытие точек, затем сообщил Preview defect; exact installed901 SHA не сообщён.
+Новый пакет требует source901 + active CSP journal до outage. Owner installation/acceptance pending;
+последняя полная deployment receipt ниже сохраняется.
 
-Последняя установка: discovery app719bf47c/toolaa61d595,owner5Nov — success/exit0,
+Последняя полная terminal receipt: discovery app719bf47c/toolaa61d595,owner5Nov — success/exit0,
 ready→active,readonly postcheck active. [Квитанция](library_discovery_owner_deploy_20261105.json),
 [evidence](evidence_library_discovery0200_20261105.yaml). Local/theme0200,649fixed files/108tables.
 Подробные employee browser cases не перечислены; повтор/recovery не требуются.
@@ -13,7 +17,7 @@ ready→active,readonly postcheck active. [Квитанция](library_discovery
 [квалификация](studio_csp_qualification_20261105.json), [установка](../../docs/STUDIO_CSP_INSTALL_RU.md).
 Route45e не установлен по owner statement; новый пакет прямо от719 включает Route Studio и strict-CSP YUI bootstrap.
 Прежняя [квалификация45e/1c](route_editor_qualification_20261105.json) сохранена как история.
-Production остаётся719bf47c; квалификация не означает установку.
+Последний полный terminal receipt719bf47c; owner6Nov частично принял скрытие точек, точный installed SHA не сообщён. Квалификация не означает установку.
 
 Предыдущие установки Библиотеки: [marketplace471/tool59f](library_marketplace_owner_deploy_20261103.json),
 [навигация5131](library_navigation_owner_deploy_20261103.json),

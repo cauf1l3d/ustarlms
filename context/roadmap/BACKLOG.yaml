@@ -818,7 +818,7 @@ tasks:
   tool_commit: f4d81940242217c48b0eaf7afd1c4d79e068b00e
 - id: STUDIO-PREVIEW-01
   title: 'Студия: изображения и шрифты в изолированном предпросмотре'
-  status: in_progress
+  status: awaiting_owner_deployment
   depends_on: []
   related_task: STUDIO-CSP-01
   spec: docs/superpowers/specs/2026-11-06-studio-preview-assets-design.md
@@ -831,6 +831,9 @@ tasks:
   - Native real API save and fresh reload, eval and parent access remain denied
   - Immutable two-file successor requires exact901 source and active CSP journal before outage; qualified archive/commands
   application_commit: 2cb233d994c0e4588973cfce0577c9d466027ce2
+  tool_commit: ed292313602f07a176da5eb6e44d5a1e5ff5b65d
+  qualification: context/runtime/studio_preview_qualification_20261106.json
+  runbook: docs/STUDIO_PREVIEW_INSTALL_RU.md
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

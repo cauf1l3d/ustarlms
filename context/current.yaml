@@ -137,12 +137,12 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Owner confirms route hiding, then reports Preview images unavailable with
-    parent blob URL errors. Local real Chromium RED reproduced with a valid PNG and
-    font; child-owned resources pass image/font/reopen, repeated asset size and literal
-    lesson tests. Exact deployed901 profile still requires guarded owner check; last
-    full terminal deployment receipt remains719. Native/API and immutable successor
-    qualification in progress.
+  activity: App2cb233d9/tool ed292313 qualified on exacted292313:4CI and11FullRC PASS.
+    Real PNG/font preview and API/fresh reload pass on Moodle5.1.1/5.1.8 with unchanged
+    CSP/sandbox. Source1649tests/274conditional skips each PHP8.2/8.3, native430/1988
+    each, Connect172/875, operator16actualPHP/UID33 PASS. Archivecf8c9b0b is CI/retained
+    byte-identical. Owner confirms points hide but exact901 deployment remains unverified;
+    last full terminal receipt719.
   next_task: STUDIO-PREVIEW-01
   ready_tasks: []
   task_statuses:
@@ -189,7 +189,7 @@ current_work:
     RSS-01: done
     STUDIO-01: done
     STUDIO-CSP-01: awaiting_owner_deployment
-    STUDIO-PREVIEW-01: in_progress
+    STUDIO-PREVIEW-01: awaiting_owner_deployment
     STUDIO-SCORM-01: in_progress
     TECH-01: planned
 server_facts:

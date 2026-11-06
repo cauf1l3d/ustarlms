@@ -1,6 +1,9 @@
 # Навигация по контексту
 
 - [Начало](../START_HERE.md), [STATE](roadmap/STATE.yaml), [текущие задачи](tasks/ACTIVE.md).
+- [Предпросмотр: картинки и шрифты](reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md),
+  [квалификация](runtime/studio_preview_qualification_20261106.json),
+  [инструкция](../docs/STUDIO_PREVIEW_INSTALL_RU.md).
 - [Студия CSP + редактор точки](reviews/20261105/STUDIO_CSP_REVIEW_RU.md),
   [квалификация](runtime/studio_csp_qualification_20261105.json),
   [инструкция](../docs/STUDIO_CSP_INSTALL_RU.md).

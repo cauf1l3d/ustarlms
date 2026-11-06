@@ -1,17 +1,18 @@
 # Активная работа —06.11.2026
 
-## Предпросмотр Студии: исправление ресурсов
+## Предпросмотр Студии: квалифицированный пакет
 
-STUDIO-PREVIEW-01 in_progress. Owner: точки скрываются, но изображения Preview не видны;
-Chromium блокирует parent blob URLs в opaque iframe. Терминальной квитанции901 нет.
-App2cb233d9 создаёт ресурсы внутри самого iframe и учитывает app.js в cache identity.
-Локальный real browser RED→GREEN: PNG/font/reopen,24повтора файла без дублирования,
-literal $ replacement tokens; sandbox/CSP прежние. Native/API и owner successor проходят квалификацию.
-[Реализация](../reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md),
-[план](../../docs/superpowers/plans/2026-11-06-studio-preview-assets.md).
-Новый пакет2files/0added поверх901 проверит полный source profile и active CSP journal.
-[Предыдущая квалификация901/f4d](../runtime/studio_csp_qualification_20261105.json):4CI/11FullRC PASS;
-это не exact deployment receipt. Production.last_full_receipt719 сохранён.
+STUDIO-PREVIEW-01 awaiting_owner_deployment. App2cb233d9/tool ed292313:
+4CI/11FullRC PASS на exacted292313. Реальные PNG/font/API/fresh reload PASS
+в Moodle5.1.1/5.1.8; sandbox/CSP прежние. Native430/1988 каждый, Connect172/875,
+PHP8.2/8.3 по1649tests/274conditional skips, operator16actualPHP/UID33 PASS.
+Архив136074bytes SHAcf8c9b0b совпал с CI и сохранённой копией.
+[Квалификация](../runtime/studio_preview_qualification_20261106.json),
+[установка](../../docs/STUDIO_PREVIEW_INSTALL_RU.md),
+[реализация](../reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md).
+Пакет2files/0added поверх901 требует полный source profile и active CSP journal до outage.
+Owner подтвердил скрытие точек; exact901 terminal receipt отсутствует. Последняя полная
+receipt719 сохранена; новая установка и проверка Preview на server1 ожидаются.
 
 ## Установленная Академия
 

@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально05.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
+Актуально06.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
 PR110 (RSS2803) и PR111 (ролевой Connect/графика) объединены после единой FullRC.
 [Интеграция](context/runtime/connect_feed_integration_order_20261101.json).
 
@@ -16,20 +16,22 @@ visuals_ready/recovery_required:false. Оба бота отвечают; PNG/к�
 руководство с2Nov; публичный HTTPS и Mini App ожидают согласования.
 
 Merge не меняет production.
-## Текущее состояние Библиотеки0200
+## Библиотека и Студия0200
 
-Owner3Nov установил app4715383b/tool59f: success/exit0/postcheck active и
-подтвердил «Отлично работает». [Квитанция](context/runtime/library_marketplace_owner_deploy_20261103.json).
-Маркетплейс скрыт по умолчанию; admin выбирает отделы. Исходники товаров доступны
-редактору. «Центр управления» → «Материалы», Библиотека — читательский раздел.
-[Инструкция](docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md).
-SCORM/Quiz приняты; детальные роли/URL/purchases ещё не приняты.
-Main2900 отдельно; PR112/113/114 открыты без разрешения merge.
-Discovery app719bf47c/toolaa61d595 установлен5Nov: exit0/postcheck active.
-[Квитанция](context/runtime/library_discovery_owner_deploy_20261105.json).
-STUDIO-CSP-01: [ревью](context/reviews/20261105/STUDIO_CSP_REVIEW_RU.md).
-45e не установлен. Пакет app901ac9eb/toolf4d81940 квалифицирован: Route Studio и YUI при строгой CSP. [Квалификация](context/runtime/studio_csp_qualification_20261105.json),
-[инструкция](docs/STUDIO_CSP_INSTALL_RU.md). Production719 не менялся.
+Последняя полная terminal receipt: app719bf47c/toolaa61d595 установлен5Nov,
+[квитанция](context/runtime/library_discovery_owner_deploy_20261105.json).
+Marketplace скрыт по умолчанию; admin выбирает отделы. Исходники editor-only.
+[Правила доступа](docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md). Main2900 отдельно;
+PR112/113/114 открыты без разрешения merge.
+
+Предыдущий cumulative app901/toolf4d включает Route Studio и YUI при строгой CSP:
+[квалификация](context/runtime/studio_csp_qualification_20261105.json).
+Owner6Nov: точки скрываются, но изображения Preview не видны; точный installed SHA не сообщён.
+STUDIO-PREVIEW-01 app2cb233d9/tool ed292313: собственные ресурсы opaque iframe,
+[реализация](context/reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md),
+[квалификация](context/runtime/studio_preview_qualification_20261106.json),
+[установка](docs/STUDIO_PREVIEW_INSTALL_RU.md). 4CI/11FullRC PASS на ed292313.
+Пакет требует source901 и active CSP journal до outage; deployment ждёт owner receipt.
 
 ## PERF-01 после Библиотеки
 

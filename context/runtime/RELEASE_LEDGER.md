@@ -1,5 +1,7 @@
 # Реестр кода, проверок и deployment evidence
 
+06.11.2026 — STUDIO-PREVIEW-01 app2cb233d9/tool ed292313 квалифицирован на exacted292313:4CI/11FullRC PASS; native430/1988 каждый, Connect172/875, PHP8.2/8.3 по1649tests/274conditional skips. Opaque preview создаёт собственные resource URLs;2source files/0added,0200/653files/108tables. PNG/font/API/fresh reload и eval/parent denial PASS в Moodle5.1.1/5.1.8; operator16actualPHP/UID33 PASS. Архив136074bytes SHA cf8c9b0b CI/retained byte-equal. Требует exact901 + active CSP journal. Owner подтвердил скрытие точек и сообщил Preview defect; это не exact deployment receipt. [Квалификация](studio_preview_qualification_20261106.json), [установка](../../docs/STUDIO_PREVIEW_INSTALL_RU.md).
+
 05.11.2026 — Route Studio app6c4f30b6/tool45e9d6b7 квалифицирован на1c43377b:4CI/9FullRC SUCCESS, native430tests/1988assertions в Moodle5.1.1/5.1.8, authenticated HTTP draft/hide/restore/invalid input PASS. Source PHP8.2/8.3, DOM/browser1440/390 и оператор13tests с actualPHP/UID33 PASS. Архив193168bytes SHA6834c161 побайтно совпал с CI и сохранённой копией.13addon файлов,653fixed files/108tables; схема/бизнес-данные/worker не меняются. Owner installation/retry pending; production719bf47c и main не менялись. [Квитанция](route_editor_qualification_20261105.json), [команды](../../docs/ROUTE_EDITOR_INSTALL_RU.md). Полная оптимизация route readers/T04, PERF-01 и реальный UX пилот не закрыты этим пакетом.
 
 01.11.2026 — PR112: прямой запуск SCORM из текущей точки квалифицирован на51332a21,

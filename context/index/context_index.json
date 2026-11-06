@@ -6,14 +6,14 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 1278,
-      "sha256": "7e03d4f32260590df2867ca230188843c411761e467b55f8d7d3d48e8fc40f4f"
+      "size": 1539,
+      "sha256": "b6dcd725a352bf924fb2c79fa98563eec9a3f4c2111cebc9ed967439ecf39262"
     },
     {
       "path": "context/agents/astra.md",
       "domain": "agents",
-      "size": 3678,
-      "sha256": "af989362b407fa7f3ca5c353740406855fe9154fb6fc094513f23769079acb71"
+      "size": 4717,
+      "sha256": "2d3984cca9ed381d72003d67db9bbc61bc2edb9f71627f0cfde12e1d64958fbc"
     },
     {
       "path": "context/architecture/access_matrix.yaml",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 12615,
-      "sha256": "ff5cd511ffdd22ed12ab45ca4a5b9ad80d95cd9cf8618ec4f466d5f251867186"
+      "size": 12647,
+      "sha256": "7a7c1887a6c99e6045a0f14da3b15768bfd47b707545284d88965d27e25711a1"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -894,8 +894,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 3250,
-      "sha256": "fcf2b6f76965bd749d0bda7d14140e1e96ed91d697f3860cbba0d5d645960aa6"
+      "size": 3253,
+      "sha256": "909e9b2d64bb9d74af926b4fd588ea7e9dbc3be9793e6cdfc9046f30cf6d6fa1"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1572,8 +1572,8 @@
     {
       "path": "context/reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md",
       "domain": "reviews",
-      "size": 3703,
-      "sha256": "e967329ddbafd78abfba91a7a81953bc349dd8ca47fee909860c467dcdce9747"
+      "size": 4949,
+      "sha256": "4a401ca0bfbce592437bdaf470f30bffef82d2f963100281a9185573e9995149"
     },
     {
       "path": "context/roadmap/ACCEPTED_RISKS.yaml",
@@ -1602,8 +1602,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 47793,
-      "sha256": "719c55069bc6a97c425d706700d3bb1fb40eb74558456824f3c9b48e64376ddc"
+      "size": 47984,
+      "sha256": "a180bcc05a517a86a82d1f0b0e773f1c27629c9d7ee2fa78ff17fae070de2c02"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1656,8 +1656,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22477,
-      "sha256": "5c7e9a4e768c597cf36d6d6cfeb4c84fed91086496d3e2a396bf1e3d355a4311"
+      "size": 22862,
+      "sha256": "ad18b9e85f45237cd07dd9c2225710493797d4c72e7af81d923ae776c17d05a3"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1746,14 +1746,14 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 3434,
-      "sha256": "7a9fae335a2a8a2ffbd184849be334a5f0f6b14afa5c5f54242ddd9eca582a6a"
+      "size": 3909,
+      "sha256": "72fb179e483230cfd93c6716b0884b32161ec9024f7590cc3923d89171d8841d"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 101995,
-      "sha256": "c44142233b6bae6e27c68a6b7fec80c448fcc1e43c1b25b8f843e30c06c7eff0"
+      "size": 102799,
+      "sha256": "d4832d20d6d99a0db889843bcc9a4f847fb42bf76c0aed516a55dc4c7f258a1e"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -3910,6 +3910,12 @@
       "sha256": "e62fc85707c8412ff13a4e289d5d4269b82277e52225ae418c55a0f3678ccbe9"
     },
     {
+      "path": "context/runtime/studio_preview_qualification_20261106.json",
+      "domain": "runtime",
+      "size": 7552,
+      "sha256": "17e13ade661d55dd98e49274f9059532894438ea8c4fac5ba4c759d129740753"
+    },
+    {
       "path": "context/runtime/studio_scorm_edit_20261103.json",
       "domain": "runtime",
       "size": 5743,
@@ -4014,8 +4020,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3416,
-      "sha256": "972f92fe5739486c5fc1608b0eddce47ccffb8b73a4c35ec8c8e3fc043ef3adb"
+      "size": 3341,
+      "sha256": "85017f3e267cc0c0f40df5e4df924863274c269c42f6a9d21f3869fe3b66d114"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

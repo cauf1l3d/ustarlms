@@ -15,15 +15,15 @@ No core/DB/business/worker/role changes; immutable previous installers. Opaque p
 
 Files: tests/release_20260912/course_studio_browser.cjs; tests/stage/course_studio_native_browser.cjs; moodle/local/ustar/course_studio/app.js; moodle/local/ustar/course_studio.php.
 
-- [ ] Add real PNG upload and image decode checks to existing preview browser test; observe RED with original sandbox and blob error. Add equivalent native API/browser regression.
-- [ ] Create preview asset URLs inside its own opaque document, embed each resource once through existing M.toBase64; remove parent preview URL leases and inaccessible parent onload; include app.js in existing cache identity.
-- [ ] GREEN same test, reopen lifecycle/font/assets/export and parent/eval denial; run existing npm suite and native browser matrix.
-- [ ] Author trace review and fixed-source application commit.
+- [x] Add real PNG upload and image decode checks to existing preview browser test; observe RED with original sandbox and blob error. Add equivalent native API/browser regression.
+- [x] Create preview asset URLs inside its own opaque document, embed each resource once through existing M.toBase64; remove parent preview URL leases and inaccessible parent onload; include app.js in existing cache identity.
+- [x] GREEN same test, reopen lifecycle/font/assets/export and parent/eval denial; run existing npm suite and native browser matrix.
+- [x] Author trace review and fixed-source application commit.
 
 ## Task2 — bounded owner successor and handoff
 
 Files: new studio_preview_patch.py/build_studio_preview_patch.py and focused operator tests; infra CI job; context/runtime receipt/runbook.
 
-- [ ] Extend only qualified source-only mechanics, baseline901,2changed/0added,653files/108XMLDB tables,0200. Require active current CSP journal; preserve all prior journals/worker/config/metadata/locks; offline plan/check/apply/recover.
-- [ ] Actual1-file PHP lint, UID33, interruption after first write, drift, rollback and cache purge tests; exact app/tool pins.
-- [ ] Relevant source/native/CI qualification, deterministic archive=CI=saved-retained bytes; update context/PR114 and provide direct archive/commands. Owner installation stays separate.
+- [x] Extend only qualified source-only mechanics, baseline901,2changed/0added,653files/108XMLDB tables,0200. Require active current CSP journal; preserve all prior journals/worker/config/metadata/locks; offline plan/check/apply/recover.
+- [x] Actual1-file PHP lint, UID33, interruption after first write, drift, rollback and cache purge tests; exact app/tool pins.
+- [x] Relevant source/native/CI qualification, deterministic archive=CI=saved-retained bytes; update context/PR114 and provide direct archive/commands. Owner installation stays separate.

@@ -1,12 +1,13 @@
 schema_version: 2
 updated_at: '2026-11-06'
 project: USTAR Academy
-stage: studio_preview_assets_qualification
-stage_label: Isolated Studio preview assets fix; qualification in progress
-current_activity: Owner confirms route hiding, then reports Preview images unavailable with parent blob URL errors.
-  Local real Chromium RED reproduced with a valid PNG and font; child-owned resources pass image/font/reopen,
-  repeated asset size and literal lesson tests. Exact deployed901 profile still requires guarded owner check;
-  last full terminal deployment receipt remains719. Native/API and immutable successor qualification in progress.
+stage: studio_preview_qualified_owner_deploy_pending
+stage_label: Studio preview assets qualified; owner installation pending
+current_activity: App2cb233d9/tool ed292313 qualified on exacted292313:4CI and11FullRC PASS.
+  Real PNG/font preview and API/fresh reload pass on Moodle5.1.1/5.1.8 with unchanged CSP/sandbox.
+  Source1649tests/274conditional skips each PHP8.2/8.3, native430/1988 each, Connect172/875,
+  operator16actualPHP/UID33 PASS. Archivecf8c9b0b is CI/retained byte-identical.
+  Owner confirms points hide but exact901 deployment remains unverified; last full terminal receipt719.
 entrypoint: START_HERE.md
 next_task: STUDIO-PREVIEW-01
 ready_tasks: []
@@ -398,7 +399,7 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   application_commit: 2cb233d994c0e4588973cfce0577c9d466027ce2
-  status: qualification_in_progress
+  status: qualified_owner_deploy_pending
   branch: feat/library-unification-20261102
   deployed: false
   local_ustar_version: 2026110200
@@ -414,3 +415,9 @@ development_candidate:
   progress: context/reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md
   owner_receipt: null
   execution_authorized: true
+  tool_commit: ed292313602f07a176da5eb6e44d5a1e5ff5b65d
+  qualification: context/runtime/studio_preview_qualification_20261106.json
+  runbook: docs/STUDIO_PREVIEW_INSTALL_RU.md
+  archive_sha256: cf8c9b0b0f5fd6217cda3ed699fa8ea8f256e28c58764d7acb7fd87b7e1e5fb7
+  retained_copy_verified: true
+  qualified_commit: ed292313602f07a176da5eb6e44d5a1e5ff5b65d

@@ -1,0 +1,201 @@
+{
+  "schema": 1,
+  "date": "2026-11-02",
+  "task": "LIBRARY-01",
+  "status": "qualified_owner_deploy_pending",
+  "deployed": false,
+  "merged": false,
+  "scope": "Unified Library: personal materials, product reference, supplemental marketplace, scoped grants and optional checks",
+  "input_archives": {
+    "copies": 3,
+    "identical_inner_tar": true,
+    "sha256": "752883b26619e71b51e1be3835b7bdf881f2e67a9f88eb79e486cef3921ca97d",
+    "regular_files": 40
+  },
+  "application_commit": "26bd4fe05a7e1c81bdb4b83992c16d4b4c0a0971",
+  "tool_commit": "6ee7112318b672779f84a801e27a8da0c2f94898",
+  "qualified_commit": "6ee7112318b672779f84a801e27a8da0c2f94898",
+  "pr": 114,
+  "accepted_deployment_baseline": {
+    "application_commit": "2150affe7e2964a1056468cce0e438f9e2f91dcb",
+    "local_ustar": 2026110100,
+    "theme_ustar": 2026102700,
+    "owner_receipt": "context/runtime/scorm_tracking_owner_20261102.json"
+  },
+  "target": {
+    "local_ustar": 2026110200,
+    "theme_ustar": 2026110200,
+    "files": 649,
+    "changed_payload_files": 55,
+    "tables": 108
+  },
+  "worker": {
+    "changed": false,
+    "preserved_commit": "267e55874eb8f6c36259d748f28a2c636adc9810"
+  },
+  "workflows": [
+    {
+      "name": "USTAR console",
+      "id": 41478732059,
+      "conclusion": "success",
+      "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/41478732059"
+    },
+    {
+      "name": "USTAR infrastructure verification",
+      "id": 41478731896,
+      "conclusion": "success",
+      "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/41478731896"
+    },
+    {
+      "name": "USTAR context integrity",
+      "id": 41478731926,
+      "conclusion": "success",
+      "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/41478731926"
+    },
+    {
+      "name": "USTAR review gate",
+      "id": 41478732043,
+      "conclusion": "success",
+      "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/41478732043"
+    }
+  ],
+  "full_rc_jobs": [
+    {
+      "id": 125391110164,
+      "name": "source (8.2)",
+      "conclusion": "success"
+    },
+    {
+      "id": 125391110598,
+      "name": "rollback",
+      "conclusion": "success"
+    },
+    {
+      "id": 125391110691,
+      "name": "source (8.3)",
+      "conclusion": "success"
+    },
+    {
+      "id": 125396867894,
+      "name": "connect-db",
+      "conclusion": "success"
+    },
+    {
+      "id": 125396867988,
+      "name": "prepare-rc",
+      "conclusion": "success"
+    },
+    {
+      "id": 125397099706,
+      "name": "moodle-db (historical, tests/stage/compose.yaml, moodle-db-evidence)",
+      "conclusion": "success"
+    },
+    {
+      "id": 125397099838,
+      "name": "moodle-db (patch-518, tests/stage/patch-compose.yaml, moodle-patch-evidence)",
+      "conclusion": "success"
+    },
+    {
+      "id": 125402436450,
+      "name": "gate",
+      "conclusion": "success"
+    }
+  ],
+  "verification": {
+    "source_php": [
+      "8.2",
+      "8.3"
+    ],
+    "python_tests_per_matrix": 1548,
+    "python_skipped_per_matrix": 266,
+    "php_regression_contracts": 12,
+    "native_moodle_versions": [
+      "5.1.1",
+      "5.1.8"
+    ],
+    "native_tests_per_version": 415,
+    "native_assertions_per_version": 1916,
+    "native_library_tests_per_version": 26,
+    "native_library_errors": 0,
+    "postgresql": 16,
+    "exact_accepted_1100_to_0200_upgrade_repeat": true,
+    "fresh_upgrade_schema_parity": true,
+    "accepted_legacy_index_omissions_preserved": true,
+    "real_sql_mutations_denied": [
+      "changed_grant_uid",
+      "unexpected_index",
+      "task_disabled",
+      "missing_idempotency_index"
+    ],
+    "bootstrap_repeat_byte_identical": true,
+    "authenticated_library_http": "tabs/manage/check render; GET does not create attempt; legacy redirects",
+    "browser": {
+      "views": 36,
+      "widths": [
+        390,
+        768,
+        1440
+      ],
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "production_templates_tokens": true,
+      "synthetic_fixture_data": true,
+      "keyboard": true,
+      "touch": true,
+      "quote_fields": true,
+      "compact_editor_fields": true
+    },
+    "visual_inspection": [
+      "catalog desktop light",
+      "offer mobile dark",
+      "mine mobile light",
+      "management desktop dark and mobile light"
+    ],
+    "installer_root_uid33_metadata_and_forward_recovery_tests": 9,
+    "installer_contract_and_determinism_tests": 3,
+    "private_code_database_pair": true,
+    "provider_calls": false,
+    "production_ssh": false
+  },
+  "archive": {
+    "file_name": "ustar-library-6ee71123.tar.gz",
+    "bytes": 381392,
+    "sha256": "db2f51a1b8b95c4a3cf7a2ef4fb3cf6fef559927131b4dfdb93dda67eaab770f",
+    "script_sha256": "653147b3d3cd760b46be752b621984b70bcd4d4f681c1fa3b11a77fbb49d2386",
+    "members": [
+      "INSTALL.json",
+      "SHA256SUMS",
+      "update.py"
+    ],
+    "regular_private_members": true,
+    "ci_artifact_id": 13159215434,
+    "ci_zip_sha256": "52260673945d5d58a8bf90f3d2385690d001a8967b7e9a363862b4cd06237487",
+    "zip_crc": "PASS",
+    "ci_byte_identical": true,
+    "saved_copy_byte_identical": true,
+    "saved_copy_sha256": "db2f51a1b8b95c4a3cf7a2ef4fb3cf6fef559927131b4dfdb93dda67eaab770f"
+  },
+  "defaults": {
+    "library_navigation": true,
+    "store_enabled": false,
+    "price_min": 1,
+    "price_max": 25,
+    "purchases_permanent": true,
+    "optional_checks_reward": "mark_only",
+    "source_audience_unchanged": true
+  },
+  "review": {
+    "method": "Author review, explicit RED/GREEN contracts, native Moodle/PostgreSQL and browser CI",
+    "coderabbit_run": false,
+    "subagents_used": false
+  },
+  "limits": [
+    "Production remains owner-accepted1100 until installation",
+    "No new whole-host audit or ordinary-workday performance measurements",
+    "Owner acceptance of Library on real business accounts is pending",
+    "No merge, production deployment, external publication or coin emission"
+  ],
+  "next": "Owner installs the qualified archive; verify Library with real account. PERF-01 passive measurement follows."
+}

@@ -24,9 +24,84 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  studio-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runtime: historical
+            compose: tests/stage/compose.yaml
+          - runtime: patch-518
+            compose: tests/stage/patch-compose.yaml
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: npm ci --prefix tests/mobile
+      - run: cd tests/mobile && npx playwright install --with-deps chromium
+      - name: Build isolated native browser runtime
+        run: docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml build --pull
+      - name: Start disposable native site with localhost-only browser port
+        run: |
+          mkdir -p artifacts
+          rm -f artifacts/studio-browser-ready artifacts/studio-browser-done
+          id=$(docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml run --rm -d --publish 127.0.0.1:8087:8087 --entrypoint bash runner /source/tests/stage/route_editor_native.sh studio-browser)
+          printf '%s\n' "$id" > artifacts/studio-browser-container-id
+          for attempt in $(seq 1 120); do
+            test ! -e artifacts/studio-browser-ready || exit 0
+            test "$(docker inspect -f '{{.State.Running}}' "$id")" = true
+            sleep 2
+          done
+          exit 1
+      - name: Native Studio CSP and save regression
+        run: |
+          trap 'touch artifacts/studio-browser-done' EXIT
+          node tests/stage/course_studio_native_browser.cjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: studio-native-browser-${{ matrix.runtime }}
+          path: artifacts/
+      - name: Dispose only isolated browser site
+        if: always()
+        run: |
+          if test -f artifacts/studio-browser-container-id; then
+            id=$(cat artifacts/studio-browser-container-id)
+            [[ $id =~ ^[a-f0-9]{12,64}$ ]] && docker rm -f "$id" || true
+          fi
+          docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml down --volumes
+
+  route-editor-http:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Build existing isolated Moodle 5.1.8 runtime
+        run: docker compose -f tests/stage/patch-compose.yaml build --pull
+      - name: Exercise real editor HTTP on fresh synthetic PostgreSQL site
+        run: docker compose -f tests/stage/patch-compose.yaml run --rm --entrypoint bash runner /source/tests/stage/route_editor_native.sh
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: route-editor-native-http
+          path: artifacts/
+      - name: Dispose only isolated stage
+        if: always()
+        run: docker compose -f tests/stage/patch-compose.yaml down --volumes
+
   source:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    # Full regression suite plus cold-runner browser dependencies; every check remains required.
+    timeout-minutes: 25
     outputs:
       connect_db: ${{ steps.connect-scope.outputs.connect_db }}
     strategy:
@@ -50,6 +125,16 @@ jobs:
           extensions: pdo_sqlite
           coverage: none
       - run: python scripts/ci/source_checks.py
+      - name: Route points launch the authorised SCORM player directly
+        run: php tests/release_20260912/scorm_route_launch.php
+      - name: Authorised SCORM learners receive tracking without overriding denials or enrolment dates
+        run: php tests/release_20260912/scorm_tracking.php
+      - name: Route review policy keeps completion and server access separate
+        run: php tests/release_20260912/route_access_policy.php
+      - name: Removing an automatic point never revives its closed material URL
+        run: php tests/release_20260912/route_access_history.php
+      - name: Imported SCORM completion preserves Moodle announcements and all other requirements
+        run: php tests/release_20260912/scorm_import_completion.php
       - name: Determine whether Connect schema or service requires native DB verification
         id: connect-scope
         env:
@@ -65,6 +150,15 @@ jobs:
           fi
       - run: pip install -r tests/stage/python-requirements.txt
       - run: python -m unittest discover -s tests/r16 -v
+      - name: Library business refusal and snapshot regressions
+        run: |
+          php tests/release_20260912/library_access_contract.php
+          php tests/release_20260912/library_store_contract.php
+          php tests/release_20260912/library_assessment_contract.php
+          php tests/release_20260912/library_generator_contract.php
+          php tests/release_20260912/library_marketplace_contract.php
+          php tests/release_20260912/library_discovery_contract.php
+          php -d zend.assertions=1 -d assert.exception=1 tests/release_20260912/route_editor_form_contract.php
       - name: Verify production paired copy with exact reported Unix owners
         if: matrix.php == '8.3'
         run: >-
@@ -78,6 +172,7 @@ jobs:
           tests.r16.test_connect_academy_installer.Transaction.test_real_uid33_and_root_gid_activation_and_restore -v
       - run: php tests/release_20260912/route_flow.php
       - run: php tests/release_20260912/career.php
+      - run: php tests/release_20260912/course_studio_archived_contract.php
       - run: php tests/release_20260912/course_studio_source.php
       - run: php tests/release_20260912/course_studio_native_package.php
       - run: php tests/release_20260912/material_catalog.php
@@ -89,6 +184,14 @@ jobs:
       - run: npm ci --prefix tests/mobile
       - run: cd tests/mobile && npx playwright install --with-deps chromium
       - run: npm test --prefix tests/mobile
+      - name: Library browser evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: library-browser-${{ matrix.php }}
+          path: artifacts/library-browser/
+          if-no-files-found: ignore
+      - run: node tests/release_20260912/route_editor_browser.cjs
       - run: node tests/release_20260912/course_studio_browser.cjs
       - name: Studio viewport resize handoff preserves compact canvas height
         run: USTAR_STUDIO_DELAY_RESIZE=1 node tests/release_20260912/course_studio_browser.cjs
@@ -142,6 +245,10 @@ jobs:
           git archive 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/telegram-presentation-target
           python3 tests/stage/con02_update_native.py prepare
           python3 tests/stage/connect_role_bot_native.py --prepare
+          mkdir -p .stage-input/library-baseline
+          git archive 2150affe7e2964a1056468cce0e438f9e2f91dcb moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/library-baseline
+          python3 tests/stage/route_access_native.py --prepare
+          python3 tests/stage/library_native.py --prepare
           python3 - <<'PYCONFIG'
           import importlib.util
           from pathlib import Path
@@ -218,6 +325,10 @@ jobs:
           python3 tests/stage/perf_query_legacy_native.py --prepare
           python3 tests/stage/feed_media_legacy_native.py --prepare
           python3 tests/stage/connect_role_bot_native.py --prepare
+          mkdir -p .stage-input/library-baseline
+          git archive 2150affe7e2964a1056468cce0e438f9e2f91dcb moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/library-baseline
+          python3 tests/stage/route_access_native.py --prepare
+          python3 tests/stage/library_native.py --prepare
           mkdir -p artifacts
           cp .stage-input/baseline.json artifacts/baseline.json
       - name: Build isolated test runtime
@@ -283,11 +394,13 @@ jobs:
 
   gate:
     if: ${{ always() && ((github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'full-rc'))) }}
-    needs: [source, rollback, prepare-rc, moodle-db, connect-db]
+    needs: [studio-browser, route-editor-http, source, rollback, prepare-rc, moodle-db, connect-db]
     runs-on: ubuntu-24.04
     steps:
       - name: Require every check to pass
         env:
+          STUDIO_BROWSER: ${{ needs.studio-browser.result }}
+          ROUTE_EDITOR_HTTP: ${{ needs.route-editor-http.result }}
           SOURCE: ${{ needs.source.result }}
           MOODLE: ${{ needs.moodle-db.result }}
           ROLLBACK: ${{ needs.rollback.result }}
@@ -295,6 +408,8 @@ jobs:
           CONNECT: ${{ needs.connect-db.result }}
           CONNECT_REQUIRED: ${{ needs.source.outputs.connect_db }}
         run: |
+          test "$STUDIO_BROWSER" = success
+          test "$ROUTE_EDITOR_HTTP" = success
           test "$SOURCE" = success
           test "$MOODLE" = success
           test "$ROLLBACK" = success

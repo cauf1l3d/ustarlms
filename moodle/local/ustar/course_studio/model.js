@@ -28,7 +28,132 @@ async function buildFiles(course){const c=ensure(normalizeCourse(course));if(!ru
 async function exportScorm(c){const z=new root.JSZip();for(const[p,b]of Object.entries(await buildFiles(c)))z.file(p,b);return z.generateAsync({type:'uint8array',compression:'DEFLATE',compressionOptions:{level:3}})}
 function parseDataJS(s){const m=String(s).trim().match(/^window\.COURSE\s*=\s*([\s\S]*?);?$/);if(!m)throw Error('Не найден поддерживаемый data.js курса РЦ');try{return JSON.parse(m[1].replace(/;\s*$/,''))}catch(_){throw Error('Формат данных SCORM не поддерживается. Откройте проект или архив курса РЦ.')}}
 function mime(path){const e=path.split('.').pop().toLowerCase();return({png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',webp:'image/webp',gif:'image/gif',woff2:'font/woff2',woff:'font/woff',ttf:'font/ttf',otf:'font/otf'})[e]||'application/octet-stream'}
-async function importScorm(bytes,depth=0){if(bytes.byteLength>300*1024*1024)throw Error('Архив превышает 300 МБ');const z=await root.JSZip.loadAsync(bytes);const names=Object.keys(z.files).filter(n=>!z.files[n].dir);if(names.length>4000)throw Error('Слишком много файлов в архиве');for(const n of names){const original=z.files[n].unsafeOriginalName||n;if(original!==n||n.includes('..')||n.startsWith('/')||n.includes('\\'))throw Error('Небезопасный путь в архиве')}const bundles=names.filter(n=>/^scorm\/[^/]+\.zip$/i.test(n));if(bundles.length&&depth===0){const all=[];for(const n of bundles)all.push(...await importScorm(await z.file(n).async('uint8array'),1));return all}const meta=z.file('editor.json');let c,assetTypes={};if(meta){let p;try{p=JSON.parse(await meta.async('string'))}catch(_){throw Error('Повреждены данные редактора в архиве')}if(p.format!=='ustar-rc-embedded-project'||p.schemaVersion!==1)throw Error('Неподдерживаемая версия проекта в SCORM');c=normalizeCourse(p.course);assetTypes=p.assets||{}}else{const f=z.file('data.js');if(!f)throw Error('В архиве нет редактируемого проекта USTAR. Импортируйте готовый SCORM через Материалы.');c=normalizeCourse({data:parseDataJS(await f.async('string'))})}let total=0;for(const name of names.filter(validPath)){const b=await z.file(name).async('uint8array');total+=b.length;if(total>150*1024*1024)throw Error('Ресурсы курса превышают 150 МБ');c.assets[name]={type:assetTypes[name]?.type||mime(name),data:toBase64(b)}}ensure(c);return[c]}
+// A static SCORM is converted to normal lesson screens; source scripts are never executed.
+async function importHtmlScorm(zip,names,read){
+ if(!root.DOMParser)throw Error('Для импорта HTML-курса откройте Студию в браузере.');
+ const parse=(s,type='text/html')=>new root.DOMParser().parseFromString(s,type);
+ const manifests=names.filter(n=>/(^|\/)imsmanifest\.xml$/i.test(n));
+ if(manifests.length!==1)throw Error('Нужен один SCORM с imsmanifest.xml. Откройте отдельный архив курса.');
+ const manifestName=manifests[0],xml=dec.decode(await read(manifestName,2*1024*1024));
+ if(/<!DOCTYPE|<!ENTITY/i.test(xml))throw Error('Манифест SCORM содержит неподдерживаемые объявления XML.');
+ const manifest=parse(xml,'application/xml');
+ if(manifest.querySelector('parsererror')||manifest.doctype)throw Error('Повреждён манифест SCORM.');
+ const elements=(node,tag)=>Array.from(node.getElementsByTagNameNS('*',tag));
+ const direct=(node,tag)=>Array.from(node.children||[]).find(n=>n.localName===tag);
+ const resolve=(base,raw)=>{
+  raw=String(raw||'').trim();
+  if(!raw||/[\x00-\x1f\\]/.test(raw)||/^(?:[a-z][a-z0-9+.-]*:|\/)/i.test(raw))throw Error('Небезопасный путь ресурса SCORM.');
+  let path;try{path=decodeURIComponent(raw.split(/[?#]/,1)[0]);}catch(_){throw Error('Повреждён путь ресурса SCORM.');}
+  if(/[\\\x00-\x1f]/.test(path)||path.startsWith('/'))throw Error('Небезопасный путь ресурса SCORM.');
+  const parts=base.split('/').slice(0,-1);
+  for(const part of path.split('/')){if(!part||part==='.')continue;if(part==='..'){if(!parts.length)throw Error('Ресурс выходит за пределы архива.');parts.pop();}else parts.push(part);}
+  const out=parts.join('/');if(!names.includes(out))throw Error('В архиве отсутствует файл ресурса: '+out);return out;
+ };
+ const resources=new Map(elements(manifest,'resource').map(r=>[r.getAttribute('identifier'),r]));
+ const orgs=elements(manifest,'organizations')[0],preferred=orgs?.getAttribute('default');
+ const org=elements(manifest,'organization').find(o=>o.getAttribute('identifier')===preferred)||elements(manifest,'organization')[0];
+ const queue=[],seen=new Set();
+ const add=(ref,title)=>{const resource=resources.get(ref),href=resource?.getAttribute('href');if(!href)return;const file=resolve(manifestName,href);if(!/\.html?$/i.test(file))throw Error('Ресурс SCORM не содержит HTML для редактирования.');if(!seen.has(file)){seen.add(file);queue.push({file,title});}};
+ if(org)for(const item of elements(org,'item'))add(item.getAttribute('identifierref'),direct(item,'title')?.textContent?.trim()||'');
+ if(!queue.length)for(const r of resources.values())add(r.getAttribute('identifier'),'');
+ if(!queue.length)throw Error('В манифесте SCORM нет HTML-материала.');
+ const title=(direct(org||manifest.documentElement,'title')?.textContent||'').trim()||'Импорт SCORM';
+ const code='SCORM-'+uid().replace(/[^a-zA-Z0-9]/g,'').slice(0,28),course=normalizeCourse({data:{code,title:title.slice(0,255),version:'1.0',pages:[]}});
+ const allowed=new Set('p div span section article button img br li figure figcaption h1 h2 h3 h4 h5 h6 details summary strong b i em u s strike del sub sup ul ol a blockquote pre code table thead tbody tfoot tr th td hr font mark small'.split(' '));
+ const properties=new Set(('color background background-color font font-size font-family font-weight font-style line-height text-align text-decoration text-decoration-line text-indent white-space vertical-align width max-width min-width height max-height min-height margin margin-left margin-right margin-top margin-bottom padding padding-left padding-right padding-top padding-bottom border border-left border-right border-top border-bottom border-color border-width border-style border-radius display object-fit float clear box-sizing letter-spacing word-break flex flex-basis flex-grow flex-shrink').split(' '));
+ let assetIndex=0,totalText=0;const assetPaths=new Map();
+ function cssRules(doc){
+  const vars={},rules=[];let order=0;
+  for(const style of doc.querySelectorAll('style')){
+   const css=style.textContent.replace(/\/\*[\s\S]*?\*\//g,'');if(css.length>500000)throw Error('Стили SCORM слишком велики.');
+   let start=0;
+   while(start<css.length){let open=css.indexOf('{',start);if(open<0)break;let depth=1,end=open+1,quote='';
+    for(;end<css.length&&depth;end++){const ch=css[end];if(quote){if(ch===quote&&css[end-1]!=='\\')quote='';continue;}if(ch==='"'||ch==="'"){quote=ch;continue;}if(ch==='{')depth++;if(ch==='}')depth--;}
+    if(depth)break;const selector=css.slice(start,open).trim(),body=css.slice(open+1,end-1);start=end;
+    if(selector.startsWith('@')||/[{}\\<>@]/.test(selector))continue;
+    if(selector.split(',').some(s=>s.trim()===':root'))for(const m of body.matchAll(/(--[\w-]+)\s*:\s*([^;{}]+)/g))vars[m[1]]=m[2].trim();
+    for(const sel of selector.split(',')){const s=sel.trim();if(!s||s===':root'||s.length>300)continue;const ids=(s.match(/#[\w-]+/g)||[]).length,classes=(s.match(/[.\[:][\w-]+/g)||[]).length;rules.push({selector:s,body,score:ids*10000+classes*100+order++/10000});}
+   }
+  }
+  if(rules.length>2000)throw Error('Слишком много правил оформления SCORM.');
+  return {vars,rules:rules.sort((a,b)=>a.score-b.score)};
+ }
+ function declarations(text,vars){const out={};for(const rule of text.split(';')){const colon=rule.indexOf(':');if(colon<0)continue;const key=rule.slice(0,colon).trim().toLowerCase();let value=rule.slice(colon+1).trim().replace(/\s*!important\s*$/i,'');if(!properties.has(key))continue;
+  for(let i=0;i<5&&value.includes('var(');i++)value=value.replace(/var\(\s*(--[\w-]+)\s*(?:,\s*([^()]+))?\)/g,(_,name,fallback)=>vars[name]??fallback??'');
+  if(!value||value.includes('var(')||/[\\<>@{}\x00-\x1f]|url|expression|behavior|binding|javascript/i.test(value))continue;
+  if(key==='display'&&value==='none')continue;out[key]=value;
+ }return out;}
+ async function image(src,base){
+  let bytes,type,key;
+  const match=String(src).match(/^data:(image\/(?:png|jpeg|gif|webp));base64,([A-Za-z0-9+/=\r\n]+)$/);
+  if(match){key=src;if(src.length>35*1024*1024)throw Error('Изображение SCORM слишком велико.');bytes=toBytes(match[2].replace(/[\r\n]/g,''));type=match[1];}
+  else{key=resolve(base,src);if(assetPaths.has(key))return assetPaths.get(key);bytes=await read(key,25*1024*1024);type=mime(key);}
+  if(assetPaths.has(key))return assetPaths.get(key);
+  if(!['image/png','image/jpeg','image/gif','image/webp'].includes(type)||!bytes.length)throw Error('Изображение SCORM не поддерживается.');
+  const ext={ 'image/png':'png','image/jpeg':'jpg','image/gif':'gif','image/webp':'webp'}[type];
+  const path='assets/scorm-image-'+(++assetIndex)+'.'+ext;course.assets[path]={type,data:toBase64(bytes)};assetPaths.set(key,path);return path;
+ }
+ for(const resource of queue){
+  const doc=parse(dec.decode(await read(resource.file,5*1024*1024))),css=cssRules(doc);
+  if(doc.querySelectorAll('*').length>20000)throw Error('Слишком сложная HTML-страница SCORM.');
+  const sections=Array.from(doc.querySelectorAll('section.page,article.page,div.page,section[data-page]')).filter(el=>!el.parentElement?.closest('section.page,article.page,div.page,section[data-page]'));
+  let candidates=sections.length?sections:[doc.querySelector('main')||doc.body];
+  for(const original of candidates){
+   if(!original)continue;
+   if(original.querySelector('video,audio,canvas,iframe,object,embed,form,input,textarea,select'))throw Error('В SCORM есть интерактивный элемент без редактируемого исходника. Сохраните исходный проект конструктора.');
+   const clone=original.cloneNode(true),sourceNodes=[original,...original.querySelectorAll('*')],targetNodes=[clone,...clone.querySelectorAll('*')];
+   for(let i=0;i<sourceNodes.length;i++){
+    const source=sourceNodes[i],target=targetNodes[i],tag=source.localName?.toLowerCase();
+    if(!allowed.has(tag)){
+     if(['script','style','link','meta','base','svg','nav','header','footer'].includes(tag))target.remove();else target.replaceWith(...target.childNodes);continue;
+    }
+    const style={};for(const rule of css.rules){try{if(source.matches(rule.selector))Object.assign(style,declarations(rule.body,css.vars));}catch(_){}}
+    Object.assign(style,declarations(source.getAttribute('style')||'',css.vars));
+    for(const attr of [...target.attributes])target.removeAttribute(attr.name);
+    const classes=(source.getAttribute('class')||'').replace(/[^a-zA-Z0-9_ -]/g,'').slice(0,200);if(classes)target.setAttribute('class',classes);
+    if(Object.keys(style).length)target.setAttribute('style',Object.entries(style).map(([k,v])=>k+':'+v).join(';'));
+    for(const name of ['colspan','rowspan','width','height','start']){const value=source.getAttribute(name);if(/^\d{1,4}$/.test(value||'')&&+value>0)target.setAttribute(name,value);}
+    if(tag==='img'){target.setAttribute('src',await image(source.getAttribute('src')||'',resource.file));target.setAttribute('alt',source.getAttribute('alt')||'');target.setAttribute('loading','lazy');}
+    if(tag==='a'){const href=(source.getAttribute('href')||'').trim();if(/^(https?:\/\/|mailto:|tel:|#)[^\x00-\x20]*$/i.test(href)){target.setAttribute('href',href);target.setAttribute('rel','noopener noreferrer');}}
+    if(tag==='details'&&source.hasAttribute('open'))target.setAttribute('open','');
+   }
+   const heading=original.querySelector('h1,h2,h3,h4,h5,h6')?.textContent?.trim();
+   // Keep section contents editable; the Studio player supplies screen navigation.
+   const html=clone.innerHTML,total=enc.encode(html).length;totalText+=total;
+   if(total>2000000||totalText>5*1024*1024||course.data.pages.length>=500)throw Error('HTML-курс превышает размер проекта Студии.');
+   if(!clone.textContent.trim()&&!clone.querySelector('img'))throw Error('В SCORM нет редактируемого HTML-содержимого. Нужен исходный проект конструктора.');
+   course.data.pages.push({id:code+'-'+(course.data.pages.length+1),title:(heading||resource.title||'Экран '+(course.data.pages.length+1)).slice(0,500),kind:'lesson',chapter:'',html,source_text:'',sources:[]});
+  }
+ }
+ return ensure(course);
+}
+async function importScorm(bytes,depth=0,budget={bytes:0,files:0}){
+ if(bytes.byteLength>300*1024*1024||depth>3)throw Error('Архив слишком велик или содержит слишком много вложенных архивов.');
+ const z=await root.JSZip.loadAsync(bytes),names=Object.keys(z.files).filter(n=>!z.files[n].dir);
+ budget.files+=names.length;if(budget.files>4000)throw Error('Слишком много файлов в архиве');
+ let declared=0;
+ for(const n of names){const entry=z.files[n],original=entry.unsafeOriginalName||n;
+  if(original!==n||n.includes('..')||n.startsWith('/')||n.includes('\\')||/[\x00-\x1f]/.test(n))throw Error('Небезопасный путь в архиве');
+  const size=entry._data?.uncompressedSize;if(Number.isFinite(size)){if(size<0||size>200*1024*1024)throw Error('Ресурс архива слишком велик');declared+=size;}
+ }
+ if(declared>200*1024*1024)throw Error('Распакованный архив превышает200МБ');
+ const cache=new Map();
+ const read=async(name,limit=100*1024*1024)=>{const entry=z.file(name);if(!entry)throw Error('В архиве отсутствует файл ресурса: '+name);
+  if(entry._data?.uncompressedSize>limit)throw Error('Файл ресурса слишком велик: '+name);
+  if(!cache.has(name))cache.set(name,entry.async('uint8array').then(raw=>{budget.bytes+=raw.length;if(raw.length>limit||budget.bytes>200*1024*1024)throw Error('Распакованный архив превышает допустимый размер');return raw;}));
+  const raw=await cache.get(name);if(raw.length>limit)throw Error('Файл ресурса слишком велик: '+name);return raw;
+ };
+ const bundles=names.filter(n=>/^scorm\/[^/]+\.zip$/i.test(n));
+ if(bundles.length&&depth===0){const all=[];for(const n of bundles)all.push(...await importScorm(await read(n),depth+1,budget));return all;}
+ if(names.length===1&&/\.zip$/i.test(names[0]))return importScorm(await read(names[0]),depth+1,budget);
+ const manifests=names.filter(n=>/(^|\/)imsmanifest\.xml$/i.test(n)),prefix=manifests.length===1?manifests[0].slice(0,-'imsmanifest.xml'.length):'';
+ const meta=z.file(prefix+'editor.json');let c,assetTypes={};
+ if(meta){let p;try{p=JSON.parse(dec.decode(await read(prefix+'editor.json',5*1024*1024)));}catch(_){throw Error('Повреждены данные редактора в архиве');}
+  if(p.format!=='ustar-rc-embedded-project'||p.schemaVersion!==1)throw Error('Неподдерживаемая версия проекта в SCORM');c=normalizeCourse(p.course);assetTypes=p.assets||{};
+ }else{const f=z.file(prefix+'data.js'),source=f?dec.decode(await read(prefix+'data.js',5*1024*1024)):'';if(!/^\s*window\.COURSE\s*=/.test(source))return[await importHtmlScorm(z,names,read)];c=normalizeCourse({data:parseDataJS(source)})}
+ let total=0;for(const name of names.filter(n=>n.startsWith(prefix)&&validPath(n.slice(prefix.length)))){const logical=name.slice(prefix.length),b=await read(name,25*1024*1024);total+=b.length;if(total>150*1024*1024)throw Error('Ресурсы курса превышают150МБ');c.assets[logical]={type:assetTypes[logical]?.type||mime(logical),data:toBase64(b)}}
+ ensure(c);return[c];
+}
 function makeCopy(c,existing){const out=normalizeCourse(c),base=c.data.code.slice(0,45);let n=1;while(existing.includes(base+'-copy'+n))n++;out.data.code=base+'-copy'+n;out.data.title=c.data.title+' · копия '+n;out.data.pages.forEach((p,i)=>p.id=out.data.code+'-'+i+'-'+uid().slice(0,8));out.revision=0;return out}
 return{defaults,normalizeCourse,validateCourse,serializeProject,parseProject,snapshot,History,toBytes,toBase64,escapeHTML,refs,setRuntime,fontCSS,themeCSS,navigationTheme,buildFiles,exportScorm,importScorm,parseDataJS,makeCopy,uid,unsafeHTML};
 });

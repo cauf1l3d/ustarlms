@@ -18,7 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'sync') {
         $ownidentity = \local_ustar\structure::resolve_user((int)$USER->id);
         $ownpositionid = (string)($ownidentity['position']['id'] ?? '');
-        if ($ownpositionid !== '' && \local_ustar\employment::learning_allowed((int)$USER->id)) {
+        if ($ownpositionid !== '' && \local_ustar\employment::learning_allowed((int)$USER->id)
+                && empty(\local_ustar\adaptation_service::route_card((int)$USER->id,false)['blocked'])) {
             \local_ustar\route_model::for_user($ownpositionid, (int)$USER->id);
         }
         redirect(new moodle_url('/local/ustar/route.php'));
@@ -114,6 +115,8 @@ if ($adaptation && !empty($adaptation['blocked']) && !empty($route['ok'])) {
 
 $rewards = \local_ustar\route_rewards::summary((int)$USER->id);
 $data = [
+    'servernow' => time(),
+    'accesscommandurl' => (new moodle_url('/local/ustar/route_access.php'))->out(false),
     'sesskey' => sesskey(),
     'previewing' => $previewing,
     'continueerror' => optional_param('continueerror', 0, PARAM_BOOL),
@@ -148,6 +151,7 @@ $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Мой учебный маршрут | USTAR');
 $PAGE->set_heading('USTAR Academy');
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/route_v2.css'));
+$PAGE->requires->js(new moodle_url('/local/ustar/route_access.js', ['v'=>2026110100]));
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/forced_retraining.css'));
 
 $output = $PAGE->get_renderer('local_ustar');

@@ -195,6 +195,20 @@ SOURCE_ONLY = SOURCE_ONLY | {'feed_media_update', 'build_feed_media_update', 'wo
 SOURCE_ONLY = SOURCE_ONLY | {'connect_role_bot_update', 'build_connect_role_bot_update'}
 SOURCE_ONLY = SOURCE_ONLY | {'connect_bot_visual_update', 'build_connect_bot_visual_update', 'build_connect_card_font'}
 SOURCE_ONLY = SOURCE_ONLY | {'connect_bot_visual_successor', 'build_connect_bot_visual_successor'}
+SOURCE_ONLY = SOURCE_ONLY | {'route_scorm_patch', 'build_route_scorm_patch'}
+SOURCE_ONLY = SOURCE_ONLY | {'route_access_update', 'build_route_access_update'}
+SOURCE_ONLY = SOURCE_ONLY | {'route_review_finish'}
+SOURCE_ONLY = SOURCE_ONLY | {'scorm_tracking_patch', 'build_scorm_tracking_patch'}
+SOURCE_ONLY = SOURCE_ONLY | {'library_update', 'build_library_update'}
+SOURCE_ONLY = SOURCE_ONLY | {'library_navigation_patch', 'build_library_navigation_patch'}
+SOURCE_ONLY = SOURCE_ONLY | {'library_marketplace_patch', 'build_library_marketplace_patch'}
+SOURCE_ONLY = SOURCE_ONLY | {'studio_scorm_edit_patch', 'build_studio_scorm_edit_patch'}
+SOURCE_ONLY = SOURCE_ONLY | {'studio_scorm_edit_lint_patch', 'build_studio_scorm_edit_lint_patch'}
+SOURCE_ONLY = SOURCE_ONLY | {'library_discovery_patch', 'build_library_discovery_patch'}
+SOURCE_ONLY = SOURCE_ONLY | {'route_editor_patch', 'build_route_editor_patch'}
+SOURCE_ONLY = SOURCE_ONLY | {'studio_csp_patch', 'build_studio_csp_patch'}
+SOURCE_ONLY = SOURCE_ONLY | {'studio_preview_patch', 'build_studio_preview_patch'}
+SOURCE_ONLY = SOURCE_ONLY | {'library_management_patch', 'build_library_management_patch'}
 METADATA.update({'academy_https': ('Владелец HTTPS Академии',
                    'Исходники проверенных поставок',
                    'Справка об исходнике; конкретная версия и режим указаны в dated runtime-квитанции.',

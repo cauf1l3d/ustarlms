@@ -13,9 +13,36 @@ sources /source/.stage-input/role-bot-baseline/moodle
 USTAR_STAGE_PREFIX=botold_ php admin/cli/install_database.php --agree-license --adminpass='Fixture-Only-Password1!' \
     --adminemail=stage@example.invalid --fullname='USTAR frozen2803' --shortname=ustar-role-baseline > /artifacts/connect-role-bot-install2803.log 2>&1
 python3 /source/tests/stage/connect_role_bot_native.py --legacy-baseline
-sources /source/moodle
+sources /source/.stage-input/role-bot-candidate/moodle
 USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifacts/connect-role-bot-upgrade2900.log 2>&1
 python3 /source/tests/stage/connect_role_bot_native.py --after-upgrade
 USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifacts/connect-role-bot-repeat2900.log 2>&1
 python3 /source/tests/stage/connect_role_bot_native.py --after-repeat
-python3 /source/tests/stage/connect_role_bot_native.py --verify
+python3 /source/tests/stage/legacy_103_projection.py
+# Subsequent tests exercise the actual current candidate, not the historical overlay.
+sources /source/.stage-input/library-baseline/moodle
+
+# Exact2900 with the accepted legacy index pair upgrades to the current candidate twice.
+USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifacts/route-access-upgrade.log 2>&1
+USTAR_STAGE_PREFIX=botold_ php /source/tests/stage/schema_snapshot.php > /artifacts/route-access-upgraded.json
+USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifacts/route-access-repeat.log 2>&1
+USTAR_STAGE_PREFIX=botold_ php /source/tests/stage/schema_snapshot.php > /artifacts/route-access-repeat.json
+cmp /artifacts/route-access-upgraded.json /artifacts/route-access-repeat.json
+python3 /source/tests/stage/route_access_native.py --verify
+# The delivered successor starts from this exact accepted app1100 baseline.
+python3 -c 'import sys,json;sys.path[:0]=["/source/tests/stage","/source/scripts/infra"];from connect_role_bot_native import query;from connect_academy_installer import db_query;from pathlib import Path;Path("/artifacts/library-baseline-native.json").write_text(json.dumps(query(db_query("botold_"))))'
+sources /source/moodle
+USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifacts/library-upgrade.log 2>&1
+USTAR_STAGE_PREFIX=botold_ php /source/tests/stage/schema_snapshot.php > /artifacts/library-upgraded.json
+USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifacts/library-repeat.log 2>&1
+USTAR_STAGE_PREFIX=botold_ php /source/tests/stage/schema_snapshot.php > /artifacts/library-repeat.json
+cmp /artifacts/library-upgraded.json /artifacts/library-repeat.json
+python3 /source/tests/stage/library_native.py --verify
+# Definitions precede offers; a second bootstrap pass must be a byte-for-byte no-op.
+for library_pass in first repeat; do
+    USTAR_STAGE_PREFIX=botold_ php public/local/ustar/cli/library_quick_sync.php > "/artifacts/library-sync-$library_pass.log" 2>&1
+    USTAR_STAGE_PREFIX=botold_ php public/local/ustar/cli/library_offer_seed.php > "/artifacts/library-seed-$library_pass.log" 2>&1
+    USTAR_STAGE_PREFIX=botold_ php -r 'define("CLI_SCRIPT",true); require "/stage/moodle/config.php"; $rows=[];foreach(["offer","grant","assessment","attempt"] as $suffix){$rows[$suffix]=array_values($DB->get_records("local_ustar_library_".$suffix,[],"id"));}echo json_encode($rows,JSON_UNESCAPED_UNICODE);' > "/artifacts/library-bootstrap-$library_pass.json"
+done
+cmp /artifacts/library-bootstrap-first.json /artifacts/library-bootstrap-repeat.json
+php admin/cli/purge_caches.php > /artifacts/library-purge.log 2>&1

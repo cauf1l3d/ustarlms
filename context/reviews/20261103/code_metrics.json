@@ -1,0 +1,212 @@
+{
+  "source_commit": "5e61c0d2566e8103d01121968d56852e26da99fa",
+  "worker_commit": "267e55874eb8f6c36259d748f28a2c636adc9810",
+  "tracked_files_by_scope": {
+    "moodle/local/ustar": 591,
+    "moodle/theme/ustar": 58,
+    "connect-worker": 38,
+    "server-console": 130,
+    "scripts/infra": 101
+  },
+  "largest_code_files": [
+    {
+      "path": "moodle/local/ustar/db/upgrade.php",
+      "lines": 5026,
+      "bytes": 194083,
+      "functions": 1
+    },
+    {
+      "path": "moodle/local/ustar/classes/route_model.php",
+      "lines": 3229,
+      "bytes": 128810,
+      "functions": 48
+    },
+    {
+      "path": "connect-worker/ustar_connect/_bot_font.py",
+      "lines": 1203,
+      "bytes": 125874,
+      "functions": 0
+    },
+    {
+      "path": "moodle/local/ustar/classes/adaptation_service.php",
+      "lines": 1437,
+      "bytes": 72387,
+      "functions": 59
+    },
+    {
+      "path": "moodle/local/ustar/classes/content_admin.php",
+      "lines": 2587,
+      "bytes": 67069,
+      "functions": 16
+    },
+    {
+      "path": "moodle/theme/ustar/scss/_product_parity.scss",
+      "lines": 1046,
+      "bytes": 54837,
+      "functions": 0
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/app.js",
+      "lines": 208,
+      "bytes": 54294,
+      "functions": 71
+    },
+    {
+      "path": "moodle/local/ustar/classes/assessment_lifecycle.php",
+      "lines": 1076,
+      "bytes": 54157,
+      "functions": 20
+    },
+    {
+      "path": "moodle/local/ustar/classes/catalog_mastery.php",
+      "lines": 2016,
+      "bytes": 54068,
+      "functions": 16
+    },
+    {
+      "path": "scripts/infra/server_facts.py",
+      "lines": 924,
+      "bytes": 51153,
+      "functions": 49
+    },
+    {
+      "path": "moodle/local/ustar/route_studio.php",
+      "lines": 1488,
+      "bytes": 51049,
+      "functions": 0
+    },
+    {
+      "path": "moodle/local/ustar/feed.php",
+      "lines": 792,
+      "bytes": 48679,
+      "functions": 0
+    },
+    {
+      "path": "scripts/infra/postgres_app_handoff.py",
+      "lines": 820,
+      "bytes": 45457,
+      "functions": 73
+    },
+    {
+      "path": "moodle/local/ustar/materials.php",
+      "lines": 1829,
+      "bytes": 43947,
+      "functions": 0
+    },
+    {
+      "path": "moodle/theme/ustar/scss/_materials.scss",
+      "lines": 2596,
+      "bytes": 43885,
+      "functions": 0
+    },
+    {
+      "path": "moodle/local/ustar/home.php",
+      "lines": 2194,
+      "bytes": 43514,
+      "functions": 1
+    },
+    {
+      "path": "moodle/local/ustar/classes/grade_promotion.php",
+      "lines": 885,
+      "bytes": 43187,
+      "functions": 28
+    },
+    {
+      "path": "scripts/infra/infra_one_pass.py",
+      "lines": 746,
+      "bytes": 42892,
+      "functions": 62
+    },
+    {
+      "path": "scripts/infra/production_patch_upgrade.py",
+      "lines": 793,
+      "bytes": 42879,
+      "functions": 47
+    },
+    {
+      "path": "moodle/local/ustar/classes/task_workspace/page.php",
+      "lines": 410,
+      "bytes": 40741,
+      "functions": 27
+    },
+    {
+      "path": "server-console/tools/build_knowledge.py",
+      "lines": 456,
+      "bytes": 40376,
+      "functions": 1
+    },
+    {
+      "path": "moodle/local/ustar/classes/material_studio.php",
+      "lines": 736,
+      "bytes": 40076,
+      "functions": 22
+    },
+    {
+      "path": "moodle/local/ustar/positions.php",
+      "lines": 1489,
+      "bytes": 38531,
+      "functions": 0
+    },
+    {
+      "path": "scripts/infra/production_restore.py",
+      "lines": 665,
+      "bytes": 38210,
+      "functions": 37
+    },
+    {
+      "path": "scripts/infra/host_cold_recovery.py",
+      "lines": 847,
+      "bytes": 38039,
+      "functions": 37
+    }
+  ],
+  "selected_god_candidates": [
+    {
+      "path": "moodle/local/ustar/classes/catalog_mastery.php",
+      "lines": 2016,
+      "bytes": 54068,
+      "functions": 16
+    },
+    {
+      "path": "moodle/local/ustar/classes/content_admin.php",
+      "lines": 2587,
+      "bytes": 67069,
+      "functions": 16
+    },
+    {
+      "path": "moodle/local/ustar/classes/route_model.php",
+      "lines": 3229,
+      "bytes": 128810,
+      "functions": 48
+    },
+    {
+      "path": "moodle/local/ustar/home.php",
+      "lines": 2194,
+      "bytes": 43514,
+      "functions": 1
+    }
+  ],
+  "privacy_examples": [
+    {
+      "table": "local_ustar_coin_ledger",
+      "exists_in_schema": true,
+      "literal_in_provider": false
+    },
+    {
+      "table": "local_ustar_learning_tasks",
+      "exists_in_schema": true,
+      "literal_in_provider": false
+    },
+    {
+      "table": "local_ustar_feed_posts",
+      "exists_in_schema": true,
+      "literal_in_provider": false
+    },
+    {
+      "table": "local_ustar_employment",
+      "exists_in_schema": true,
+      "literal_in_provider": false
+    }
+  ],
+  "limits": "size is a navigation metric, not a defect count; privacy absence reviewed against full provider and indirect branches; no coverage percentage inferred"
+}

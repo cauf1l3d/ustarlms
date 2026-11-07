@@ -1,0 +1,181 @@
+{
+  "schema": 1,
+  "date_msk": "2026-11-02",
+  "status": "owner_installed_SCORM_functional_accepted",
+  "source": "owner_console_and_readonly_CM104_diagnostic_in_current_dialogue",
+  "PR": 113,
+  "previous_application": "b9f170d89cead30021b0acbfba6ee681cec024f8",
+  "application_commit": "2150affe7e2964a1056468cce0e438f9e2f91dcb",
+  "versions_unchanged": {
+    "local_ustar": 2026110100,
+    "theme_ustar": 2026102700
+  },
+  "files": 614,
+  "tables": 104,
+  "owner_browser": {
+    "cmid": 104,
+    "helper": true,
+    "sameOrigin": true,
+    "http": 200,
+    "active": true,
+    "ready": false,
+    "closed": false,
+    "error": false
+  },
+  "owner_native": {
+    "CM": {
+      "id": 104,
+      "course": 29,
+      "instance": 20,
+      "completion": 2
+    },
+    "learner": {
+      "userid": 132,
+      "lastview": 1793610091,
+      "savetrack": false,
+      "completion": false,
+      "tracks": []
+    }
+  },
+  "confirmed_cause": "No effective mod/scorm:savetrack capability and no native result. The completed label inside the package is not native evidence.",
+  "not_proven": "Which assigned role or missing assignment causes the denial on the host; the fix preserves explicit role denials and fails clearly if standard Student itself cannot track.",
+  "rejected_as_current_explanation": "Old completion timestamp: there is no stored completion to be rejected in this owner output.",
+  "implementation": [
+    "The authorised native player launch checks savetrack before opening the SCO.",
+    "Missing positive learner access can receive only the existing Student role in that course through manual enrolment.",
+    "Explicit CAP_PREVENT/CAP_PROHIBIT, disabled/suspended/future/expired enrolment are not overridden.",
+    "Existing enrolment dates, native attempts, grades and one-time route rewards are preserved."
+  ],
+  "delivery": {
+    "operator": "scripts/infra/scorm_tracking_patch.py",
+    "builder": "scripts/infra/build_scorm_tracking_patch.py",
+    "runtime_files": [
+      "local/ustar/classes/scorm_route_launch.php",
+      "local/ustar/tests/scorm_route_launch_test.php"
+    ],
+    "source_only": true,
+    "schema_changed": false,
+    "database_restore": false,
+    "worker_changed": false,
+    "previous_finish_companion": "scripts/infra/route_review_finish.py",
+    "finish_sha256": "38fa5e373a319e8bba4bb0cee3e69d9e5930432bee9e85b6c9dca9ff2a4aa76d",
+    "companion_behavior": "The protected active predecessor receipt is historical; do not replay its cron backoff or worker states. Only publication_committed uses the qualified checker/recoverer. Overlay independently verifies all614 source files and current preserved controls.",
+    "recovery": "Source-only rollback; business learning and role assignments are never restored from a database copy.",
+    "archive": "ustar-scorm-tracking-b5ead9cb.tar.gz",
+    "archive_bytes": 110176,
+    "archive_sha256": "1a58fb0e713f0ac38324e22ca19011487b067b4d12e990181ff84d39100dc66f",
+    "update_sha256": "36bdbc4406fd1fdcd6f7b8f84bcce71f213236955813d75221acfc4ef829639a",
+    "members": [
+      "update.py",
+      "finish.py",
+      "INSTALL.json",
+      "SHA256SUMS"
+    ],
+    "archive_and_members_byte_identical_to_CI": true,
+    "downloaded_saved_archive_byte_identical": true,
+    "CI_artifact": 13131413457,
+    "CI_zip_crc": "PASS",
+    "operator_check": "new update.py --check, not the original f879 checker after overlay",
+    "archive_changed_after_owner_trace": false
+  },
+  "local_checks": {
+    "PHP_tracking": "RED missing savetrack -> GREEN scoped role/replay/denials/disabled instance",
+    "PHP_direct_launch": "PASS",
+    "operator_transactions": "11 current focused tests PASS; actual UID33 root-group case PASS in mandatory sudo CI",
+    "qualification_limit": "An earlier running local full suite imported the old test before the companion signature changed: one stale-import TypeError. Fresh focused suite and clean full CI checkout passed; runtime sources were not changed for that environment artifact.",
+    "diagnostic_wrapper": "PASS on unchanged delivered envelope: deliberately absent predecessor journal captured as FileNotFoundError/errno2/path; this fixture is not evidence of the production cause.",
+    "missing_runtime_lock_repair": "PASS: reproduce FileNotFoundError on final fixture lock, atomic create -> ready; actual held flock still returns managed_operation_busy_retry_later, inode and existing bytes preserved, zero service calls."
+  },
+  "native_CI": {
+    "head": "b5ead9cb705cf538fe2134f332cfe5ccd055aa06",
+    "all4CI": "success",
+    "context": {
+      "run": 41425685840,
+      "tests": 1533,
+      "skipped": 257
+    },
+    "infra": {
+      "run": 41425685648,
+      "tracking_job": 125211606328,
+      "contract_tests": 3,
+      "root_transactions": 8,
+      "actual_UID33_root_group": "PASS"
+    },
+    "console": {
+      "run": 41425685726,
+      "conclusion": "success"
+    },
+    "full_review": {
+      "run": 41425685784,
+      "final_gate_job": 125220691371,
+      "PHP82_source": "1533 tests /257 skips PASS",
+      "PHP83_source": "1533 tests /257 skips PASS",
+      "Moodle518": {
+        "job": 125216328447,
+        "tests": 389,
+        "assertions": 1824,
+        "conclusion": "success"
+      },
+      "historical_Moodle": {
+        "job": 125216328505,
+        "tests": 389,
+        "assertions": 1824,
+        "conclusion": "success"
+      },
+      "Connect": {
+        "job": 125216188725,
+        "tests": 172,
+        "assertions": 875,
+        "conclusion": "success"
+      },
+      "actual_PostgreSQL": "104 tables;2900->1100/repeat;fresh/accepted legacy parity;4 foreign schema refusals PASS"
+    }
+  },
+  "owner_new_archive_applied": true,
+  "owner_tracking_after_reopen": {
+    "basis": "owner functional statement, not fresh tracking SQL",
+    "courses_open_complete_and_transition_as_configured": true
+  },
+  "historical_finish_evidence": "context/runtime/route_review_recovery_20261102.json",
+  "previous_code_qualification": {
+    "head": "d70616c8b088bff108ae34f9e63fb3ff2a13bc5a",
+    "all4CI": "success",
+    "context": "1522 tests /249 skips; infra and both native suites passed; not owner acceptance"
+  },
+  "plan": "context/tasks/scorm_tracking_fix_20261102.md",
+  "owner_instructions": "inline_chat_only",
+  "agent_server_access": false,
+  "merge_authorized": false,
+  "tool_commit": "b5ead9cb705cf538fe2134f332cfe5ccd055aa06",
+  "qualification_commit": "b5ead9cb705cf538fe2134f332cfe5ccd055aa06",
+  "owner_retest": "Close the old player; reopen through the authorised route, finish SCORM again, and verify the next eligible point under its published advance policy. No previously unsaved result is credited.",
+  "owner_preflight": {
+    "archive_checksum": "PASS",
+    "member_checksums": [
+      "INSTALL.json: OK",
+      "finish.py: OK",
+      "update.py: OK"
+    ],
+    "mode": "--check",
+    "phase": "refused",
+    "reason": "scorm_tracking_operation_failed",
+    "upgrade_run": false,
+    "exception_type": "FileNotFoundError",
+    "cause_confirmed": true,
+    "next": "Owner atomically opens/creates only the missing runtime sentinel with native flags, without truncation/replacement, then reruns unchanged update.py --check. Upgrade only on ready.",
+    "errno": 2,
+    "path": "/run/ustar-connect-install.lock",
+    "frames": [
+      "<ustar-scorm-tracking/scorm_tracking_patch.py>:141:main",
+      "<qualified-route-scorm-overlay>:190:check",
+      "/usr/lib/python3.12/contextlib.py:137:__enter__",
+      "<qualified-route-scorm-overlay>:146:locks"
+    ],
+    "cause": "The last shared managed lock path is absent. Read-only check opens existing locks without O_CREAT; the native Connect installer creates this sentinel with O_CREAT|O_RDWR|O_NOFOLLOW mode0600. No source update has run.",
+    "why_file_disappeared": "Not confirmed; /run is runtime storage. Do not assert a reboot from this trace alone.",
+    "resolved_by_owner": true,
+    "resolution_receipt": "context/runtime/scorm_tracking_owner_20261102.json"
+  },
+  "owner_receipt": "context/runtime/scorm_tracking_owner_20261102.json",
+  "next_separate_issue": "context/runtime/studio_assessment_route_20261102.json"
+}

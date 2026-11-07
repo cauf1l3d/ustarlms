@@ -56,6 +56,11 @@ def main(args):
         role.c.require(not out.exists(),'fixture_input_exists')
         for name,raw in bundle.predecessor.payload.items():
             path=out/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
+        candidate=ROOT/'.stage-input/role-bot-candidate/moodle'
+        role.c.require(not candidate.exists(),'fixture_input_exists')
+        for name,raw in bundle.payload.items():
+            path=candidate/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
+
         print('CONNECT_ROLE_BOT_FIXED2803_INPUT=READY');return
     ref=json.loads(REFERENCE.read_text());role.validate_reference(ref)
     if args==['--legacy-baseline']:

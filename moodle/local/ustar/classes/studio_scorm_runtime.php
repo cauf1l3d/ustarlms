@@ -107,6 +107,13 @@ final class studio_scorm_runtime {
                 'completionview' => 0, 'completionexpected' => 0,
             ];
             $module = add_moduleinfo($module, $course);
+            // Moodle still owns course completion; new imports explicitly require their SCORM.
+            require_once($CFG->libdir . '/completionlib.php');
+            require_once($CFG->dirroot . '/completion/criteria/completion_criteria_activity.php');
+            $criteria = new \completion_criteria_activity();
+            $completionconfig = (object)['id'=>(int)$course->id,
+                'criteria_activity'=>[(int)$module->coursemodule=>1]];
+            $criteria->update_config($completionconfig);
             $parsed = $DB->get_record('scorm', ['id' => (int)$module->instance], 'id,version', MUST_EXIST);
             if ((string)$parsed->version !== 'SCORM_1.2'
                     || !$DB->record_exists_select('scorm_scoes',

@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "date_msk": "2026-11-03",
+  "order": "Update GitHub after owner marketplace acceptance and prepare leadership summary",
+  "period_confirmed_by_user": "October2026 plus1–3November2026",
+  "source_branch": "feat/library-unification-20261102",
+  "source_base": "1fcacdeefd5ac82a9bf44e7e3212818f3d6fcdc8",
+  "current_owner_receipt": "context/runtime/library_marketplace_owner_deploy_20261103.json",
+  "report": "docs/reports/USTAR_MONTHLY_UPDATE_202610_20261103_RU.md",
+  "source_evidence": "context/reviews/20261103/monthly_change_evidence.json",
+  "report_scope": {
+    "sections": 9,
+    "changes": 41,
+    "sources": 29,
+    "pages": 13,
+    "roles": 5,
+    "proposed_demo_minutes": 12
+  },
+  "verification": {
+    "context_and_secret_guards": "PASS",
+    "governance_unit_tests": "3/3 PASS",
+    "DOCX_ZIP": "PASS",
+    "PDF_content_all41_titles": "PASS",
+    "PDF_clickable_source_links": 29,
+    "PDF_page_bounds": "PASS",
+    "visual_review": "all13 pages inspected; final changed4 pages re-inspected, other9 PNGs byte-identical to inspected version",
+    "source_code_review": "Unmerged manifest deployment status now follows STATE and an active matching owner receipt; source integration remains distinct from installation."
+  },
+  "outputs": [
+    {
+      "file": "USTAR_Changes_October_November_2026.pdf",
+      "bytes": 241782,
+      "sha256": "3f81a9ccdaa6bbce317000f77df58d174c66aa19d71a4414ff883f6aa8e76658",
+      "library_file_id": "libfile_ab70ba487348819185f0ddfa47141dc1"
+    },
+    {
+      "file": "USTAR_Changes_October_November_2026.docx",
+      "bytes": 53110,
+      "sha256": "00099eb7d86328660f832db21ce3e083684dc6c81bfa56125bf69700fa6fe531",
+      "library_file_id": "libfile_bcc629a31324819185419786433f3bdd"
+    }
+  ],
+  "boundaries": {
+    "application_changed": false,
+    "schema_changed": false,
+    "worker_changed": false,
+    "production_commands_by_agent": false,
+    "merged": false,
+    "main_source_baseline_unchanged": true,
+    "all_roles_acceptance_claimed": false,
+    "whole_host_census_claimed": false
+  },
+  "next": "Detailed real-account role acceptance and PERF-01; public HTTPS/Mini App require leadership decision."
+}

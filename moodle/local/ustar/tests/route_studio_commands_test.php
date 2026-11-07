@@ -16,6 +16,77 @@ final class route_studio_commands_test extends \advanced_testcase {
         accounts::ensure_profile_field();
     }
 
+    public function test_visibility_changes_no_version_and_rejects_stale_or_foreign_requests(): void {
+        global $DB,$USER;
+        [$g,$u,$route,$point,$version]=$this->fixture();
+        $before=$DB->count_records('local_ustar_route_versions');
+        $command=['routeid'=>(int)$route->id,'pointid'=>(int)$point->id,'actorid'=>(int)$USER->id,
+            'expectedmodified'=>(int)$point->timemodified,'active'=>false];
+        $hidden=route_commands::set_point_active($command);
+        $this->assertSame(0,(int)$hidden->active);
+        $this->assertSame($before,$DB->count_records('local_ustar_route_versions'));
+        $command['expectedmodified']=(int)$hidden->timemodified;$command['active']=true;
+        $restored=route_commands::set_point_active($command);$this->assertSame(1,(int)$restored->active);
+        $this->assertSame($before,$DB->count_records('local_ustar_route_versions'));
+        $command['actorid']=(int)$u->id;
+        try { route_commands::set_point_active($command);$this->fail('Forged actor accepted'); }
+        catch (\required_capability_exception $e) { /* Actor rejection occurs before a transaction. */ }
+        $command['actorid']=(int)$USER->id;
+        // A Moodle delegated rollback poisons the enclosing test transaction: reject last.
+        $this->expectException(\moodle_exception::class);
+        route_commands::set_point_active($command);
+    }
+
+    public function test_editor_roundtrip_preserves_multiple_activities_and_mixed_required_flags(): void {
+        global $USER,$DB;
+        [$g,$u,$route,$point,$v]=$this->fixture();
+        $course=$this->getDataGenerator()->create_course();
+        $scorm=$this->getDataGenerator()->create_module('scorm',['course'=>$course->id]);
+        $quiz=$this->getDataGenerator()->create_module('quiz',['course'=>$course->id]);
+        $base=[['type'=>'cm','sourceid'=>(int)$scorm->cmid,'required'=>true,'label'=>'SCORM'],
+            ['type'=>'cm','sourceid'=>(int)$quiz->cmid,'required'=>false,'label'=>'Quiz']];
+        $v=route_model::create_version((int)$point->id,['requirements'=>$base,'status'=>'draft',
+            'accesspolicy'=>['advance'=>'manual','repeat'=>'close','finish'=>'next']],(int)$USER->id);
+        $base=route_model::requirements_for_version($v);
+        $decoded=route_studio_form::decode(['rows'=>[['base'=>'0','required'=>1],['base'=>'1']]],$base,[]);
+        $this->assertSame($base,$decoded);
+        $command=['routeid'=>(int)$route->id,'pointid'=>(int)$point->id,'actorid'=>(int)$USER->id,
+            'expectedmodified'=>(int)$point->timemodified,'baseversion'=>(int)$v->id,'active'=>true,
+            'versiondata'=>['title'=>'Edited','status'=>'draft','requirements'=>$decoded,
+                'accesspolicy'=>['advance'=>'manual','repeat'=>'close','finish'=>'next']]];
+        $saved=route_commands::save_version($command);
+        $this->assertSame($base,route_model::requirements_for_version($saved));
+        $this->assertSame('manual',route_point_access::policy($saved)['advance']);
+        $this->assertSame((int)$saved->id,(int)route_model::latest_version((int)$point->id)->id);
+        $command['expectedmodified']=(int)$DB->get_field('local_ustar_route_points','timemodified',['id'=>$point->id]);
+        $this->expectException(\moodle_exception::class);
+        route_commands::save_version($command); // A changed immutable base must not be reinterpreted.
+    }
+
+    public function test_incomplete_scorm_draft_can_be_saved_but_never_published(): void {
+        global $USER,$DB;
+        [$g,$u,$route,$point,$published]=$this->fixture();
+        $draft=route_model::create_version((int)$point->id,['status'=>'draft','requirements'=>[
+            ['type'=>'native','sourcekey'=>native_learning::TEAM_STRUCTURE,'required'=>true]],
+            'accesspolicy'=>['advance'=>'manual','repeat'=>'close','finish'=>'next']],(int)$USER->id);
+        $this->assertSame('draft',$draft->status);
+        $before=$DB->get_record('local_ustar_route_points',['id'=>$point->id]);
+        try {
+            route_commands::publish_version((int)$route->id,(int)$point->id,(int)$draft->id,(int)$USER->id,(int)$before->timemodified);
+            $this->fail('Incompatible SCORM policy published');
+        } catch (\invalid_parameter_exception $e) {
+            $this->assertSame('draft',$DB->get_field('local_ustar_route_versions','status',['id'=>$draft->id]));
+        }
+    }
+
+    public function test_employee_cannot_change_point_visibility_as_real_actor(): void {
+        [$g,$u,$route,$point,$v]=$this->fixture();
+        $this->setUser($u);
+        $this->expectException(\required_capability_exception::class);
+        route_commands::set_point_active(['routeid'=>(int)$route->id,'pointid'=>(int)$point->id,
+            'actorid'=>(int)$u->id,'expectedmodified'=>(int)$point->timemodified,'active'=>false]);
+    }
+
     /** @return array{0:local_ustar_generator,1:stdClass,2:stdClass,3:stdClass,4:stdClass} */
     private function fixture(): array {
         $generator = $this->getDataGenerator()->get_plugin_generator('local_ustar');

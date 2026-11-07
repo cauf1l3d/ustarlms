@@ -5000,5 +5000,27 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         }
         upgrade_plugin_savepoint(true, 2026102900, 'local', 'ustar');
     }
+    if ($oldversion < 2026110100) {
+        // Add access metadata only. Existing completion, packages and attempts are untouched.
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load route review schema'); }
+        $table = new xmldb_table('local_ustar_route_versions');
+        $field = $schema->getStructure()->getTable('local_ustar_route_versions')->getField('accesspolicyjson');
+        if (!$dbman->field_exists($table, $field)) { $dbman->add_field($table, $field); }
+        $access = $schema->getStructure()->getTable('local_ustar_route_access');
+        if (!$dbman->table_exists($access)) { $dbman->create_table($access); }
+        upgrade_plugin_savepoint(true, 2026110100, 'local', 'ustar');
+    }
+    if ($oldversion < 2026110200) {
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load Library schema'); }
+        foreach (['offer','grant','assessment','attempt'] as $suffix) {
+            $table = $schema->getStructure()->getTable('local_ustar_library_' . $suffix);
+            if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
+        }
+        require_once(__DIR__ . '/library_defaults.php');
+        local_ustar_library_defaults();
+        upgrade_plugin_savepoint(true, 2026110200, 'local', 'ustar');
+    }
 return true;
 }

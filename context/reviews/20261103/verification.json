@@ -1,0 +1,221 @@
+{
+  "schema": 1,
+  "audit_started": "2026-11-03",
+  "completed_date_msk": "2026-11-04",
+  "application_commit": "5e61c0d2566e8103d01121968d56852e26da99fa",
+  "worker_commit": "267e55874eb8f6c36259d748f28a2c636adc9810",
+  "checked_metadata_commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb",
+  "local_checks_repeated_date_msk": "2026-11-04",
+  "local_checks": [
+    {
+      "name": "library_probe",
+      "command": [
+        "php",
+        "context/reviews/20261103/probes/library_reads.php"
+      ],
+      "exit": 0,
+      "result": "context/reviews/20261103/library_probe_result.json",
+      "result_sha256": "1e61964ce4e506971b8e008900a5f8f0d404485cc89c4fd57fbc836fb5377484"
+    },
+    {
+      "name": "connect_capacity",
+      "command": [
+        "python3",
+        "context/reviews/20261103/probes/connect_capacity.py"
+      ],
+      "exit": 0,
+      "result": "context/reviews/20261103/connect_capacity_result.json",
+      "result_sha256": "d036f8ac02463036947a0bd523be634038b39375077a6d1fc012d02105deed9e"
+    },
+    {
+      "name": "ui_probe",
+      "command": [
+        "node",
+        "context/reviews/20261103/probes/ui_contracts.cjs"
+      ],
+      "exit": 0,
+      "result": "context/reviews/20261103/ui_probe_result.json",
+      "result_sha256": "b44292b46887a5451d11c99999d850ded9410baf01b49e22561367084932d89a"
+    },
+    {
+      "name": "library_access_contract",
+      "command": [
+        "php",
+        "tests/release_20260912/library_access_contract.php"
+      ],
+      "exit": 0,
+      "output": "PASS bulk respects inactive employment despite a grant\nPASS bulk respects audience despite a grant\nPASS bulk respects unpublished offer despite a grant\nPASS zero price preserves the gated policy\nPASS future grant does not open a paid body\nPASS catalog ancestry cycles fail closed\nPASS 6 Library access contracts\n"
+    },
+    {
+      "name": "library_store_contract",
+      "command": [
+        "php",
+        "tests/release_20260912/library_store_contract.php"
+      ],
+      "exit": 0,
+      "output": "PASS insufficient balance is a normal refusal with no debit\nPASS spoofed actor denied\nPASS stale quote refuses before wallet debit\n"
+    },
+    {
+      "name": "library_marketplace_contract",
+      "command": [
+        "php",
+        "tests/release_20260912/library_marketplace_contract.php"
+      ],
+      "exit": 0,
+      "output": "PASS Marketplace/source contracts=27\n"
+    },
+    {
+      "name": "library_assessment_contract",
+      "command": [
+        "php",
+        "tests/release_20260912/library_assessment_contract.php"
+      ],
+      "exit": 0,
+      "output": "PASS spoofed actor\nPASS snapshot threshold\n"
+    },
+    {
+      "name": "course_studio_archived_contract",
+      "command": [
+        "php",
+        "tests/release_20260912/course_studio_archived_contract.php"
+      ],
+      "exit": 0,
+      "output": "COURSE_STUDIO_ARCHIVED=PASS author projection/source state/non-course refusal\n"
+    },
+    {
+      "name": "route_access_policy",
+      "command": [
+        "php",
+        "tests/release_20260912/route_access_policy.php"
+      ],
+      "exit": 0,
+      "output": "PASS route access policy\n"
+    },
+    {
+      "name": "route_access_history",
+      "command": [
+        "php",
+        "tests/release_20260912/route_access_history.php"
+      ],
+      "exit": 0,
+      "output": "PASS route material access history\n"
+    },
+    {
+      "name": "receiver",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/r16",
+        "-p",
+        "test_connect_receiver.py",
+        "-v"
+      ],
+      "exit": 0,
+      "summary": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 41 tests in 1.063s",
+        "",
+        "OK"
+      ]
+    }
+  ],
+  "javascript_regression": {
+    "executed_date_msk": "2026-11-03",
+    "command": "PATH=<PHP8.3-wrapper>:$PATH npm test --prefix tests/release_20260912",
+    "exit": 0,
+    "log_sha256": "a5756b3d2b5b6eb60a5710933e61c2a7878890de21f5cc9b8bf5d8d9fd3c64b6",
+    "output_markers": [
+      "PASS DOM assertions=47",
+      "PASS inline assertions=41",
+      "PASS route access browser: cancellation, confirmation, deadline, completed-package return",
+      "PASS Route Studio browser acceptance",
+      "TASK_WORKSPACE_DOM_OK kind-fields builder stable-keys reorder limits",
+      "NOTEBOOK_DOM_OK escaping keyboard serial-revisions csrf endpoint zoom failure",
+      "HOME_LAYOUT_DOM_OK default-order hidden-add size serial-revision csrf reorder reset",
+      "REWARD_CONTROL_DOM_OK source scope learning-coins new-condition",
+      "PALETTE_DOM_OK account-preference preserved at early render and AMD init",
+      "MESSAGES_DOM_WORKER=PASS draft retry payload removal revoked-access public-only-cache",
+      "COURSE_STUDIO_CODEC_OK",
+      "COURSE_STUDIO_SCORM=PASS legacy HTML/wrapper/folder/assets/roundtrip/inert scripts",
+      "COURSE_STUDIO_SYNC_OK shared conflict keep-both retry metadata csrf revoked",
+      "COURSE_STUDIO_THEME_OK legacy fingerprint optional validation history projects SCORM palette",
+      "COURSE_STUDIO_DOM_OK boot edit shared-save prepare canonical-link sandbox chrome palette account",
+      "COURSE_STUDIO_PDF_OK Cyrillic lines escaping page limits scan print safety",
+      "COURSE_STUDIO_WORD_OK Cyrillic formatting lists tables images roundtrip bounded unsafe rejection",
+      "COURSE_STUDIO_MATERIAL_DOM_OK exact draft no phantom inherited revision safe local text",
+      "COURSE_STUDIO_MATERIAL_DOM_OK authorized file conversion source token no phantom inherited revision safe local text",
+      "COURSE_STUDIO_MATERIAL_DOM_OK archived SCORM editable conversion source token no phantom inherited revision safe local text",
+      "MATERIALS_DOM_OK reader author persistent views single DOM keyboard menu drag revision storage failures"
+    ]
+  },
+  "retained_CI": {
+    "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb",
+    "application_and_worker_trees_unchanged": true,
+    "review": {
+      "run": 41658953431,
+      "conclusion": "success",
+      "jobs": 8,
+      "all_jobs": "success",
+      "native": [
+        {
+          "Moodle": "5.1.8",
+          "job": 126002848304,
+          "tests": 423,
+          "assertions": 1957,
+          "result": "success"
+        },
+        {
+          "Moodle": "5.1.1",
+          "job": 126002847303,
+          "tests": 423,
+          "assertions": 1957,
+          "result": "success"
+        }
+      ]
+    },
+    "infrastructure": {
+      "run": 41658953396,
+      "conclusion": "success"
+    },
+    "context": {
+      "run": 41658953354,
+      "conclusion": "success"
+    },
+    "console": {
+      "run": 41658953352,
+      "conclusion": "success"
+    }
+  },
+  "initial_local_environment_limitations": [
+    {
+      "check": "query_batching.php",
+      "result": "not completed locally",
+      "reason": "local PHP wrapper lacks PDO/pdo_sqlite; previous exact-source native/source CI is separate evidence"
+    },
+    {
+      "check": "console HTTP auth",
+      "result": "not completed locally",
+      "reason": "FastAPI unavailable; initial unittest import cannot load pytest HTTP suite; console CI success is separately cited"
+    },
+    {
+      "check": "first npm run",
+      "result": "environment setup corrected",
+      "reason": "php not on PATH for child process; complete rerun with PHP wrapper passed"
+    }
+  ],
+  "live_validation_limits": [
+    "No production SSH, new runtime census, pentest, load test, interviews or provider sends.",
+    "Synthetic DB-call counts are not actual PostgreSQL wire SQL counts or latency.",
+    "Probes demonstrate current snapshot behavior, not applied remediations.",
+    "Existing green tests do not prove absence of the newly identified defects."
+  ],
+  "independent_agents": false,
+  "application_changes": false,
+  "worker_changes": false,
+  "schema_changes": false,
+  "merge_performed": false
+}

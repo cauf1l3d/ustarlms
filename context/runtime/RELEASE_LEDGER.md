@@ -1,5 +1,17 @@
 # Реестр кода, проверок и deployment evidence
 
+06.11.2026 — STUDIO-PREVIEW-01 app2cb233d9/tool ed292313 квалифицирован на exacted292313:4CI/11FullRC PASS; native430/1988 каждый, Connect172/875, PHP8.2/8.3 по1649tests/274conditional skips. Opaque preview создаёт собственные resource URLs;2source files/0added,0200/653files/108tables. PNG/font/API/fresh reload и eval/parent denial PASS в Moodle5.1.1/5.1.8; operator16actualPHP/UID33 PASS. Архив136074bytes SHA cf8c9b0b CI/retained byte-equal. Требует exact901 + active CSP journal. Owner подтвердил скрытие точек и сообщил Preview defect; это не exact deployment receipt. [Квалификация](studio_preview_qualification_20261106.json), [установка](../../docs/STUDIO_PREVIEW_INSTALL_RU.md).
+
+05.11.2026 — Route Studio app6c4f30b6/tool45e9d6b7 квалифицирован на1c43377b:4CI/9FullRC SUCCESS, native430tests/1988assertions в Moodle5.1.1/5.1.8, authenticated HTTP draft/hide/restore/invalid input PASS. Source PHP8.2/8.3, DOM/browser1440/390 и оператор13tests с actualPHP/UID33 PASS. Архив193168bytes SHA6834c161 побайтно совпал с CI и сохранённой копией.13addon файлов,653fixed files/108tables; схема/бизнес-данные/worker не меняются. Owner installation/retry pending; production719bf47c и main не менялись. [Квитанция](route_editor_qualification_20261105.json), [команды](../../docs/ROUTE_EDITOR_INSTALL_RU.md). Полная оптимизация route readers/T04, PERF-01 и реальный UX пилот не закрыты этим пакетом.
+
+01.11.2026 — PR112: прямой запуск SCORM из текущей точки квалифицирован на51332a21,
+app3f8521ec. Все4CI SUCCESS; обе native Moodle suites374tests/1762assertions,
+PHP8.2/8.3 source1499/236skips, rollback и actualUID33 file recovery PASS.
+Archive74672bytes SHA92fb191f, ZIP/CRC/all6 CI-файлов и сохранённая скачанная копия
+побайтно совпали. Четырёхфайловый source overlay сохраняет версии2900/theme2700,
+схему, данные, пакеты, опубликованные точки и worker267. Owner apply и live-проверка
+сообщённой точки ещё ожидаются; main не слит. [Квитанция](route_scorm_launch_20261101.json).
+
 01.11.2026 — По прямому поручению владельца PR110/111 объединены в main:
 110→0670fcb2, 111→73f3b818. Единая FullRC41262736011 на2bd47af3 и все4CI SUCCESS;
 обе Moodle DB suites371/1751, Connect native172/875, rollback PASS. Дерево merge111
@@ -1007,3 +1019,60 @@ No SSH, worker rollout or PR107 merge.
 Owner: «отлично всё работает» after81118e39 handoff. Basic working acceptance recorded;
 no new exact terminal inventory supplied. STUDIO-01 closed, PERF-01/PR109 active.
 [Receipt](studio_viewport_owner_acceptance_20261028.json). PR107 remains open; no automatic main merge.
+
+
+## 03Nov — Маркетплейс по отделам установлен и общая работа принята
+
+Owner terminal: archive/inner SHA OK, ready → active, systemd success/exit0,
+финальный readonly postcheck active; owner «Отлично работает».
+[Receipt](library_marketplace_owner_deploy_20261103.json). Application4715383b,
+tool59f482ee, local/theme0200,649 fixed files/108tables;13 source replacements.
+cache_purged=true/database_changed=true при применении — служебный кеш;
+business_data_changed=false/schema_changed=false. Повтор/recovery не нужны.
+Worker/cron/workday не измерялись заново; конкретные department/URL/purchase cases
+общей фразой не подтверждены. Текущий заказ — сводка за октябрь и1–3Nov.
+Main2900 и PR112/113/114 остаются отдельно; новых слияний не выполнено.
+
+
+## 03Nov — редактирование статического SCORM и архивных источников
+
+App5e61c0d2/toola8d44b20 qualified, not deployed. All4 CI/8 FullRC jobs SUCCESS;
+обе Moodle423tests/1957assertions, PHP8.2/8.3 source, Chromium и rollback PASS.
+Приложенный статический курс:20 экранов/82 изображения, полный текст/байты сохранены.
+Новые native cases проверяют авторский черновик архива, Moodle FileAPI и отказ learner;
+исходная активность сохраняется. Script-only/proprietary interactive требует исходник.
+Пакет172338bytes, SHA6baaab0d91bdbfac683fc95e3a8cabb0ca09bafd12d4d8e59c7ef92cbcba4ded;
+CI ZIP CRC/members/local build/saved readback PASS. Шесть existing source files,
+649 fixed profile/108tables/0200, worker267 прежний. Production остаётся4715383b.
+[Квитанция](studio_scorm_edit_20261103.json), [команды](../../docs/STUDIO_SCORM_EDIT_INSTALL_RU.md).
+Owner installation/browser acceptance pending; agent SSH/merge не выполнены.
+
+
+## 03Nov — исправлен PHP lint установщика SCORM
+
+Owner a8: SHA OK, ready; service exit2/refused host_command_failed; final check ready.
+Воспроизведён PHP -n short_open_tag=1 parse error в XML-строке model.js: frozen
+transaction передавал PHP lint все6 файлов. До backups/web stop/source switch не дошёл.
+Исправленный separate operator4aee проверяет только PHP по fixed manifest paths;
+13 CI tests PASS, включая real PHP stdin, invalid PHP before outage, actualUID33/xattrs.
+Application5e61 и её native/browser квалификация прежние; production471 сохраняется.
+Пакет172727bytes SHA d558a90a1bfbe8952c8482567f63e53f15887b4d650afd90a650c4d680c654e2,
+CI CRC/all3members/local build/saved readback PASS. Новая установка owner pending.
+[Квитанция](studio_scorm_edit_lint_recovery_20261103.json),
+[команды](../../docs/STUDIO_SCORM_EDIT_LINT_INSTALL_RU.md). Старый a8 не повторять.
+
+## 03Nov2026 — SCORM corrected installer owner accepted
+
+Tool4aee/app5e61: checksums OK, initial busy refusal then ready → active; unit02 success/exit0, final readonly active. General owner report; detailed browser cases not enumerated. [Receipt](studio_scorm_edit_owner_deploy_20261103.json). No merge or independent host probe.
+
+## 04Nov2026 — тройной аудит и план
+
+[Отчёт](../reviews/20261103/AUDIT_RU.md):30находок,app5e61/worker267,3probes,41receiver/7PHP/JS и4CI/8FullRC baseline. [План T01–T10](../../docs/superpowers/plans/2026-11-03-project-audit-remediation.md) покрывает всеID; исправления пока не внесены. Production/source/worker не менялись; merge не выполнялся.
+
+## 05Nov2026 — discovery owner installed; Route Studio next package
+
+app719bf47c/toolaa61d595: SHA OK, ready→active, unit success/exit0, readonly active.
+[Receipt](library_discovery_owner_deploy_20261105.json). Business/schema/worker unchanged,cache purged.
+Owner reported Route Studio501 on inactive/draft; [review/probe](../reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md)
+reproduces lossy requirement projection, exact production exception remains unconfirmed.
+ROUTE-EDITOR-01 spec/plan ready; no route code changed/no merge.

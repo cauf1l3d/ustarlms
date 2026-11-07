@@ -1,0 +1,214 @@
+{
+  "schema": 1,
+  "date": "2026-11-05",
+  "task": "ROUTE-EDITOR-01",
+  "status": "qualified_owner_deploy_pending",
+  "deployed": false,
+  "merged": false,
+  "pr": 114,
+  "scope": "Lossless Route Studio requirement rows; independent visibility; draft/publication clarity; input-preserving validation; early Moodle page context",
+  "application_commit": "6c4f30b600e6353aad10e112e94f7db7930e0e48",
+  "tool_commit": "45e9d6b749d3eac2a018f597b3c8b9a931debd13",
+  "qualified_commit": "1c43377bda481b15b40ad2e95907778588bda88c",
+  "accepted_deployment_baseline": {
+    "application_commit": "719bf47c1ba5942c094a04312898890ec7de00c1",
+    "tool_commit": "aa61d5954d96c33b8de2845cf2c0891ba428c76d",
+    "owner_receipt": "context/runtime/library_discovery_owner_deploy_20261105.json"
+  },
+  "target": {
+    "local_ustar": 2026110200,
+    "theme_ustar": 2026110200,
+    "files": 653,
+    "tables": 108,
+    "changed_existing_files": 9,
+    "added_files": 4,
+    "schema_changed": false,
+    "business_data_changed": false,
+    "worker_changed": false,
+    "preserved_worker": "267e55874eb8f6c36259d748f28a2c636adc9810"
+  },
+  "verification": {
+    "source_php": [
+      "8.2",
+      "8.3"
+    ],
+    "python_tests_per_matrix": 1619,
+    "python_skipped_per_matrix": 272,
+    "native_moodle_versions": [
+      "5.1.1",
+      "5.1.8"
+    ],
+    "native_tests_per_version": 430,
+    "native_assertions_per_version": 1988,
+    "postgresql": 16,
+    "authenticated_editor_http": "PASS each runtime: draft preserves published requirements; hide/restore preserve version count; invalid timed0 retains title and version history",
+    "native_jobs": [
+      127267767714,
+      127267767547
+    ],
+    "early_http_job": 127262441729,
+    "operator_tests": 13,
+    "actual_php_and_uid33_in_dedicated_ci": true,
+    "operator_job": 127262442579,
+    "browser": {
+      "widths": [
+        1440,
+        390
+      ],
+      "real_templates_and_page_css": true,
+      "synthetic_fixture": true,
+      "form_data_and_reflow": true,
+      "visual_inspection": "Both synthetic viewport screenshots inspected; their template/CSS bytes verified equal to final application; final CI rerun passed"
+    },
+    "module_names_probe": {
+      "modules": [
+        100,
+        1000
+      ],
+      "types": 2,
+      "db_api_calls": [
+        2,
+        2
+      ],
+      "rows": [
+        100,
+        1000
+      ],
+      "scope": "actual controller block with synthetic DB API; not PostgreSQL latency or whole-page query budget"
+    },
+    "exact_source_upgrade_repeat_and_fresh_schema_parity": true,
+    "source_only_installer_preserves_journals_metadata_and_business_data": true,
+    "provider_calls": false,
+    "production_ssh": false
+  },
+  "archive": {
+    "file_name": "ustar-route-editor-45e9d6b7.tar.gz",
+    "bytes": 193168,
+    "sha256": "6834c16184978218e377c92381dfb8d4f7ba0590f37a6eb544f03c473d5d7f71",
+    "script_sha256": "35289c12bec8405264130c687f7a030d4d943f5010c7ca975e3045aebf79ab4c",
+    "members": [
+      "INSTALL.json",
+      "SHA256SUMS",
+      "update.py"
+    ],
+    "regular_private_members": true,
+    "offline_PLAN_ONLY": "PASS",
+    "ci_artifact_id": 13415999377,
+    "ci_zip_sha256": "10684aacec436c2c9cb667526f0bc9589acbacb865531ed51edfd21c417d429f",
+    "zip_crc": "PASS",
+    "ci_byte_identical": true,
+    "saved_copy_byte_identical": true,
+    "saved_copy_sha256": "6834c16184978218e377c92381dfb8d4f7ba0590f37a6eb544f03c473d5d7f71",
+    "tool_selection": "CI selects last immutable operator/builder change45e9d6b7; qualification1c43377b changes historical test dependency only, application6c4f30b6 unchanged"
+  },
+  "review": {
+    "method": "Author trace review, explicit RED/GREEN regressions, native PostgreSQL and authenticated HTTP, real-template DOM/browser CI",
+    "subagents_used": false,
+    "independent_reviewer": false,
+    "coderabbit_run": false
+  },
+  "corrected_qualification_failures": [
+    {
+      "commit": "40c5b4a0c7309b5947dd1b6d80bab0c115171396",
+      "run": 41999080761,
+      "reason": "Native test continuation after delegated rollback; associative key order comparison; curl session expiry0 was treated as expired by Python",
+      "fix": "4c122d0a fixes fixtures and cookie regression; runtime behavior unchanged"
+    },
+    {
+      "commit": "f433ae207ceb3123f1f7f63fce37ca676777a71b",
+      "run": 42006317436,
+      "reason": "Real GET HTTP500: PAGE context missing before assessment catalogue format_string",
+      "evidence": "context/reviews/20261105/page_context_http_failure.json",
+      "fix": "6c4f30b6 sets PAGE system context after authorization and before formatting"
+    },
+    {
+      "commit": "45e9d6b749d3eac2a018f597b3c8b9a931debd13",
+      "run": 42007421134,
+      "reason": "Historical test image lacked Python3; application DB suites and5.1.8 HTTP passed",
+      "fix": "1c43377b adds Python3 and stdlib check to historical test Dockerfile, preserving application/operator"
+    }
+  ],
+  "limits": [
+    "Exact owner invalidparameter lacks debug trace; owner installation and retry are pending",
+    "Full route reader/admin history and broad metadata hydration remain O(N); T04 and ordinary-workday PERF-01 remain open",
+    "No production load test, full WCAG certification or real-author usability pilot",
+    "Per-field errors, unsaved/back guard and arbitrary requirement drag reordering remain follow-up scope",
+    "Override visibility follows ADR0004 return-to-common semantics; no new per-position exclusion model",
+    "Production remains owner-installed719bf47c and worker267; main not merged"
+  ],
+  "runbook": "docs/ROUTE_EDITOR_INSTALL_RU.md",
+  "next": "Owner installs qualified archive and retries reported point; separate owner receipt required.",
+  "workflows": [
+    {
+      "id": 42032572073,
+      "name": "USTAR infrastructure verification",
+      "conclusion": "success",
+      "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/42032572073"
+    },
+    {
+      "id": 42032572102,
+      "name": "USTAR console",
+      "conclusion": "success",
+      "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/42032572102"
+    },
+    {
+      "id": 42032572017,
+      "name": "USTAR context integrity",
+      "conclusion": "success",
+      "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/42032572017"
+    },
+    {
+      "id": 42032572049,
+      "name": "USTAR review gate",
+      "conclusion": "success",
+      "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/42032572049"
+    }
+  ],
+  "full_rc_jobs": [
+    {
+      "id": 127262441729,
+      "name": "route-editor-http",
+      "conclusion": "success"
+    },
+    {
+      "id": 127262442326,
+      "name": "source (8.2)",
+      "conclusion": "success"
+    },
+    {
+      "id": 127262442430,
+      "name": "rollback",
+      "conclusion": "success"
+    },
+    {
+      "id": 127262442440,
+      "name": "source (8.3)",
+      "conclusion": "success"
+    },
+    {
+      "id": 127267597495,
+      "name": "prepare-rc",
+      "conclusion": "success"
+    },
+    {
+      "id": 127267597522,
+      "name": "connect-db",
+      "conclusion": "success"
+    },
+    {
+      "id": 127267767547,
+      "name": "moodle-db (patch-518, tests/stage/patch-compose.yaml, moodle-patch-evidence)",
+      "conclusion": "success"
+    },
+    {
+      "id": 127267767714,
+      "name": "moodle-db (historical, tests/stage/compose.yaml, moodle-db-evidence)",
+      "conclusion": "success"
+    },
+    {
+      "id": 127273473717,
+      "name": "gate",
+      "conclusion": "success"
+    }
+  ]
+}

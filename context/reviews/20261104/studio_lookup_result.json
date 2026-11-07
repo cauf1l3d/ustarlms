@@ -1,0 +1,17 @@
+{
+    "scope": "real course_studio::get with synthetic authorized actor and DB; returned JSON bytes, not PostgreSQL latency or production memory",
+    "samples": [
+        {
+            "projects": 100,
+            "db_calls": 1,
+            "sourcejson_bytes_loaded": 6563690,
+            "returned_projects": 1
+        },
+        {
+            "projects": 1000,
+            "db_calls": 1,
+            "sourcejson_bytes_loaded": 65637890,
+            "returned_projects": 1
+        }
+    ]
+}

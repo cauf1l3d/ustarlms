@@ -114,4 +114,48 @@ final class course_studio_material_test extends \advanced_testcase {
         $assets=(array)$project->assets;$asset=reset($assets);$this->assertSame(hash('sha256',$bytes),$asset->hash);
         $this->assertSame($bytes,course_studio::asset($asset->hash,$USER->id)->get_content());
     }
+    public function test_archived_scorm_opens_a_shared_draft_without_restoring_or_replacing_original(): void {
+        global $DB,$USER;
+        $item=$this->native();material_studio::build_scorm($item['id'],$USER->id);
+        $DB->set_field('local_ustar_content','status','archived',['id'=>$item['id']]);
+        $before=$DB->get_record('local_ustar_content',['id'=>$item['id']]);
+        $this->assertTrue(course_studio_material::supported($before));
+        $first=course_studio_material::open($item['id'],$USER->id);
+        $again=course_studio_material::open($item['id'],$USER->id);
+        $this->assertNotSame($item['id'],$first['contentid']);
+        $this->assertSame($first['contentid'],$again['contentid']);
+        $this->assertEquals($before,$DB->get_record('local_ustar_content',['id'=>$item['id']]));
+        $draft=course_studio::get($first['code'],$USER->id);
+        $this->assertSame('draft',$draft['status']);
+        $this->assertStringContainsString('Учебный материал',$draft['course']->data->pages[0]->html);
+    }
+    public function test_native_moodle_scorm_keeps_package_and_original_activity_when_opened_for_editing(): void {
+        global $DB,$USER;
+        $course=$this->getDataGenerator()->create_course();
+        $scorm=$this->getDataGenerator()->create_module('scorm',['course'=>$course->id]);
+        $context=\context_module::instance($scorm->cmid);
+        $fs=get_file_storage();$fs->delete_area_files($context->id,'mod_scorm','package',0);
+        $file=$fs->create_file_from_string(['contextid'=>$context->id,'component'=>'mod_scorm','filearea'=>'package',
+            'itemid'=>0,'filepath'=>'/','filename'=>'legacy.zip','mimetype'=>'application/zip'],'fixture-package-bytes');
+        $id=$DB->insert_record('local_ustar_content',(object)['title'=>'Архивный SCORM','type'=>'scorm',
+            'sourcekind'=>content::SOURCE_MOODLE,'status'=>'archived','courseid'=>$course->id,'cmid'=>$scorm->cmid]);
+        $before=$DB->get_record('scorm',['id'=>$scorm->id]);
+        $opened=course_studio_material::open($id,$USER->id);
+        $this->assertSame('file',$opened['kind']);$this->assertSame('scorm',$opened['format']);
+        $this->assertSame('legacy.zip',$opened['filename']);
+        $this->assertSame($file->get_contenthash(),course_studio_material::file($id,$USER->id)->get_contenthash());
+        $this->assertEquals($before,$DB->get_record('scorm',['id'=>$scorm->id]));
+        $project=course_studio_source::from_pages('Изменено','LEGACY-EDIT',[['title'=>'Экран','body'=>'Изменено']],static fn()=>[]);
+        $draft=course_studio_material::complete($id,$project,$opened['sourceToken'],$USER->id);
+        $this->assertNotSame($id,$draft['contentid']);$this->assertSame('archived',$DB->get_field('local_ustar_content','status',['id'=>$id]));
+        $this->assertEquals($before,$DB->get_record('scorm',['id'=>$scorm->id]));
+    }
+    public function test_archived_source_still_refuses_a_learner(): void {
+        global $DB;
+        $source=$this->native();$DB->set_field('local_ustar_content','status','archived',['id'=>$source['id']]);
+        $learner=$this->getDataGenerator()->create_user();$this->setUser($learner);
+        $this->expectException(\required_capability_exception::class);
+        course_studio_material::open($source['id'],$learner->id);
+    }
+
 }

@@ -173,6 +173,7 @@ final class route_scope {
                 'title' => $version->title, 'summary' => $version->summary,
                 'requirements' => json_decode($version->requirementsjson, true),
                 'renewalpolicy' => $version->renewalpolicy, 'validdays' => $version->validdays,
+                'accesspolicy' => route_point_access::policy($version),
                 'status' => route_model::STATUS_DRAFT,
             ], $actorid);
         $created->sourcepointid = $pointid;

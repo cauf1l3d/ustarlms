@@ -1,0 +1,39 @@
+{{!
+    Library — assessment result.
+    A mark, not a reward: no coins are minted here.
+}}
+<div class="u-library">
+
+  <header class="u-library__head">
+    <div class="u-library__headmain">
+      <p class="u-pagehead__eyebrow">Результат</p>
+      <h1>{{title}}</h1>
+      <p class="u-library__lede">
+        {{score}} из {{total}} верных · {{percent}}% · порог {{passpercent}}%
+      </p>
+    </div>
+    <div class="u-library__wallet">
+      {{#passed}}
+      <span class="u-badge u-badge--success">Пройдено</span>
+      {{/passed}}
+      {{^passed}}
+      <span class="u-badge u-badge--warning">Не пройдено</span>
+      {{/passed}}
+      <strong>{{percent}}%</strong>
+    </div>
+  </header>
+
+  <section class="u-library__section">
+    <p class="u-muted">
+      Отметка сохранена в вашем профиле проверок.
+      {{#canretry}}Осталось попыток: {{attemptsleft}}.{{/canretry}}
+      {{^canretry}}{{^passed}}Попытки исчерпаны — обратитесь к руководителю.{{/passed}}{{/canretry}}
+    </p>
+
+    <div class="u-library__checkactions">
+      {{#canretry}}<a class="u-btn u-btn--primary" href="{{actionurl}}">Пройти ещё раз</a>{{/canretry}}
+      <a class="u-btn" href="{{backurl}}">Вернуться в библиотеку</a>
+    </div>
+  </section>
+
+</div>

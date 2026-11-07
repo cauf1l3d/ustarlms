@@ -1,0 +1,5 @@
+# Disposable synthetic browser site only. Internal Docker bridges suppress published ports.
+# The PHP listener is published on host loopback; production compose is untouched.
+networks:
+  isolated:
+    internal: false

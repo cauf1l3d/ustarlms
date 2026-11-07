@@ -1,0 +1,955 @@
+{
+  "date": "2026-11-03",
+  "application_commit": "5e61c0d2566e8103d01121968d56852e26da99fa",
+  "worker_commit": "267e55874eb8f6c36259d748f28a2c636adc9810",
+  "metadata_commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb",
+  "not_exhaustive_or_certification": true,
+  "findings": [
+    {
+      "id": "P01",
+      "title": "Зависимость учебного ядра от конкретных объектов Устар",
+      "priority": "P1 до тиражирования",
+      "evidence_type": "код: подтверждено",
+      "scope": "подразделения и внешний продукт",
+      "references": [
+        {
+          "path": "moodle/local/ustar/classes/catalog_mastery.php",
+          "line": 16,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/product_quiz.php",
+          "line": 18,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "catalog_mastery фиксирует POINT_ID=70 и SCORM_CMID=41; product_quiz фиксирует CMID=69, QUIZID=11, POINTID=70. Это действующие сервисы, а не только исторические миграции.",
+      "impact": "На другой базе эти ID могут отсутствовать или обозначать другие объекты. Для новых подразделений нельзя предполагать, что одна товарная аттестация подходит всем. Это не доказательство неправильной работы текущей настроенной базы.",
+      "remediation": "Ввести явную проверяемую привязку учебного сценария к существующим course/module/point и области должностей; сохранить текущие привязки миграцией. Сначала ADR для политики конфигурации, без второго хранилища прогресса.",
+      "verification": "Два отдела и две независимые БД с разными ID; отсутствие/удаление/подмена module отказывает; старые попытки и награды неизменны.",
+      "plan_task": "T07"
+    },
+    {
+      "id": "P02",
+      "title": "Организационная область не является изоляцией клиентов SaaS",
+      "priority": "P1 до общего SaaS",
+      "evidence_type": "архитектурное ограничение",
+      "scope": "внешний продукт",
+      "references": [
+        {
+          "path": "moodle/local/ustar/classes/access_context.php",
+          "line": 36,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/organization_directory.php",
+          "line": 8,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/db/install.xml",
+          "line": 1,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "company_scope читает пользователей всего Moodle; каталог организации общий, права часто в context_system. Поля tenant в схеме относятся к Connect identities, не являются tenant boundary для задач/учёбы/кошелька.",
+      "impact": "Нельзя разместить независимых клиентов в одной базе только разными отделами и обещать изоляцию. Для текущей одной компании это допустимая архитектура.",
+      "remediation": "Первый внешний пилот планировать как отдельный Moodle instance/БД/файлы/секреты на клиента, после отдельного ADR и проверки восстановления. Общий multi-tenant SaaS — отдельный проект, не добавление поля tenant в несколько таблиц.",
+      "verification": "Два изолированных клиента: пользователи, файлы, поиск, отчёты, cron, backup и Connect не пересекаются; восстановление одного не затрагивает другого.",
+      "plan_task": "T07"
+    },
+    {
+      "id": "P03",
+      "title": "Privacy API покрывает только часть персональных доменов",
+      "priority": "P1 до внешнего выпуска",
+      "evidence_type": "код: подтверждено",
+      "scope": "внутренние данные и внешний продукт",
+      "references": [
+        {
+          "path": "moodle/local/ustar/classes/privacy/provider.php",
+          "line": 113,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/privacy/provider.php",
+          "line": 174,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/privacy/provider.php",
+          "line": 239,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "scripts/ci/privacy_inventory.py",
+          "line": 1,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "Discovery/export/erase реализованы для Connect, route_access и Library. В полном provider нет обработки local_ustar_coin_ledger, local_ustar_learning_tasks, local_ustar_feed_posts, local_ustar_employment; записи этих таблиц подтверждены install.xml. Наличие inventory не делает export/deletion полными.",
+      "impact": "Экспорт субъекта неполон; утверждённое удаление не охватывает все данные и файлы. Это технический разрыв, не заключение о нарушении закона и не разрешение удалять кадровую/учебную историю.",
+      "remediation": "Составить матрицу data owner → purpose → retention → export → anonymise/delete; утвердить политику сохранения фактов и сторонних авторов; добавить доменные handlers в существующий provider.",
+      "verification": "Пользователь с данными во всех доменах, чужие соавторы/файлы, retained evidence, повтор удаления; точные Moodle DB/Privacy API тесты.",
+      "plan_task": "T06"
+    },
+    {
+      "id": "P04",
+      "title": "Нет завершённого пакета доказательств готовности каждого подразделения",
+      "priority": "P1 для массового запуска",
+      "evidence_type": "пробел доказательств",
+      "scope": "подразделения",
+      "references": [
+        {
+          "path": "context/tasks/ACTIVE.md",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/runtime/connect_visual_owner_deploy_20261101.json",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/runtime/studio_scorm_edit_owner_deploy_20261103.json",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        }
+      ],
+      "fact": "Есть реальные owner-приёмки и подробные CI, но текущие receipts отдельно оставляют остальные ролевые процессы руководству и не перечисляют весь цикл по каждому отделу. Нет полученного workday/SLO отчёта. Сведения о бизнес-эффекте обучения в этом аудите не получены.",
+      "impact": "Раннее распространение может увеличить нагрузку на единственного оператора и поддержку. По числу фич нельзя установить эффективность адаптации или успешность самостоятельной работы сотрудников.",
+      "remediation": "Пилотная матрица employee/manager/HRD/editor/admin и перевод/совмещение/увольнение. Считать task success, время до первого полезного действия, отказы по доступу, задержку проверки руководителем и обращения; использовать существующие события, не записывать лишние персональные payload.",
+      "verification": "В каждом пилотном отделе пройти онбординг → назначение → материал → оценка → отчёт/возврат → перевод/отзыв. Зафиксировать ожидаемый результат и подпись владельца процесса.",
+      "plan_task": "T05"
+    },
+    {
+      "id": "P05",
+      "title": "Поставки воспроизводимы для server1, но не являются универсальной установкой продукта",
+      "priority": "P1 до внешнего выпуска",
+      "evidence_type": "код и ADR: подтверждено",
+      "scope": "внешнее развёртывание",
+      "references": [
+        {
+          "path": "scripts/infra/studio_scorm_edit_lint_patch.py",
+          "line": 13,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "scripts/infra/studio_scorm_edit_lint_patch.py",
+          "line": 67,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "server-console/backend/ustar_console/operations.py",
+          "line": 29,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "context/decisions/0017-operator-tooling.md",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        }
+      ],
+      "fact": "Successor требует точного baseline, прежних журналов и путей /opt/ustar; ops broker привязан к датированным backup/lab producers и их SHA. Это сознательные transaction guards текущего сервера.",
+      "impact": "Новый клиент не может использовать последний overlay как установщик с нуля. Цепочка операторов увеличивает стоимость сопровождения, а одинаковая версия0200 не определяет точный набор исходников.",
+      "remediation": "Сохранить frozen installers; подготовить отдельный fresh-install profile и upgrade matrix с release manifest, конфигурацией окружения, зависимостями и smoke/restore. Не удалять guards и не превращать старые patch scripts в универсальный shell.",
+      "verification": "Чистая БД/хост и обновление с поддерживаемого релиза; источник, схема, права, rollback и отсутствие прежних journal paths проверяются на стенде.",
+      "plan_task": "T07"
+    },
+    {
+      "id": "P06",
+      "title": "Редактируемость SCORM имеет чёткие границы формата",
+      "priority": "P2; P1 для обещания универсальной совместимости",
+      "evidence_type": "код: подтверждено",
+      "scope": "авторы и позиционирование продукта",
+      "references": [
+        {
+          "path": "moodle/local/ustar/course_studio/model.js",
+          "line": 31,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/course_studio/model.js",
+          "line": 103,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/course_studio/model.js",
+          "line": 27,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/course_studio_material.php",
+          "line": 80,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "Статический HTML конвертируется в страницы; video/audio/canvas/iframe/forms требуют исходного проекта и отклоняются. Экспорт создаёт SCORM1.2 с собственным runtime. Старый источник открывается отдельным черновиком, а не заменяет существующий Moodle activity.",
+      "impact": "Можно редактировать подтверждённый присланный пакет, но нельзя обещать импорт любого SCORM без потерь интерактивности, sequencing или исходного поведения. Сохранённая копия не означает замену материала во всех маршрутах.",
+      "remediation": "Публиковать матрицу форматов и экран предварительного разбора: что переносится, что отклонено, какой источник/черновик/маршрут затронут. Для неподдержанного пакета сохранить исходник и запросить authoring project, не исполнять чужие scripts в редакторе.",
+      "verification": "Корпус USTAR/static/multi-SCO/interactive/SCORM2004; сравнение текста/медиа/порядка, player tracking и явно отказанные функции; публикация не стирает старые attempts.",
+      "plan_task": "T02"
+    },
+    {
+      "id": "P07",
+      "title": "Legacy-сотрудник без employment-записи считается active",
+      "priority": "P1 перед массовым импортом/внешним входом",
+      "evidence_type": "подтверждённый compatibility risk",
+      "scope": "онбординг и доступ",
+      "references": [
+        {
+          "path": "moodle/local/ustar/classes/employment.php",
+          "line": 17,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/employment.php",
+          "line": 42,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_access.php",
+          "line": 24,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "resolve() возвращает ACTIVE/source=legacy, если строки нет. Это документированная совместимость. Саморегистрация имеет register_pending, а capability/user-suspended проверки продолжают действовать.",
+      "impact": "Процесс создания аккаунтов вне проверенного registration writer может остаться в legacy-режиме. Это не подтверждённый обход авторизации: результат зависит также от выдачи Moodle ролей и существующих guards.",
+      "remediation": "Инвентаризировать writers регистрации/HR/import/SSO; согласовать завершение legacy migration window. Новый onboarding должен создавать explicit lifecycle, существующих людей переводить только по проверенному плану, без массового отключения.",
+      "verification": "Новый пользователь каждым входным путём; pending не получает учебный/управленческий доступ; старые допустимые аккаунты и suspended/terminated проверяются раздельно.",
+      "plan_task": "T06"
+    },
+    {
+      "id": "U01",
+      "title": "Карточка ведёт в Маркетплейс, который этому сотруднику запрещён",
+      "priority": "P1",
+      "evidence_type": "воспроизведено на реальных readers",
+      "scope": "каталог и проверки",
+      "references": [
+        {
+          "path": "moodle/local/ustar/classes/library_view.php",
+          "line": 45,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_view.php",
+          "line": 70,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/library.php",
+          "line": 15,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_access.php",
+          "line": 75,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "Для published paid catalog offer без гранта catalog_allowed(teaser=true) даёт карточку; URL создаётся tab=shop&open=1. При выключенном отделе can_view_marketplace=false, can_view_offer_page=false. library_probe_result.json воспроизводит этот переход. Аналогичный CTA checks требует проверки тем же кейсом.",
+      "impact": "Сотрудник видит доступное действие и после нажатия получает отказ. Защита сервера работает, но путь к получению доступа оборван.",
+      "remediation": "Выводить состояние «Доступ по назначению» без ссылки в закрытый раздел; предоставить допустимый способ обращения/назначения в существующем процессе. Не открывать marketplace ради исправления кнопки.",
+      "verification": "Пустой allowlist, другой отдел, платный/assigned/gated оффер, действующий грант и обязательный маршрут; карточка не содержит заведомо запрещённого CTA.",
+      "plan_task": "T01"
+    },
+    {
+      "id": "U02",
+      "title": "После 500 активных грантов старый материал исчезает из поиска",
+      "priority": "P1",
+      "evidence_type": "воспроизведено на реальных readers",
+      "scope": "сотрудники с большой библиотекой",
+      "references": [
+        {
+          "path": "moodle/local/ustar/classes/library_view.php",
+          "line": 11,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_view.php",
+          "line": 24,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_grant.php",
+          "line": 116,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "mine() запрашивает лишь500 последних грантов, затем применяет поиск и pagination. Probe создаёт501 уникальный грант, ищет ONLY-OLDEST и получает0, хотя запись активна. Учебная история в probe пуста, поэтому независимый fallback не маскирует дефект.",
+      "impact": "Часть оплаченного/назначенного контента становится необнаружимой через «Мои материалы». Само право в БД не теряется и прямой разрешённый путь может работать.",
+      "remediation": "Запрашивать полную логическую выдачу по пользователю и фильтру с корректной дедупликацией до страницы; явный hasnext/cursor. Не устранять лимит простым чтением всех body/проверкой всех ACL в память.",
+      "verification": "501 и2000 грантов, поиск старейшего, несколько грантов одного offer, revoke/future/expiry, независимые route материалы; страницы без пропусков и утечек.",
+      "plan_task": "T01"
+    },
+    {
+      "id": "U03",
+      "title": "Административные селекторы и история молча обрезаются",
+      "priority": "P1 для масштабирования контента",
+      "evidence_type": "код: подтверждено",
+      "scope": "авторы и руководители",
+      "references": [
+        {
+          "path": "moodle/local/ustar/library_manage.php",
+          "line": 58,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/library_manage.php",
+          "line": 71,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/library_manage.php",
+          "line": 96,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/library_manage.php",
+          "line": 113,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "Селектор предметов берёт первые500 строк каждого типа; точки —500; история грантов —100; список ручных проверок —100. Pagination предложений существует, но эти независимые списки собственной навигации/поиска не имеют.",
+      "impact": "Старое назначение нельзя найти для отзыва из этой истории, поздний материал — выбрать из формы. Выбранный существующий объект за лимитом может отсутствовать в option и создавать ошибку сохранения.",
+      "remediation": "Scoped autocomplete/pagination по каноническим объектам; включать текущий выбранный объект, даже если он вне страницы. Историю фильтровать по сотруднику/материалу/status и дать переходы.",
+      "verification": "501 предмет,101 grant/check; старую запись можно найти и изменить; запрещённые сотрудники не появляются даже в поиске и total.",
+      "plan_task": "T01"
+    },
+    {
+      "id": "U04",
+      "title": "В редакторе новой проверки нельзя добавить шестой вопрос",
+      "priority": "P1 для авторского процесса",
+      "evidence_type": "код + DOM воспроизведение",
+      "scope": "проверки знаний",
+      "references": [
+        {
+          "path": "moodle/local/ustar/library_manage.php",
+          "line": 107,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/templates/library_manage.mustache",
+          "line": 36,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_assessment.php",
+          "line": 122,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "Форма создаёт max(5,count(existing)) questionfields. Для новой проверки это5; кнопок добавления/удаления блоков нет. Validator допускает до100, но UI не предоставляет этот путь. Реальный Mustache в JSDOM содержит5textarea и единственную кнопку сохранения.",
+      "impact": "Создать проверку из6+ вопросов штатным интерфейсом нельзя; существующий банк из5 вопросов также нельзя расширить.",
+      "remediation": "Добавление/удаление/перестановка вопросов с устойчивыми ключами и сохранением correct mapping; limits1–100 в UI и сервере. Не добавлять альтернативную модель банка.",
+      "verification": "Создать6, добавить101 с отказом, удалить/переставить ответ и вопрос; correct не меняет смысл; ошибочная форма сохраняет введённые данные.",
+      "plan_task": "T02"
+    },
+    {
+      "id": "U05",
+      "title": "Поиск и страницы теряют контекст и дают неточное пустое состояние",
+      "priority": "P2",
+      "evidence_type": "код + DOM воспроизведение",
+      "scope": "ежедневная навигация",
+      "references": [
+        {
+          "path": "moodle/local/ustar/templates/library.mustache",
+          "line": 12,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/templates/library.mustache",
+          "line": 18,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/library.php",
+          "line": 80,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/templates/library_checks.mustache",
+          "line": 3,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "Search form передаёт толькоtab/q, поэтому поиск внутри catalog parent сбрасывает раздел. Навигация содержит только «Следующая страница», без предыдущей/номера. Проверки при непустом запросе без совпадений говорят «Проверок пока нет…появятся после публикации».",
+      "impact": "Пользователь не понимает область поиска и может решить, что учебный контент вообще не опубликован. Browser Back частично помогает, но не заменяет явное состояние.",
+      "remediation": "Задать явную семантику поиска в разделе/во всей библиотеке; сохранять фильтры и return context; previous/next/current page; различать пустой каталог и отсутствие совпадений.",
+      "verification": "Поиск в nested folder → карточка → назад; page2 → previous; пустые данные и пустой результат поиска имеют разный текст.",
+      "plan_task": "T02"
+    },
+    {
+      "id": "U06",
+      "title": "Отзыв доступа и возврат выполняются одним кликом без обзора последствий",
+      "priority": "P2",
+      "evidence_type": "подтверждённый UX-риск",
+      "scope": "управление доступом",
+      "references": [
+        {
+          "path": "moodle/local/ustar/templates/library_manage.mustache",
+          "line": 30,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/library_manage.php",
+          "line": 1,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_grant.php",
+          "line": 70,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "Формы revoke/refund сразу POSTят действие, без отдельного confirmation шага; серверные actor/sesskey/правила операции при этом есть. Текст кнопки возврата объясняет общий смысл, но нет обзора конкретного получателя/материала/суммы.",
+      "impact": "Легче ошибиться строкой в длинном списке. Это не CSRF-уязвимость и не доказанная потеря средств.",
+      "remediation": "Доступное подтверждение с конкретными данными операции или безопасный review step; не заменять идемпотентность и серверные проверки window.confirm.",
+      "verification": "Клавиатурная отмена не меняет данные; подтверждение показывает точный объект; stale/replayed POST не выполняет другую операцию.",
+      "plan_task": "T02"
+    },
+    {
+      "id": "U07",
+      "title": "Браузерные PASS не доказывают WCAG AA и полный ролевой UX",
+      "priority": "P1 для заявления о соответствии; P2 внутренний",
+      "evidence_type": "пробел доказательств",
+      "scope": "доступность интерфейса",
+      "references": [
+        {
+          "path": "tests/mobile/library.cjs",
+          "line": 1,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "tests/release_20260912/course_studio_dom.cjs",
+          "line": 1,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/course_studio/editor.html",
+          "line": 5,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "Есть36 synthetic views с responsive/light-dark/touch/одним Tab и отдельные DOM/Studio suites. Нет в проверенной цепочке полного screen-reader traversal, WCAG matrix или task-based измерения реальных ролей. В Studio уже существуют move-up/down — утверждение «только drag» опровергнуто.",
+      "impact": "Нельзя утверждать отсутствие всех проблем доступности или оценить cognitive load по скриншотам. Это не подтверждение нарушения всех критериев WCAG.",
+      "remediation": "Добавить автоматизированные a11y проверки и ручной маршрут keyboard/screen reader; проверить 200–400% zoom,320CSSpx reflow,focus restore/error association/контраст всех состояний.",
+      "verification": "Матрица применимых WCAG2.2 AA: результат и evidence на реальные экраны; автоматический скан дополняется ручными сценариями.",
+      "plan_task": "T05"
+    },
+    {
+      "id": "U08",
+      "title": "Часть пользовательских строк и брендинга зашита в код",
+      "priority": "P2; P1 для многоязычного white-label",
+      "evidence_type": "код: подтверждено",
+      "scope": "внешний продукт",
+      "references": [
+        {
+          "path": "moodle/local/ustar/library.php",
+          "line": 50,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/templates/library.mustache",
+          "line": 3,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/course_studio/model.js",
+          "line": 26,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/course_studio/editor.html",
+          "line": 1,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "Новые Library/Studio тексты и экспортированный runtime содержат русский текст и USTAR напрямую. lang API существует в проекте, но применяется непоследовательно.",
+      "impact": "Локализация/брендинг требуют патча исходников; рост вариантов языка ухудшит сопровождение. Для текущей русскоязычной компании это не blocker.",
+      "remediation": "Постепенно переносить видимые строки в Moodle language strings/JS boot dictionary; бренд и export labels брать из согласованной site config.",
+      "verification": "Русский и второй тестовый язык, длинные строки, export metadata, экранирование и fallback; бренд не меняет права/идентичность проектов.",
+      "plan_task": "T07"
+    },
+    {
+      "id": "E01",
+      "title": "N+1 остаётся внутри пакетного resolver Маркетплейса",
+      "priority": "P1",
+      "evidence_type": "воспроизведено на реальном коде",
+      "scope": "рост каталога",
+      "references": [
+        {
+          "path": "moodle/local/ustar/classes/library_store.php",
+          "line": 61,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_access.php",
+          "line": 136,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_access.php",
+          "line": 160,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_access.php",
+          "line": 192,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "resolve_many пакетирует grants, но evaluate повторяет eligible/is_authoring и читает предмет для каждого offer. Все published offers загружаются до page slice. Probe:24/240/2400 offers →101/965/9605 DB API calls, при отображении тех же24 карточек. Это calls синтетического adapter, не измеренное число wire SQL Moodle/PostgreSQL и не latency.",
+      "impact": "Рост работы пропорционален всему каталогу, включая невидимую часть; page size24 не ограничивает стоимость запроса.",
+      "remediation": "Request-local actor facts + batch subjects/ancestors + пакетное решение ACL; bounded candidate scan/cursor, сохранив ACL до totals/pagination. Не вводить межпользовательский cache прав.",
+      "verification": "Native DB perf_get_reads для24/240/2400, одинаковые карточки/сортировка/visibility; отозванные права и пустые страницы; SQL EXPLAIN только на репрезентативном стенде.",
+      "plan_task": "T03"
+    },
+    {
+      "id": "E02",
+      "title": "Другие вкладки Библиотеки также проверяют весь набор до пагинации",
+      "priority": "P1 при большом каталоге",
+      "evidence_type": "код: подтверждено",
+      "scope": "каталог, проверки, личные материалы",
+      "references": [
+        {
+          "path": "moodle/local/ustar/classes/library_view.php",
+          "line": 11,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_view.php",
+          "line": 44,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_view.php",
+          "line": 60,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_assessment.php",
+          "line": 114,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_runtime.php",
+          "line": 85,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "mine по гранту читает offer, затем resolve снова offer. catalog делает catalog_allowed дважды и for_subject; ancestry идёт запросом на уровень. checks читает все published, для каждой can_open/best; best повторно читает definition. slice выполняется после работы.",
+      "impact": "Это отдельные горячие пути, которые не исправятся только оптимизацией storefront. Иерархия увеличивает множитель.",
+      "remediation": "Общие batch readers в текущем Library domain; передавать уже прочитанные definitions/offers; загрузить ancestor map и best attempts пачкой.",
+      "verification": "Query budget по каждой вкладке и глубине каталога, одинаковый ACL/expiry/route entitlement. Сохранить независимые права маршрута.",
+      "plan_task": "T03"
+    },
+    {
+      "id": "E03",
+      "title": "Повторный расчёт области управления внутри списка сотрудников",
+      "priority": "P1 для крупных подразделений",
+      "evidence_type": "код: подтверждённый путь O(N²) при растущем scope",
+      "scope": "HR/руководители",
+      "references": [
+        {
+          "path": "moodle/local/ustar/library_manage.php",
+          "line": 85,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_access.php",
+          "line": 118,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/access_context.php",
+          "line": 32,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/organization_model.php",
+          "line": 177,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/organization_directory.php",
+          "line": 12,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "library_manage уже получает scope, но в цикле каждого кандидата вызывает can_target; для не-admin can_target повторяет access_context::scope. Company scope опять перебирает всех users; manager scope обходится по descendants с запросами. organization_directory также resolve-ит каждого отдельно.",
+      "impact": "HR с COMPANY_READ, но без admin bypass, может многократно обходить один и тот же набор. Отдельные account caches не устраняют повтор полного списка/identity. Фактическое время не измерено.",
+      "remediation": "Одно scoped read context на запрос, batched identities/employment/occupants, paginated employee picker. На каждой записи заново проверить актуальный scope под прежними guards.",
+      "verification": "10/100/1000 сотрудников, HR non-admin/manager/acting/перевод; bounded read growth и запрет stale scope при submit.",
+      "plan_task": "T03"
+    },
+    {
+      "id": "E04",
+      "title": "Studio ищет проект сканированием всех JSON и держит общий lock",
+      "priority": "P1 при росте авторов и курсов",
+      "evidence_type": "код: подтверждено; contention не измерен",
+      "scope": "редакторы",
+      "references": [
+        {
+          "path": "moodle/local/ustar/classes/course_studio.php",
+          "line": 15,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/course_studio.php",
+          "line": 38,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/course_studio.php",
+          "line": 80,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/course_studio.php",
+          "line": 100,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "find(code) читает все SCORM blueprints c sourcejson, декодирует до совпадения. listing тоже читает все body. save/open_material держат hierarchy lock10s; внутри — assets checks, find и transaction.",
+      "impact": "Чем больше/тяжелее курсы, тем дороже даже get/save одного. Независимые авторы конкурируют за один lock; это риск timeout, не доказанный deadlock.",
+      "remediation": "Сначала ограничить lookup по существующему contentid и проверять соответствие code; metadata listing без всех body. Затем по concurrency evidence сузить hierarchy lock до структурных изменений, сохранив порядок per-project locks; новая проекция только с ADR.",
+      "verification": "100/1000 проектов со значительным sourcejson; два автора разных/одного проекта; revision conflicts, delete/move/publish и interrupted save без потери источника.",
+      "plan_task": "T04"
+    },
+    {
+      "id": "E05",
+      "title": "Маршрут сочетает чтение с синхронизацией и запросами на каждую точку",
+      "priority": "P2; измерить до массового запуска",
+      "evidence_type": "код: подтверждено",
+      "scope": "обучение",
+      "references": [
+        {
+          "path": "moodle/local/ustar/classes/route_model.php",
+          "line": 2627,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/route_model.php",
+          "line": 2685,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/route_model.php",
+          "line": 2712,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/route_model.php",
+          "line": 1949,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/library_runtime.php",
+          "line": 47,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "for_user(default) читает current version по точке, обеспечивает enrolment и синхронизирует assessment/completion для доступной последовательности. evaluate_point читает progress. read_only_snapshot уже частично batch-ит и не должен считаться тем же writer. library_runtime повторно читает версии по snapshot points.",
+      "impact": "Рендер/request может включать дорогую и побочную работу; сложнее диагностировать p95 и безопасно переиспользовать reader. Эти записи легитимны по текущему runtime, не объявлены несанкционированной мутацией.",
+      "remediation": "Характеризовать пути default/readonly/preview; пакетировать текущие версии/progress. Разделять presenter и orchestration постепенно, сохранив немедленное открытие следующей точки и канонический completion writer.",
+      "verification": "10/100 точек, locked future не оценивается, preview0writes, SCORM/Quiz completion/renewal/reset/rewards не дублируются.",
+      "plan_task": "T04"
+    },
+    {
+      "id": "E06",
+      "title": "Сосредоточение нескольких ответственностей в крупных объектах и страницах",
+      "priority": "P2 технический долг",
+      "evidence_type": "код и воспроизводимая метрика",
+      "scope": "стоимость разработки",
+      "references": [
+        {
+          "path": "moodle/local/ustar/classes/route_model.php",
+          "line": 1,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/content_admin.php",
+          "line": 148,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/classes/catalog_mastery.php",
+          "line": 928,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "moodle/local/ustar/home.php",
+          "line": 1,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "route_model:3229 строк/48 методов (CRUD,версии,scope,evaluation,enrolment,presentation); content_admin:2587/16 (файлы,версии,публикация,архив); catalog_mastery:2016/16 (попытки,вопросы,SCORM cards); home:2194 строк объединяет controller/render. Метрика не доказывает дефект сама по себе; основания — реально смешанные обязанности. Большой upgrade.php — история миграций, не повод переписать её.",
+      "impact": "Риск незаметного влияния изменения на соседние домены и высокая стоимость review. Минифицированные/плотные first-party JS/PHP дополнительно затрудняют точечный diff.",
+      "remediation": "Сохранять публичные фасады и вытаскивать reader/presenter/codec по одной ответственности при соответствующей задаче. Отдельное форматирование first-party файлов, без vendor и без логических правок. Не вводить микросервисы/DI везде.",
+      "verification": "Characterisation tests до extraction, одинаковый HTML/API/SQL результат, guards и lock order; inventory/code-map обновляется.",
+      "plan_task": "T08"
+    },
+    {
+      "id": "E07",
+      "title": "Connect останавливается при 10 000 событиях младше семи дней",
+      "priority": "P1 до массового подключения",
+      "evidence_type": "воспроизведено actual SQLite Journal",
+      "scope": "доставка и доступность бота",
+      "references": [
+        {
+          "path": "connect-worker/ustar_connect/receiver_journal.py",
+          "line": 94,
+          "commit": "267e55874eb8f6c36259d748f28a2c636adc9810"
+        },
+        {
+          "path": "connect-worker/ustar_connect/receiver_journal.py",
+          "line": 110,
+          "commit": "267e55874eb8f6c36259d748f28a2c636adc9810"
+        },
+        {
+          "path": "connect-worker/ustar_connect/receiver_runtime.py",
+          "line": 166,
+          "commit": "267e55874eb8f6c36259d748f28a2c636adc9810"
+        },
+        {
+          "path": "connect-worker/deploy/ustar-connect-receiver.service",
+          "line": 44,
+          "commit": "267e55874eb8f6c36259d748f28a2c636adc9810"
+        }
+      ],
+      "fact": "prepare_poll удаляет до500 terminal events только старше604800s; begin при COUNT>=10000 выдаёт journal_full. Реальный Journal на10k synthetic sent events отказал; после7дней уборка дала9500 и приём возобновился. Runtime возвращает4, штатный unit содержит RestartPreventExitStatus=2 3 4. Worker tree совпадает с установленным267.",
+      "impact": "Около1429 событий/сутки за7дней уже достаточно для достижения порога; это арифметика лимита, не измеренная нагрузка. После stop уборка в этом процессе сама не продолжится. Проверить effective unit overrides на сервере отдельно.",
+      "remediation": "Порог/retention и alert headroom по traffic budget; сохранить replay guards и uncertain semantics. Разделить operational history/rate window/dedup watermark, предусмотреть bounded recovery без повторной отправки и без удаления неизвестных исходов.",
+      "verification": "10k+ поток реальных begin/finish, restart/full/disk-full/old duplicate/uncertain; доказать отсутствие двойной команды и доставки.",
+      "plan_task": "T03"
+    },
+    {
+      "id": "E08",
+      "title": "Не измерена ёмкость системы на рабочем дне",
+      "priority": "P1 как gate расширения",
+      "evidence_type": "пробел доказательств",
+      "scope": "все подразделения",
+      "references": [
+        {
+          "path": "context/tasks/ACTIVE.md",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/runtime/perf2802_owner_browser_acceptance_20261029.json",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/runtime/infra_closure_matrix_20261026.md",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        }
+      ],
+      "fact": "PERF-01 остаётся открытым; observer из2900 требует адаптации к0200. Нельзя получить SQL/page,Web-SAPI OPcache,concurrent users или p95 из статуса systemd/Apache aggregate.",
+      "impact": "Невозможно обоснованно обещать скорость для500/5000 людей или выбрать размер сервера. Процент покрытия кода также не следует из числа тестов.",
+      "remediation": "Read-only observer successor под точный установленный manifest; пассивный день и synthetic representative workload на staging. Согласовать SLI/SLO и бюджеты запросов/очередей/ошибок.",
+      "verification": "Отчёт с объёмом выборки/ролями/маршрутами, p50/p95/p99,DB reads/time,cron/delivery lag,CPU/RAM/IO; без restart/pg_stat_statements enable на prod без отдельного плана.",
+      "plan_task": "T05"
+    },
+    {
+      "id": "E09",
+      "title": "main и установленный source снова расходятся",
+      "priority": "P1 перед следующим интеграционным выпуском",
+      "evidence_type": "Git и owner receipt: подтверждено",
+      "scope": "сопровождение и релизы",
+      "references": [
+        {
+          "path": "context/roadmap/STATE.yaml",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/runtime/studio_scorm_edit_owner_deploy_20261103.json",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/code_map/development_source.json",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        }
+      ],
+      "fact": "main baseline5cc02944/local2900, фактически установлен app5e61/local0200 из unmerged PR112/113/114. Разделение теперь честно записано, но default clone main не воспроизводит текущую Академию.",
+      "impact": "Новый инженер или release pipeline может собрать старое приложение; растёт сложность ancestry/rollback и повторения аудита.",
+      "remediation": "Подготовить единый integration candidate с точными app/worker trees и migration parity; owner отдельно разрешает merge. Затем supported release/tag, manifest и concise current pointers, исторические receipts сохраняются.",
+      "verification": "Compare merge tree с принятым приложением, combined FullRC на exact SHA, bootstrap от supported release. Никаких автоматических merge из этого аудита.",
+      "plan_task": "T09"
+    },
+    {
+      "id": "E10",
+      "title": "Нет единого доказательства состава и уязвимостей всей поставки",
+      "priority": "P1 до внешнего выпуска",
+      "evidence_type": "пробел покрытия, не найденная CVE",
+      "scope": "supply chain",
+      "references": [
+        {
+          "path": ".github/workflows/ustar-review-gate.yml",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": ".github/workflows/ustar-console.yml",
+          "line": 41,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "moodle/local/ustar/course_studio/vendor/JSZIP-LICENSE.md",
+          "line": 1,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        },
+        {
+          "path": "server-console/requirements.lock",
+          "line": 1,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "Есть pinned Actions,requirements locks,source manifests,vendor licenses и npm audit для console. Полного сопоставленного с фактическим Moodle/image/addons/JS/Python SBOM и результата advisory scan всей поставки в рассмотренной release evidence нет. Legacy frontend исключён из активного выпуска.",
+      "impact": "Нельзя говорить «CVE нет» или готовить внешний distributable без версии/происхождения/условий сторонних компонентов.",
+      "remediation": "SBOM+dependency provenance по реально поставляемым компонентам, versioned advisory scan и triage; inventory лицензий. Не включать legacy frontend в active risk без факта его развёртывания.",
+      "verification": "Manifest→artifact→SBOM совпадают; fixture с известной зависимостью вызывает finding; решения/исключения с владельцем и сроком, без автоматического major upgrade.",
+      "plan_task": "T07"
+    },
+    {
+      "id": "I01",
+      "title": "Полное восстановление на независимом чистом хосте не подтверждено",
+      "priority": "P1 для SLA внешнего продукта",
+      "evidence_type": "принятый риск и пробел доказательств",
+      "scope": "DR",
+      "references": [
+        {
+          "path": "context/runtime/infra_closure_matrix_20261026.md",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/roadmap/ACCEPTED_RISKS.yaml",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/runtime/BACKUP_RESTORE.md",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        }
+      ],
+      "fact": "Backup/HDD/encrypted companion и изолированные drills существуют; копии переданы. Внешний clean-host restore и whole-host RPO/RTO остаются unknown по решению владельца.",
+      "impact": "Backup success не гарантирует восстановление пользователей,файлов,секретов,cron,Connect и DNS после потери единственного сервера.",
+      "remediation": "Согласовать RPO/RTO и один clean-host rehearsal с актуальным release/restore inventory. Не повторять принятые storage/OS циклы и не удалять рабочие копии.",
+      "verification": "Восстановленная изолированная Academy: login,SCORM progress,task files,balances,disabled provider sends; измеренное время и точки потери данных.",
+      "plan_task": "T10"
+    },
+    {
+      "id": "I02",
+      "title": "Внешний периметр имеет незакрытые условия допуска",
+      "priority": "P1 до открытия в интернет",
+      "evidence_type": "принятый риск; не свежий pentest",
+      "scope": "внешний продукт",
+      "references": [
+        {
+          "path": "context/roadmap/ACCEPTED_RISKS.yaml",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/runtime/infra_closure_matrix_20261026.md",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "server-console/backend/ustar_console/operations.py",
+          "line": 318,
+          "commit": "5e61c0d2566e8103d01121968d56852e26da99fa"
+        }
+      ],
+      "fact": "LAN парольный доступ принят; SSH/firewall ждут внешнего периметра. Проверка общей www-data/caddy boundary ограничена. У console есть отдельная ops auth и Unix peer allowlist; это не публичная Academy login. HTTPS уже принят в своей области — утверждать «TLS нет» неверно.",
+      "impact": "Из текущей LAN-приёмки нельзя вывести защищённость публичной установки, MFA/abuse/rate/restore-secret boundary.",
+      "remediation": "Threat model и ASVS L2-oriented matrix по Academy/API/File/SCORM/RSS/Connect/console. Отдельно внешние ACL/IPv6/NAT,admin/ops boundary,auth/CSRF/upload/SSRF/rate и негативные сценарии.",
+      "verification": "Независимый staging security review и effective-config evidence; отсутствуют неприемлемые риски до publish, каждый accepted risk имеет trigger/owner.",
+      "plan_task": "T06"
+    },
+    {
+      "id": "I03",
+      "title": "Ротация логов и воспроизводимый production image отложены",
+      "priority": "P2 сейчас; P1 перед тиражированием",
+      "evidence_type": "принятый риск",
+      "scope": "операции",
+      "references": [
+        {
+          "path": "context/decisions/0018-container-runtime.md",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/runtime/docker_runtime_successor_20261026.md",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        }
+      ],
+      "fact": "Docker rotation/health/recreate и переход к reproducible Dockerfile deferred до планового Moodle/PHP окна. Анализ writable layer существует, но не равен build spec.",
+      "impact": "Рост логов может занять диск; на другом сервере нельзя полагаться на ручной mutable layer. Текущая заполненность не измерена заново.",
+      "remediation": "В согласованном окне pinned image,задокументированные пакеты,log/health budgets и backup/cron/HTTPS проверка. При abnormal disk growth пересмотреть срок раньше по accepted trigger.",
+      "verification": "Rebuild identity, clean start, controlled rollback, bounded logs и recovery; не запускать старый frozen successor.",
+      "plan_task": "T10"
+    },
+    {
+      "id": "I04",
+      "title": "Независимое обнаружение потери хоста и shutdown ИБП не доказаны",
+      "priority": "P2 внутри; P1 при SLA",
+      "evidence_type": "пробел доказательств",
+      "scope": "доступность",
+      "references": [
+        {
+          "path": "context/runtime/infra_closure_matrix_20261026.md",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/runtime/MONITORING.md",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        }
+      ],
+      "fact": "Пульт/уведомления есть, но независимый от того же сервера host-loss observer не подтверждён. ИБП присутствует; автоматическое выключение и возврат не приняты отдельным тестом.",
+      "impact": "Если хост полностью пропал, локальный монитор может не сообщить. Наличие ИБП не гарантирует консистентность при длительном отключении.",
+      "remediation": "Отдельная точка health observation и согласованный канал, shutdown/recovery drill в окне; уведомления только по отдельному разрешению адресатам.",
+      "verification": "Контролируемое отсутствие heartbeat обнаружено снаружи; blackout simulation на безопасном стенде; корректное восстановление БД/cron и предотвращение ложных тревог.",
+      "plan_task": "T10"
+    },
+    {
+      "id": "I05",
+      "title": "Свежая успешность cron/доставки/почты не следует из установки overlay",
+      "priority": "P1 при gate массового запуска",
+      "evidence_type": "пробел доказательств",
+      "scope": "фоновые бизнес-процессы",
+      "references": [
+        {
+          "path": "context/roadmap/STATE.yaml",
+          "line": 33,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/runtime/feed2803_owner_deploy_20261029.json",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        },
+        {
+          "path": "context/runtime/studio_scorm_edit_owner_deploy_20261103.json",
+          "line": 1,
+          "commit": "a1dfe7c2b86e984bebbd03de2ffbef9d9900a7fb"
+        }
+      ],
+      "fact": "Последний SCORM receipt проверяет source-only overlay; он не запускает новый cron/drain/SMTP delivery аудит. Исторические failed/overdue значения сохраняются с датами; актуальное состояние неизвестно.",
+      "impact": "Открывающиеся страницы не гарантируют своевременные назначения,эскалации,quick checks и внешние уведомления. Нельзя называть старые ошибки действующим инцидентом без свежего наблюдения.",
+      "remediation": "Включить readonly scheduled/ad-hoc/task lag и outbox/delivery counters в workday evidence; проверить маршруты доставки с утверждёнными тестовыми получателями.",
+      "verification": "Обычный рабочий цикл,нет нового ростаbacklog,known failures классифицированы; историю не сбрасывать ради зелёного статуса.",
+      "plan_task": "T05"
+    }
+  ],
+  "completed_date_msk": "2026-11-04"
+}

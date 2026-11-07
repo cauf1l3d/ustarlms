@@ -1,27 +1,30 @@
 # USTAR — инструкции агентам
 
-Актуально01.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
-Канонический main — app2900/source5cc02944; PR110/111 слиты. Owner29Oct установил app2900/theme2700 через9a:
-[receipt](context/runtime/connect_role_bot_owner_deploy_20261029.json).
-Owner1Nov восстановил egress (CONNECT200/HTTP302/TLS0), оба бота отвечают.
+Актуально05.11.2026. Начать с [START_HERE](START_HERE.md), затем текущий домен.
+Main2900/source5cc02944; PR110/111 слиты.
 Worker267e5587 установлен: visuals_active/visuals_ready, recovery_required:false.
 [Owner receipt](context/runtime/connect_visual_owner_deploy_20261101.json); PNG/читаемость и задачи/возврат/фото приняты.
 Инструкции владельцу — прямо в чат короткими блоками команд.
-[Квалификация](context/runtime/connect_role_bot_cron_preflight_fix_20261029.json),
-[команды](docs/CONNECT_BOT_2900_INSTALL_RU.md).
 
 ## Работа и разрешения
 
 Owner1Nov разрешил merge110/111; объединены после FullRC.
 [Основание/проверки](context/runtime/connect_feed_integration_order_20261101.json).
 App2900/theme2700 и worker267e5587 уже установлены владельцем; merge не deploy.
-Задачи/возврат/фото/читаемость приняты. Остальные процессы с руководством с2Nov;
-публичный HTTPS/Mini App ждут согласования. Следующий этап — PERF-01: пассивное
-наблюдение обычного рабочего дня. Отчёт8h ещё не получен; старые cron19/failed2
-не сбрасывать и не выдавать за новую ошибку.
+Задачи/возврат/фото/читаемость приняты. Owner принял прямой SCORM запуск51332a21;
+SCORM/Quiz и первичная Библиотека приняты2–3Nov.
+[Report](context/runtime/library_owner_navigation_20261103.json). Owner3Nov установил
+marketplace4715383b/tool59f: success/exit0/postcheck active, «Отлично работает».
+[Receipt](context/runtime/library_marketplace_owner_deploy_20261103.json).
+Discovery app719bf47c/toolaa61d595 установлен5Nov: exit0/active.
+[Receipt](context/runtime/library_discovery_owner_deploy_20261105.json). ROUTE-EDITOR-01:
+Owner подтвердил45e не установлен. STUDIO-CSP-01: native YUI/CSP regression и cumulative
+пакет app901ac9eb/toolf4d81940 (qualified2984b066) с Route Studio от719bf47c; без unsafe-eval/core changes.
+[Реализация](context/reviews/20261105/STUDIO_CSP_IMPLEMENTATION.md),
+[квалификация](context/runtime/studio_csp_qualification_20261105.json). Детальные роли и
+PERF-01 остаются; HTTPS/Mini App ждут руководства. Старые cron19/failed2 не сбрасывать.
 
-Owner29Oct возобновил полный Connect: кнопки/короткие пояснения/визуальные сводки,
-все роли через существующую Академию; Mini App и внешний HTTPS в конце.
+Connect: все роли через существующую Академию; Mini App и HTTPS в конце.
 [Поручение](context/runtime/connect_bot_owner_order_20261029.json).
 Самостоятельная реализация, без субагентов, соразмерные проверки, один целый выпуск.
 [Квалификация2803](context/runtime/feed2803_qualification_20261029.json) сохраняет
@@ -38,7 +41,7 @@ Docker rotation/health/recreate отложены до
 
 - [STATE](context/roadmap/STATE.yaml): версии/SHA/квитанции и степень уверенности.
 - [ACTIVE](context/tasks/ACTIVE.md), [BACKLOG](context/roadmap/BACKLOG.yaml): текущая работа.
-- [Ревью](context/reviews/20261026/VERIFIED_REVIEW_RU.md): факты и гипотезы.
+- [Аудит](context/reviews/20261103/AUDIT_RU.md): факты и гипотезы.
 - [Риски](context/roadmap/ACCEPTED_RISKS.yaml), [ADR](context/decisions/README.md).
 - Датированные runtime receipts и archive сохраняют историю; входные документы краткие.
 
@@ -53,9 +56,7 @@ server-console имеет отдельную ops-авторизацию, не Ac
 обязательна; исторические миграции не переписывать ради форматирования.
 Не публиковать config.php, токены, дампы, moodledata, private logs и ключи.
 
-Различать Git source, CI, owner receipt и свежую проверку сервера. Payload590/100
-не является whole-host manifest. Общая browser-приёмка не доказывает все роли,
-PDF/conflict/employee edge cases, производительность или полное восстановление.
+Различать Git source, CI, owner receipt и свежую проверку сервера. Payload не whole-host census; browser-приёмка не доказывает все роли, нагрузку и restore.
 Принятые SSD/Moodle5.1.8/OS/reboot/DB-role/code/HTTPS/Connect циклы не повторять.
 SSH/firewall — перед внешним доступом. Копии переданы, внешний restore unknown по
 решению владельца. ИБП есть, автоматический shutdown не проверен. Остаточные

@@ -105,10 +105,18 @@ def check():
     effective=manifest
     candidate=state.get('development_candidate')
     if candidate:
-        # Keep accepted source/deployment evidence immutable. A candidate is
-        # explicit, byte-checked and tree-addressed, never a new native receipt.
+        # Source integration and owner deployment are independent. An unmerged
+        # tree may already be installed; its dated receipt supplies that fact.
         effective=json.loads((ROOT/candidate['manifest']).read_text())
-        assert effective['kind']=='unmerged_development_source' and effective['deployed'] is False
+        assert effective['kind']=='unmerged_development_source'
+        assert effective['deployed'] is bool(candidate.get('deployed', False))
+        if effective['deployed']:
+            assert effective['deployment_evidence']==candidate['owner_receipt']
+            assert (ROOT/effective['deployment_evidence']).is_file()
+            assert candidate['application_commit']==state['production']['current_source_commit']
+            owner=read(effective['deployment_evidence'])
+            assert owner['application']['payload_commit']==candidate['application_commit']
+            assert owner['application']['phase']==owner['postcheck']['phase']=='active'
         assert effective['baseline_commit']==baseline
         assert len(effective['files'])==len({f['path'] for f in effective['files']})==effective['counts']['files']
         treepaths=set()

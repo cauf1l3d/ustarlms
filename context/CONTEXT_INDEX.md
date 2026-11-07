@@ -1,6 +1,9 @@
 # Навигация по контексту
 
 - [Начало](../START_HERE.md), [STATE](roadmap/STATE.yaml), [текущие задачи](tasks/ACTIVE.md).
+- [Управление Библиотекой](reviews/20261106/LIBRARY_MANAGEMENT_IMPLEMENTATION.md),
+  [план](../docs/superpowers/plans/2026-11-06-library-management.md),
+  [инструкция автору](../docs/LIBRARY_MANAGEMENT_RU.md).
 - [Предпросмотр: картинки и шрифты](reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md),
   [квалификация](runtime/studio_preview_qualification_20261106.json),
   [инструкция](../docs/STUDIO_PREVIEW_INSTALL_RU.md).

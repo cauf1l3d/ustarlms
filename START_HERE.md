@@ -24,14 +24,12 @@ Marketplace скрыт по умолчанию; admin выбирает отде�
 [Правила доступа](docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md). Main2900 отдельно;
 PR112/113/114 открыты без разрешения merge.
 
-Предыдущий cumulative app901/toolf4d включает Route Studio и YUI при строгой CSP:
-[квалификация](context/runtime/studio_csp_qualification_20261105.json).
-Owner6Nov: точки скрываются, но изображения Preview не видны; точный installed SHA не сообщён.
-STUDIO-PREVIEW-01 app2cb233d9/tool ed292313: собственные ресурсы opaque iframe,
-[реализация](context/reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md),
-[квалификация](context/runtime/studio_preview_qualification_20261106.json),
-[установка](docs/STUDIO_PREVIEW_INSTALL_RU.md). 4CI/11FullRC PASS на ed292313.
-Пакет требует source901 и active CSP journal до outage; deployment ждёт owner receipt.
+Owner6Nov принял Preview общим «все ок», точный manifest не передан:
+[приёмка](context/runtime/studio_preview_owner_acceptance_20261106.json).
+LIBRARY-MANAGEMENT-01 appd63a63d3: формы вопросов/поиск/история,
+[реализация](context/reviews/20261106/LIBRARY_MANAGEMENT_IMPLEMENTATION.md),
+[инструкция](docs/LIBRARY_MANAGEMENT_RU.md). Native/owner package квалификация идёт.
+Expected predecessor2cb проверяется полным source profile и active Preview journal.
 
 ## PERF-01 после Библиотеки
 

@@ -208,6 +208,7 @@ SOURCE_ONLY = SOURCE_ONLY | {'library_discovery_patch', 'build_library_discovery
 SOURCE_ONLY = SOURCE_ONLY | {'route_editor_patch', 'build_route_editor_patch'}
 SOURCE_ONLY = SOURCE_ONLY | {'studio_csp_patch', 'build_studio_csp_patch'}
 SOURCE_ONLY = SOURCE_ONLY | {'studio_preview_patch', 'build_studio_preview_patch'}
+SOURCE_ONLY = SOURCE_ONLY | {'library_management_patch', 'build_library_management_patch'}
 METADATA.update({'academy_https': ('Владелец HTTPS Академии',
                    'Исходники проверенных поставок',
                    'Справка об исходнике; конкретная версия и режим указаны в dated runtime-квитанции.',

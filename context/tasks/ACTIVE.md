@@ -1,18 +1,22 @@
 # Активная работа —06.11.2026
 
-## Предпросмотр Студии: квалифицированный пакет
+## Управление Библиотекой: следующий пакет
 
-STUDIO-PREVIEW-01 awaiting_owner_deployment. App2cb233d9/tool ed292313:
-4CI/11FullRC PASS на exacted292313. Реальные PNG/font/API/fresh reload PASS
-в Moodle5.1.1/5.1.8; sandbox/CSP прежние. Native430/1988 каждый, Connect172/875,
-PHP8.2/8.3 по1649tests/274conditional skips, operator16actualPHP/UID33 PASS.
-Архив136074bytes SHAcf8c9b0b совпал с CI и сохранённой копией.
-[Квалификация](../runtime/studio_preview_qualification_20261106.json),
-[установка](../../docs/STUDIO_PREVIEW_INSTALL_RU.md),
-[реализация](../reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md).
-Пакет2files/0added поверх901 требует полный source profile и active CSP journal до outage.
-Owner подтвердил скрытие точек; exact901 terminal receipt отсутствует. Последняя полная
-receipt719 сохранена; новая установка и проверка Preview на server1 ожидаются.
+LIBRARY-MANAGEMENT-01 in_progress, appd63a63d3. U03/U04/U09/U10:
+поиск/страницы материалов, сотрудников, истории и проверок; закреплённый subject;
+6–100questions и корректные reorder/remove; сохранение rejected input/stale token;
+точные future/expired/refund labels. Local PHP/DOM/npm/36browser views PASS.
+Native SQL/browser и owner successor проходят квалификацию.3changed/7added,
+660files/108tables/0200; schema/writers/worker267 прежние.
+[Реализация](../reviews/20261106/LIBRARY_MANAGEMENT_IMPLEMENTATION.md),
+[план](../../docs/superpowers/plans/2026-11-06-library-management.md),
+[инструкция автору](../../docs/LIBRARY_MANAGEMENT_RU.md).
+
+Owner6Nov принял Preview «все ок» и поручил следующий пакет.
+[Приёмка](../runtime/studio_preview_owner_acceptance_20261106.json) — general functional,
+без exact terminal receipt. Предыдущий app2cb/tool ed29:4CI/11FullRC PASS.
+Новый installer проверит exact2cb + active private Preview journal до outage.
+Последняя полная source terminal receipt719 сохранена; не переустанавливать старые архивы.
 
 ## Установленная Академия
 

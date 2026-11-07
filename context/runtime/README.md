@@ -1,11 +1,15 @@
 # Runtime evidence
 
+06Nov owner: Preview «все ок», поручен следующий пакет. [Функциональная приёмка](studio_preview_owner_acceptance_20261106.json)
+без terminal manifest; expected2cb проверит новый installer. [Управление Библиотекой](../reviews/20261106/LIBRARY_MANAGEMENT_IMPLEMENTATION.md)
+проходит квалификацию,3changed/7added,660files/108tables/0200.
+
 06Nov: app2cb233d9/tool ed292313 квалифицирован на exacted292313:4CI/11FullRC PASS.
 Исправлены images/fonts в opaque Preview, source2files/0added,653files/108tables,0200.
 [Квалификация](studio_preview_qualification_20261106.json), [установка](../../docs/STUDIO_PREVIEW_INSTALL_RU.md),
 [реализация](../reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md).
 Owner подтвердил скрытие точек, затем сообщил Preview defect; exact installed901 SHA не сообщён.
-Новый пакет требует source901 + active CSP journal до outage. Owner installation/acceptance pending;
+Preview package requires source901 + active CSP journal; owner now generally accepted Preview, exact terminal receipt remains absent;
 последняя полная deployment receipt ниже сохраняется.
 
 Последняя полная terminal receipt: discovery app719bf47c/toolaa61d595,owner5Nov — success/exit0,

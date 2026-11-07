@@ -866,6 +866,7 @@ capabilities:
   literal_reference_paths:
   - moodle/local/ustar/classes/library_access.php
   - moodle/local/ustar/library_manage.php
+  - moodle/local/ustar/tests/library_management_test.php
   - moodle/local/ustar/tests/library_store_test.php
   direct_check_paths:
   - moodle/local/ustar/classes/library_access.php

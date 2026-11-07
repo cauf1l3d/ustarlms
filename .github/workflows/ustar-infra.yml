@@ -18,6 +18,35 @@ concurrency:
   group: ustar-infra-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  library-management:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Library management forms and searchable history contracts and actual owner metadata
+        run: |
+          php -n -r 'if (!ini_get("short_open_tag")) { exit(1); }'
+          python3 -m unittest tests.r16.test_library_management_patch.Delivery tests.r16.test_library_management_patch.Contract tests.r16.test_library_management_patch.RealPhp -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_library_management_patch.Transaction -v
+      - name: Build and verify the exact bounded Library management forms and searchable history successor offline
+        run: |
+          LIBRARY_MANAGEMENT_TOOL=$(git log -1 --format=%H -- scripts/infra/library_management_patch.py scripts/infra/build_library_management_patch.py)
+          python3 scripts/infra/build_library_management_patch.py --tool-commit "$LIBRARY_MANAGEMENT_TOOL" --output artifacts/library-management
+          tar --no-same-owner -xzf artifacts/library-management/ustar-library-management-*.tar.gz -C artifacts/library-management
+          cd artifacts/library-management
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: library-management
+          path: artifacts/library-management/
   studio-preview:
     runs-on: ubuntu-24.04
     timeout-minutes: 10

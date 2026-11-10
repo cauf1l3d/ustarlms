@@ -3,9 +3,10 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 
-global $DB, $USER;
+global $DB, $USER, $PAGE;
 $context = context_system::instance();
 \local_ustar\hr_access::require_structure_manager();
+$PAGE->set_context($context);
 
 $structure = \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE);
 $departments = [];
@@ -156,98 +157,43 @@ foreach ($structure['skills'] ?? [] as $skill) {
     if ($id !== '') { $skillmap[$id] = (string)($skill['name'] ?? $id); }
 }
 
-/** Convert human-selected catalog values to one immutable route-version payload. */
-$requirements_from_request = static function() use ($DB, $skillmap): array {
-    $requirements = [];
-    $required = optional_param('required', 0, PARAM_BOOL) ? true : false;
-    $completionmode = optional_param('completionmode', 'open', PARAM_ALPHA);
-    $completionmode = in_array($completionmode, ['open', 'ack'], true) ? $completionmode : 'open';
-    foreach (optional_param_array('contentids', [], PARAM_INT) as $contentid) {
-        $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,type,status,cmid', IGNORE_MISSING);
-        if (!$content || (string)$content->type === 'folder') {
-            throw new invalid_parameter_exception('Выбранный материал больше недоступен. Обновите форму.');
-        }
-        // A Studio SCORM package runs in Moodle. Pin the actual CM in the
-        // immutable route version so its completion, score and attempts come
-        // from Moodle, including when the author imports a later version.
-        if (\local_ustar\material_studio::available()
-                && (string)$DB->get_field('local_ustar_content_blueprints', 'kind',
-                    ['contentid' => (int)$content->id]) === \local_ustar\material_studio::KIND_SCORM) {
-            if ((string)$content->status !== \local_ustar\content::STATUS_PUBLISHED
-                    || !\local_ustar\material_studio::runtime_ready((int)$content->id)) {
-                throw new invalid_parameter_exception('Сначала импортируйте и опубликуйте SCORM-пакет.');
-            }
-            $requirements[] = ['type' => 'cm', 'sourceid' => (int)$content->cmid,
-                'required' => $required, 'label' => (string)$content->title];
-            continue;
-        }
-        $requirements[] = ['type' => 'content', 'sourceid' => (int)$content->id, 'completionmode' => $completionmode,
-            'required' => $required, 'label' => (string)$content->title];
-    }
-    $courseid = optional_param('courseid', 0, PARAM_INT);
-    if ($courseid > 0) {
-        $course = $DB->get_record('course', ['id' => $courseid], 'id,fullname', MUST_EXIST);
-        $requirements[] = ['type' => 'course', 'sourceid' => (int)$course->id, 'required' => $required,
-            'label' => (string)$course->fullname];
-    }
-    $cmid = optional_param('cmid', 0, PARAM_INT);
-    if ($cmid > 0) {
-        $module = $DB->get_record_sql('SELECT cm.id, cm.instance, m.name AS modname, c.fullname FROM {course_modules} cm '
-            . 'JOIN {modules} m ON m.id = cm.module JOIN {course} c ON c.id = cm.course '
-            . 'WHERE cm.id = :id AND cm.deletioninprogress = 0', ['id' => $cmid], MUST_EXIST);
-        $activityname = (string)$module->modname;
-        if (preg_match('/^[a-z_]+$/', (string)$module->modname)) {
-            $candidate = $DB->get_field((string)$module->modname, 'name', ['id' => (int)$module->instance], IGNORE_MISSING);
-            if ($candidate) { $activityname = (string)$candidate; }
-        }
-        $requirements[] = ['type' => 'cm', 'sourceid' => (int)$module->id, 'required' => $required,
-            'label' => (string)$module->fullname . ' — ' . $activityname];
-    }
-    $assessmentkey = optional_param('assessmentkey', '', PARAM_ALPHANUMEXT);
-    if ($assessmentkey !== '') {
-        $assessment = \local_ustar\development_assessment::published($assessmentkey);
-        if (!$assessment) {
-            throw new invalid_parameter_exception('Выбранный развивающий профиль больше не опубликован. Обновите форму.');
-        }
-        $requirements[] = [
-            'type' => 'assessment',
-            'sourcekey' => $assessmentkey,
-            'required' => $required,
-            'label' => (string)$assessment['assessment']->title,
-        ];
-    }
-    $nativekey = optional_param('nativekey', '', PARAM_ALPHANUMEXT);
-    if ($nativekey !== '') {
-        $allowednative = array_column(\local_ustar\native_learning::authoring_options(), 'name', 'id');
-        if (!isset($allowednative[$nativekey])) {
-            throw new invalid_parameter_exception('Выберите доступную активность USTAR.');
-        }
-        $requirements[] = [
-            'type' => 'native', 'sourcekey' => $nativekey,
-            'required' => $required, 'label' => $allowednative[$nativekey],
-        ];
-    }
-    $primaryskillid = optional_param('primaryskillid', '', PARAM_ALPHANUMEXT);
-    $skillids = optional_param_array('skillids', [], PARAM_ALPHANUMEXT);
-    if ($primaryskillid !== '' && !in_array($primaryskillid, $skillids, true)) { $skillids[] = $primaryskillid; }
-    foreach (array_values(array_unique($skillids)) as $skillid) {
-        if (!isset($skillmap[$skillid])) {
-            throw new invalid_parameter_exception('Выбранный навык больше не существует. Обновите форму.');
-        }
-        // A skill selected in Route Studio describes what this learning
-        // develops. It is not an employee completion gate by itself.
-        // Explicit skill/evidence gates must be created deliberately.
-        $requirements[] = ['type' => 'skill', 'sourcekey' => $skillid, 'required' => false,
-            'primary' => $skillid === $primaryskillid, 'label' => $skillmap[$skillid]];
-    }
-    if (optional_param('previousadaptation', 0, PARAM_BOOL)) {
-        $requirements[] = ['type' => 'previous_adaptation', 'required' => true,
-            'label' => 'Завершить предыдущие обязательные точки'];
-    }
-    return \local_ustar\route_model::normalize_requirements($requirements);
-};
+$formerror='';$postedform=null;$previewonly=false;
+if ($_SERVER['REQUEST_METHOD']==='POST' && in_array(optional_param('action','',PARAM_ALPHANUMEXT),['save_version','add_point'],true)) {
+    $postedform=\local_ustar\route_studio_form::posted($_POST);
+    $previewonly=in_array(optional_param('intent','',PARAM_ALPHA),['addrow','search'],true);
+    if ($previewonly) { require_sesskey();\local_ustar\view_as::assert_writable();if (optional_param('intent','',PARAM_ALPHA)==='addrow') { $postedform['rows'][]=['base'=>'','required'=>'1']; } }
+}
+// Resolve permitted source choices once per request, without any writer calls.
+$learningchoices=[];
+$blueprints=\local_ustar\material_studio::available() ? $DB->get_records('local_ustar_content_blueprints',[],'','contentid,kind') : [];
+foreach ($DB->get_records_select('local_ustar_content','type<>:folder AND status<>:archived',['folder'=>'folder','archived'=>'archived'],'title','id,title,status,cmid') as $r) {
+    if (($blueprints[$r->id]->kind??'')===\local_ustar\material_studio::KIND_SCORM) {
+        if ($r->status!=='published' || !\local_ustar\material_studio::runtime_ready((int)$r->id)) { continue; }
+        $learningchoices['content:'.$r->id]=['type'=>'cm','sourceid'=>(int)$r->cmid,'label'=>'SCORM · '.$r->title];
+    } else { $learningchoices['content:'.$r->id]=['type'=>'content','sourceid'=>(int)$r->id,'label'=>'Материал · '.$r->title,'completionmode'=>'open']; }
+}
+foreach ($DB->get_records_select('course','id>1',[],'fullname','id,fullname') as $r) {
+    $learningchoices['course:'.$r->id]=['type'=>'course','sourceid'=>(int)$r->id,'label'=>'Курс · '.$r->fullname];
+}
+$modules=$DB->get_records_sql('SELECT cm.id,cm.instance,m.name AS modname,c.fullname FROM {course_modules} cm JOIN {modules} m ON m.id=cm.module JOIN {course} c ON c.id=cm.course WHERE cm.deletioninprogress=0 AND c.id>1 ORDER BY c.fullname,cm.id');
+$modulenames=[];
+foreach ($modules as $m) { if (preg_match('/^[a-z_]+$/D',$m->modname)) { $modulenames[$m->modname][]=(int)$m->instance; } }
+foreach ($modulenames as $name=>$ids) { $modulenames[$name]=$DB->get_records_list($name,'id',array_unique($ids),'','id,name'); }
+foreach ($modules as $r) {
+    $label=$r->fullname.' · '.($modulenames[$r->modname][$r->instance]->name??$r->modname);
+    $learningchoices['cm:'.$r->id]=['type'=>'cm','sourceid'=>(int)$r->id,'label'=>$label];
+}
+foreach (\local_ustar\development_assessment::catalog() as $r) {
+    $learningchoices['assessment:'.$r['key']]=['type'=>'assessment','sourcekey'=>(string)$r['key'],'label'=>$r['title']];
+}
+foreach (\local_ustar\native_learning::authoring_options() as $r) {
+    $learningchoices['native:'.$r['id']]=['type'=>'native','sourcekey'=>(string)$r['id'],'label'=>$r['name']];
+}
+foreach ($skillmap as $id=>$name) { $learningchoices['skill:'.$id]=['type'=>'skill','sourcekey'=>$id,'required'=>false,'primary'=>false,'label'=>'Навык · '.$name]; }
+$learningchoices['previous_adaptation']=['type'=>'previous_adaptation','label'=>'Предыдущие обязательные шаги'];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$previewonly) {
+    try {
     require_sesskey();
     \local_ustar\view_as::assert_writable();
 
@@ -331,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // The membership was checked above. All writes now target the same physical parent.
         $route = \local_ustar\route_family::parent_route($familyid);
         if (!$route) { throw new invalid_parameter_exception('Нет родительского маршрута'); }
-        if (!in_array($action, ['save_version', 'make_override', 'revert_parent'], true)) {
+        if (!in_array($action, ['save_version', 'set_point_active', 'make_override', 'revert_parent'], true)) {
             throw new invalid_parameter_exception('Это действие выполняется в общем маршруте');
         }
     }
@@ -346,7 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($positionediting && $action === 'save_version') {
         $editingpointid = required_param('pointid', PARAM_INT);
         if (!\local_ustar\route_scope::exclusive_to($editingpointid, $positionid)
-                || !\local_ustar\route_scope::point_applies($editingpointid, $positionid, true)) {
+                || !in_array($editingpointid,array_map(static fn($p)=>(int)$p->id,\local_ustar\route_scope::points_for_position((int)$route->id,$positionid,true,true)),true)) {
             throw new invalid_parameter_exception('Общий шаг нельзя менять для всех из вкладки должности');
         }
     }
@@ -435,8 +381,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 PARAM_ALPHANUMEXT
             );
 
-        $requirements =
-            $requirements_from_request();
+        $baseversion=null;$baserequirements=[];
+        if ($action==='save_version') {
+            if (required_param('expectedmodified',PARAM_INT)<=0) { throw new invalid_parameter_exception('Форма устарела. Обновите маршрут перед сохранением.'); }
+            $baseversion=\local_ustar\route_model::latest_version(required_param('pointid',PARAM_INT));
+            if ((int)($baseversion->id??0)!==required_param('baseversion',PARAM_INT)) {
+                throw new moodle_exception('Содержание точки изменено другим редактором. Введённые данные сохранены в форме; обновите страницу и сверьте изменения.');
+            }
+            $baserequirements=$baseversion?\local_ustar\route_model::requirements_for_version($baseversion):[];
+        }
+        $requirements=\local_ustar\route_studio_form::decode($_POST,$baserequirements,$learningchoices);
 
         if (
             $status
@@ -448,6 +402,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'Нельзя опубликовать шаг без обучения '
                 . 'или условия завершения'
             );
+        }
+
+        $accesspolicy = null;
+        if (optional_param('advancepolicy', '', PARAM_ALPHA) !== '') {
+            $unit = optional_param('reviewunit', 'hours', PARAM_ALPHA);
+            if (!in_array($unit, ['hours','days'], true)) { throw new invalid_parameter_exception('Неизвестная единица срока.'); }
+            $accesspolicy = \local_ustar\route_point_access::normalize([
+                'advance'=>required_param('advancepolicy',PARAM_ALPHA),
+                'repeat'=>required_param('repeataccess',PARAM_ALPHA),
+                'finish'=>required_param('finishaction',PARAM_ALPHA),
+                'seconds'=>(int)round(optional_param('reviewduration',24,PARAM_FLOAT) * ($unit === 'days' ? DAYSECS : HOURSECS))]);
         }
 
         $versiondata = [
@@ -487,6 +452,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ? time()
                 : 0,
         ];
+
+        if ($accesspolicy !== null) { $versiondata['accesspolicy'] = $accesspolicy; }
 
         if ($action === 'add_point') {
             $sort = 10;
@@ -569,8 +536,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'positionid' => $positionid,
                 'positionediting' => $positionediting,
                 'phase' => $phase,
-                'active' => optional_param('active', 0, PARAM_BOOL),
+                'active' => !empty($point->active),
                 'versiondata' => $versiondata,
+                'baseversion' => (int)($baseversion->id??0),
                 'actorid' => $actorid,
                 'expectedmodified' => required_param('expectedmodified', PARAM_INT),
             ]);
@@ -628,43 +596,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
         $anchor = '#point-' . $sourceid;
 
-    } else if ($action === 'archive_point') {
-        $pointid =
-            required_param(
-                'pointid',
-                PARAM_INT
-            );
-
-        $point =
-            $DB->get_record(
-                'local_ustar_route_points',
-                [
-                    'id' => $pointid,
-                    'routeid' => (int)$route->id,
-                ],
-                'id,phase,inheritstate,timemodified',
-                MUST_EXIST
-            );
-
-        if (
-            (string)$point->inheritstate
-            === \local_ustar\route_family::INHERITED
-        ) {
-            throw new moodle_exception(
-                'Наследуемый общий шаг нельзя '
-                . 'отключить напрямую'
-            );
-        }
-
-        \local_ustar\route_model::update_point(
-            (int)$route->id,
-            $pointid,
-            (string)$point->phase,
-            false,
-            $actorid,
-            (int)$point->timemodified
-        );
-
+    } else if ($action === 'set_point_active') {
+        \local_ustar\route_commands::set_point_active([
+            'routeid'=>(int)$route->id,'pointid'=>required_param('pointid',PARAM_INT),
+            'actorid'=>$actorid,'expectedmodified'=>required_param('expectedmodified',PARAM_INT),
+            'positionid'=>$positionid,'positionediting'=>$positionediting,'active'=>required_param('active',PARAM_BOOL)]);
     } else {
         throw new invalid_parameter_exception(
             'Неизвестное действие редактора маршрута'
@@ -707,6 +643,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } finally { $commandlock->release(); }
 
     redirect($redirecturl);
+    } catch (moodle_exception $e) {
+        if (($e instanceof dml_exception && !($e instanceof dml_missing_record_exception)) || $e instanceof required_capability_exception) { throw $e; }
+        $formerror=$e instanceof dml_missing_record_exception ? 'Один из выбранных источников или шагов больше недоступен. Обновите список и проверьте обучение.' : \local_ustar\route_studio_presenter::error($e);
+    }
 }
 
 /*
@@ -730,19 +670,17 @@ if ($selectedroute) {
         $route =
             \local_ustar\route_model::admin_view_route(
                 (int)$selectedroute->id,
-                $resolvedview ? $positionid : ''
+                $resolvedview ? $positionid : '', true
             );
 
         if ($route && $resolvedview) {
+            $applicableids=array_map(static fn($p)=>(int)$p->id,\local_ustar\route_scope::points_for_position((int)$selectedroute->id,$positionid,true,true));
             $route['points'] =
                 array_values(
                     array_filter(
                         $route['points'] ?? [],
-                        static function(array $point) use ($positionid): bool {
-                            return \local_ustar\route_scope::point_applies(
-                                (int)$point['id'],
-                                $positionid, true
-                            );
+                        static function(array $point) use ($applicableids): bool {
+                            return in_array((int)$point['id'],$applicableids,true);
                         }
                     )
                 );
@@ -766,9 +704,7 @@ if ($selectedroute) {
 
     } else {
         $route =
-            \local_ustar\route_model::admin_view(
-                (string)$selectedroute->positionid
-            );
+            \local_ustar\route_model::admin_view_route((int)$selectedroute->id,(string)$selectedroute->positionid,true);
     }
 
 } else {
@@ -783,47 +719,8 @@ if ($route && !$resolvedview && $selectedfamily) {
 }
 
 $routeexists = !empty($route['ok']);
-$editpointid = optional_param('point', 0, PARAM_INT);
+$editpointid = $postedform!==null ? (int)($postedform['pointid']??0) : optional_param('point',0,PARAM_INT);
 $newcontentid = optional_param('newcontent', 0, PARAM_INT);
-$contentoptions = [];
-foreach ($DB->get_records_select('local_ustar_content', 'type <> :folder AND status <> :archived', ['folder' => 'folder', 'archived' => 'archived'], 'title ASC', 'id,title,type,status') as $item) {
-    $studio = \local_ustar\material_studio::available()
-        ? $DB->get_field('local_ustar_content_blueprints', 'kind', ['contentid' => (int)$item->id]) : false;
-    if ($studio === \local_ustar\material_studio::KIND_SCORM
-            && ((string)$item->status !== \local_ustar\content::STATUS_PUBLISHED
-                || !\local_ustar\material_studio::runtime_ready((int)$item->id))) {
-        continue;
-    }
-    $contentoptions[(int)$item->id] = ['id' => (int)$item->id, 'name' => (string)$item->title,
-        'meta' => ($studio === \local_ustar\material_studio::KIND_SCORM ? 'SCORM · попытки в Moodle'
-            : ((string)$item->type === 'video' ? 'Видео' : 'Материал'))
-            . ((string)$item->status === 'draft' ? ' · Черновик' : '')];
-}
-$courseoptions = [];
-foreach ($DB->get_records_select('course', 'id > 1', [], 'fullname ASC', 'id,fullname') as $course) {
-    $courseoptions[(int)$course->id] = ['id' => (int)$course->id, 'name' => (string)$course->fullname];
-}
-$activityoptions = [];
-$activitysql = 'SELECT cm.id, cm.course, cm.instance, m.name AS modname, c.fullname FROM {course_modules} cm '
-    . 'JOIN {modules} m ON m.id = cm.module JOIN {course} c ON c.id = cm.course WHERE cm.deletioninprogress = 0 AND c.id > 1 ORDER BY c.fullname, cm.id';
-foreach ($DB->get_records_sql($activitysql) as $activity) {
-    $activityname = (string)$activity->modname;
-    if (preg_match('/^[a-z_]+$/', (string)$activity->modname)) {
-        $candidate = $DB->get_field((string)$activity->modname, 'name', ['id' => (int)$activity->instance], IGNORE_MISSING);
-        if ($candidate) { $activityname = (string)$candidate; }
-    }
-    $activityoptions[(int)$activity->id] = ['id' => (int)$activity->id, 'name' => (string)$activity->fullname . ' — ' . $activityname];
-}
-$assessmentoptions = [];
-foreach (\local_ustar\development_assessment::catalog() as $assessment) {
-    $assessmentoptions[(string)$assessment['key']] = [
-        'id' => (string)$assessment['key'],
-        'name' => (string)$assessment['title'],
-        'meta' => 'Личный развивающий профиль',
-    ];
-}
-$nativeoptions = \local_ustar\native_learning::authoring_options();
-
 if ($routeexists) {
     $route['hasinherited'] = false;
 
@@ -903,16 +800,6 @@ if ($routeexists) {
             $publishedversion,
             $draftversion
         );
-        $selectedcontents = []; $selectedskills = []; $primaryskill = ''; $selectedcourse = 0; $selectedcm = 0; $selectedassessment = ''; $selectednative = ''; $previous = false;
-        foreach ($requirements as $requirement) {
-            if (($requirement['type'] ?? '') === 'content') { $selectedcontents[] = (int)$requirement['sourceid']; }
-            if (($requirement['type'] ?? '') === 'course') { $selectedcourse = (int)$requirement['sourceid']; }
-            if (($requirement['type'] ?? '') === 'cm') { $selectedcm = (int)$requirement['sourceid']; }
-            if (($requirement['type'] ?? '') === 'assessment') { $selectedassessment = (string)($requirement['sourcekey'] ?? ''); }
-            if (($requirement['type'] ?? '') === 'native') { $selectednative = (string)($requirement['sourcekey'] ?? ''); }
-            if (($requirement['type'] ?? '') === 'skill') { $selectedskills[] = (string)$requirement['sourcekey']; if (!empty($requirement['primary'])) { $primaryskill = (string)$requirement['sourcekey']; } }
-            $previous = $previous || (($requirement['type'] ?? '') === 'previous_adaptation');
-        }
         $state =
             (string)($point['inheritstate'] ?? 'local');
 
@@ -1095,10 +982,20 @@ if ($routeexists) {
             . '#point-'
             . (int)$point['id'];
 
+        $point['hidden']=empty($point['active']);
+        $point['visible']=!$point['hidden'];
+        $point['canvisibility']=$point['canedit'] && (empty($point['sourcepointid']) || $point['hidden']);
+        if ($point['hidden']) { $point['canmove']=false;$point['draggable']='false';$point['draggableflag']='0'; }
         $point['expectedmodified'] = (int)$DB->get_field('local_ustar_route_points', 'timemodified', ['id' => (int)$point['id']], MUST_EXIST);
         $point['formtitle'] = $latest ? (string)$latest->title : '';
         $point['formsummary'] = $latest ? (string)$latest->summary : '';
         $point['formvaliddays'] = $latest ? (int)$latest->validdays : 0;
+        $accesspolicy = $latest ? \local_ustar\route_point_access::policy($latest) : \local_ustar\route_point_access::normalize([]);
+        foreach (['auto','manual','timed'] as $choice) { $point['access'.$choice] = $accesspolicy['advance'] === $choice; }
+        foreach (['close','keep'] as $choice) { $point['access'.$choice] = $accesspolicy['repeat'] === $choice; }
+        foreach (['route','next','stay'] as $choice) { $point['finish'.$choice] = $accesspolicy['finish'] === $choice; }
+        $point['reviewduration'] = $accesspolicy['seconds'] > 0 ? $accesspolicy['seconds'] / HOURSECS : 24;
+
         $point['hasversiondiff'] = !empty($versiondiff['haschanges']);
         $point['versiondiffrows'] = $versiondiff['rows'];
         $point['versiondiffadded'] = array_map(
@@ -1117,38 +1014,16 @@ if ($routeexists) {
         $point['versiondiffdraftlabel'] = !empty($versiondiff['draftversion'])
             ? 'v' . (int)$versiondiff['draftversion']
             : '';
-        $point['draftselected'] = !$latest || (string)$latest->status !== \local_ustar\route_model::STATUS_PUBLISHED;
-        $point['publishedselected'] = $latest && (string)$latest->status === \local_ustar\route_model::STATUS_PUBLISHED;
-
-        $currentcompletionmode = 'open';
-        foreach ($requirements as $requirement) {
-            if (
-                ($requirement['type'] ?? '') === 'content'
-                &&
-                ($requirement['completionmode'] ?? 'open') === 'ack'
-            ) {
-                $currentcompletionmode = 'ack';
-                break;
+        if ($point['editing']) {
+            $formversion=$latest;
+            if ($postedform!==null && (int)($postedform['baseversion']??0)>0) {
+                $old=$DB->get_record('local_ustar_route_versions',['id'=>(int)$postedform['baseversion'],'pointid'=>(int)$point['id']]);
+                if ($old) { $formversion=$old; }
             }
+            $formdata=\local_ustar\route_studio_presenter::form($formversion,$learningchoices,$postedform);
+            if ($formdata['expectedmodified']===null) { unset($formdata['expectedmodified']); }
+            $point=array_replace($point,$formdata);
         }
-        $point['openselected'] = $currentcompletionmode === 'open';
-        $point['ackselected'] = $currentcompletionmode === 'ack';
-        $point['activechecked'] = !empty($DB->get_field('local_ustar_route_points', 'active', ['id' => (int)$point['id']])) ? 'checked' : '';
-        $point['adaptationselected'] = (string)$point['phase'] === \local_ustar\route_model::PHASE_ADAPTATION;
-        $point['gateselected'] = (string)$point['phase'] === \local_ustar\route_model::PHASE_GATE;
-        $point['continuousselected'] = (string)$point['phase'] === \local_ustar\route_model::PHASE_CONTINUOUS;
-        $point['keepselected'] = !$latest || (string)$latest->renewalpolicy === \local_ustar\route_model::RENEW_KEEP;
-        $point['allselected'] = $latest && (string)$latest->renewalpolicy === \local_ustar\route_model::RENEW_ALL;
-        $point['expiryselected'] = $latest && (string)$latest->renewalpolicy === \local_ustar\route_model::RENEW_EXPIRY;
-        $point['manualselected'] = $latest && (string)$latest->renewalpolicy === \local_ustar\route_model::RENEW_MANUAL;
-        $point['contentoptions'] = array_values(array_map(static function(array $item) use ($selectedcontents, $newcontentid): array { $item['selected'] = in_array((int)$item['id'], $selectedcontents, true) || (int)$item['id'] === $newcontentid; return $item; }, $contentoptions));
-        $point['courseoptions'] = array_values(array_map(static function(array $item) use ($selectedcourse): array { $item['selected'] = (int)$item['id'] === $selectedcourse; return $item; }, $courseoptions));
-        $point['activityoptions'] = array_values(array_map(static function(array $item) use ($selectedcm): array { $item['selected'] = (int)$item['id'] === $selectedcm; return $item; }, $activityoptions));
-        $point['assessmentoptions'] = array_values(array_map(static function(array $item) use ($selectedassessment): array { $item['selected'] = (string)$item['id'] === $selectedassessment; return $item; }, $assessmentoptions));
-        $point['nativeoptions'] = array_values(array_map(static function(array $item) use ($selectednative): array { $item['selected'] = (string)$item['id'] === $selectednative; return $item; }, $nativeoptions));
-        $point['skilloptions'] = []; $point['primaryskills'] = [];
-        foreach ($skillmap as $id => $name) { $point['skilloptions'][] = ['id' => $id, 'name' => $name, 'selected' => in_array($id, $selectedskills, true)]; $point['primaryskills'][] = ['id' => $id, 'name' => $name, 'selected' => $id === $primaryskill]; }
-        $point['previouschecked'] = $previous ? 'checked' : '';
         $point['canupload'] =
             empty($route['isparent'])
             &&
@@ -1267,10 +1142,6 @@ if ($selectedfamily) {
     }
 }
 
-$addcontentoptions = array_values(array_map(static function(array $item) use ($newcontentid): array { $item['selected'] = (int)$item['id'] === $newcontentid; return $item; }, $contentoptions));
-$addassessmentoptions = array_values($assessmentoptions);
-$addskilloptions = []; foreach ($skillmap as $id => $name) { $addskilloptions[] = ['id' => $id, 'name' => $name]; }
-
 $pageparams = [];
 
 if ($familyid > 0) {
@@ -1285,8 +1156,6 @@ if ($positionid !== '') {
     $pageparams['position'] =
         $positionid;
 }
-
-$PAGE->set_context($context);
 
 $PAGE->set_url(
     new moodle_url(
@@ -1395,6 +1264,7 @@ $data = [
     'sesskey' =>
         sesskey(),
 
+    'formerror'=>$formerror,
     'revision' =>
         $routeexists
         ? \local_ustar\route_model::revision(
@@ -1433,25 +1303,7 @@ $data = [
             )
         )->out(false),
 
-    'addcontentoptions' =>
-        $addcontentoptions,
 
-    'courseoptions' =>
-        array_values($courseoptions),
-
-    'activityoptions' =>
-        array_values($activityoptions),
-
-    'assessmentoptions' =>
-        $addassessmentoptions,
-
-    'nativeoptions' => $nativeoptions,
-
-    'skilloptions' =>
-        $addskilloptions,
-
-    'primaryskills' =>
-        $addskilloptions,
 ];
 
 $output =
@@ -1459,6 +1311,8 @@ $output =
         'local_ustar'
     );
 
+$data['formerror']=$formerror;
+$data['addform']=\local_ustar\route_studio_presenter::form(null,$learningchoices,$postedform!==null && empty($postedform['pointid'])?$postedform:null);
 echo $output->header();
 
 echo $output->render_from_template(

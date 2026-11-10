@@ -18,6 +18,9 @@ final class provider implements
     \core_privacy\local\request\user_preference_provider {
 
     public static function get_metadata(collection $collection): collection {
+        $collection->add_database_table('local_ustar_route_access', array_fill_keys(
+            ['userid','pointid','versionid','studyat','openedat','deadline','closedat','closereason'],
+            'privacy:metadata:route_access'), 'privacy:metadata:route_access');
         foreach (['local_ustar_conn_dialogs'=>['userid','identityhash','linkid','linkrevision','revision','phase','payload','expiresat','ratewindow','ratecount','timemodified','authority'],
                 'local_ustar_conn_actions'=>['userid','dialogid','revision','intent','payload','summary','status','resultjson','expiresat','timecreated','tokenhash','authority'],
                 'local_ustar_conn_updates'=>['userid','identityhash','linkrevision','payloadhash','responsejson','timecreated','eventhash','authority']] as $table=>$fields) {
@@ -100,6 +103,10 @@ final class provider implements
             'timecreated' => 'privacy:metadata:connect:time', 'timemodified' => 'privacy:metadata:connect:time',
             'nextattempt' => 'privacy:metadata:connect:time',
         ], 'privacy:metadata:connect');
+        foreach (['local_ustar_library_grant'=>['userid','grantedby','revokerid','offerid','source','comment','validfrom','validto','revokedat','refundedat'],
+                'local_ustar_library_attempt'=>['userid','assessmentid','versionno','score','passed','answersjson','startedat','submittedat']] as $table=>$fields) {
+            $collection->add_database_table($table,array_fill_keys($fields,'privacy:metadata:library'),'privacy:metadata:library');
+        }
         return $collection;
     }
 
@@ -120,6 +127,13 @@ final class provider implements
             ['level' => CONTEXT_SYSTEM, 'linkuser' => $userid, 'challengeuser' => $userid,
                 'launchuser' => $userid, 'sessionuser' => $userid, 'signupuser' => $userid,
                 'actionuser' => $userid, 'prefuser' => $userid, 'prefname' => \local_ustar\connect\notification_preferences::NAME, 'deliveryuser' => $userid]);
+        $contexts->add_from_sql('SELECT c.id FROM {context} c WHERE c.contextlevel=:level AND EXISTS
+            (SELECT a.id FROM {local_ustar_route_access} a WHERE a.userid=:userid)',
+            ['level'=>CONTEXT_SYSTEM,'userid'=>$userid]);
+        $contexts->add_from_sql('SELECT c.id FROM {context} c WHERE c.contextlevel=:level AND
+            (EXISTS (SELECT g.id FROM {local_ustar_library_grant} g WHERE g.userid=:guser OR g.grantedby=:actor OR g.revokerid=:revoker)
+             OR EXISTS (SELECT a.id FROM {local_ustar_library_attempt} a WHERE a.userid=:auser))',
+            ['level'=>CONTEXT_SYSTEM,'guser'=>$userid,'actor'=>$userid,'revoker'=>$userid,'auser'=>$userid]);
         return $contexts;
     }
 
@@ -132,8 +146,14 @@ final class provider implements
         if ($userlist->get_context()->contextlevel !== CONTEXT_SYSTEM) { return; }
         foreach (['local_ustar_conn_links', 'local_ustar_conn_challenges',
                 'local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups', 'local_ustar_conn_acktokens',
-                'local_ustar_conn_dialogs','local_ustar_conn_actions','local_ustar_conn_updates'] as $table) {
+                'local_ustar_conn_dialogs','local_ustar_conn_actions','local_ustar_conn_updates','local_ustar_route_access'] as $table) {
             $userlist->add_from_sql('userid', 'SELECT DISTINCT userid FROM {' . $table . '} WHERE userid > 0', []);
+        }
+        foreach (['local_ustar_library_grant','local_ustar_library_attempt'] as $table) {
+            $userlist->add_from_sql('userid','SELECT DISTINCT userid FROM {'.$table.'} WHERE userid>0',[]);
+        }
+        foreach (['grantedby','revokerid'] as $field) {
+            $userlist->add_from_sql($field,'SELECT DISTINCT '.$field.' FROM {local_ustar_library_grant} WHERE '.$field.'>0',[]);
         }
         $userlist->add_from_sql('userid', 'SELECT userid FROM {user_preferences} WHERE name = :name',
             ['name' => \local_ustar\connect\notification_preferences::NAME]);
@@ -162,6 +182,12 @@ final class provider implements
         }
         if (!in_array(\context_system::instance()->id, $contextlist->get_contextids())) { return; }
         $userid = (int)$contextlist->get_user()->id;
+        writer::with_context(\context_system::instance())->export_data(['Route review access'], (object)[
+            'windows'=>array_values($DB->get_records('local_ustar_route_access',['userid'=>$userid]))]);
+        writer::with_context(\context_system::instance())->export_data(['Library'],(object)[
+            'access'=>array_values($DB->get_records_select('local_ustar_library_grant','userid=:uid OR grantedby=:actor OR revokerid=:revoker',
+                ['uid'=>$userid,'actor'=>$userid,'revoker'=>$userid])),
+            'checks'=>array_values($DB->get_records('local_ustar_library_attempt',['userid'=>$userid]))]);
         $links = $DB->get_records('local_ustar_conn_links', ['userid' => $userid], 'id',
             'id,provider,tenant,subject,state,revision,timecreated,timemodified');
         $challenges = $DB->get_records('local_ustar_conn_challenges', ['userid' => $userid], 'id',
@@ -210,6 +236,33 @@ final class provider implements
         }
     }
 
+    private static function erase_library(?array $userids): void {
+        global $DB;
+        if ($userids===null) {
+            $DB->delete_records('local_ustar_library_grant');$DB->delete_records('local_ustar_library_attempt');
+            foreach (['local_ustar_library_offer','local_ustar_library_assessment'] as $table) { $DB->set_field($table,'usermodified',0); }
+            $DB->delete_records_select('local_ustar_workflow_events','entitytype=:offer OR entitytype=:assessment',
+                ['offer'=>'library_offer','assessment'=>'library_assessment']);return;
+        }
+        foreach ($userids as $userid) {
+            $grants=$DB->get_records('local_ustar_library_grant',['userid'=>$userid]);
+            // Audit JSON contains target identities; erase those event records along with their access history.
+            $grantids=array_map('intval',array_keys($grants));
+            foreach ($DB->get_records('local_ustar_workflow_events',['entitytype'=>'library_offer']) as $event) {
+                $details=json_decode((string)$event->detailsjson,true);
+                if ((int)($details['userid']??0)===$userid || in_array((int)($details['grantid']??0),$grantids,true)) {
+                    $DB->delete_records('local_ustar_workflow_events',['id'=>$event->id]);
+                }
+            }
+            $DB->delete_records('local_ustar_library_grant',['userid'=>$userid]);
+            $DB->delete_records('local_ustar_library_attempt',['userid'=>$userid]);
+            foreach (['grantedby','revokerid'] as $field) { $DB->set_field('local_ustar_library_grant',$field,0,[$field=>$userid]); }
+            foreach (['local_ustar_library_offer','local_ustar_library_assessment'] as $table) { $DB->set_field($table,'usermodified',0,['usermodified'=>$userid]); }
+            $DB->delete_records_select('local_ustar_workflow_events','(entitytype=:offer OR entitytype=:assessment) AND actorid=:actor',
+                ['offer'=>'library_offer','assessment'=>'library_assessment','actor'=>$userid]);
+        }
+    }
+
     /** Privacy lifecycle is a deliberate erase, never a transfer to another userid. */
     private static function erase(?array $userids): void {
         global $DB;
@@ -219,7 +272,19 @@ final class provider implements
         try {
             $transaction = $DB->start_delegated_transaction();
             try {
+                self::erase_library($userids);
                 self::erase_bot($userids);
+                if ($userids === null) {
+                    $DB->delete_records('local_ustar_workflow_events',['entitytype'=>'route_review_access']);
+                    $DB->delete_records('local_ustar_route_access');
+                } else {
+                    [$accesssql,$accessparams] = $DB->get_in_or_equal($userids,SQL_PARAMS_NAMED,'reviewuser');
+                    $DB->delete_records_select('local_ustar_workflow_events','entitytype=:accesskind AND entityid IN
+                        (SELECT id FROM {local_ustar_route_access} WHERE userid '.$accesssql.')',
+                        $accessparams+['accesskind'=>'route_review_access']);
+                    $DB->delete_records_select('local_ustar_route_access','userid '.$accesssql,$accessparams);
+                }
+
                 if ($userids === null) {
                     $DB->delete_records('local_ustar_conn_acktokens');
                     $DB->delete_records('local_ustar_notify_delivery', ['connectversion' => 1]);

@@ -1,0 +1,64 @@
+<div class="u-library">
+<header class="u-library__head"><div><p class="u-pagehead__eyebrow">Отдел обучения</p><h1>Управление Библиотекой</h1><p class="u-library__lede">Материалы, проверки знаний и доступ сотрудников.</p></div><a class="u-btn" href="{{libraryurl}}">Открыть Библиотеку</a></header>
+{{#notice}}<div class="u-alert" role="{{#formerror}}alert{{/formerror}}{{^formerror}}status{{/formerror}}" {{#formerror}}tabindex="-1" data-library-error{{/formerror}}>{{notice}}</div>{{/notice}}
+{{^writable}}<p>В режиме просмотра изменения недоступны.</p>{{/writable}}
+{{#writable}}
+{{#admin}}<details class="u-library__section"><summary>Доступ отделов к Маркетплейсу</summary>
+<p class="u-muted">Маркетплейс скрыт от сотрудников, пока вы не выберете их отдел. Выбор отдела открывает витрину; условия каждого материала и аудитория сохраняются. Покупки включаются отдельно.</p>
+<form class="u-library__checksedit" method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="marketplace"><input type="hidden" name="settingsrevision" value="{{settingsrevision}}">
+<fieldset><legend>Отделы, которым виден Маркетплейс</legend>
+{{#marketdepartments}}<label class="u-choice"><input type="checkbox" name="marketdept[]" value="{{id}}" {{#selected}}checked{{/selected}}>{{name}}</label>{{/marketdepartments}}
+{{^hasmarketdepartments}}<p class="u-muted">Сначала добавьте отделы в оргструктуре.</p>{{/hasmarketdepartments}}
+</fieldset><p class="u-muted">Если ничего не выбрано, Маркетплейс виден только администратору. Вложенные отделы выбираются отдельно.</p>
+<button class="u-btn u-btn--primary" type="submit">Сохранить доступ отделов</button></form></details>{{/admin}}
+{{#author}}<section class="u-library__section" id="library-subject"><h2>Условия доступа к материалу</h2><p class="u-muted">Правила аудитории сохраняются. Назначение или покупка не публикуют материал для всей компании.</p>
+{{^id}}<form class="u-library__search" method="get" action="{{manageurl}}">
+{{#subjectsearchfields}}<input type="hidden" name="{{name}}" value="{{value}}">{{/subjectsearchfields}}
+<label class="u-field">Тип материала<select name="subjecttype">{{#subjecttypes}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/subjecttypes}}</select></label>
+<label class="u-field">Поиск материала<input type="search" name="subjectq" value="{{subjectq}}" maxlength="128" placeholder="Название материала"></label><button class="u-btn" type="submit">Найти материал</button></form>
+{{#subjectpagination}}{{> local_ustar/library_manage_pagination}}{{/subjectpagination}}{{/id}}
+<form class="u-library__checksedit" data-library-editor {{#offererror}}data-library-pending="1"{{/offererror}} method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="save"><input type="hidden" name="id" value="{{id}}"><input type="hidden" name="expectedmodified" value="{{expectedmodified}}">
+{{#id}}<p>Материал: <strong>{{selectedsubjectlabel}}</strong></p><input type="hidden" name="subject" value="{{subject}}"><p class="u-muted">Материал существующего предложения закреплён. Для другого материала создайте отдельное предложение.</p>{{/id}}
+{{^id}}<label class="u-field">Материал<select name="subject" required><option value="" {{^subject}}selected{{/subject}}>Выберите материал</option>{{#subjects}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/subjects}}</select></label>{{/id}}
+<label class="u-field">Название в Библиотеке<input name="title" value="{{title}}" maxlength="255" required></label>
+<label class="u-field">Краткое описание<textarea name="summary" rows="3">{{summary}}</textarea></label>
+<div class="u-library__fields"><label class="u-field">Доступ<select name="accesspolicy">{{#policies}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/policies}}</select></label><label class="u-field">Цена, USCOIN<input type="number" name="pricecoin" value="{{pricecoin}}" min="0" max="{{pricemax}}"><small>Для платного доступа: {{pricemin}}–{{pricemax}} USCOIN.</small></label>
+<label class="u-field">Открывающая точка маршрута<select name="gatepointid">{{#gates}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/gates}}</select></label>
+<label class="u-field">Публикация предложения<select name="visibility">{{#visibilities}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/visibilities}}</select></label></div>
+<button type="submit" class="u-btn u-btn--primary">Сохранить условия</button>{{#offererror}}<p class="u-muted">Ввод сохранён. При конфликте версии откройте текущие условия в новой вкладке и сверьте изменения: <a href="{{offerreloadurl}}" target="_blank" rel="noopener">текущая версия</a>.</p>{{/offererror}}</form>
+<p><a href="{{materialsurl}}">Редактор материалов и аудитории →</a> · <a href="{{catalogediturl}}">Редактор каталога →</a></p></section>{{/author}}
+{{#grantor}}<section class="u-library__section" id="library-person"><h2>Предоставить доступ</h2>
+<form class="u-library__search" method="get" action="{{manageurl}}">{{#personsearchfields}}<input type="hidden" name="{{name}}" value="{{value}}">{{/personsearchfields}}<label class="u-field">Поиск сотрудника<input type="search" name="personq" value="{{personq}}" maxlength="128" placeholder="Имя или фамилия"></label><button class="u-btn" type="submit">Найти сотрудника</button></form>
+{{#personpagination}}{{> local_ustar/library_manage_pagination}}{{/personpagination}}
+{{#hastargets}}<form class="u-library__checksedit" method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="grant"><input type="hidden" name="nonce" value="{{nonce}}">
+<label class="u-field">Сотрудник<select name="targetuserid" required>{{#targets}}<option value="{{value}}">{{label}}</option>{{/targets}}</select></label>
+<label class="u-field">Материал<select name="offerid" required>{{#grantoffers}}<option value="{{value}}">{{label}}</option>{{/grantoffers}}</select></label>
+<label class="u-field">Комментарий<input name="comment" maxlength="1000"></label><button class="u-btn u-btn--primary" type="submit">Предоставить доступ</button></form>{{/hastargets}}
+{{^hastargets}}<p class="u-muted">Сотрудники для назначения не найдены. Измените поиск; отображаются только доступные вам сотрудники.</p>{{/hastargets}}
+<h3 id="library-history">История доступа</h3>
+<form class="u-library__search" method="get" action="{{manageurl}}">{{#historysearchfields}}<input type="hidden" name="{{name}}" value="{{value}}">{{/historysearchfields}}<label class="u-field">Поиск в истории<input type="search" name="historyq" value="{{historyq}}" maxlength="128" placeholder="Сотрудник или название материала"></label><button class="u-btn" type="submit">Найти в истории</button></form>
+{{#historyempty}}<p class="u-muted">Доступные записи не найдены. Измените поиск.</p>{{/historyempty}}
+{{#historypagination}}{{> local_ustar/library_manage_pagination}}{{/historypagination}}<ul class="u-library__checks">{{#grants}}<li class="u-checkrow"><div><strong>{{person}} · {{title}}</strong><span class="u-muted">{{source}} · {{date}} · {{status}}</span></div>
+{{#canrevoke}}<form method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="revoke"><input type="hidden" name="grantid" value="{{id}}"><button class="u-btn" type="submit">Отозвать доступ</button></form>{{/canrevoke}}
+{{#canrefund}}<form method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="refund"><input type="hidden" name="grantid" value="{{id}}"><button class="u-btn" type="submit">Вернуть USCOIN и закрыть покупку</button></form>{{/canrefund}}</li>{{/grants}}</ul></section>{{/grantor}}
+{{#admin}}<details class="u-library__section"><summary>Настройки продаж</summary><form class="u-library__checksedit" method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="settings"><input type="hidden" name="settingsrevision" value="{{settingsrevision}}">
+<label class="u-choice"><input type="checkbox" name="storeenabled" value="1" {{#storeenabled}}checked{{/storeenabled}}>Разрешить покупки за USCOIN</label>
+<div class="u-library__fields"><label class="u-field">Минимальная цена<input type="number" name="pricemin" value="{{pricemin}}" min="1" required></label><label class="u-field">Максимальная цена<input type="number" name="pricemax" value="{{pricemax}}" min="1" max="1000000" required></label></div><button class="u-btn" type="submit">Сохранить настройки</button></form></details>{{/admin}}
+{{#assessor}}<details class="u-library__section" {{#opencheck}}open{{/opencheck}}><summary>Редактор проверок знаний</summary><p class="u-muted">Короткие проверки сохраняют отметку. Обязательные аттестации маршрута создаются в Студии.</p>
+<form class="u-library__checksedit" data-library-editor {{#checkerror}}data-library-pending="1"{{/checkerror}} method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="savecheck"><input type="hidden" name="id" value="{{checkid}}"><input type="hidden" name="expectedrevision" value="{{checkrevision}}">
+<label class="u-field">Название<input name="title" value="{{checktitle}}" maxlength="255" required></label>
+<label class="u-field">Связь с темой, навыком или группой<select name="targetref">{{#targetrefs}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/targetrefs}}</select></label>
+<label class="u-field">Тема (для тематической проверки)<input name="topic" value="{{topic}}" maxlength="128"></label>
+<div class="u-library__fields"><label class="u-field">Вопросов за попытку<input type="number" name="questioncount" value="{{questioncount}}" min="1" max="100" required></label><label class="u-field">Порог прохождения, %<input type="number" name="passpercent" value="{{passpercent}}" min="1" max="100" required></label><label class="u-field">Попыток на версию<input type="number" name="maxattempts" value="{{maxattempts}}" min="1" max="100" required></label><label class="u-field">Публикация<select name="status">{{#checkstatuses}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/checkstatuses}}</select></label></div>
+<p class="u-muted">Заполните нужные вопросы; пустые блоки пропускаются. Укажите 2–6 вариантов и отметьте верный.</p>
+<div data-library-questions>{{#questionfields}}{{> local_ustar/library_question_fields}}{{/questionfields}}</div>
+<template data-library-question-template>{{#blankquestion}}{{> local_ustar/library_question_fields}}{{/blankquestion}}</template>
+<div class="u-library__questionactions"><button class="u-btn" type="button" data-library-add-question>Добавить вопрос</button><p class="u-muted" data-library-question-status aria-live="polite"></p></div>
+<button class="u-btn u-btn--primary" type="submit">Сохранить проверку как новую версию</button>{{#checkerror}}<p class="u-muted">Ввод сохранён. При конфликте версии сверьте текст с <a href="{{checkreloadurl}}" target="_blank" rel="noopener">текущей версией в новой вкладке</a>.</p>{{/checkerror}}</form>
+<h3 id="library-checks">Сохранённые проверки</h3>
+<form class="u-library__search" method="get" action="{{manageurl}}">{{#checksearchfields}}<input type="hidden" name="{{name}}" value="{{value}}">{{/checksearchfields}}<label class="u-field">Поиск проверки<input type="search" name="checkq" value="{{checkq}}" maxlength="128" placeholder="Название проверки"></label><button class="u-btn" type="submit">Найти проверку</button></form>
+{{#checkpagination}}{{> local_ustar/library_manage_pagination}}{{/checkpagination}}
+{{#checksuitempty}}<p class="u-muted">Проверки не найдены. Измените поиск или создайте новую.</p>{{/checksuitempty}}
+<ul>{{#checks}}<li><a href="{{editurl}}">{{title}}</a></li>{{/checks}}</ul></details>{{/assessor}}
+<section class="u-library__section" id="library-offers"><h2>Предложения Библиотеки</h2><ul class="u-library__checks">{{#offers}}<li class="u-checkrow"><div><strong>{{title}}</strong><span class="u-muted">{{policy}} · {{status}}</span></div>{{#author}}<a class="u-btn" href="{{editurl}}">Настроить</a>{{/author}}</li>{{/offers}}</ul>{{#offerpagination}}{{> local_ustar/library_manage_pagination}}{{/offerpagination}}</section>
+{{/writable}}</div>

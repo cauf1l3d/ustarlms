@@ -7,10 +7,11 @@ let revision=0;
 const server=http.createServer(async(req,res)=>{try{
  const url=new URL(req.url,'http://localhost');
  if(url.pathname==='/api'){
-  let data='';for await(const part of req)data+=part;
+  const chunks=[];for await(const part of req)chunks.push(part);const bytes=Buffer.concat(chunks),data=bytes.toString('utf8');
   const route=url.searchParams.get('route');res.setHeader('content-type','application/json');
   if(route==='session')return res.end(JSON.stringify({authenticated:true,userId:'2'}));
   if(route==='courses')return res.end('{"courses":[]}');
+  if(/^assets\/[a-f0-9]{64}$/.test(route)&&req.method==='POST'){const hash=require('node:crypto').createHash('sha256').update(bytes).digest('hex');assert.equal(hash,route.slice(7));return res.end(JSON.stringify({hash,size:bytes.length,type:req.headers['content-type']}));}
   if(route.startsWith('courses/'))return res.end(JSON.stringify({revision:++revision,contentmodified:100+revision,fingerprint:require('node:crypto').createHash('sha256').update(JSON.stringify(JSON.parse(data).course)).digest('hex')}));
   if(route==='prepare')return res.end('{"contentid":42,"revision":1,"contentmodified":999}');
   res.statusCode=400;return res.end('{}');
@@ -45,7 +46,7 @@ const server=http.createServer(async(req,res)=>{try{
    };
   });
   const page=await context.newPage();
-  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  const errors=[],resourceErrors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error'&&m.text().includes('Not allowed to load local resource'))resourceErrors.push(m.text());});
   const fixture=await context.newPage();await fixture.setContent('<meta charset="utf-8"><h1>Учебник Академии</h1><p>Первый раздел: знания и практика.</p><div style="break-before:page"><h2>Следующая тема</h2><p>Проверка кириллицы и второго экрана.</p></div>');
   const pdf=await fixture.pdf({format:'A4'});await fixture.close();
   await page.goto('http://127.0.0.1:'+server.address().port);await page.waitForFunction(()=>document.querySelector('.workspace').inert===false);
@@ -116,8 +117,33 @@ const server=http.createServer(async(req,res)=>{try{
   for(const [key,color] of Object.entries({navBackground:'#112233',navText:'#ddeeff',navActive:'#fafafa',navAccent:'#aa5500',accent:'#3579ab',paper:'#fff2df',background:'#edf8ff'}))await page.locator('#theme-'+key).evaluate((el,color)=>{el.value=color;el.dispatchEvent(new Event('input',{bubbles:true}));},color);
   await page.locator('#nav-theme-preview').scrollIntoViewIfNeeded();
   await page.screenshot({path:artifacts+'/studio-color-settings.png',fullPage:true});
+  // Real uploaded assets must decode both in the editor and its opaque preview.
+  await page.locator('#page-list .outline-row').first().click();
+  // A valid PNG with a 64KiB tEXt chunk exposes repeated-resource duplication.
+  const tiny=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNQWOUAAAH4AQupjECUAAAAAElFTkSuQmCC','base64');
+  const text=Buffer.from('Fixture\0'+'x'.repeat(65536)),chunk=Buffer.alloc(text.length+12);
+  chunk.writeUInt32BE(text.length);chunk.write('tEXt',4);text.copy(chunk,8);
+  chunk.writeUInt32BE(require('node:zlib').crc32(chunk.subarray(4,-4)),chunk.length-4);
+  const png=Buffer.concat([tiny.subarray(0,-12),chunk,tiny.subarray(-12)]);
+  await page.locator('#image-file').setInputFiles({name:'preview.png',mimeType:'image/png',buffer:png});
+  await page.waitForFunction(()=>{const im=document.querySelector('#editor-content img');return im?.complete&&im.naturalWidth===1;});
+  await page.locator('#font-file').setInputFiles({name:'preview.ttf',mimeType:'font/ttf',buffer:fs.readFileSync('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf')});
+  await page.waitForFunction(()=>document.querySelector('#paper').style.fontFamily.includes('RCFont'));
+  const literalLesson="Literal $& $` $' </script> <style> preserved";
+  await page.locator('#editor-content').evaluate((el,text)=>{const p=document.createElement('p');p.textContent=text;el.prepend(p);el.dispatchEvent(new Event('input',{bubbles:true}));},literalLesson);
   await page.locator('#preview-button').click();
   const player=page.frameLocator('#preview-frame');await player.locator('aside').waitFor();
+  assert((await player.locator('body').innerText()).includes(literalLesson),'Lesson text must remain literal during preview assembly');
+  await player.locator('img').first().scrollIntoViewIfNeeded();
+  const previewImage=await player.locator('img').first().evaluate(async im=>{if(!im.complete)await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('Preview image load timeout')),5000);im.onload=im.onerror=()=>{clearTimeout(timer);resolve()}});return{complete:im.complete,width:im.naturalWidth,src:im.getAttribute('src')};});
+  fs.writeFileSync(artifacts+'/preview-assets.json',JSON.stringify({image:previewImage,resourceErrors},null,2));
+  assert.equal(previewImage.width,1,'Uploaded image must decode inside isolated preview');
+  assert.deepEqual(resourceErrors,[],'Preview must not request inaccessible parent blob URLs');
+  const previewFrame=page.frames().find(f=>f.url()==='about:srcdoc');assert(previewFrame);
+  const font=await previewFrame.evaluate(async()=>{await document.fonts.ready;return [...document.fonts].filter(f=>f.family.includes('RCFont')).map(f=>({family:f.family,status:f.status}));});
+  assert(font.length>0&&font.every(f=>f.status==='loaded'),'Uploaded custom font must load inside preview');
+  assert.equal(await page.locator('#preview-frame').getAttribute('sandbox'),'allow-scripts');
+  assert.equal(await previewFrame.evaluate(()=>{try{void parent.document;return 'allowed'}catch(e){return e.name}}),'SecurityError');
   assert.equal(await player.locator('aside').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(17, 34, 51)');
   assert.equal(await player.locator('nav button.active').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(250, 250, 250)');
   assert.equal(await player.locator('nav button.active').evaluate(el=>getComputedStyle(el).color),'rgb(0, 0, 0)');
@@ -125,6 +151,16 @@ const server=http.createServer(async(req,res)=>{try{
   assert.equal(await player.locator('.card').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(255, 242, 223)');
   assert.equal(await player.locator('#next').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(53, 121, 171)');
   await page.screenshot({path:artifacts+'/studio-course-colors.png',fullPage:true});
+  const singleAssetHTML=await page.locator('#preview-frame').getAttribute('srcdoc');
+  await page.locator('[data-close="preview-dialog"]').click();
+  assert.equal(await page.locator('#editor-content img').first().evaluate(im=>im.naturalWidth),1,'Closing preview preserves editor resources');
+  await page.locator('#editor-content').evaluate(el=>{const im=el.querySelector('img');for(let n=0;n<24;n++)el.append(im.cloneNode(true));el.dispatchEvent(new Event('input',{bubbles:true}));});
+  await page.locator('#preview-button').click();await player.locator('aside').waitFor();
+  const repeatedAssetHTML=await page.locator('#preview-frame').getAttribute('srcdoc');
+  assert(repeatedAssetHTML.length-singleAssetHTML.length<65536,'Repeated images must share one resource, rather than embed its bytes in every reference');
+  fs.writeFileSync(artifacts+'/preview-assets.json',JSON.stringify({image:previewImage,font,resourceErrors,sandbox:'allow-scripts',parentAccess:'denied',singleBytes:singleAssetHTML.length,repeatedBytes:repeatedAssetHTML.length,literalLesson:true},null,2));
+  await player.locator('img').first().scrollIntoViewIfNeeded();
+  assert.equal(await player.locator('img').first().evaluate(async im=>{await im.decode();return im.naturalWidth}),1,'Reopened preview still renders the uploaded image');
   await page.locator('[data-close="preview-dialog"]').click();
   await page.screenshot({path:artifacts+'/studio-desktop.png',fullPage:true});
   await page.locator('#pdf-export-button').click();await page.locator('#pdf-print-button:not([disabled])').waitFor();

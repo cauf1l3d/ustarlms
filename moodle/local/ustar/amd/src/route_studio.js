@@ -1,4 +1,5 @@
 export const init = () => {
+    document.querySelector('[data-u-form-error]')?.focus();
     const list = document.getElementById('u-route-list');
     if (!list) {
         return;
@@ -6,8 +7,10 @@ export const init = () => {
 
     let dragged = null;
 
+    const visiblePoints = () => [...list.querySelectorAll('.u-route-editor__point')].filter(item => item.dataset.uPointActive !== '0');
     const renumber = () => {
-        [...list.querySelectorAll('.u-route-editor__point')].forEach((item, index) => {
+        const points = visiblePoints();
+        points.forEach((item, index) => {
             const number = item.querySelector('.u-route-item__order');
             if (number) {
                 number.textContent = String(index + 1);
@@ -18,7 +21,7 @@ export const init = () => {
                 up.disabled = index === 0;
             }
             if (down) {
-                down.disabled = index === list.children.length - 1;
+                down.disabled = index === points.length - 1;
             }
         });
     };
@@ -61,12 +64,10 @@ export const init = () => {
         item.querySelectorAll('[data-u-move]').forEach((button) => {
             button.addEventListener('click', () => {
                 const direction = button.dataset.uMove;
-                if (direction === 'up' && item.previousElementSibling) {
-                    item.previousElementSibling.before(item);
-                }
-                if (direction === 'down' && item.nextElementSibling) {
-                    item.nextElementSibling.after(item);
-                }
+                const points = visiblePoints();
+                const index = points.indexOf(item);
+                if (direction === 'up' && index > 0) { points[index - 1].before(item); }
+                if (direction === 'down' && index >= 0 && index < points.length - 1) { points[index + 1].after(item); }
                 renumber();
                 item.focus?.();
             });

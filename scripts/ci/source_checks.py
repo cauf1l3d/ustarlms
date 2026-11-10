@@ -23,6 +23,9 @@ def check(skip_php=False):
     tables = schema.find('TABLES')
     names = [table.attrib['NAME'] for table in tables]
     assert len(names) == len(set(names)), 'Duplicate XMLDB table'
+    for field in schema.findall('.//FIELD'):
+        assert not (field.attrib.get('TYPE')=='char' and field.attrib.get('NOTNULL')=='true'
+                    and field.attrib.get('DEFAULT')==''), 'XMLDB CHAR NOT NULL cannot declare an empty default: '+field.attrib['NAME']
     for table in tables:
         fields = {f.attrib['NAME'] for f in table.find('FIELDS')}
         for group in ('KEYS', 'INDEXES'):

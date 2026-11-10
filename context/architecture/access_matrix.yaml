@@ -2,7 +2,7 @@
 schema_version: 1
 generated: true
 definition_source: moodle/local/ustar/db/access.php
-definition_sha256: 1f932db6d3708299fd362068343d1834029bac4de76e145929b79be72531c54a
+definition_sha256: 5edf16ca7d3eaf857921ddf671b0c4aec443f314705a0a1c050f11fa6e7e6062
 effective_production_role_bindings: not_measured
 limits:
 - Literal references are navigation aids, not proof of a complete authorization path
@@ -72,6 +72,7 @@ capabilities:
   - moodle/local/ustar/classes/hr_access.php
   - moodle/local/ustar/classes/hr_people.php
   - moodle/local/ustar/classes/knowledge_index.php
+  - moodle/local/ustar/classes/library_access.php
   - moodle/local/ustar/classes/reward_control.php
   - moodle/local/ustar/classes/route_tester.php
   - moodle/local/ustar/classes/staffing_requests.php
@@ -123,6 +124,7 @@ capabilities:
   - moodle/local/ustar/classes/global_search.php
   - moodle/local/ustar/classes/hr_access.php
   - moodle/local/ustar/classes/hr_people.php
+  - moodle/local/ustar/classes/library_access.php
   - moodle/local/ustar/classes/reward_control.php
   - moodle/local/ustar/classes/staffing_requests.php
   - moodle/local/ustar/classes/standard_model.php
@@ -236,6 +238,7 @@ capabilities:
   - moodle/local/ustar/classes/position_application.php
   - moodle/local/ustar/classes/position_model.php
   - moodle/local/ustar/classes/registration_service.php
+  - moodle/local/ustar/classes/route_commands.php
   - moodle/local/ustar/classes/route_tester.php
   - moodle/local/ustar/classes/staffing_requests.php
   - moodle/local/ustar/classes/studio_scorm_runtime.php
@@ -331,6 +334,7 @@ capabilities:
   - moodle/local/ustar/classes/position_access.php
   - moodle/local/ustar/classes/position_model.php
   - moodle/local/ustar/classes/registration_service.php
+  - moodle/local/ustar/classes/route_commands.php
   - moodle/local/ustar/classes/route_tester.php
   - moodle/local/ustar/classes/staffing_requests.php
   - moodle/local/ustar/classes/studio_scorm_runtime.php
@@ -599,11 +603,13 @@ capabilities:
   - moodle/local/ustar/classes/home_layout.php
   - moodle/local/ustar/classes/learning_events.php
   - moodle/local/ustar/classes/learning_tasks.php
+  - moodle/local/ustar/classes/library_access.php
   - moodle/local/ustar/classes/material_studio.php
   - moodle/local/ustar/classes/native_learning.php
   - moodle/local/ustar/classes/notebook_board.php
   - moodle/local/ustar/classes/position_access.php
   - moodle/local/ustar/classes/route_model.php
+  - moodle/local/ustar/classes/route_point_access.php
   - moodle/local/ustar/classes/route_tester.php
   - moodle/local/ustar/classes/target_core.php
   - moodle/local/ustar/cli/audit_feed_roles.php
@@ -630,6 +636,7 @@ capabilities:
   - moodle/local/ustar/profile.php
   - moodle/local/ustar/profile_settings.php
   - moodle/local/ustar/route.php
+  - moodle/local/ustar/route_access.php
   - moodle/local/ustar/route_career.php
   - moodle/local/ustar/route_next.php
   - moodle/local/ustar/route_profile_reveal.php
@@ -648,6 +655,7 @@ capabilities:
   - moodle/local/ustar/tests/connect_notification_action_test.php
   - moodle/local/ustar/tests/connect_notification_test.php
   - moodle/local/ustar/tests/feed_roles_test.php
+  - moodle/local/ustar/tests/library_management_test.php
   - moodle/local/ustar/tests/organization_identity_test.php
   - moodle/local/ustar/tests/recruiter_access_test.php
   - moodle/local/ustar/user_prefs.php
@@ -669,6 +677,7 @@ capabilities:
   - moodle/local/ustar/classes/connect/receipt_actor.php
   - moodle/local/ustar/classes/external/base.php
   - moodle/local/ustar/classes/feed_access.php
+  - moodle/local/ustar/classes/route_point_access.php
   - moodle/local/ustar/classes/route_tester.php
   - moodle/local/ustar/continue.php
   - moodle/local/ustar/course_launch.php
@@ -689,6 +698,7 @@ capabilities:
   - moodle/local/ustar/profile.php
   - moodle/local/ustar/profile_settings.php
   - moodle/local/ustar/route.php
+  - moodle/local/ustar/route_access.php
   - moodle/local/ustar/route_career.php
   - moodle/local/ustar/route_next.php
   - moodle/local/ustar/route_profile_reveal.php
@@ -840,3 +850,33 @@ capabilities:
   - moodle/local/ustar/tests/task_workspace_test.php
   direct_check_paths:
   - moodle/local/ustar/classes/task_workspace/service.php
+- capability: local/ustar:librarypublish
+  captype: write
+  contextlevel: CONTEXT_SYSTEM
+  risk_constants: []
+  declared_archetypes: {}
+  literal_reference_paths:
+  - moodle/local/ustar/classes/library_access.php
+  direct_check_paths:
+  - moodle/local/ustar/classes/library_access.php
+- capability: local/ustar:librarygrant
+  captype: write
+  contextlevel: CONTEXT_SYSTEM
+  risk_constants: []
+  declared_archetypes: {}
+  literal_reference_paths:
+  - moodle/local/ustar/classes/library_access.php
+  - moodle/local/ustar/library_manage.php
+  - moodle/local/ustar/tests/library_management_test.php
+  - moodle/local/ustar/tests/library_store_test.php
+  direct_check_paths:
+  - moodle/local/ustar/classes/library_access.php
+- capability: local/ustar:libraryassess
+  captype: write
+  contextlevel: CONTEXT_SYSTEM
+  risk_constants: []
+  declared_archetypes: {}
+  literal_reference_paths:
+  - moodle/local/ustar/classes/library_access.php
+  direct_check_paths:
+  - moodle/local/ustar/classes/library_access.php

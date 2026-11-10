@@ -13,7 +13,7 @@
     fitStyle.textContent = "/* Route-only embedded SCORM. Keep the Moodle DOM/API alive, remove outer presentation. */\nbody.ustar-scorm-inline [data-ustar-scorm-return],\nbody.ustar-scorm-inline .ustar-scorm-legacy,\nbody.ustar-scorm-inline .u-activity-context,\nbody.ustar-scorm-inline .activity-header,\nbody.ustar-scorm-inline .activity-navigation,\nbody.ustar-scorm-inline .tertiary-navigation,\nbody.ustar-scorm-inline .scorm-exitbar,\nbody.ustar-scorm-inline #scorm_toc_toggle,\nbody.ustar-scorm-inline #scorm_navpanel { display:none !important; }\nbody#page-mod-scorm-player.ustar-scorm-inline .u-main {\n    height:var(--ustar-scorm-height,calc(100dvh - 64px)) !important;\n    min-height:0 !important; padding:0 !important; margin-top:0 !important; margin-bottom:0 !important;\n    overflow:hidden !important;\n}\nbody#page-mod-scorm-player.ustar-scorm-inline .u-main > .u-container,\nbody#page-mod-scorm-player.ustar-scorm-inline #page-content,\nbody#page-mod-scorm-player.ustar-scorm-inline #region-main-box,\nbody#page-mod-scorm-player.ustar-scorm-inline #region-main,\nbody#page-mod-scorm-player.ustar-scorm-inline [role=\"main\"],\nbody#page-mod-scorm-player.ustar-scorm-inline #scorm_layout,\nbody#page-mod-scorm-player.ustar-scorm-inline #scormpage,\nbody#page-mod-scorm-player.ustar-scorm-inline #scorm_content,\nbody#page-mod-scorm-player.ustar-scorm-inline #scorm_box,\nbody#page-mod-scorm-player.ustar-scorm-inline #scorm_object {\n    box-sizing:border-box !important; width:100% !important; max-width:none !important;\n    height:100% !important; min-height:0 !important; max-height:none !important;\n    margin:0 !important; padding:0 !important; border:0 !important; border-radius:0 !important;\n}\nbody#page-mod-scorm-player.ustar-scorm-inline #scorm_content,\nbody#page-mod-scorm-player.ustar-scorm-inline #scorm_object { display:block !important; }\n/* The TOC stays available to Moodle's initialization and SCORM navigation code. */\nbody#page-mod-scorm-player.ustar-scorm-inline #scorm_toc {\n    position:absolute !important; width:0 !important; min-width:0 !important;\n    height:0 !important; overflow:hidden !important; visibility:hidden !important;\n}\n";
     document.head.appendChild(fitStyle);
     document.querySelectorAll('[data-ustar-scorm-return]').forEach(el => el.remove());
-    let timer, busy = false, acknowledged = false, finished = false, failures = 0, control = null;
+    let timer, busy = false, acknowledged = false, finished = false, failures = 0, control = null, returnToRoute = false;
     const documents = new Map(), labels = new WeakMap();
     const controls = 'button,input[type="button"],input[type="submit"],a,[role="button"]';
     const finishText = /^(?:изучено|изучил|материал изучен|завершить(?: курс| обучение| изучение)?|finish|complete)(?:\s*[✓✔→.!]*)$/iu;
@@ -24,8 +24,24 @@
         if (url.origin !== location.origin) { throw new Error('Invalid destination'); }
         return url;
     }
-    function schedule(delay = 1200) { clearTimeout(timer); if (!finished) { timer = setTimeout(check, delay); } }
-    function accept(el) { acknowledged = true; control = el; schedule(150); }
+    function schedule(delay = acknowledged ? 1200 : 15000) { clearTimeout(timer); if (!finished) { timer = setTimeout(check, delay); } }
+    function accept(el) { finished = false; acknowledged = true; control = el; schedule(150); }
+    function showFinish(status) {
+        if (!status.ready || document.querySelector('[data-ustar-scorm-finish]')
+                || [...documents.keys()].some(doc => doc.querySelector('[data-ustar-scorm-finish]'))) { return; }
+        let targetDoc = document, parent = null;
+        documents.forEach((_, doc) => {
+            const last = [...doc.querySelectorAll(controls)].find(el => studiedText.test(label(el)));
+            if (last && doc !== document) { targetDoc = doc; parent = last.parentElement; }
+        });
+        const button = targetDoc.createElement('button');
+        button.type = 'button'; button.dataset.ustarScormFinish = '1';
+        button.textContent = 'Вернуться в маршрут';
+        button.style.cssText = 'background:#ebc500;color:#222120;border:0;border-radius:8px;padding:12px 18px;font:700 16px sans-serif;cursor:pointer;margin:12px 0;';
+        if (!parent) { parent = document.body; button.style.cssText += 'position:fixed;right:20px;bottom:16px;z-index:1100;'; }
+        button.addEventListener('click', () => { returnToRoute = true; accept(button); });
+        parent.appendChild(button);
+    }
     function inspect(doc, depth = 0) {
         if (!doc || depth > 5 || finished) { return; }
         if (!documents.has(doc)) {
@@ -99,7 +115,7 @@
         const url = localUrl(statusUrl), options = {credentials:'same-origin',cache:'no-store',signal:controller.signal};
         if (confirm) {
             options.method = 'POST';
-            options.body = new URLSearchParams({cmid:String(cmid),launchid,confirm:'1',acknowledged:'1',sesskey});
+            options.body = new URLSearchParams({cmid:String(cmid),launchid,confirm:'1',acknowledged:'1',sesskey,returntoroute:returnToRoute?'1':'0'});
         } else { url.searchParams.set('cmid',String(cmid)); url.searchParams.set('launchid',launchid); }
         try {
             const response = await fetch(url.href, options);
@@ -114,7 +130,6 @@
         if (finished) { return; }
         if (busy || document.hidden) { schedule(); return; }
         inspect(document); fit();
-        if (!acknowledged) { schedule(); return; }
         busy = true;
         try {
             const status = await request(false);
@@ -123,17 +138,28 @@
                 if (control) { control.title = 'Запуск курса изменился. Откройте материал из маршрута заново.'; }
                 return;
             }
-            if (!(status.ready || status.confirmed)) { return; }
+            if (status.closed) {
+                finished = true; window.location.assign(localUrl(status.targeturl || status.routeurl).href); return;
+            }
+            showFinish(status);
+            if (!acknowledged || !(status.ready || status.confirmed)) { return; }
             const result = await request(true, status.sesskey);
             if (finished) { return; }
             if (!result.confirmed || !result.targeturl) { throw new Error('Not confirmed'); }
             const target = localUrl(result.targeturl);
-            finished = true; clearTimeout(timer);
-            window.location.assign(target.href);
+            if (result.navigate === false) {
+                acknowledged = false;
+                if (control) { control.title = 'Изучение засчитано. Материал можно повторять.'; }
+                finished = !result.reviewing;
+                showFinish({ready:true});
+            } else {
+                finished = true; clearTimeout(timer);
+                window.location.assign(target.href);
+            }
         } catch (e) {
             failures++;
             if (control) { control.title = 'Результат сохраняется. При восстановлении связи переход выполнится автоматически.'; }
-        } finally { busy = false; schedule(Math.min(15000, 1200 * Math.pow(2, Math.min(failures, 4)))); }
+        } finally { busy = false; schedule(acknowledged ? Math.min(15000, 1200 * Math.pow(2, Math.min(failures, 4))) : 15000); }
     }
     function stop() {
         finished = true; clearTimeout(timer);
@@ -145,5 +171,5 @@
     window.addEventListener('resize',fit);
     if (window.visualViewport) { window.visualViewport.addEventListener('resize',fit); }
     document.addEventListener('visibilitychange',() => { if (!document.hidden) { schedule(100); } });
-    inspect(document); fit(); schedule();
+    inspect(document); fit(); schedule(150);
 })();

@@ -1,0 +1,230 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "task": "STUDIO-PREVIEW-01",
+  "status": "qualified_owner_deploy_pending",
+  "deployed": false,
+  "merged": false,
+  "pr": 114,
+  "application_commit": "2cb233d994c0e4588973cfce0577c9d466027ce2",
+  "tool_commit": "ed292313602f07a176da5eb6e44d5a1e5ff5b65d",
+  "qualified_commit": "ed292313602f07a176da5eb6e44d5a1e5ff5b65d",
+  "tested_commit": "ed292313602f07a176da5eb6e44d5a1e5ff5b65d",
+  "expected_deployment_baseline": {
+    "application_commit": "901ac9eb9d87956e9818ab656410a1a7e63cb221",
+    "tool_commit": "f4d81940242217c48b0eaf7afd1c4d79e068b00e",
+    "active_journal": "var/lib/ustar-studio-csp-901ac9eb9d87/state.json",
+    "source_and_active_journal_required_before_outage": true,
+    "exact_owner_terminal_receipt_supplied": false,
+    "owner_partial_statement": "Points now hide; Preview images fail; blob resource errors screenshot",
+    "last_full_terminal_receipt": "context/runtime/library_discovery_owner_deploy_20261105.json"
+  },
+  "target": {
+    "local_ustar": 2026110200,
+    "theme_ustar": 2026110200,
+    "files": 653,
+    "tables": 108,
+    "changed_existing_files": 2,
+    "added_files": 0,
+    "schema_changed": false,
+    "business_data_changed": false,
+    "worker_changed": false,
+    "preserved_worker": "267e55874eb8f6c36259d748f28a2c636adc9810"
+  },
+  "regression": {
+    "original_red": "Valid PNG editor naturalWidth1, opaque preview0, exact Not allowed to load local resource parent blob error; uploaded custom font also blocked",
+    "repeated_asset_red": "Data URI alternative duplicates64KiB valid PNG bytes per reference; rejected after24reference size regression",
+    "literal_red": "$&/$`/$' text corrupts string replacement assembly; two aside nodes",
+    "fix": "Document-owned blob URLs inside opaque child; each asset serialized once; JSON < escaping and callback replacements; app.js hash in cache identity",
+    "CSP_header_byte_identical": true,
+    "preview_CSP_unchanged": true,
+    "sandbox": "allow-scripts",
+    "unsafe_eval_added": false,
+    "core_modified": false,
+    "runtime_export_model_pdf_unchanged": true
+  },
+  "verification": {
+    "native_browser_status": "PASS both pinned runtimes",
+    "native_browser_jobs": [
+      127881070339,
+      127881070334
+    ],
+    "native_browser_artifacts": [
+      13501095504,
+      13500761502
+    ],
+    "real_API": true,
+    "fresh_reload_image_decoded": true,
+    "uploaded_PNG_width": 1,
+    "uploaded_font_status": "loaded",
+    "resource_errors": [],
+    "parent_access": "denied",
+    "eval": "denied",
+    "operator_tests": 16,
+    "operator_job": 127881057350,
+    "actual_php_and_uid33": true,
+    "local_browser_normal_and_delayed": "PASS",
+    "local_npm": "PASS",
+    "repeat_resource": {
+      "references_added": 24,
+      "PNG_text_metadata_bytes": 65536,
+      "preview_srcdoc_chars_added": 2544
+    },
+    "author_review": "Inline diff/trace review under owner prohibition on subagents; no independent agent review",
+    "production_ssh": false,
+    "provider_calls": false,
+    "local_r16": {
+      "qualification_pass": false,
+      "tests": 1646,
+      "failures": 13,
+      "errors": 3,
+      "skipped": 63,
+      "causes": [
+        "Local minimal PHP runtime lacks PDO: notification_ack4 and query_batching9 failures",
+        "Local Python lacks mcp: harness2 errors and stdio module import1"
+      ],
+      "full_gate": "Both CI matrices PASS1649tests/274conditional skips with declared dependencies; local missing dependencies did not justify any source/test changes or waivers"
+    },
+    "source_php": [
+      "8.2",
+      "8.3"
+    ],
+    "source_jobs": [
+      127881070226,
+      127881070473
+    ],
+    "python_tests_per_matrix": 1649,
+    "python_skipped_per_matrix": 274,
+    "source_matrices": "PASS both",
+    "source83_external_dependency_delay": "Chromium --with-deps install prolonged; first attempt passed within existing25min budget; no timeout/test weakening or code change",
+    "native_moodle_versions": [
+      "5.1.1",
+      "5.1.8"
+    ],
+    "native_php_tests_per_runtime": 430,
+    "native_php_assertions_per_runtime": 1988,
+    "native_DB_jobs": [
+      127889429823,
+      127889429700
+    ],
+    "source_and_full_RC": "PASS",
+    "connect_db_tests": 172,
+    "connect_db_assertions": 875,
+    "connect_db_job": 127889293200,
+    "full_rc_jobs": 11,
+    "full_rc_job_results": [
+      {
+        "id": 127881069915,
+        "name": "rollback",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127881070226,
+        "name": "source (8.2)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127881070272,
+        "name": "route-editor-http",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127881070334,
+        "name": "studio-browser (patch-518, tests/stage/patch-compose.yaml)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127881070339,
+        "name": "studio-browser (historical, tests/stage/compose.yaml)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127881070473,
+        "name": "source (8.3)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127889293103,
+        "name": "prepare-rc",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127889293200,
+        "name": "connect-db",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127889429700,
+        "name": "moodle-db (patch-518, tests/stage/patch-compose.yaml, moodle-patch-evidence)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127889429823,
+        "name": "moodle-db (historical, tests/stage/compose.yaml, moodle-db-evidence)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 127894076062,
+        "name": "gate",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "workflow_status": [
+      {
+        "id": 42214512649,
+        "name": "USTAR console",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 42214512579,
+        "name": "USTAR infrastructure verification",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 42214512597,
+        "name": "USTAR context integrity",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 42214512598,
+        "name": "USTAR review gate",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "workflows": {
+    "review": 42214512598,
+    "infra": 42214512579,
+    "context": 42214512597,
+    "console": 42214512649
+  },
+  "archive": {
+    "name": "ustar-studio-preview-ed292313.tar.gz",
+    "bytes": 136074,
+    "sha256": "cf8c9b0b0f5fd6217cda3ed699fa8ea8f256e28c58764d7acb7fd87b7e1e5fb7",
+    "script_sha256": "a6d4bbdcd44be7ac8a1d35ce7730d0166da9b3c5704c902aa7df378e528809f1",
+    "CI_artifact": 13499364633,
+    "CI_zip_sha256": "81dc5ee425332391d7d83e8b352d263aa55d8981c86cdcbb6739f267d5d22a0b",
+    "CI_byte_equal": true,
+    "library_file_id": "libfile_52efd698859c8191895aaf988a7f20c1",
+    "file_id": "file_000000006b3081f4b9fa5bf543a58293",
+    "retained_byte_equal": true
+  },
+  "runbook": "docs/STUDIO_PREVIEW_INSTALL_RU.md",
+  "qualified_at": "2026-11-06T12:34:12.881754+00:00"
+}

@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-05",
+  "kind": "sanitized_native_HTTP_failure_extract",
+  "run": 42006317436,
+  "job": 127173843494,
+  "artifact": 13404284187,
+  "candidate": "f433ae207ceb3123f1f7f63fce37ca676777a71b",
+  "runtime": "Moodle5.1.8/PHP8.3.33/PostgreSQL16 isolated fresh site",
+  "http_status": 500,
+  "exception": "Whoops\\Exception\\ErrorException (E_USER_NOTICE)",
+  "message": "Coding problem: $PAGE->context was not set. You may have forgotten to call require_login() or $PAGE->set_context(). The page may not display correctly as a result",
+  "stack": [
+    "route_studio.php:185 development_assessment::catalog",
+    "development_assessment.php:61 format_string",
+    "weblib.php:760 core formatting",
+    "formatting.php:81 PAGE context",
+    "pagelib.php:575 debugging"
+  ],
+  "raw_response_sha256": "6edfd3904850d1b0188c51778d371b52dd058e4a81d402305bf3512f48f0e9e4",
+  "raw_response_in_repository": false,
+  "production_data": false,
+  "deployed": false,
+  "fix_application": "6c4f30b600e6353aad10e112e94f7db7930e0e48",
+  "fix": "Set PAGE system context after real structure-manager authorization and before catalogue formatting; retain later URL/layout initialization.",
+  "owner_report_exact_root_cause_claimed": false
+}

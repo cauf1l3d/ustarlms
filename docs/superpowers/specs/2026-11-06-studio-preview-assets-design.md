@@ -1,0 +1,9 @@
+# Studio preview assets —06Nov2026
+
+Owner confirms images disappear after Preview and Chromium reports Not allowed to load local resource blob:https://ustar.local/.... Current application901ac9eb/tool f4d81940 is the expected deployment profile from the preceding owner workflow; hiding accepted, but no terminal deployment receipt supplied. Do not claim exact host identity until the guarded check confirms it.
+
+Goal: real images and custom fonts load in Preview, including reopening. Preserve sandbox allow-scripts, opaque origin, eval/parent denial and exact parent/preview CSP. Keep editor storage, SCORM export and PDF rendering unchanged. No schema, business, worker or core changes.
+
+Source: app.js preview creates parent object URLs and injects them into sandboxed srcdoc. Existing PDF-import preview already embeds image data. Preview receives each resource once in a safely serialized bootstrap and creates its own document-owned blob URLs. A valid PNG with64KiB metadata repeated24times exposed unacceptable inline data URL duplication; the child-owned bootstrap avoids that cost. Browser unload releases leases; no postMessage protocol or shared-origin relaxation is needed. Imported CSS/course JSON is passed as inert JSON with < escaped, and inserted using textContent/JSON.parse; no eval is used. The old parent onload navigation was inaccessible under the sandbox and is removed without changing the first-page behavior. Cache identity must include app.js bytes, using the existing page asset-version calculation. This is a routine restoration of the already-authorized editor behavior, no new product design or subagents.
+
+Scope: app.js preview/close only; course_studio.php cache version; real browser regression in existing Studio fixture/native harness. Then immutable two-file owner successor of901 with653-file before/after guards and current CSP journal preserved. Old f4d/45e/aa61 remain frozen.

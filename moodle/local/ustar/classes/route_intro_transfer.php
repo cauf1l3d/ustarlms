@@ -73,6 +73,7 @@ final class route_intro_transfer {
             $rows[] = ['pointid' => (int)$point->id, 'versionid' => (int)$version->id,
                 'title' => (string)$version->title, 'phase' => (string)$point->phase,
                 'summary' => (string)$version->summary, 'requirements' => $requirements,
+                'accesspolicy' => route_point_access::policy($version),
                 'renewalpolicy' => (string)$version->renewalpolicy,
                 'validdays' => (int)$version->validdays, 'copykey' => $copykey,
                 'existing' => $existing ? (int)$existing->id : 0, 'issues' => $issues];
@@ -111,6 +112,7 @@ final class route_intro_transfer {
                     $point = route_model::add_point($targetid, $row['copykey'], $row['phase'], $sort,
                         ['title' => $row['title'], 'summary' => $row['summary'],
                             'requirements' => $row['requirements'], 'renewalpolicy' => $row['renewalpolicy'],
+                            'accesspolicy' => $row['accesspolicy'],
                             'validdays' => $row['validdays'], 'status' => route_model::STATUS_DRAFT,
                             'effectivedate' => 0], $actorid, true);
                     if (route_scope::available() && (string)$preview['target']->routekind === 'parent') {

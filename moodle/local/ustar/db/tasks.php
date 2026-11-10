@@ -2,6 +2,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $tasks = [
+    ['classname'=>'local_ustar\\task\\sync_library_quick_checks','blocking'=>0,'minute'=>'*/5','hour'=>'*','day'=>'*','month'=>'*','dayofweek'=>'*'],
+    ['classname'=>'local_ustar\task\reconcile_route_access','blocking'=>0,'minute'=>'*','hour'=>'*','day'=>'*','month'=>'*','dayofweek'=>'*'],
     ['classname'=>'local_ustar\\task\\reconcile_competitions','blocking'=>0,'minute'=>'*/5','hour'=>'*','day'=>'*','month'=>'*','dayofweek'=>'*'],
     [
         'classname' => 'local_ustar\\task\\reconcile_reporting',

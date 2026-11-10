@@ -18,6 +18,358 @@ concurrency:
   group: ustar-infra-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  library-management:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Library management forms and searchable history contracts and actual owner metadata
+        run: |
+          php -n -r 'if (!ini_get("short_open_tag")) { exit(1); }'
+          python3 -m unittest tests.r16.test_library_management_patch.Delivery tests.r16.test_library_management_patch.Contract tests.r16.test_library_management_patch.RealPhp -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_library_management_patch.Transaction -v
+      - name: Build and verify the exact bounded Library management forms and searchable history successor offline
+        run: |
+          LIBRARY_MANAGEMENT_TOOL=$(git log -1 --format=%H -- scripts/infra/library_management_patch.py scripts/infra/build_library_management_patch.py)
+          python3 scripts/infra/build_library_management_patch.py --tool-commit "$LIBRARY_MANAGEMENT_TOOL" --output artifacts/library-management
+          tar --no-same-owner -xzf artifacts/library-management/ustar-library-management-*.tar.gz -C artifacts/library-management
+          cd artifacts/library-management
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: library-management
+          path: artifacts/library-management/
+  studio-preview:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Isolated Studio preview resources contracts and actual owner metadata
+        run: |
+          php -n -r 'if (!ini_get("short_open_tag")) { exit(1); }'
+          python3 -m unittest tests.r16.test_studio_preview_patch.Delivery tests.r16.test_studio_preview_patch.Contract tests.r16.test_studio_preview_patch.RealPhp -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_studio_preview_patch.Transaction -v
+      - name: Build and verify the exact bounded Isolated Studio preview resources successor offline
+        run: |
+          STUDIO_PREVIEW_TOOL=$(git log -1 --format=%H -- scripts/infra/studio_preview_patch.py scripts/infra/build_studio_preview_patch.py)
+          python3 scripts/infra/build_studio_preview_patch.py --tool-commit "$STUDIO_PREVIEW_TOOL" --output artifacts/studio-preview
+          tar --no-same-owner -xzf artifacts/studio-preview/ustar-studio-preview-*.tar.gz -C artifacts/studio-preview
+          cd artifacts/studio-preview
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: studio-preview
+          path: artifacts/studio-preview/
+  studio-csp:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Cumulative Route editor / strict Studio CSP contracts and actual owner metadata
+        run: |
+          php -n -r 'if (!ini_get("short_open_tag")) { exit(1); }'
+          python3 -m unittest tests.r16.test_studio_csp_patch.Delivery tests.r16.test_studio_csp_patch.Contract tests.r16.test_studio_csp_patch.RealPhp -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_studio_csp_patch.Transaction -v
+      - name: Build and verify the exact bounded Cumulative Route editor / strict Studio CSP successor offline
+        run: |
+          STUDIO_CSP_TOOL=$(git log -1 --format=%H -- scripts/infra/studio_csp_patch.py scripts/infra/build_studio_csp_patch.py)
+          python3 scripts/infra/build_studio_csp_patch.py --tool-commit "$STUDIO_CSP_TOOL" --output artifacts/studio-csp
+          tar --no-same-owner -xzf artifacts/studio-csp/ustar-studio-csp-*.tar.gz -C artifacts/studio-csp
+          cd artifacts/studio-csp
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: studio-csp
+          path: artifacts/studio-csp/
+  route-editor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Route point editor contracts and actual owner metadata
+        run: |
+          php -n -r 'if (!ini_get("short_open_tag")) { exit(1); }'
+          python3 -m unittest tests.r16.test_route_editor_patch.Contract tests.r16.test_route_editor_patch.RealPhp -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_route_editor_patch.Transaction -v
+      - name: Build and verify the exact bounded Route point editor successor offline
+        run: |
+          ROUTE_EDITOR_TOOL=$(git log -1 --format=%H -- scripts/infra/route_editor_patch.py scripts/infra/build_route_editor_patch.py)
+          python3 scripts/infra/build_route_editor_patch.py --tool-commit "$ROUTE_EDITOR_TOOL" --output artifacts/route-editor
+          tar --no-same-owner -xzf artifacts/route-editor/ustar-route-editor-*.tar.gz -C artifacts/route-editor
+          cd artifacts/route-editor
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: route-editor
+          path: artifacts/route-editor/
+  library-discovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Library discovery contracts and actual owner metadata
+        run: |
+          php -n -r 'if (!ini_get("short_open_tag")) { exit(1); }'
+          python3 -m unittest tests.r16.test_library_discovery_patch.Contract tests.r16.test_library_discovery_patch.RealPhp -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_library_discovery_patch.Transaction -v
+      - name: Build and verify the exact bounded Library discovery successor offline
+        run: |
+          DISCOVERY_TOOL=$(git log -1 --format=%H -- scripts/infra/library_discovery_patch.py scripts/infra/build_library_discovery_patch.py)
+          python3 scripts/infra/build_library_discovery_patch.py --tool-commit "$DISCOVERY_TOOL" --output artifacts/library-discovery
+          tar --no-same-owner -xzf artifacts/library-discovery/ustar-library-discovery-*.tar.gz -C artifacts/library-discovery
+          cd artifacts/library-discovery
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: library-discovery
+          path: artifacts/library-discovery/
+  studio-scorm-edit-lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Studio SCORM edit contracts and actual owner metadata
+        run: |
+          php -n -r 'if (!ini_get("short_open_tag")) { exit(1); }'
+          python3 -m unittest tests.r16.test_studio_scorm_edit_lint_patch.Contract tests.r16.test_studio_scorm_edit_lint_patch.RealPhp -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_studio_scorm_edit_lint_patch.Transaction -v
+      - name: Build and verify the exact bounded Studio SCORM edit successor offline
+        run: |
+          SCORM_EDIT_TOOL=$(git log -1 --format=%H -- scripts/infra/studio_scorm_edit_lint_patch.py scripts/infra/build_studio_scorm_edit_lint_patch.py)
+          python3 scripts/infra/build_studio_scorm_edit_lint_patch.py --tool-commit "$SCORM_EDIT_TOOL" --output artifacts/studio-scorm-edit-lint
+          tar --no-same-owner -xzf artifacts/studio-scorm-edit-lint/ustar-studio-scorm-edit-lint-*.tar.gz -C artifacts/studio-scorm-edit-lint
+          cd artifacts/studio-scorm-edit-lint
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: studio-scorm-edit-lint
+          path: artifacts/studio-scorm-edit-lint/
+  studio-scorm-edit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Studio SCORM edit contracts and actual owner metadata
+        run: |
+          python3 -m unittest tests.r16.test_studio_scorm_edit_patch.Contract -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_studio_scorm_edit_patch.Transaction -v
+      - name: Build and verify the exact bounded Studio SCORM edit successor offline
+        run: |
+          SCORM_EDIT_TOOL=$(git log -1 --format=%H -- scripts/infra/studio_scorm_edit_patch.py scripts/infra/build_studio_scorm_edit_patch.py)
+          python3 scripts/infra/build_studio_scorm_edit_patch.py --tool-commit "$SCORM_EDIT_TOOL" --output artifacts/studio-scorm-edit
+          tar --no-same-owner -xzf artifacts/studio-scorm-edit/ustar-studio-scorm-edit-*.tar.gz -C artifacts/studio-scorm-edit
+          cd artifacts/studio-scorm-edit
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: studio-scorm-edit
+          path: artifacts/studio-scorm-edit/
+  library-marketplace:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Marketplace contracts and actual owner metadata
+        run: |
+          python3 -m unittest tests.r16.test_library_marketplace_patch.Contract -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_library_marketplace_patch.Transaction -v
+      - name: Build and verify the exact bounded Marketplace successor offline
+        run: |
+          MARKET_TOOL=$(git log -1 --format=%H -- scripts/infra/library_marketplace_patch.py scripts/infra/build_library_marketplace_patch.py)
+          python3 scripts/infra/build_library_marketplace_patch.py --tool-commit "$MARKET_TOOL" --output artifacts/library-marketplace
+          tar --no-same-owner -xzf artifacts/library-marketplace/ustar-library-marketplace-*.tar.gz -C artifacts/library-marketplace
+          cd artifacts/library-marketplace
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: library-marketplace
+          path: artifacts/library-marketplace/
+  library-navigation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Source-only navigation contracts and actual owner metadata
+        run: |
+          python3 -m unittest tests.r16.test_library_navigation_patch.Contract -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_library_navigation_patch.Transaction -v
+      - name: Build and verify the exact one-file successor offline
+        run: |
+          NAV_TOOL=$(git log -1 --format=%H -- scripts/infra/library_navigation_patch.py scripts/infra/build_library_navigation_patch.py)
+          python3 scripts/infra/build_library_navigation_patch.py --tool-commit "$NAV_TOOL" --output artifacts/library-navigation
+          tar --no-same-owner -xzf artifacts/library-navigation/ustar-library-navigation-*.tar.gz -C artifacts/library-navigation
+          cd artifacts/library-navigation
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: library-navigation
+          path: artifacts/library-navigation/
+  library-successor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Library operator contract and real mixed-owner recovery
+        run: |
+          python3 -m unittest tests.r16.test_library_update.Contract tests.r16.test_library_update.Package -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_library_update.Transaction -v
+      - name: Build exact offline successor
+        run: |
+          LIBRARY_TOOL=$(git log -1 --format=%H -- scripts/infra/library_update.py scripts/infra/build_library_update.py)
+          python3 scripts/infra/build_library_update.py --tool-commit "$LIBRARY_TOOL" --output artifacts/library
+          tar --no-same-owner -xzf artifacts/library/ustar-library-*.tar.gz -C artifacts/library
+          cd artifacts/library
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: library-successor
+          path: artifacts/library/
+  scorm-tracking-access:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Scoped tracking source, frozen companion and real private metadata recovery
+        run: |
+          python3 -m unittest tests.r16.test_scorm_tracking_patch.Contract -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_scorm_tracking_patch.Transaction -v
+      - name: Build the bounded1100 tracking repair without host access
+        run: |
+          python3 scripts/infra/build_scorm_tracking_patch.py --tool-commit b5ead9cb705cf538fe2134f332cfe5ccd055aa06 --output artifacts/scorm-tracking
+          tar --no-same-owner -xzf artifacts/scorm-tracking/ustar-scorm-tracking-*.tar.gz -C artifacts/scorm-tracking
+          cd artifacts/scorm-tracking
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+          python3 -I -S finish.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: scorm-tracking-access
+          path: artifacts/scorm-tracking/
+  route-review-access:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Exact source, private images, mixed owners and forward recovery
+        run: |
+          python3 -m unittest tests.r16.test_route_access_update.Contract tests.r16.test_route_access_update.Package -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_route_access_update.Transaction -v
+          python3 -m unittest tests.r16.test_route_review_finish.Contract -v
+          sudo -n python3 -m unittest tests.r16.test_route_review_finish.Transaction -v
+      - name: Package the narrow committed-publication recovery
+        run: |
+          install -D -m 600 scripts/infra/route_review_finish.py artifacts/route-finish/ustar-route-finish-20261102.py
+          cd artifacts/route-finish
+          sha256sum ustar-route-finish-20261102.py > SHA256SUMS
+          python3 -I -S ustar-route-finish-20261102.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: route-review-finish
+          path: artifacts/route-finish/
+      - name: Build fixed route review release and verify offline envelope
+        run: |
+          python3 scripts/infra/build_route_access_update.py --tool-commit f879822a406eefc3c65fe4a5d0c36d28bc091ba5 --output artifacts/route-review
+          tar --no-same-owner -xzf artifacts/route-review/ustar-route-review-*.tar.gz -C artifacts/route-review
+          cd artifacts/route-review
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: route-review-access
+          path: artifacts/route-review/
+  route-scorm-source-overlay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Exact source overlay preserves actual UID33, locks and crash recovery
+        run: |
+          python3 -m unittest tests.r16.test_route_scorm_patch.Package -v
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_route_scorm_patch.Transaction -v
+      - name: Build the fixed SCORM overlay and verify offline plan
+        run: |
+          python3 scripts/infra/build_route_scorm_patch.py --tool-commit 51332a218f9ff58f5aa7074f80a1a00426502108 --output artifacts/route-scorm-fix
+          tar --no-same-owner -xzf artifacts/route-scorm-fix/ustar-scorm-direct-*.tar.gz -C artifacts/route-scorm-fix
+          cd artifacts/route-scorm-fix
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -S update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: route-scorm-source-overlay
+          path: artifacts/route-scorm-fix/
   connect-runtime:
     runs-on: ubuntu-24.04
     timeout-minutes: 20

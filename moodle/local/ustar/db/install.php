@@ -78,4 +78,6 @@ function xmldb_local_ustar_install(): void {
 
     set_config('completion_reward_startedat',time()+1,'local_ustar');
     accesslib_clear_all_caches(true);
+    require_once(__DIR__ . '/library_defaults.php');
+    local_ustar_library_defaults();
 }

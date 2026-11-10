@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "date": "2026-11-03",
+  "task": "LIBRARY-01",
+  "status": "owner_retry_pending_after_explicit_parent_preparation",
+  "deployed": false,
+  "archive": "ustar-library-6ee71123.tar.gz",
+  "archive_sha256": "db2f51a1b8b95c4a3cf7a2ef4fb3cf6fef559927131b4dfdb93dda67eaab770f",
+  "application_commit": "26bd4fe05a7e1c81bdb4b83992c16d4b4c0a0971",
+  "tool_commit": "6ee7112318b672779f84a801e27a8da0c2f94898",
+  "owner_evidence": {
+    "first_upgrade": "refused",
+    "reason": "library_operation_failed",
+    "exception": "FileNotFoundError",
+    "frame": "<ustar-route-access/library_update.py>:273:prepare",
+    "expected_directory_error": true,
+    "directory_exists": false,
+    "state_exists": false,
+    "readonly_check": {
+      "phase": "ready",
+      "baseline": "2150affe7e2964a1056468cce0e438f9e2f91dcb",
+      "host_changes": false
+    }
+  },
+  "root_cause": "Frozen prepare() calls parent.stat() for the new local/ustar/tests/fixtures/library_fixture.php. Accepted614-file source has no tests/fixtures directory. Previous filesystem fixture only used existing parents and missed this case.",
+  "affected_directory": "/opt/ustar/data/moodle/public/public/local/ustar/tests/fixtures",
+  "remediation": {
+    "action": "Provision exactly the missing empty code directory root:root0755 after the same updater readonly check, then run the unchanged qualified updater --upgrade --acknowledge-outage",
+    "archive_changed": false,
+    "operator_changed": false,
+    "application_changed_before_retry": false,
+    "delete_locks": false,
+    "restore_database": false
+  },
+  "local_verification": {
+    "actual_uid": 0,
+    "filesystem_real": true,
+    "docker_sql_boundary": "controlled test Host; not production",
+    "failure_reproduced": true,
+    "failure_before_journal_and_outage": true,
+    "check_after_failure": "ready",
+    "after_exact_install_d_command": "active",
+    "repeat": "active",
+    "new_directory_owner": "root:root",
+    "new_directory_mode": "0755",
+    "workers_stopped_once": true,
+    "upgrade_called_twice": true,
+    "fixture_cleaned": true
+  },
+  "limits": [
+    "Owner execution of the directory preparation/retry is pending",
+    "Library not yet accepted on production",
+    "Original native415-test and archive qualification remains dated evidence; it did not cover this missing-parent case"
+  ]
+}

@@ -15,6 +15,12 @@ if (!$canmanage) {
     require_capability('local/ustar:use', $context);
 }
 
+if ($_SERVER['REQUEST_METHOD']==='GET' && get_config('local_ustar','library_rail')
+        && !optional_param('editor',0,PARAM_BOOL) && !optional_param('edit',0,PARAM_INT)) {
+    redirect(new moodle_url('/local/ustar/library.php',['tab'=>'catalog',
+        'parent'=>optional_param('parent',0,PARAM_INT),'product'=>optional_param('product',0,PARAM_INT),'q'=>optional_param('q','',PARAM_TEXT)]));
+}
+
 $notice = '';
 $failedinput = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

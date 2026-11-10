@@ -1,0 +1,229 @@
+{
+  "kind": "qualified_source_only_owner_update",
+  "task": "LIBRARY-MANAGEMENT-01",
+  "qualified_at": "2026-11-10T16:54:04+03:00",
+  "pull_request": 114,
+  "branch": "feat/library-unification-20261102",
+  "application_commit": "53c9f16e615ec4e5701e21207176ffca5bfaecda",
+  "tool_commit": "f374d2d992e6222fadd9bb848b33a25eb2fc0e57",
+  "qualification_commit": "f374d2d992e6222fadd9bb848b33a25eb2fc0e57",
+  "baseline_commit": "2cb233d994c0e4588973cfce0577c9d466027ce2",
+  "initial_failed_qualification": {
+    "commit": "31d1a942ec727b8678823f08e690362135ad017b",
+    "review_run_id": 42317008152,
+    "reason": "Test role assigned internal learning.use operation through Moodle assign_capability; corrected to local/ustar:use. No production PHP/JS/template changed."
+  },
+  "predecessor_journal": "var/lib/ustar-studio-preview-2cb233d994c0/state.json",
+  "predecessor_functional_acceptance": "context/runtime/studio_preview_owner_acceptance_20261106.json",
+  "owner_installed": false,
+  "owner_receipt": null,
+  "production_terminal_receipt": "context/runtime/library_discovery_owner_deploy_20261105.json",
+  "findings": [
+    "U03",
+    "U04",
+    "U09",
+    "U10"
+  ],
+  "source": {
+    "versions": {
+      "local_ustar": 2026110200,
+      "theme_ustar": 2026110200
+    },
+    "files": 660,
+    "tables": 108,
+    "modified": 3,
+    "added": 7,
+    "overlay_files": [
+      "local/ustar/library_manage.php",
+      "local/ustar/styles/library.css",
+      "local/ustar/templates/library_manage.mustache",
+      "local/ustar/classes/library_manage_form.php",
+      "local/ustar/classes/library_manage_reader.php",
+      "local/ustar/amd/src/library_manage.js",
+      "local/ustar/amd/build/library_manage.min.js",
+      "local/ustar/templates/library_question_fields.mustache",
+      "local/ustar/templates/library_manage_pagination.mustache",
+      "local/ustar/tests/library_management_test.php"
+    ],
+    "canonical_writers_changed": false,
+    "schema_changed": false,
+    "business_data_changed": false,
+    "core_changed": false,
+    "worker_changed": false,
+    "web_restart_required": true,
+    "cache_purge_required": true
+  },
+  "workflows": [
+    {
+      "id": 42825577412,
+      "name": "USTAR console",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 42825577176,
+      "name": "USTAR infrastructure verification",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 42825577132,
+      "name": "USTAR context integrity",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 42825577143,
+      "name": "USTAR review gate",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "review_jobs": [
+    {
+      "id": 129861882427,
+      "name": "rollback",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 129861882820,
+      "name": "studio-browser (historical, tests/stage/compose.yaml)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 129861882847,
+      "name": "source (8.2)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 129861882914,
+      "name": "route-editor-http",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 129861882915,
+      "name": "studio-browser (patch-518, tests/stage/patch-compose.yaml)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 129861882927,
+      "name": "source (8.3)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 129867432768,
+      "name": "connect-db",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 129867432847,
+      "name": "prepare-rc",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 129867596395,
+      "name": "moodle-db (historical, tests/stage/compose.yaml, moodle-db-evidence)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 129867596592,
+      "name": "moodle-db (patch-518, tests/stage/patch-compose.yaml, moodle-patch-evidence)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 129872327008,
+      "name": "gate",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "native_moodle": [
+    {
+      "version": "5.1.1",
+      "job_id": 129867596395,
+      "db_artifact_id": 13770665374,
+      "full_tests": 440,
+      "full_assertions": 2041,
+      "focused_tests": 10,
+      "focused_assertions": 53,
+      "browser_artifact_id": 13769801258,
+      "browser": {
+        "status": "PASS",
+        "bankid": 1,
+        "created_questions": 6,
+        "invalid_post_preserved": true,
+        "invalid_post_zero_bank_writes": true,
+        "reorder_remove_correct_preserved": true,
+        "revision": 3,
+        "fresh_reload": true
+      }
+    },
+    {
+      "version": "5.1.8",
+      "job_id": 129867596592,
+      "db_artifact_id": 13769279379,
+      "full_tests": 440,
+      "full_assertions": 2041,
+      "focused_tests": 10,
+      "focused_assertions": 53,
+      "browser_artifact_id": 13768727208,
+      "browser": {
+        "status": "PASS",
+        "bankid": 1,
+        "created_questions": 6,
+        "invalid_post_preserved": true,
+        "invalid_post_zero_bank_writes": true,
+        "reorder_remove_correct_preserved": true,
+        "revision": 3,
+        "fresh_reload": true
+      }
+    }
+  ],
+  "connect": {
+    "job_id": 129867432768,
+    "artifact_id": 13768879238,
+    "tests": 172,
+    "assertions": 875
+  },
+  "source_php": {
+    "versions": [
+      "8.2",
+      "8.3"
+    ],
+    "python_cases_per_matrix": 1669,
+    "conditional_skips_per_matrix": 275,
+    "library_browser_views_per_matrix": 36
+  },
+  "installer": {
+    "job_id": 129861884553,
+    "tests": 19,
+    "real_php_lint": true,
+    "real_uid_33": true,
+    "archive_offline_check": "PLAN_ONLY",
+    "interruption_recovery": true
+  },
+  "archive": {
+    "name": "ustar-library-management-f374d2d9.tar.gz",
+    "bytes": 138669,
+    "sha256": "edda60bf09f005e469678bb7e22428e7f2ac2d326bd98c20df4e2c1f8b4c1ea3",
+    "script_sha256": "a5432a94543841061c719a622fd55cc49cc7f184685170c915f172b20c82ca12",
+    "CI_artifact": 13768227768,
+    "CI_zip_sha256": "70ba24d7c6da570d16b80f56470788fda8065d3ce8d1a0e87d5f1bd84204f48a",
+    "CI_byte_equal": true,
+    "library_file_id": "libfile_66e1ca56482c8191bc70fa8002b1aed3",
+    "file_id": "file_000000003d6881f494b99c3ae8094387",
+    "retained_byte_equal": true
+  },
+  "runbook": "docs/LIBRARY_MANAGEMENT_INSTALL_RU.md",
+  "author_guide": "docs/LIBRARY_MANAGEMENT_RU.md"
+}

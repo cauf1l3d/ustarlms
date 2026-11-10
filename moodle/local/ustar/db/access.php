@@ -127,4 +127,7 @@ $capabilities = [
         'riskbitmask' => RISK_PERSONAL, 'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM, 'archetypes' => [],
     ],
+    'local/ustar:librarypublish' => ['captype'=>'write','contextlevel'=>CONTEXT_SYSTEM,'archetypes'=>[]],
+    'local/ustar:librarygrant' => ['captype'=>'write','contextlevel'=>CONTEXT_SYSTEM,'archetypes'=>[]],
+    'local/ustar:libraryassess' => ['captype'=>'write','contextlevel'=>CONTEXT_SYSTEM,'archetypes'=>[]],
 ];

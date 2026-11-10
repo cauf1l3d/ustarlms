@@ -222,6 +222,11 @@ final class route_model {
                     : '',
                 'draft' => $displaydays((string)$draft->validdays),
             ],
+            [
+                'label' => 'Доступ и переход',
+                'published' => $published ? route_point_access::description($published) : '',
+                'draft' => route_point_access::description($draft),
+            ],
         ];
         $rows = [];
         foreach ($fields as $field) {
@@ -458,7 +463,8 @@ final class route_model {
         bool $active,
         array $versiondata,
         int $actorid,
-        int $expectedmodified = 0
+        int $expectedmodified = 0,
+        int $expectedversion = 0
     ): \stdClass {
         global $DB;
 
@@ -500,6 +506,10 @@ final class route_model {
                     throw new \moodle_exception(
                         'Наследуемый общий шаг нельзя редактировать напрямую.'
                     );
+                }
+
+                if ($expectedversion>0 && (int)(self::latest_version($pointid)->id??0)!==$expectedversion) {
+                    throw new \moodle_exception('Содержание точки изменено другим редактором. Обновите маршрут и сверьте изменения.');
                 }
 
                 $status = self::clean_status(
@@ -658,6 +668,8 @@ final class route_model {
                     $requirements,
                     $actorid
                 );
+
+                route_point_access::validate_for_requirements(route_point_access::policy($version),$requirements);
 
                 $now = time();
                 $version->status = self::STATUS_PUBLISHED;
@@ -1045,6 +1057,12 @@ final class route_model {
             );
         }
 
+        $accesspolicy = array_key_exists('accesspolicy', $data)
+            ? route_point_access::normalize((array)$data['accesspolicy']) : null;
+        if ($accesspolicy !== null && $status===self::STATUS_PUBLISHED) { route_point_access::validate_for_requirements($accesspolicy, $requirements); }
+        $accessjson = $accesspolicy !== null
+            ? json_encode($accesspolicy, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+            : ($latest->accesspolicyjson ?? null);
         $validdays = max(0, min(3650, (int)($data['validdays'] ?? ($latest->validdays ?? 0))));
         $effectivedate = isset($data['effectivedate']) ? max(0, (int)$data['effectivedate']) : 0;
         $now = time();
@@ -1055,6 +1073,7 @@ final class route_model {
             'title' => $title,
             'summary' => $summary,
             'requirementsjson' => json_encode($requirements, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            'accesspolicyjson' => $accessjson,
             'renewalpolicy' => $policy,
             'validdays' => $validdays,
             'status' => $status,
@@ -1456,6 +1475,10 @@ final class route_model {
             ]))->out(false);
             $completion = $DB->get_record('course_completions', ['course' => $courseid, 'userid' => $userid], 'timecompleted');
             $completedat = $completion ? (int)$completion->timecompleted : 0;
+            if ($completedat <= 0) {
+                // A proven single-activity Studio import may use its native SCORM evidence.
+                $completedat = scorm_route_launch::managed_course_completedat($courseid, $userid);
+            }
             $result['completedat'] = $completedat;
             $result['satisfied'] = $completedat > 0;
         } else if ($type === 'cm') {
@@ -1653,7 +1676,7 @@ final class route_model {
                 $result['detail'] = 'Текущая опубликованная версия материала USTAR не найдена';
                 return $result;
             }
-            if (!content::can_access_record($item, $userid)) {
+            if (!content::audience_allows_record($item, $userid)) {
                 $result['configured'] = false;
                 $result['detail'] = 'Правила доступа материала не включают этого сотрудника';
                 return $result;
@@ -2391,6 +2414,12 @@ final class route_model {
             }
 
             if ($complete) {
+                $accessfact = route_point_access::project($userid, $point, $version,
+                    ['satisfied'=>true,'completedat'=>$completedat,'inherited'=>!$exact], false);
+                $complete = !empty($accessfact['satisfied']);
+            }
+
+            if ($complete) {
                 $status = 'done';
                 $done++;
 
@@ -2747,6 +2776,10 @@ final class route_model {
                 }
             }
 
+            if ($sequenceopen) {
+                $fact = route_point_access::project($userid, $point, $version, $fact, !$readonly);
+            }
+
             $quizsummary = null;
             if (!$assessmentview) {
                 $quizsummary = self::quiz_summary_for_version($version, $userid);
@@ -2755,7 +2788,8 @@ final class route_model {
 
             $storedstatus = $readonly ? (string)($storedpoints[(int)$point->id]['status'] ?? 'locked') : '';
             $pendingsync = $readonly && $storedstatus === 'current'
-                && (!empty($fact['satisfied']) || !empty($assessmentview['pendingsync']));
+                && (!empty($fact['satisfied']) || (!empty($fact['studied']) && !empty($fact['reviewing'])
+                    && empty($fact['accessid'])) || !empty($assessmentview['pendingsync']));
             if ($readonly && $storedstatus === 'done') {
                 $fact['satisfied'] = true;
             }
@@ -2795,6 +2829,16 @@ final class route_model {
             }
 
             $item = [
+                'versionid' => (int)$version->id,
+                'reviewing' => !empty($fact['reviewing']),
+                'studied' => !empty($fact['studied']),
+                'accessid' => (int)($fact['accessid'] ?? 0),
+                'accessdeadline' => (int)($fact['accessdeadline'] ?? 0),
+                'hasaccessdeadline' => !empty($fact['accessdeadline']) && !empty($fact['reviewing']),
+                'accessdeadlinelabel' => !empty($fact['accessdeadline']) ? userdate((int)$fact['accessdeadline'], '%d.%m.%Y %H:%M') : '',
+                'closesaccess' => !empty($fact['closesaccess']),
+                'canadvance' => !empty($fact['reviewing']) && !empty($fact['accessid']),
+                'reviewlinks' => $fact['reviewlinks'] ?? [],
                 'id' => (int)$point->id,
                 'number' => $displaynumber,
                 'pointkey' => (string)$point->pointkey,
@@ -2835,13 +2879,13 @@ final class route_model {
 
                 'launchurl' => (string)($fact['launchurl'] ?? ''),
                 'canlaunch' =>
-                    $status === 'current' &&
+                    ($status === 'current' || ($status === 'done' && route_point_access::policy($version)['repeat'] === 'keep')) &&
                     !$pendingsync &&
                     !empty($fact['launchurl']) &&
                     (!$assessmentview || !empty($assessmentview['canlaunch'])),
-                'actionlabel' => $assessmentview
+                'actionlabel' => !empty($fact['studied']) && !empty($fact['launchurl']) ? 'Повторить материал →' : ($assessmentview
                     ? (string)($assessmentview['actionlabel'] ?? 'Открыть шаг →')
-                    : 'Открыть шаг →',
+                    : 'Открыть шаг →'),
                 'actionlabelshort' => $assessmentview
                     ? (string)($assessmentview['actionlabelshort'] ?? 'Продолжить')
                     : 'Продолжить',
@@ -2928,7 +2972,7 @@ final class route_model {
      *
      * Employee runtime continues to resolve routes strictly by position.
      */
-    public static function admin_view_route(int $routeid, string $positionid = ''): array {
+    public static function admin_view_route(int $routeid, string $positionid = '', bool $includeinactive = false): array {
         global $DB;
 
         $route = $DB->get_record(
@@ -2957,7 +3001,7 @@ final class route_model {
 
         $points = [];
 
-        foreach (self::points((int)$route->id) as $point) {
+        foreach (self::points((int)$route->id,$includeinactive) as $point) {
             $versions = [];
 
             foreach (self::versions((int)$point->id) as $version) {
@@ -3080,6 +3124,7 @@ final class route_model {
             $latest = $versions[0] ?? null;
 
             $points[] = [
+                'routeid'=>(int)$route->id, 'active'=>(int)$point->active,
                 'id' =>
                     (int)$point->id,
 

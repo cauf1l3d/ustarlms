@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-02",
+  "source": "owner_terminal_outputs_in_current_dialogue",
+  "status": "owner_publication_committed_finish_pending",
+  "application_commit": "b9f170d89cead30021b0acbfba6ee681cec024f8",
+  "tool_commit": "f879822a406eefc3c65fe4a5d0c36d28bc091ba5",
+  "previous_qualification": "context/runtime/route_scorm_access_qualification_20261102.json",
+  "upgrade": {
+    "unit": "ustar-route-review-1793586687.service",
+    "phases": [
+      "prepared",
+      "database_copy",
+      "database_copied",
+      "source_switching",
+      "upgrade_1",
+      "upgrade_2",
+      "publication_committed"
+    ],
+    "refusal": "application_login_failed",
+    "exit_code": 2,
+    "runtime_seconds": 40.883
+  },
+  "readonly_check": {
+    "phase": "recovery_required",
+    "host_changes": false
+  },
+  "services_last_owner_output": {
+    "ustar-connect-receiver.service": "inactive",
+    "ustar-connect-notify.service": "inactive",
+    "ustar-console-notify.service": "active",
+    "ustar-telegram-egress.service": "active"
+  },
+  "HTTP_GET_owner": {
+    "headers": {
+      "Host": "ustar.local"
+    },
+    "proxy": "disabled",
+    "frontend_loopback_port80": 302,
+    "moodle_loopback_port8082": 200,
+    "redirect_target": "not_collected"
+  },
+  "recover_attempt": {
+    "unit": "ustar-route-recover-1793587158.service",
+    "refusal": "application_login_failed",
+    "exit_code": 2,
+    "runtime_seconds": 4.58
+  },
+  "root_cause": "Frozen Host.login requires HTTP200 from port80; owner frontend returns302. The operator stops before restoring workers despite successful publication/target verification.",
+  "agent_server_access": false,
+  "application_changed_by_recovery": false,
+  "completion_version_evidence": "fixed updater reached publication_committed after verify_target, not an independent current SQL snapshot",
+  "historical_last_completed_deployment": "context/runtime/connect_role_bot_owner_deploy_20261029.json",
+  "recovery": {
+    "source": "scripts/infra/route_review_finish.py",
+    "original_script_sha256": "a811fd52db1e8d1debdf32b07e075ed91db4220adc91ac701ae57b4782ede04c",
+    "scope": "only publication_committed/active journal; same frozen finish guards; Moodle HTTP200 on fixed loopback8082; restore original worker states; journal active",
+    "no_database_restore": true,
+    "no_upgrade_or_source_reapply": true,
+    "original_archive_unchanged": true,
+    "merge_authorized": false
+  },
+  "worker_start_commands_given": true,
+  "worker_start_result_received": false,
+  "owner_recovery_active_received": false,
+  "owner_functional_acceptance_received": false,
+  "tests": "10 local tests passed (4 contract,6 root transactions); frozen updater+catalog tests passed with existing UID33 case delegated to mandatory sudo CI",
+  "CI": "pending"
+}

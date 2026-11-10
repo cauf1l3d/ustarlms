@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "type": "owner_functional_acceptance",
+  "statement": "все ок переходи к формированию следующего пакета",
+  "scope": "General acceptance after Preview resource fix and request to prepare next audit package",
+  "expected_application_commit": "2cb233d994c0e4588973cfce0577c9d466027ce2",
+  "expected_tool_commit": "ed292313602f07a176da5eb6e44d5a1e5ff5b65d",
+  "terminal_deployment_receipt_supplied": false,
+  "exact_host_source_verified": false,
+  "does_not_prove": [
+    "all roles and business flows",
+    "production query/latency measurements",
+    "external restore",
+    "exact installed source SHA"
+  ],
+  "next_package_requires": "Exact2cb source manifest and active private Preview journal before outage"
+}

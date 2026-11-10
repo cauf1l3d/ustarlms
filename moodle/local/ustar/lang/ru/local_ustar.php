@@ -40,3 +40,12 @@ $string['notification_read'] = 'Прочитано';
 $string['privacy:metadata:connect:acktokens'] = 'Хеши персональных кнопок подтверждения уведомлений; без исходных токенов действий.';
 
 $string['privacy:metadata:connect:bot'] = 'Краткоживущие черновики диалогов, подтверждения действий и разрешённые фотографии отчётов Connect.';
+
+$string['task_route_access'] = 'Закрывать истёкшие окна повторения маршрута';
+$string['privacy:metadata:route_access'] = 'Окна повторения учебной точки: сотрудник, версия, срок и подтверждённое закрытие доступа.';
+
+$string['libraryerror'] = 'Ошибка Библиотеки: {$a}';
+$string['ustar:librarypublish'] = 'Управлять материалами и условиями доступа Библиотеки';
+$string['ustar:librarygrant'] = 'Предоставлять доступ к Библиотеке сотрудникам своей области';
+$string['ustar:libraryassess'] = 'Создавать дополнительные проверки знаний';
+$string['privacy:metadata:library'] = 'Library access history and optional assessment attempts.';

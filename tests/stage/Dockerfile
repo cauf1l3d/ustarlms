@@ -2,10 +2,11 @@ FROM composer:2.8.12 AS composer
 FROM php:8.2.30-cli-bookworm
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git unzip locales-all libicu-dev libzip-dev libpq-dev libpng-dev libjpeg62-turbo-dev \
-    libfreetype6-dev libxml2-dev libsodium-dev libcurl4-openssl-dev libonig-dev curl ca-certificates \
+    libfreetype6-dev libxml2-dev libsodium-dev libcurl4-openssl-dev libonig-dev curl ca-certificates python3 \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && missing_extensions="$(php -r 'foreach (["intl","zip","pgsql","gd","soap","exif","sodium","Zend OPcache","curl","mbstring","dom","xml","xmlreader"] as $ext) { if (!extension_loaded($ext)) echo ($ext === "Zend OPcache" ? "opcache" : $ext) . " "; }')" \
     && if [ -n "$missing_extensions" ]; then docker-php-ext-install -j2 $missing_extensions; fi \
+    && python3 -c 'import http.cookiejar, ssl' \
     && rm -rf /var/lib/apt/lists/*
 # Match the dump/restore client major to the PostgreSQL 16 test server.
 # Debian bookworm's default client is 15 and cannot dump a newer server.

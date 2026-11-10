@@ -50,7 +50,8 @@ final class library_management_test extends \advanced_testcase {
     public function test_nonadmin_capability_without_scope_cannot_list_foreign_people_or_history(): void {
         $leader=$this->employee();$target=$this->employee();$offer=$this->offer('assigned',0);$this->grant($offer,$target);
         $role=create_role('Management fixture','managementfixture','');$ctx=\context_system::instance();
-        foreach(['local/ustar:librarygrant',capabilities::LEARNING_USE] as $cap) {assign_capability($cap,CAP_ALLOW,$role,$ctx->id);}
+        assign_capability('local/ustar:use', CAP_ALLOW, $role, $ctx->id);
+        assign_capability('local/ustar:librarygrant', CAP_ALLOW, $role, $ctx->id);
         role_assign($role,$leader->id,$ctx->id);$this->setUser($leader);
         $this->assertTrue(library_access::can_grant($leader->id));
         $this->assertSame([],library_manage_reader::history($leader->id,'',0,time())['items']);

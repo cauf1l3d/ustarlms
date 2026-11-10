@@ -838,7 +838,9 @@ tasks:
   terminal_deployment_receipt_supplied: false
 - id: LIBRARY-MANAGEMENT-01
   title: 'Библиотека: авторские формы, поиск и история доступа'
-  status: in_progress
+  status: qualified_awaiting_owner_installation
+  qualification: context/runtime/library_management_qualification_20261110.json
+  runbook: docs/LIBRARY_MANAGEMENT_INSTALL_RU.md
   depends_on: []
   related_task: STUDIO-PREVIEW-01
   spec: docs/superpowers/specs/2026-11-06-library-management-design.md

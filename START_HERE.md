@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально06.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
+Актуально 10.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
 PR110 (RSS2803) и PR111 (ролевой Connect/графика) объединены после единой FullRC.
 [Интеграция](context/runtime/connect_feed_integration_order_20261101.json).
 
@@ -28,7 +28,7 @@ Owner6Nov принял Preview общим «все ок», точный manifest
 [приёмка](context/runtime/studio_preview_owner_acceptance_20261106.json).
 LIBRARY-MANAGEMENT-01 app53c9f16e: формы вопросов/поиск/история,
 [реализация](context/reviews/20261106/LIBRARY_MANAGEMENT_IMPLEMENTATION.md),
-[инструкция](docs/LIBRARY_MANAGEMENT_RU.md). Native/owner package квалификация идёт.
+[установка](docs/LIBRARY_MANAGEMENT_INSTALL_RU.md). 4 CI / 11 FullRC PASS. Ожидается приёмка владельцем.
 Expected predecessor2cb проверяется полным source profile и active Preview journal.
 
 ## PERF-01 после Библиотеки

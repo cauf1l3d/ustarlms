@@ -11,7 +11,7 @@ Generated: [manifest](generated/source_manifest.json), [классы](generated/
 [таблицы](generated/database_tables.md), [API](generated/web_services.md).
 Обновление: bash scripts/build_code_map.sh EXACT_SOURCE_COMMIT.
 [Токены](../design/tokens.yaml), [capability references](../architecture/access_matrix.yaml),
-[домены](../domains). Unmerged PR114/app53c9f16e — development_source.json:660файлов/108таблиц, квалификация форм/поиска управления Библиотекой, не deployment receipt.
+[домены](../domains). Unmerged PR114/app53c9f16e — development_source.json:660файлов/108таблиц, формы и поиск управления Библиотекой квалифицированы, [приёмка ожидается](../runtime/library_management_qualification_20261110.json).
 Owner installed5Nov app719bf47c/toolaa61d595:649файлов/108таблиц;
 receipt library_discovery_owner_deploy_20261105.json.
 Предыдущая установка marketplace4715383b/tool59f принята3Nov:

@@ -1,13 +1,14 @@
-# Активная работа —06.11.2026
+# Активная работа — 10.11.2026
 
 ## Управление Библиотекой: следующий пакет
 
-LIBRARY-MANAGEMENT-01 in_progress, app53c9f16e. U03/U04/U09/U10:
+LIBRARY-MANAGEMENT-01 app53c9f16e/toolf374d2d9 квалифицирован. U03/U04/U09/U10:
 поиск/страницы материалов, сотрудников, истории и проверок; закреплённый subject;
 6–100questions и корректные reorder/remove; сохранение rejected input/stale token;
 точные future/expired/refund labels. Local PHP/DOM/npm/36browser views PASS.
-Native SQL/browser и owner successor проходят квалификацию.3changed/7added,
-660files/108tables/0200; schema/writers/worker267 прежние.
+4 CI / 11 FullRC PASS. Moodle 5.1.1 и 5.1.8 по 440 тестов.
+[Квалификация](../runtime/library_management_qualification_20261110.json), [установка](../../docs/LIBRARY_MANAGEMENT_INSTALL_RU.md).
+Ожидается проверка на server1 владельцем. 660files/108tables/0200.
 [Реализация](../reviews/20261106/LIBRARY_MANAGEMENT_IMPLEMENTATION.md),
 [план](../../docs/superpowers/plans/2026-11-06-library-management.md),
 [инструкция автору](../../docs/LIBRARY_MANAGEMENT_RU.md).

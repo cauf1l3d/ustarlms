@@ -1,12 +1,11 @@
 schema_version: 2
-updated_at: '2026-11-06'
+updated_at: '2026-11-10'
 project: USTAR Academy
-stage: library_management_qualification
-stage_label: Library author forms and scoped management search; qualification in progress
-current_activity: Owner accepts Preview generally and requests next audit package. App53c9f16e implements
-  U03 management search/selection, U04 repeatable questions, U09 rejected input preservation, U10 accurate
-  grant status. Local PHP/controller/DOM/36browser views and operator19cases pass; native SQL/browser
-  and exact owner successor qualification pending. Expected predecessor2cb guarded; last full terminal719.
+stage: library_management_owner_acceptance
+stage_label: Library management package qualified; owner installation and acceptance pending
+current_activity: App53c9f16e/toolf374d2d9 qualified on 4 workflows and 11 FullRC jobs.
+  Native Moodle5.1.1 and5.1.8 management SQL and actual browser save/reject/reorder passed.
+  Owner check/install/acceptance pending. Expected predecessor2cb guarded; last full terminal719.
 entrypoint: START_HERE.md
 next_task: LIBRARY-MANAGEMENT-01
 ready_tasks: []
@@ -398,7 +397,10 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   application_commit: 53c9f16e615ec4e5701e21207176ffca5bfaecda
-  status: qualification_in_progress
+  tool_commit: f374d2d992e6222fadd9bb848b33a25eb2fc0e57
+  status: qualified_awaiting_owner_installation
+  qualification: context/runtime/library_management_qualification_20261110.json
+  runbook: docs/LIBRARY_MANAGEMENT_INSTALL_RU.md
   branch: feat/library-unification-20261102
   deployed: false
   local_ustar_version: 2026110200

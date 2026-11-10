@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-06'
+updated_at: '2026-11-10'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -137,11 +137,10 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Owner accepts Preview generally and requests next audit package. App53c9f16e
-    implements U03 management search/selection, U04 repeatable questions, U09 rejected
-    input preservation, U10 accurate grant status. Local PHP/controller/DOM/36browser
-    views and operator19cases pass; native SQL/browser and exact owner successor qualification
-    pending. Expected predecessor2cb guarded; last full terminal719.
+  activity: App53c9f16e/toolf374d2d9 qualified on 4 workflows and 11 FullRC jobs.
+    Native Moodle5.1.1 and5.1.8 management SQL and actual browser save/reject/reorder
+    passed. Owner check/install/acceptance pending. Expected predecessor2cb guarded;
+    last full terminal719.
   next_task: LIBRARY-MANAGEMENT-01
   ready_tasks: []
   task_statuses:
@@ -174,7 +173,7 @@ current_work:
     LEARN-SCORM-01: done
     LEARN-SCORM-02: done
     LIBRARY-01: in_progress
-    LIBRARY-MANAGEMENT-01: in_progress
+    LIBRARY-MANAGEMENT-01: qualified_awaiting_owner_installation
     MOB-01: planned
     MOB-02: planned
     MOB-03: planned

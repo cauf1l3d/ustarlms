@@ -2,7 +2,8 @@
 
 06Nov owner: Preview «все ок», поручен следующий пакет. [Функциональная приёмка](studio_preview_owner_acceptance_20261106.json)
 без terminal manifest; expected2cb проверит новый installer. [Управление Библиотекой](../reviews/20261106/LIBRARY_MANAGEMENT_IMPLEMENTATION.md)
-проходит квалификацию,3changed/7added,660files/108tables/0200.
+квалифицировано 10Nov: app53c9f16e/toolf374d2d9, 4 CI / 11 FullRC PASS.
+[Квалификация](library_management_qualification_20261110.json), [установка](../../docs/LIBRARY_MANAGEMENT_INSTALL_RU.md). Ожидается приёмка владельцем.
 
 06Nov: app2cb233d9/tool ed292313 квалифицирован на exacted292313:4CI/11FullRC PASS.
 Исправлены images/fonts в opaque Preview, source2files/0added,653files/108tables,0200.

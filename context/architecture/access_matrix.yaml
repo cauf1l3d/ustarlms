@@ -655,6 +655,7 @@ capabilities:
   - moodle/local/ustar/tests/connect_notification_action_test.php
   - moodle/local/ustar/tests/connect_notification_test.php
   - moodle/local/ustar/tests/feed_roles_test.php
+  - moodle/local/ustar/tests/library_management_test.php
   - moodle/local/ustar/tests/organization_identity_test.php
   - moodle/local/ustar/tests/recruiter_access_test.php
   - moodle/local/ustar/user_prefs.php

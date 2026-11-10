@@ -2,7 +2,7 @@
 
 ## Управление Библиотекой: следующий пакет
 
-LIBRARY-MANAGEMENT-01 in_progress, appd63a63d3. U03/U04/U09/U10:
+LIBRARY-MANAGEMENT-01 in_progress, app53c9f16e. U03/U04/U09/U10:
 поиск/страницы материалов, сотрудников, истории и проверок; закреплённый subject;
 6–100questions и корректные reorder/remove; сохранение rejected input/stale token;
 точные future/expired/refund labels. Local PHP/DOM/npm/36browser views PASS.

@@ -12,7 +12,7 @@ import types
 from connect_con02_state import capture
 
 BASELINE='2cb233d994c0e4588973cfce0577c9d466027ce2'
-APPLICATION='d63a63d3e37133cc1ee21a48093579ad08598e3e'
+APPLICATION='53c9f16e615ec4e5701e21207176ffca5bfaecda'
 WORKER='267e55874eb8f6c36259d748f28a2c636adc9810'
 CHANGED=('local/ustar/library_manage.php','local/ustar/styles/library.css','local/ustar/templates/library_manage.mustache')
 ADDED=('local/ustar/classes/library_manage_form.php','local/ustar/classes/library_manage_reader.php','local/ustar/amd/src/library_manage.js','local/ustar/amd/build/library_manage.min.js','local/ustar/templates/library_question_fields.mustache','local/ustar/templates/library_manage_pagination.mustache','local/ustar/tests/library_management_test.php')

@@ -4,7 +4,7 @@
   "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "79a12e0c45e5552041ac5bb77342bd769e1b1de7",
+    "moodle/local/ustar": "51ebb7fae3f04d9e2377f1a8d1c9a3edd10be3ee",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
@@ -2314,7 +2314,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/library_management_test.php",
-      "sha256": "b1202bf18cb9f5ed050ff2a54cbf6489f83e6058fb40d3a02e49dc51f415a2b8"
+      "sha256": "a29a1e20579afb34611b3db39a617f48bfed6880e10c8b0cb69b1d20886678d7"
     },
     {
       "path": "moodle/local/ustar/tests/library_quick_sync_test.php",

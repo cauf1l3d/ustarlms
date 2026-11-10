@@ -26,7 +26,7 @@ PR112/113/114 открыты без разрешения merge.
 
 Owner6Nov принял Preview общим «все ок», точный manifest не передан:
 [приёмка](context/runtime/studio_preview_owner_acceptance_20261106.json).
-LIBRARY-MANAGEMENT-01 appd63a63d3: формы вопросов/поиск/история,
+LIBRARY-MANAGEMENT-01 app53c9f16e: формы вопросов/поиск/история,
 [реализация](context/reviews/20261106/LIBRARY_MANAGEMENT_IMPLEMENTATION.md),
 [инструкция](docs/LIBRARY_MANAGEMENT_RU.md). Native/owner package квалификация идёт.
 Expected predecessor2cb проверяется полным source profile и active Preview journal.

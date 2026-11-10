@@ -845,7 +845,7 @@ tasks:
   implementation_plan: docs/superpowers/plans/2026-11-06-library-management.md
   reference: context/reviews/20261106/LIBRARY_MANAGEMENT_IMPLEMENTATION.md
   execution_authorized: true
-  application_commit: d63a63d3e37133cc1ee21a48093579ad08598e3e
+  application_commit: 53c9f16e615ec4e5701e21207176ffca5bfaecda
   finding_ids: [U03, U04, U09, U10]
   acceptance:
   - Six-to100 questions; move/remove preserves correct option and keyboard focus

@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-06'
+updated_at: '2026-11-11'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -137,13 +137,11 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: App2cb233d9/tool ed292313 qualified on exacted292313:4CI and11FullRC PASS.
-    Real PNG/font preview and API/fresh reload pass on Moodle5.1.1/5.1.8 with unchanged
-    CSP/sandbox. Source1649tests/274conditional skips each PHP8.2/8.3, native430/1988
-    each, Connect172/875, operator16actualPHP/UID33 PASS. Archivecf8c9b0b is CI/retained
-    byte-identical. Owner confirms points hide but exact901 deployment remains unverified;
-    last full terminal receipt719.
-  next_task: STUDIO-PREVIEW-01
+  activity: Owner prioritizes Telegram relink and confirms the Library management
+    package is not installed. Local PHP/SQLite repro passes with the fix. Native Moodle
+    and guarded archive verification pending. Preview 2cb233d9 source and active journal
+    are checked before outage.
+  next_task: CONNECT-RELINK-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -151,6 +149,7 @@ current_work:
     AUDIT-FIX-01: in_progress
     B2B-01: planned
     B2B-02: planned
+    CONNECT-RELINK-01: in_progress
     DOC-01: done
     DOC-02: done
     DOC-03: done
@@ -185,6 +184,7 @@ current_work:
     PERF-01: in_progress
     PLAT-01: deferred
     PRIVACY-01: deferred
+    REWARD-SHOP-01: design
     ROUTE-EDITOR-01: awaiting_owner_deployment
     RSS-01: done
     STUDIO-01: done

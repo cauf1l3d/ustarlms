@@ -1,5 +1,6 @@
 # Навигация по контексту
 
+- [Повторная привязка Telegram](reviews/20261111/CONNECT_RELINK.md).
 - [Начало](../START_HERE.md), [STATE](roadmap/STATE.yaml), [текущие задачи](tasks/ACTIVE.md).
 - [Предпросмотр: картинки и шрифты](reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md),
   [квалификация](runtime/studio_preview_qualification_20261106.json),

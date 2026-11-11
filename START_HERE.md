@@ -1,12 +1,17 @@
 # USTAR Academy — начало работы
 
-Актуально06.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
+Актуально 11.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
 PR110 (RSS2803) и PR111 (ролевой Connect/графика) объединены после единой FullRC.
 [Интеграция](context/runtime/connect_feed_integration_order_20261101.json).
 
 1. [STATE](context/roadmap/STATE.yaml), [ACTIVE](context/tasks/ACTIVE.md), [BACKLOG](context/roadmap/BACKLOG.yaml).
 2. [Owner2900](context/runtime/connect_role_bot_owner_deploy_20261029.json).
 3. [Owner267](context/runtime/connect_visual_owner_deploy_20261101.json), [архитектура](context/architecture/overview.md).
+
+## Текущая работа
+
+11.11.2026. Исправление повторной привязки Telegram проверяется в CI.
+[Разбор](context/reviews/20261111/CONNECT_RELINK.md), [задачи](context/tasks/ACTIVE.md).
 
 ## Подтверждённое состояние
 
@@ -24,14 +29,10 @@ Marketplace скрыт по умолчанию; admin выбирает отде�
 [Правила доступа](docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md). Main2900 отдельно;
 PR112/113/114 открыты без разрешения merge.
 
-Предыдущий cumulative app901/toolf4d включает Route Studio и YUI при строгой CSP:
-[квалификация](context/runtime/studio_csp_qualification_20261105.json).
-Owner6Nov: точки скрываются, но изображения Preview не видны; точный installed SHA не сообщён.
-STUDIO-PREVIEW-01 app2cb233d9/tool ed292313: собственные ресурсы opaque iframe,
-[реализация](context/reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md),
-[квалификация](context/runtime/studio_preview_qualification_20261106.json),
-[установка](docs/STUDIO_PREVIEW_INSTALL_RU.md). 4CI/11FullRC PASS на ed292313.
-Пакет требует source901 и active CSP journal до outage; deployment ждёт owner receipt.
+Preview app2cb233d9/tool ed292313 принят владельцем по работе интерфейса.
+[Приёмка](context/runtime/studio_preview_owner_acceptance_20261106.json),
+[квалификация](context/runtime/studio_preview_qualification_20261106.json).
+Последняя полная квитанция терминала относится к discovery app719bf47c.
 
 ## PERF-01 после Библиотеки
 

@@ -137,10 +137,10 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Owner prioritizes Telegram relink and confirms the Library management
-    package is not installed. Local PHP/SQLite repro passes with the fix. Native Moodle
-    and guarded archive verification pending. Preview 2cb233d9 source and active journal
-    are checked before outage.
+  activity: Telegram relink 53fab3b6 qualified with 4 workflows and 11 FullRC jobs.
+    Both Moodle profiles passed 432 tests and 2000 assertions. Archive dc3a3c54 awaits
+    owner installation. Its preflight checks Preview 2cb233d9 and the active Preview
+    journal.
   next_task: CONNECT-RELINK-01
   ready_tasks: []
   task_statuses:
@@ -149,7 +149,7 @@ current_work:
     AUDIT-FIX-01: in_progress
     B2B-01: planned
     B2B-02: planned
-    CONNECT-RELINK-01: in_progress
+    CONNECT-RELINK-01: qualified_awaiting_owner_installation
     DOC-01: done
     DOC-02: done
     DOC-03: done

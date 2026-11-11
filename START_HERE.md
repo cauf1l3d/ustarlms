@@ -10,7 +10,7 @@ PR110 (RSS2803) и PR111 (ролевой Connect/графика) объедин�
 
 ## Текущая работа
 
-11.11.2026. Исправление повторной привязки Telegram проверяется в CI.
+11.11.2026. Исправление Telegram квалифицировано. [Установка](docs/CONNECT_RELINK_INSTALL_RU.md).
 [Разбор](context/reviews/20261111/CONNECT_RELINK.md), [задачи](context/tasks/ACTIVE.md).
 
 ## Подтверждённое состояние

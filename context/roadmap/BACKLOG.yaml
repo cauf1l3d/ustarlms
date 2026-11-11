@@ -836,7 +836,9 @@ tasks:
   runbook: docs/STUDIO_PREVIEW_INSTALL_RU.md
 - id: CONNECT-RELINK-01
   title: Повторная привязка Telegram после отвязки
-  status: in_progress
+  status: qualified_awaiting_owner_installation
+  qualification: context/runtime/connect_relink_qualification_20261111.json
+  runbook: docs/CONNECT_RELINK_INSTALL_RU.md
   depends_on: []
   reference: context/reviews/20261111/CONNECT_RELINK.md
   application_commit: 53fab3b6fa4a00f492ff355546a2948890ce7395

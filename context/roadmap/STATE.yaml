@@ -1,11 +1,11 @@
 schema_version: 2
 updated_at: '2026-11-11'
 project: USTAR Academy
-stage: connect_relink_qualification
-stage_label: Telegram relink qualification
-current_activity: Owner prioritizes Telegram relink and confirms the Library management package
-  is not installed. Local PHP/SQLite repro passes with the fix. Native Moodle and guarded archive
-  verification pending. Preview 2cb233d9 source and active journal are checked before outage.
+stage: connect_relink_owner_installation
+stage_label: Telegram relink ready for owner installation
+current_activity: Telegram relink 53fab3b6 qualified with 4 workflows and 11 FullRC jobs.
+  Both Moodle profiles passed 432 tests and 2000 assertions. Archive dc3a3c54 awaits owner
+  installation. Its preflight checks Preview 2cb233d9 and the active Preview journal.
 entrypoint: START_HERE.md
 next_task: CONNECT-RELINK-01
 ready_tasks: []
@@ -397,7 +397,10 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   application_commit: 53fab3b6fa4a00f492ff355546a2948890ce7395
-  status: qualification_in_progress
+  status: qualified_awaiting_owner_installation
+  qualification: context/runtime/connect_relink_qualification_20261111.json
+  runbook: docs/CONNECT_RELINK_INSTALL_RU.md
+  tool_commit: dc3a3c54f7547a94c947508f201f60eca6b6d67f
   branch: fix/connect-relink-20261111
   deployed: false
   local_ustar_version: 2026110200

@@ -1,5 +1,7 @@
 # Runtime evidence
 
+11.11.2026. Повторная привязка Telegram, app53fab3b6/tool dc3a3c54. 4 CI и 11 задач FullRC прошли. Архив ожидает установки владельцем. [Проверки](connect_relink_qualification_20261111.json), [команды](../../docs/CONNECT_RELINK_INSTALL_RU.md).
+
 06Nov: app2cb233d9/tool ed292313 квалифицирован на exacted292313:4CI/11FullRC PASS.
 Исправлены images/fonts в opaque Preview, source2files/0added,653files/108tables,0200.
 [Квалификация](studio_preview_qualification_20261106.json), [установка](../../docs/STUDIO_PREVIEW_INSTALL_RU.md),

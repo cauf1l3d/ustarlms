@@ -7,6 +7,9 @@ No network access is needed by the generated installation package.
 """
 from __future__ import annotations
 import argparse
+from contextlib import contextmanager
+import fcntl
+import time
 import datetime
 import gzip
 import hashlib
@@ -33,6 +36,11 @@ CONTAINER_APP = '/var/www/html/public'
 CONTAINER_CLI = '/var/www/html/admin/cli'
 BACKUP_DIR = Path('/opt/ustar/backups')
 STATE_DIR = Path('/var/lib/ustar-reward-shop-2026111100-cli-fix-v2')
+GUARD_PATHS = [Path('/var/lib/ustar-connect-relink-53fab3b6fa4a/lock')] + [Path(p) for p in (
+    '/var/lib/ustar-connect-academy-update/lock',
+    '/var/lib/ustar-connect-chat-link-update/lock',
+    '/var/lib/ustar-academy-https/lock',
+    '/run/ustar-cron/lock', '/run/ustar-backup/lock', '/run/ustar-connect-install.lock')]
 PREVIOUS_STATE = Path('/var/lib/ustar-reward-shop-2026111100/state.json')
 RELINK = Path('/root/ustar-connect-relink-dc3a3c54/update.py')
 EXPECTED = {
@@ -145,13 +153,14 @@ def build(repo, output):
             'application_root':str(HOST_APP), 'before':old, 'after':new,
             'changed':changed, 'payload_sha256':{p:digest(v) for p,v in payload.items()},
             'theme_touched':False, 'worker_touched':False,
-            'installer_revision':'cli-fix-v2-20261111',
+            'installer_revision':'lock-fix-v3-20261111',
             'cli_root':CONTAINER_CLI,
+            'managed_lock_policy':'bounded_readonly_retry_and_exclusive_update',
             'previous_journal_policy':'require_rolled_back_before_migration_or_absent',
             'change_scope':'installer_only_no_application_payload_change',
         }
         output.mkdir(parents=True, exist_ok=True)
-        result = output/f'ustar-reward-shop-{TARGET[:8]}-cli-fix-v2.tar.gz'
+        result = output/f'ustar-reward-shop-{TARGET[:8]}-lock-fix-v3.tar.gz'
         packfiles = {
             'update.py':self_content,
             'INSTALL.json':(json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2)+'\n').encode(),
@@ -231,10 +240,58 @@ def code_status(manifest):
 
 def relink_status():
     require(RELINK.is_file() and not RELINK.is_symlink(), 'missing_relink_operator')
-    result=run(['/usr/bin/python3','-I','-B',str(RELINK),'--check'],timeout=60)
-    try: x=json.loads(result.stdout.decode().splitlines()[-1]);require(x.get('phase')=='active', 'relink_not_active')
-    except (ValueError,IndexError): raise Refused('invalid_relink_check')
-    return x
+    # Relink's --check acquires SH nonblocking managed locks. A concurrent
+    # backup/cron/operator can temporarily hold EX; never bypass this gate.
+    command=['/usr/bin/python3','-I','-B',str(RELINK),'--check']
+    for attempt in range(5):
+        p=run(command, timeout=60, check=False)
+        try:
+            status=json.loads(p.stdout.decode('utf-8','replace').splitlines()[-1])
+        except (ValueError,IndexError):
+            raise Refused('invalid_relink_check:'+str(p.returncode)) from None
+        if p.returncode==0:
+            require(status.get('phase')=='active','relink_not_active')
+            return status
+        reason=status.get('reason','unknown')
+        require(isinstance(reason,str) and re.fullmatch('[a-zA-Z0-9_:/.-]+',reason),
+            'relink_unexpected_refusal')
+        if reason!='managed_operation_busy_retry_later':
+            raise Refused('relink_check_refused:'+reason)
+        if attempt==4:
+            raise Refused('managed_operation_busy_retry_later')
+        time.sleep((1, 2, 3, 4)[attempt])
+    raise Refused('relink_check_unreachable')
+
+@contextmanager
+def exclusive_operator_guards():
+    # Same ordered shared lock inventory as the installed Connect overlay.
+    # Nonblocking EX must be held through the full backup/code/DB transaction.
+    held=[]
+    try:
+        for p in GUARD_PATHS:
+            # Relink's own lock is optional in check(), but its shared locks
+            # are required. Match that exact contract without creating files.
+            if p==GUARD_PATHS[0] and not os.path.lexists(p):
+                continue
+            require(p.is_file() and not p.is_symlink(),'managed_lock_missing:'+str(p))
+            fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK)
+            held.append((p,fd))
+            current=os.fstat(fd);live=p.lstat()
+            require(stat.S_ISREG(current.st_mode) and current.st_uid==os.geteuid()
+                and current.st_nlink==1 and stat.S_IMODE(current.st_mode)==0o600
+                and (current.st_dev,current.st_ino)==(live.st_dev,live.st_ino),
+                'unsafe_managed_lock:'+str(p))
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX|fcntl.LOCK_NB)
+            except BlockingIOError:
+                raise Refused('managed_operation_busy_retry_later') from None
+        yield
+        for p,fd in held:
+            current=os.fstat(fd);live=p.lstat()
+            require((current.st_dev,current.st_ino)==(live.st_dev,live.st_ino),
+                'managed_lock_replaced:'+str(p))
+    finally:
+        for _,fd in reversed(held):os.close(fd)
 
 def inspect(manifest, *, exact_before=False):
     require(os.geteuid()==0,'root_required')
@@ -372,6 +429,19 @@ def upgrade(folder,manifest):
     require(read_state() is None,'previous_journal_exists')
     predecessor_status()
     cli_preflight()
+    with exclusive_operator_guards():
+        return upgrade_locked(folder,manifest)
+
+def upgrade_locked(folder,manifest):
+    # Preflight was outside the exclusive lock, so revalidate the entire mutable
+    # state under it to eliminate a race with a second operator after preflight.
+    require(read_state() is None,'previous_journal_exists')
+    version,matches=code_status(manifest)
+    db=db_status()
+    require(version==BEFORE and not matches(manifest['before']),
+        'baseline_changed_while_acquiring_lock')
+    require(db['version']==BEFORE and all(db['tables'].get(t) is False for t in TABLES),
+        'db_changed_while_acquiring_lock')
     backup_path=backup(manifest)
     state={'phase':'backup_complete','backup':backup_path,'previous_attempt':predecessor_status(),'baseline_commit':BASE,
            'target_commit':TARGET,'database_upgrade_started':False}

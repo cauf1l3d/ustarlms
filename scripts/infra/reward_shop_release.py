@@ -30,8 +30,10 @@ APP_REL = Path('moodle/local/ustar')
 THEME_REL = Path('moodle/theme/ustar')
 HOST_APP = Path('/opt/ustar/data/moodle/public/public')
 CONTAINER_APP = '/var/www/html/public'
+CONTAINER_CLI = '/var/www/html/admin/cli'
 BACKUP_DIR = Path('/opt/ustar/backups')
-STATE_DIR = Path('/var/lib/ustar-reward-shop-2026111100')
+STATE_DIR = Path('/var/lib/ustar-reward-shop-2026111100-cli-fix-v2')
+PREVIOUS_STATE = Path('/var/lib/ustar-reward-shop-2026111100/state.json')
 RELINK = Path('/root/ustar-connect-relink-dc3a3c54/update.py')
 EXPECTED = {
     'achievements.php', 'classes/privacy/provider.php', 'classes/reward_shop.php',
@@ -143,9 +145,13 @@ def build(repo, output):
             'application_root':str(HOST_APP), 'before':old, 'after':new,
             'changed':changed, 'payload_sha256':{p:digest(v) for p,v in payload.items()},
             'theme_touched':False, 'worker_touched':False,
+            'installer_revision':'cli-fix-v2-20261111',
+            'cli_root':CONTAINER_CLI,
+            'previous_journal_policy':'require_rolled_back_before_migration_or_absent',
+            'change_scope':'installer_only_no_application_payload_change',
         }
         output.mkdir(parents=True, exist_ok=True)
-        result = output/f'ustar-reward-shop-{TARGET[:8]}-from-relink.tar.gz'
+        result = output/f'ustar-reward-shop-{TARGET[:8]}-cli-fix-v2.tar.gz'
         packfiles = {
             'update.py':self_content,
             'INSTALL.json':(json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2)+'\n').encode(),
@@ -246,8 +252,10 @@ def inspect(manifest, *, exact_before=False):
     require(not drift,'baseline_code_drift:'+','.join(drift))
     require(all(db['tables'].get(t) is False for t in TABLES),'unexpected_reward_tables')
     relink_status()
+    predecessor_status()
+    cli_preflight()
     return {'phase':'ready','local_ustar':BEFORE,'db_version':BEFORE,'schema_changed':False,
-        'code_drift':False,'relink':'active'}
+        'code_drift':False,'relink':'active','cli_root':CONTAINER_CLI,'previous_attempt':predecessor_status()}
 
 def write_state(record):
     STATE_DIR.mkdir(mode=0o700,parents=True,exist_ok=True)
@@ -263,9 +271,39 @@ def read_state():
     p=STATE_DIR/'state.json'
     return json.loads(p.read_text()) if p.is_file() and not p.is_symlink() else None
 
+def cli_preflight():
+    # Moodle's CLI lives outside the web-visible public/ document root.
+    # Validate the actual container filesystem BEFORE taking a backup or enabling maintenance.
+    scripts = ('maintenance.php','upgrade.php','purge_caches.php')
+    for name in scripts:
+        cmd=['docker','exec','-u','www-data','ustar_moodle','test','-f',CONTAINER_CLI+'/'+name]
+        result=run(cmd,timeout=20,check=False)
+        require(result.returncode==0,'moodle_cli_missing:'+CONTAINER_CLI+'/'+name)
+    return CONTAINER_CLI
+
+def predecessor_status():
+    # Original installer attempted maintenance at the wrong path and must have rolled back.
+    # Leave its journal/backup untouched, never pretend recovery_required was rolled back.
+    if not PREVIOUS_STATE.exists() and not PREVIOUS_STATE.is_symlink():
+        return 'none'
+    require(PREVIOUS_STATE.is_file() and not PREVIOUS_STATE.is_symlink(),
+        'previous_journal_not_regular')
+    previous=json.loads(PREVIOUS_STATE.read_text())
+    require(previous.get('phase')=='rolled_back_before_migration' and
+        previous.get('database_upgrade_started') is False and
+        previous.get('target_commit')==TARGET,
+        'previous_attempt_requires_manual_review')
+    backup_path=Path(previous.get('backup',''))
+    require(backup_path.parent==BACKUP_DIR and backup_path.name.startswith('ustar-reward-shop-') and
+        not backup_path.is_symlink() and backup_path.is_dir() and
+        (backup_path/'postgres-before.dump').is_file() and
+        (backup_path/'local-ustar-before.tar.gz').is_file(),
+        'previous_attempt_backup_missing')
+    return 'rolled_back_before_migration'
+
 def cli(script, timeout=120):
     return run(['docker','exec','-u','www-data','ustar_moodle','php',
-         CONTAINER_APP+'/admin/cli/'+script],timeout=timeout)
+         cli_preflight()+'/'+script],timeout=timeout)
 
 def backup(manifest):
     BACKUP_DIR.mkdir(mode=0o700,parents=True,exist_ok=True)
@@ -332,14 +370,16 @@ def upgrade(folder,manifest):
     pre=inspect(manifest)
     require(pre['phase']=='ready','not_ready')
     require(read_state() is None,'previous_journal_exists')
+    predecessor_status()
+    cli_preflight()
     backup_path=backup(manifest)
-    state={'phase':'backup_complete','backup':backup_path,'baseline_commit':BASE,
+    state={'phase':'backup_complete','backup':backup_path,'previous_attempt':predecessor_status(),'baseline_commit':BASE,
            'target_commit':TARGET,'database_upgrade_started':False}
     write_state(state)
     maintenance=False
     try:
         run(['docker','exec','-u','www-data','ustar_moodle','php',
-            CONTAINER_APP+'/admin/cli/maintenance.php','--enable'],timeout=60)
+            cli_preflight()+'/maintenance.php','--enable'],timeout=60)
         maintenance=True
         state['phase']='maintenance';write_state(state)
         replace_code(folder,manifest)
@@ -347,14 +387,14 @@ def upgrade(folder,manifest):
         php_lint(manifest)
         state['phase']='migration_started';state['database_upgrade_started']=True;write_state(state)
         run(['docker','exec','-u','www-data','ustar_moodle','php',
-            CONTAINER_APP+'/admin/cli/upgrade.php','--non-interactive'],timeout=900)
+            cli_preflight()+'/upgrade.php','--non-interactive'],timeout=900)
         state['phase']='migration_finished';write_state(state)
         after=inspect(manifest)
         require(after['phase']=='active' and not after['shop_enabled'],'unexpected_post_upgrade_state')
         run(['docker','exec','-u','www-data','ustar_moodle','php',
-            CONTAINER_APP+'/admin/cli/purge_caches.php'],timeout=120)
+            cli_preflight()+'/purge_caches.php'],timeout=120)
         run(['docker','exec','-u','www-data','ustar_moodle','php',
-            CONTAINER_APP+'/admin/cli/maintenance.php','--disable'],timeout=60)
+            cli_preflight()+'/maintenance.php','--disable'],timeout=60)
         state['phase']='active';write_state(state)
         return {'phase':'active','backup':backup_path,'local_ustar':AFTER,
             'schema_changed':True,'shop_enabled':False,'theme_ustar':BEFORE,'worker_changed':False}
@@ -365,7 +405,7 @@ def upgrade(folder,manifest):
                 restore_code(backup_path,manifest)
                 if maintenance:
                     run(['docker','exec','-u','www-data','ustar_moodle','php',
-                         CONTAINER_APP+'/admin/cli/maintenance.php','--disable'],timeout=60)
+                         cli_preflight()+'/maintenance.php','--disable'],timeout=60)
                 state['phase']='rolled_back_before_migration'
                 write_state(state)
             except BaseException as rollback:
@@ -381,9 +421,9 @@ def finish(manifest):
     result=inspect(manifest)
     require(result['phase']=='active' and not result['shop_enabled'], 'finish_requires_target_schema')
     run(['docker','exec','-u','www-data','ustar_moodle','php',
-        CONTAINER_APP+'/admin/cli/purge_caches.php'],timeout=120)
+        cli_preflight()+'/purge_caches.php'],timeout=120)
     run(['docker','exec','-u','www-data','ustar_moodle','php',
-        CONTAINER_APP+'/admin/cli/maintenance.php','--disable'],timeout=60)
+        cli_preflight()+'/maintenance.php','--disable'],timeout=60)
     state['phase']='active';state.pop('error',None);write_state(state)
     return {'phase':'active','local_ustar':AFTER,'backup':state['backup']}
 

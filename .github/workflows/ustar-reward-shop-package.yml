@@ -1,0 +1,59 @@
+name: USTAR Reward Shop server1 install package
+on:
+  push:
+    branches: [ops/reward-shop-install-20261111]
+    paths:
+      - 'scripts/infra/reward_shop_release.py'
+      - '.github/workflows/ustar-reward-shop-package.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Verify compiler and source checkout
+        run: |
+          python3 -m py_compile scripts/infra/reward_shop_release.py
+          test "$(git rev-parse a7a34b4927ffd42db28a8d76e410d20a37d7a434^{commit})" = a7a34b4927ffd42db28a8d76e410d20a37d7a434
+          test "$(git rev-parse 53fab3b6fa4a00f492ff355546a2948890ce7395^{commit})" = 53fab3b6fa4a00f492ff355546a2948890ce7395
+      - name: Assemble exact Relink-to-Reward-Shop offline archive
+        run: |
+          set -euo pipefail
+          python3 scripts/infra/reward_shop_release.py build --repo . --output artifacts/reward-shop
+          mkdir -p artifacts/reward-shop/verify
+          tar --no-same-owner -xzf artifacts/reward-shop/ustar-reward-shop-*.tar.gz -C artifacts/reward-shop/verify
+          cd artifacts/reward-shop/verify
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -B update.py verify
+          python3 -m py_compile update.py
+      - name: Prove altered file cannot pass the package verification
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import shutil,subprocess
+          original=Path('artifacts/reward-shop/verify')
+          tampered=Path('artifacts/reward-shop/tampered')
+          shutil.copytree(original,tampered)
+          victim=tampered/'payload/classes/reward_shop.php'
+          victim.write_bytes(victim.read_bytes()+b'\nUNEXPECTED\n')
+          result=subprocess.run(['python3','-I','-B',str(tampered/'update.py'),'verify'],capture_output=True,text=True)
+          assert result.returncode==2 and 'package_digest_mismatch' in result.stdout,result.stdout
+          print('Tamper refusal: PASS')
+          PY
+      - name: Upload owner installer (not test fixtures)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ustar-reward-shop-install-a7a34b49
+          path: |
+            artifacts/reward-shop/ustar-reward-shop-*.tar.gz
+            artifacts/reward-shop/ustar-reward-shop-*.tar.gz.sha256
+          if-no-files-found: error

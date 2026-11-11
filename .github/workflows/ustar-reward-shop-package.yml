@@ -4,6 +4,7 @@ on:
     branches: [ops/reward-shop-install-20261111]
     paths:
       - 'scripts/infra/reward_shop_release.py'
+      - 'tests/r16/test_reward_shop_installer_cli_v2.py'
       - '.github/workflows/ustar-reward-shop-package.yml'
   workflow_dispatch:
 permissions:

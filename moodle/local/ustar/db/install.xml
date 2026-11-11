@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026110200" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026111100" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -2249,6 +2249,48 @@
       <INDEXES>
         <INDEX NAME="idem_uix" UNIQUE="true" FIELDS="idempotencykey" />
         <INDEX NAME="learner_idx" UNIQUE="false" FIELDS="assessmentid,userid,versionno,status" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_reward_shop_offer" COMMENT="Reward catalogue, price and available stock">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="120" NOTNULL="true"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="price" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="stock" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="draft"/>
+        <FIELD NAME="revision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
+      <INDEXES><INDEX NAME="status_id_idx" UNIQUE="false" FIELDS="status,id"/></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_reward_shop_order" COMMENT="Reward order with price snapshot and canonical debit reference">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="offerid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="120" NOTNULL="true"/>
+        <FIELD NAME="price" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="offerrevision" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="requestkey" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="pending"/>
+        <FIELD NAME="ledgerid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="resolvedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="resolvedby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="reason" TYPE="char" LENGTH="240" NOTNULL="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="offer_fk" TYPE="foreign" FIELDS="offerid" REFTABLE="local_ustar_reward_shop_offer" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="requestkey_uix" UNIQUE="true" FIELDS="requestkey"/>
+        <INDEX NAME="userid_id_idx" UNIQUE="false" FIELDS="userid,id"/>
+        <INDEX NAME="status_id_idx" UNIQUE="false" FIELDS="status,id"/>
       </INDEXES>
     </TABLE>
 </TABLES>

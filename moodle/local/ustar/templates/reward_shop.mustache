@@ -1,0 +1,54 @@
+<main class="u-product-page u-library">
+  <header class="u-product-head">
+    <div><h1>Магазин наград</h1><p>Доступно {{balance}} USCOIN</p></div>
+    <a class="u-btn" href="{{achievementsurl}}">Достижения</a>
+  </header>
+  {{#error}}<div class="alert alert-warning" role="alert">{{error}}</div>{{/error}}
+  <section class="u-panel" aria-labelledby="reward-catalog">
+    <h2 id="reward-catalog">Награды</h2>
+    {{#showcatalog}}
+      <p>При заявке резервируются монеты и одна награда. При отклонении заявки монеты возвращаются.</p>
+      {{#hasoffers}}
+      <div class="u-library__grid">
+        {{#offers}}
+        <article class="u-lcard">
+          <div class="u-lcard__body">
+            <h3>{{title}}</h3><p>{{description}}</p>
+            <p><strong>{{price}} USCOIN</strong> · Остаток {{stock}}</p>
+          </div>
+          <div class="u-lcard__actions">
+            {{#canrequest}}
+            <form action="{{url}}" method="post">
+              <input type="hidden" name="sesskey" value="{{sesskey}}">
+              <input type="hidden" name="offerid" value="{{id}}">
+              <input type="hidden" name="revision" value="{{revision}}">
+              <input type="hidden" name="price" value="{{price}}">
+              <input type="hidden" name="nonce" value="{{nonce}}">
+              <button type="submit" class="u-btn u-btn--primary">Подать заявку за {{price}} USCOIN</button>
+            </form>
+            {{/canrequest}}
+            {{^available}}<span>Нет в наличии</span>{{/available}}
+            {{#available}}{{^affordable}}<span>Недостаточно USCOIN</span>{{/affordable}}{{/available}}
+          </div>
+        </article>
+        {{/offers}}
+      </div>
+      {{/hasoffers}}
+      {{^hasoffers}}<p>На этой странице пока нет наград.</p>{{/hasoffers}}
+      {{{catalogpaging}}}
+    {{/showcatalog}}
+    {{^showcatalog}}<p>Сейчас витрина недоступна для вашего подразделения.</p>{{/showcatalog}}
+  </section>
+  <section class="u-panel" aria-labelledby="reward-orders">
+    <h2 id="reward-orders">Мои заявки</h2>
+    {{#orders}}<article class="u-lcard">
+      <div class="u-lcard__body"><h3>{{title}}</h3>
+        <p>№ {{id}} · {{date}} · {{price}} USCOIN</p>
+        <p><strong>{{statuslabel}}</strong></p>
+        {{#hasreason}}<p>{{reason}}</p>{{/hasreason}}
+      </div>
+    </article>{{/orders}}
+    {{^hasorders}}<p>На этой странице пока нет заявок.</p>{{/hasorders}}
+    {{{orderpaging}}}
+  </section>
+</main>

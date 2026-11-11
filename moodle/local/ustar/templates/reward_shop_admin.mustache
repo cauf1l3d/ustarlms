@@ -1,0 +1,77 @@
+<main class="u-product-page u-ux-tools">
+  <header class="u-product-head">
+    <div><h1>Управление наградами</h1></div>
+    <a class="u-btn" href="{{achievementsurl}}">Достижения</a>
+  </header>
+  <nav aria-label="Разделы управления наградами">
+    {{#tabs}}<a class="u-btn {{#current}}u-btn--primary{{/current}}" href="{{href}}" {{#current}}aria-current="page"{{/current}}>{{title}}</a>{{/tabs}}
+  </nav>
+  {{#error}}<div class="alert alert-warning" role="alert">{{error}}</div>{{/error}}
+  {{#showsettings}}
+  <section class="u-panel u-ux-form">
+    <h2>Доступ отделов</h2>
+    <form action="{{url}}" method="post">
+      <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="configure">
+      <input type="hidden" name="revision" value="{{revision}}">
+      <label><input type="checkbox" name="enabled" value="1" {{#enabled}}checked{{/enabled}}> Открыть витрину выбранным отделам</label>
+      <fieldset>
+        <legend>Подразделения</legend>
+        {{#departments}}<label><input type="checkbox" name="departments[]" value="{{id}}" {{#checked}}checked{{/checked}}> {{name}}</label>{{/departments}}
+      </fieldset>
+      <button class="u-btn u-btn--primary" type="submit">Сохранить доступ</button>
+    </form>
+  </section>
+  {{/showsettings}}
+  {{#showoffers}}
+  <section class="u-panel u-ux-form">
+    <h2>Карточка награды</h2>
+    <a class="u-btn" href="{{createurl}}">Новая награда</a>
+    {{#offer}}
+    <form action="{{url}}" method="post">
+      <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="save">
+      <input type="hidden" name="revision" value="{{revision}}">
+      <label>Название <input name="title" value="{{title}}" maxlength="120" required></label>
+      <label>Описание и способ получения <textarea name="description" maxlength="1500">{{description}}</textarea></label>
+      <label>Цена в USCOIN <input type="number" name="price" value="{{price}}" min="1" max="1000000" required></label>
+      <label>Остаток для новых заявок <input type="number" name="stock" value="{{stock}}" min="0" max="1000000" required></label>
+      <label>Публикация <select name="publication">{{#publication}}
+        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+      {{/publication}}</select></label>
+      <button class="u-btn u-btn--primary" type="submit">Сохранить карточку</button>
+    </form>
+    {{/offer}}
+  </section>
+  <section class="u-panel">
+    <h2>Каталог</h2>
+    {{#offers}}<article class="u-ux-question">
+      <h3>{{title}}</h3><p>{{statuslabel}} · {{price}} USCOIN · Остаток {{stock}}</p>
+      <a class="u-btn" href="{{editurl}}">Редактировать</a>
+    </article>{{/offers}}
+    {{{paging}}}
+  </section>
+  {{/showoffers}}
+  {{#showorders}}
+  <section class="u-panel u-ux-form">
+    <h2>Заявки на награды</h2>
+    <nav aria-label="Статус заявки">{{#filters}}
+      <a class="u-btn {{#current}}u-btn--primary{{/current}}" href="{{href}}" {{#current}}aria-current="page"{{/current}}>{{title}}</a>
+    {{/filters}}</nav>
+    {{#orders}}<article class="u-ux-question">
+      <h3>{{title}} · № {{id}}</h3>
+      <p>{{employee}} · {{date}} · {{price}} USCOIN</p>
+      <p><strong>{{statuslabel}}</strong> {{resolveddate}}</p>
+      {{#pending}}
+      <form action="{{url}}" method="post">
+        <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="orderid" value="{{id}}">
+        <label>Причина отклонения <input name="reason" maxlength="240"></label>
+        <button class="u-btn u-btn--primary" type="submit" name="action" value="issue">Отметить выдачу</button>
+        <button class="u-btn" type="submit" name="action" value="reject">Отклонить и вернуть USCOIN</button>
+      </form>
+      {{/pending}}
+      {{^pending}}{{#reason}}<p>{{reason}}</p>{{/reason}}{{/pending}}
+    </article>{{/orders}}
+    {{^hasorders}}<p>На этой странице нет заявок с выбранным статусом.</p>{{/hasorders}}
+    {{{paging}}}
+  </section>
+  {{/showorders}}
+</main>

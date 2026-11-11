@@ -5,6 +5,7 @@ purpose: XP, USCOIN ledger, награды, сезоны соревновани�
 services:
 - moodle/local/ustar/classes/economy.php
 - moodle/local/ustar/classes/reward_control.php
+- moodle/local/ustar/classes/reward_shop.php
 - moodle/local/ustar/classes/reward_conditions.php
 - moodle/local/ustar/classes/route_rewards.php
 - moodle/local/ustar/classes/competition.php
@@ -15,6 +16,8 @@ tables:
 - local_ustar_coin_balance
 - local_ustar_reward_grants
 - local_ustar_reward_resets
+- local_ustar_reward_shop_offer
+- local_ustar_reward_shop_order
 - local_ustar_competitions
 - local_ustar_comp_rules
 - local_ustar_comp_participants
@@ -29,5 +32,8 @@ entry_points:
 - moodle/local/ustar/achievements.php
 - moodle/local/ustar/competition_studio.php
 - moodle/local/ustar/reward_control.php
+- moodle/local/ustar/reward_shop.php
+- moodle/local/ustar/reward_shop_admin.php
 - moodle/local/ustar/games.php
+reward_shop_candidate: docs/superpowers/plans/2026-11-11-reward-shop.md
 source_reconciled_at: '2026-11-01'

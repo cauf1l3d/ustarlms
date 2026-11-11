@@ -1,0 +1,77 @@
+{
+  "task": "REWARD-SHOP-01",
+  "qualified_at": "2026-11-11T13:41:41+03:00",
+  "qualification_kind": "isolated_native_moodle_and_browser",
+  "pull_request": 116,
+  "app_baseline": "53fab3b6fa4a00f492ff355546a2948890ce7395",
+  "application_commit": "7570ffc25d2cc17ad339d63ec25ba7319e15f312",
+  "qualification_commit": "f843abc8e16861348851b1f549e92710c14d15ea",
+  "local_ustar_version": 2026111100,
+  "theme_ustar_version": 2026110200,
+  "files": 659,
+  "tables": 110,
+  "added_tables": [
+    "local_ustar_reward_shop_offer",
+    "local_ustar_reward_shop_order"
+  ],
+  "deployment": {
+    "server1_installed": false,
+    "migration_installer": "pending",
+    "feature_enabled_by_default": false
+  },
+  "decisions": {
+    "settlement": "Debit available USCOIN when the request is created and reserve one available reward. Reverse the debit and restore stock on administrative rejection.",
+    "audience": "Administrator selects canonical department IDs. Existing administrators manage catalogue, access and orders."
+  },
+  "checks": {
+    "source_structure": "PASS",
+    "php_files": 451,
+    "js_files": 34,
+    "mustache_templates": 73,
+    "context": "PASS",
+    "workflow_run_id": 43004768866
+  },
+  "initial_browser_failure": {
+    "run_id": 43003130172,
+    "reason": "First browser test expected a Russian order status in a default English Moodle locale. SQL suites passed 5 tests and 28 assertions in each profile. Status selectors now accept both configured translations."
+  },
+  "native_profiles": [
+    {
+      "profile": "reward-shop-historical",
+      "artifact_id": 13848156592,
+      "artifact_sha256": "65a261bc916f732ed0d49636e737e94ecfd1abe4a137b43e7ca8de4215d3de8e",
+      "tests": 6,
+      "assertions": 36,
+      "fresh_upgrade_repeat_schema_equal": true,
+      "browser": {
+        "result": "PASS",
+        "closedBeforeDepartmentSelection": true,
+        "employeeViewport": 390,
+        "publishedRewardPurchased": true,
+        "adminIssued": true,
+        "adminRejectedAndRefunded": true
+      },
+      "moodle_version": "5.1.1",
+      "job_id": 130469384320
+    },
+    {
+      "profile": "reward-shop-patch-518",
+      "artifact_id": 13847204597,
+      "artifact_sha256": "566f6815c61397055d2fc8c1a15534a2a21668c887c6a610fe63dbe55a0ec461",
+      "tests": 6,
+      "assertions": 36,
+      "fresh_upgrade_repeat_schema_equal": true,
+      "browser": {
+        "result": "PASS",
+        "closedBeforeDepartmentSelection": true,
+        "employeeViewport": 390,
+        "publishedRewardPurchased": true,
+        "adminIssued": true,
+        "adminRejectedAndRefunded": true
+      },
+      "moodle_version": "5.1.8",
+      "job_id": 130469384703
+    }
+  ],
+  "author_guide": "docs/REWARD_SHOP_RU.md"
+}

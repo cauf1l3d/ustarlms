@@ -1,0 +1,74 @@
+name: USTAR reward shop
+
+on:
+  pull_request:
+    branches: [fix/connect-relink-20261111, main]
+    paths:
+      - 'moodle/local/ustar/**'
+      - 'tests/stage/reward_shop*'
+      - '.github/workflows/ustar-reward-shop.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: reward-shop-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runtime: historical
+            compose: tests/stage/compose.yaml
+          - runtime: patch-518
+            compose: tests/stage/patch-compose.yaml
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: npm ci --prefix tests/mobile
+      - run: cd tests/mobile && npx playwright install --with-deps chromium
+      - name: Export the previous application and build an isolated runtime
+        run: |
+          mkdir -p .stage-input/reward-shop-baseline artifacts
+          git archive 53fab3b6fa4a00f492ff355546a2948890ce7395 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-baseline
+          docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml build --pull
+      - name: Verify fresh install, upgrade, repeat upgrade and reward transactions
+        run: |
+          id=$(docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml run --rm -d --publish 127.0.0.1:8087:8087 --entrypoint bash runner /source/tests/stage/reward_shop_native.sh)
+          printf '%s\n' "$id" > artifacts/studio-browser-container-id
+          for attempt in $(seq 1 180); do
+            test ! -e artifacts/studio-browser-ready || exit 0
+            test "$(docker inspect -f '{{.State.Running}}' "$id")" = true
+            sleep 2
+          done
+          exit 1
+      - name: Exercise the real employee and administrator forms
+        run: |
+          trap 'touch artifacts/studio-browser-done' EXIT
+          node tests/stage/reward_shop_native_browser.cjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reward-shop-${{ matrix.runtime }}
+          path: |
+            artifacts/reward-shop-*.log
+            artifacts/reward-shop-*.json
+            artifacts/reward-shop-*.xml
+      - name: Dispose only the isolated test project
+        if: always()
+        run: |
+          if test -f artifacts/studio-browser-container-id; then
+            id=$(cat artifacts/studio-browser-container-id)
+            [[ $id =~ ^[a-f0-9]{12,64}$ ]] && docker rm -f "$id" || true
+          fi
+          docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml down --volumes

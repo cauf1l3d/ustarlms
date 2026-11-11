@@ -19,5 +19,13 @@ $data=['kpipoints'=>$kpipoints,
  'top'=>$top,'hastop'=>!empty($top),'rankrows'=>$rest,'hasrankrows'=>!empty($rest),'currentrank'=>$competition['current']??null,
  'coinbalance'=>$coin['balance'],'coinearned'=>$coin['earned'],'coinspent'=>$coin['spent'],'coindebt'=>$coin['debt'],'hascoindebt'=>$coin['debt']>0,'coinhistory'=>$history,'hascoinhistory'=>!empty($history),
 ];
+$shopuserid = (int)$USER->id;
+if (\local_ustar\reward_shop::can_shop($shopuserid) || (\local_ustar\reward_shop::can_view_history($shopuserid)
+        && $DB->record_exists(\local_ustar\reward_shop::ORDER, ['userid'=>$shopuserid]))) {
+    $data['rewardshopurl'] = (new moodle_url('/local/ustar/reward_shop.php'))->out(false);
+}
+if (\local_ustar\reward_shop::can_manage($shopuserid)) {
+    $data['rewardshopadminurl'] = (new moodle_url('/local/ustar/reward_shop_admin.php'))->out(false);
+}
 $PAGE->set_context($context); $PAGE->set_url(new moodle_url('/local/ustar/achievements.php')); $PAGE->set_pagelayout('ustar'); $PAGE->set_title('Достижения | USTAR Academy'); $PAGE->set_heading('USTAR Academy');
 $output=$PAGE->get_renderer('local_ustar'); echo $output->header(); echo $output->render_from_template('local_ustar/achievements',$data); echo $output->footer();

@@ -1,6 +1,8 @@
 <section class="u-card" style="margin-bottom:24px;padding:20px"><p class="u-page-kicker">Рабочие результаты</p><h2>{{kpipoints}} баллов KPI</h2><p>Принятые задачи и чек-листы с наступившим сроком исполнения.</p><a class="u-btn" href="/local/ustar/tasks.php?view=analytics&amp;scope=mine">Мои результаты</a></section>
 <div class="u-product-page u-achievements">
 <header class="u-product-head"><div><p class="u-page-kicker">Прогресс, признание и соревнование</p><h1>Достижения</h1><p>XP показывает учебную активность, USCOIN — внутренняя игровая единица Академии. Расход монет не уменьшает рейтинг.</p></div>{{{trophyicon}}}</header>
+{{#rewardshopurl}}<a class="u-btn u-btn--primary" href="{{rewardshopurl}}">Магазин наград</a>{{/rewardshopurl}}
+{{#rewardshopadminurl}}<a class="u-btn" href="{{rewardshopadminurl}}">Управление наградами</a>{{/rewardshopadminurl}}
 <div class="u-achievements-hero-grid">
 <section class="u-level-card"><div class="u-level-emblem">{{level}}</div><div class="u-level-card__body"><span>Уровень {{level}}</span><strong>{{xp}} XP</strong><div class="u-progress u-progress--large"><span style="width:{{pct}}%"></span></div><small>Следующий ориентир: {{nextxp}} XP</small></div></section>
 <section class="u-coin-card"><span>USCOIN</span><strong>◉ {{coinbalance}}</strong><div><small>Заработано {{coinearned}}</small><small>Потрачено {{coinspent}}</small></div>{{#hascoindebt}}<small>Отозванные награды: {{coindebt}} USCOIN. Следующие начисления покроют этот остаток.</small>{{/hascoindebt}}</section>

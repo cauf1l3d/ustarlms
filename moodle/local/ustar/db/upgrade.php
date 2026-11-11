@@ -5022,5 +5022,14 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         local_ustar_library_defaults();
         upgrade_plugin_savepoint(true, 2026110200, 'local', 'ustar');
     }
+    if ($oldversion < 2026111100) {
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load reward shop schema'); }
+        foreach (['local_ustar_reward_shop_offer', 'local_ustar_reward_shop_order'] as $name) {
+            $table = $schema->getStructure()->getTable($name);
+            if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
+        }
+        upgrade_plugin_savepoint(true, 2026111100, 'local', 'ustar');
+    }
 return true;
 }

@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+test "$PWD" = /stage
+test ! -e /stage/moodle
+test -d /source/.stage-input/reward-shop-baseline/moodle/local/ustar
+mkdir -p /artifacts /stage/data/stage_ /stage/data/fresh_ /stage/phpunitdata
+trap 'code=$?; if (( code )); then tail -n 45 /artifacts/reward-shop-*.log 2>/dev/null || true; fi; exit "$code"' EXIT
+cp -a /opt/moodle /stage/moodle
+cp /source/tests/stage/config.php /stage/moodle/config.php
+cd /stage/moodle
+
+install_sources() {
+    rm -rf /stage/moodle/public/local/ustar /stage/moodle/public/theme/ustar
+    cp -a "$1/local/ustar" /stage/moodle/public/local/ustar
+    cp -a "$1/theme/ustar" /stage/moodle/public/theme/ustar
+}
+install_site() {
+    php admin/cli/install_database.php --agree-license --adminpass='Fixture-Only-Password1!' \
+        --adminemail=stage@example.invalid --fullname='USTAR reward shop fixture' --shortname=ustar-rewards
+}
+
+export USTAR_STAGE_PREFIX=stage_
+install_sources /source/.stage-input/reward-shop-baseline/moodle
+install_site > /artifacts/reward-shop-baseline.log 2>&1
+php /source/tests/stage/schema_snapshot.php > /artifacts/reward-shop-before.json
+install_sources /source/moodle
+php admin/cli/upgrade.php --non-interactive > /artifacts/reward-shop-upgrade.log 2>&1
+php /source/tests/stage/schema_snapshot.php > /artifacts/reward-shop-after.json
+php admin/cli/upgrade.php --non-interactive > /artifacts/reward-shop-repeat.log 2>&1
+php /source/tests/stage/schema_snapshot.php > /artifacts/reward-shop-repeat.json
+cmp /artifacts/reward-shop-after.json /artifacts/reward-shop-repeat.json
+USTAR_STAGE_PREFIX=fresh_ install_site > /artifacts/reward-shop-fresh.log 2>&1
+USTAR_STAGE_PREFIX=fresh_ php /source/tests/stage/schema_snapshot.php > /artifacts/reward-shop-fresh.json
+cmp /artifacts/reward-shop-after.json /artifacts/reward-shop-fresh.json
+php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/reward-shop-phpunit-init.log 2>&1
+php vendor/bin/phpunit --display-notices --fail-on-notice --log-junit /artifacts/reward-shop-unit.xml \
+    public/local/ustar/tests/reward_shop_test.php 2>&1 | tee /artifacts/reward-shop-unit.log
+php /source/tests/stage/reward_shop_fixture.php
+echo 'REWARD_SHOP_SCHEMA_AND_DB=PASS'
+bash /source/tests/stage/authenticated_shell_smoke.sh studio-browser

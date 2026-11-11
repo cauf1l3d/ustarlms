@@ -9,8 +9,9 @@ use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
 use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
+use local_ustar\reward_shop;
 
-/** Connect metadata only; the older USTAR domains still require their own privacy audit. */
+/** Privacy requests for the supported USTAR data domains. */
 final class provider implements
     \core_privacy\local\metadata\provider,
     \core_privacy\local\request\plugin\provider,
@@ -107,6 +108,12 @@ final class provider implements
                 'local_ustar_library_attempt'=>['userid','assessmentid','versionno','score','passed','answersjson','startedat','submittedat']] as $table=>$fields) {
             $collection->add_database_table($table,array_fill_keys($fields,'privacy:metadata:library'),'privacy:metadata:library');
         }
+        foreach ([reward_shop::ORDER=>['userid','offerid','title','price','status','ledgerid',
+                    'timecreated','resolvedat','resolvedby','reason'],
+                reward_shop::OFFER=>['usermodified','timemodified']] as $table=>$fields) {
+            $collection->add_database_table($table, array_fill_keys($fields, 'privacy:metadata:rewardshop'),
+                'privacy:metadata:rewardshop');
+        }
         return $collection;
     }
 
@@ -134,6 +141,10 @@ final class provider implements
             (EXISTS (SELECT g.id FROM {local_ustar_library_grant} g WHERE g.userid=:guser OR g.grantedby=:actor OR g.revokerid=:revoker)
              OR EXISTS (SELECT a.id FROM {local_ustar_library_attempt} a WHERE a.userid=:auser))',
             ['level'=>CONTEXT_SYSTEM,'guser'=>$userid,'actor'=>$userid,'revoker'=>$userid,'auser'=>$userid]);
+        $contexts->add_from_sql('SELECT c.id FROM {context} c WHERE c.contextlevel=:level AND
+            (EXISTS (SELECT o.id FROM {'.reward_shop::ORDER.'} o WHERE o.userid=:owner OR o.resolvedby=:manager)
+             OR EXISTS (SELECT a.id FROM {'.reward_shop::OFFER.'} a WHERE a.usermodified=:author))',
+            ['level'=>CONTEXT_SYSTEM,'owner'=>$userid,'manager'=>$userid,'author'=>$userid]);
         return $contexts;
     }
 
@@ -154,6 +165,11 @@ final class provider implements
         }
         foreach (['grantedby','revokerid'] as $field) {
             $userlist->add_from_sql($field,'SELECT DISTINCT '.$field.' FROM {local_ustar_library_grant} WHERE '.$field.'>0',[]);
+        }
+        foreach ([reward_shop::ORDER=>['userid','resolvedby'], reward_shop::OFFER=>['usermodified']] as $table=>$fields) {
+            foreach ($fields as $field) {
+                $userlist->add_from_sql($field, 'SELECT DISTINCT '.$field.' FROM {'.$table.'} WHERE '.$field.'>0', []);
+            }
         }
         $userlist->add_from_sql('userid', 'SELECT userid FROM {user_preferences} WHERE name = :name',
             ['name' => \local_ustar\connect\notification_preferences::NAME]);
@@ -188,6 +204,14 @@ final class provider implements
             'access'=>array_values($DB->get_records_select('local_ustar_library_grant','userid=:uid OR grantedby=:actor OR revokerid=:revoker',
                 ['uid'=>$userid,'actor'=>$userid,'revoker'=>$userid])),
             'checks'=>array_values($DB->get_records('local_ustar_library_attempt',['userid'=>$userid]))]);
+        writer::with_context(\context_system::instance())->export_data(['Reward shop'], (object)[
+            'orders'=>array_values($DB->get_records(reward_shop::ORDER, ['userid'=>$userid], 'id',
+                'id,offerid,title,price,status,ledgerid,timecreated,resolvedat,reason')),
+            'decisions'=>array_values($DB->get_records(reward_shop::ORDER, ['resolvedby'=>$userid], 'id',
+                'id,status,resolvedat,reason')),
+            'offers'=>array_values($DB->get_records(reward_shop::OFFER, ['usermodified'=>$userid], 'id',
+                'id,title,price,status,timemodified')),
+        ]);
         $links = $DB->get_records('local_ustar_conn_links', ['userid' => $userid], 'id',
             'id,provider,tenant,subject,state,revision,timecreated,timemodified');
         $challenges = $DB->get_records('local_ustar_conn_challenges', ['userid' => $userid], 'id',
@@ -267,11 +291,16 @@ final class provider implements
     private static function erase(?array $userids): void {
         global $DB;
         if ($userids === []) { return; }
-        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('connect-identity', 10);
+        $factory = \core\lock\lock_config::get_lock_factory('local_ustar');
+        $lock = $factory->get_lock('connect-identity', 10);
         if (!$lock) { throw new \moodle_exception('identity_busy', 'local_ustar'); }
+        $shoplock = null;
         try {
+            $shoplock = $factory->get_lock(reward_shop::LOCK, 10);
+            if (!$shoplock) { throw new \moodle_exception('rewardshop_busy', 'local_ustar'); }
             $transaction = $DB->start_delegated_transaction();
             try {
+                reward_shop::erase_in_transaction($userids);
                 self::erase_library($userids);
                 self::erase_bot($userids);
                 if ($userids === null) {
@@ -319,7 +348,10 @@ final class provider implements
             } catch (\Throwable $error) {
                 $transaction->rollback($error);
             }
-        } finally { $lock->release(); }
+        } finally {
+            $shoplock?->release();
+            $lock->release();
+        }
     }
 
     private static function bot_dialogs(int $userid): array {

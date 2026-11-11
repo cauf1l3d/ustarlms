@@ -45,7 +45,8 @@ class ClientCLI(unittest.TestCase):
 
     def test_ready_preflight_checks_cli_before_backup(self):
         manifest={'before': {'a':'123'}}
-        with patch.object(mod.shutil,'which',return_value='/usr/bin/docker'),\
+        with patch.object(mod.os,'geteuid',return_value=0),\
+             patch.object(mod.shutil,'which',return_value='/usr/bin/docker'),\
              patch.object(mod,'code_status',return_value=(mod.BEFORE, lambda _: [])),\
              patch.object(mod,'db_status',return_value={'version':mod.BEFORE,'tables':{x:False for x in mod.TABLES}}),\
              patch.object(mod,'relink_status'),\

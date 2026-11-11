@@ -93,8 +93,17 @@ final class identity_service {
             $userchannel = hash('sha256', $userid . ':' . $identity->provider);
             $link = $DB->get_record('local_ustar_conn_links', ['identityhash' => $key]);
             $slot = $DB->get_record('local_ustar_conn_links', ['userchannelhash' => $userchannel]);
-            if (($link && (int)$link->userid !== $userid) || ($slot && $slot->identityhash !== $key)) {
+            if ($link && (int)$link->userid !== $userid) {
                 throw new \InvalidArgumentException('link_conflict');
+            }
+            if ($slot && $slot->identityhash !== $key) {
+                if ($slot->state !== 'revoked') {
+                    throw new \InvalidArgumentException('link_conflict');
+                }
+                // Keep the original identity and link ID for receipts and pending deliveries.
+                // Move the revoked row off the unique channel slot in the same transaction.
+                $DB->set_field('local_ustar_conn_links', 'userchannelhash',
+                    hash('sha256', "ustar-connect-revoked-slot-v1\0" . $slot->identityhash), ['id' => $slot->id]);
             }
             if (!$link) {
                 $link = (object)[
@@ -105,6 +114,7 @@ final class identity_service {
                 ];
                 $link->id = $DB->insert_record('local_ustar_conn_links', $link);
             } else if ($link->state !== 'linked') {
+                $link->userchannelhash = $userchannel;
                 $link->state = 'linked';
                 $link->revision = (int)$link->revision + 1;
                 $link->timemodified = time();
@@ -139,16 +149,17 @@ final class identity_service {
         global $DB;
         if (!$DB->is_transaction_started()) { throw new \coding_exception('Owned transaction required'); }
         $userid = self::actor();
-    $link = $DB->get_record('local_ustar_conn_links', ['id' => $linkid, 'userid' => $userid]);
+        $link = $DB->get_record('local_ustar_conn_links', ['id' => $linkid, 'userid' => $userid]);
         if (!$link) {
             throw new \InvalidArgumentException('unknown_link');
         }
-        if ($link->state !== 'revoked') {
-            $link->state = 'revoked';
-            $link->revision = (int)$link->revision + 1;
-            $link->timemodified = time();
-            $DB->update_record('local_ustar_conn_links', $link);
+        if ($link->state === 'revoked') {
+            return;
         }
+        $link->state = 'revoked';
+        $link->revision = (int)$link->revision + 1;
+        $link->timemodified = time();
+        $DB->update_record('local_ustar_conn_links', $link);
         // Invalidate all still-open codes for this channel. A new issue+claim
         // is needed: a pre-revocation code cannot resurrect the link.
         $DB->set_field('local_ustar_conn_challenges', 'expiresat', 0,

@@ -1,0 +1,47 @@
+<div class="u-library">
+<header class="u-library__head"><div><p class="u-pagehead__eyebrow">Отдел обучения</p><h1>Управление Библиотекой</h1><p class="u-library__lede">Материалы, проверки знаний и доступ сотрудников.</p></div><a class="u-btn" href="{{libraryurl}}">Открыть Библиотеку</a></header>
+{{#notice}}<div class="u-alert" role="status">{{notice}}</div>{{/notice}}
+{{^writable}}<p>В режиме просмотра изменения недоступны.</p>{{/writable}}
+{{#writable}}
+{{#admin}}<details class="u-library__section"><summary>Доступ отделов к Маркетплейсу</summary>
+<p class="u-muted">Маркетплейс скрыт от сотрудников, пока вы не выберете их отдел. Выбор отдела открывает витрину; условия каждого материала и аудитория сохраняются. Покупки включаются отдельно.</p>
+<form class="u-library__checksedit" method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="marketplace"><input type="hidden" name="settingsrevision" value="{{settingsrevision}}">
+<fieldset><legend>Отделы, которым виден Маркетплейс</legend>
+{{#marketdepartments}}<label class="u-choice"><input type="checkbox" name="marketdept[]" value="{{id}}" {{#selected}}checked{{/selected}}>{{name}}</label>{{/marketdepartments}}
+{{^hasmarketdepartments}}<p class="u-muted">Сначала добавьте отделы в оргструктуре.</p>{{/hasmarketdepartments}}
+</fieldset><p class="u-muted">Если ничего не выбрано, Маркетплейс виден только администратору. Вложенные отделы выбираются отдельно.</p>
+<button class="u-btn u-btn--primary" type="submit">Сохранить доступ отделов</button></form></details>{{/admin}}
+{{#author}}<section class="u-library__section"><h2>Условия доступа к материалу</h2><p class="u-muted">Правила аудитории сохраняются. Назначение или покупка не публикуют материал для всей компании.</p>
+<form class="u-library__checksedit" method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="save"><input type="hidden" name="id" value="{{id}}"><input type="hidden" name="expectedmodified" value="{{expectedmodified}}">
+<label class="u-field">Материал<select name="subject" required>{{#subjects}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/subjects}}</select></label>
+<label class="u-field">Название в Библиотеке<input name="title" value="{{title}}" maxlength="255" required></label>
+<label class="u-field">Краткое описание<textarea name="summary" rows="3">{{summary}}</textarea></label>
+<div class="u-library__fields"><label class="u-field">Доступ<select name="accesspolicy">{{#policies}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/policies}}</select></label><label class="u-field">Цена, USCOIN<input type="number" name="pricecoin" value="{{pricecoin}}" min="0" max="{{pricemax}}"><small>Для платного доступа: {{pricemin}}–{{pricemax}} USCOIN.</small></label>
+<label class="u-field">Открывающая точка маршрута<select name="gatepointid">{{#gates}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/gates}}</select></label>
+<label class="u-field">Публикация предложения<select name="visibility">{{#visibilities}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/visibilities}}</select></label></div>
+<button type="submit" class="u-btn u-btn--primary">Сохранить условия</button></form>
+<p><a href="{{materialsurl}}">Редактор материалов и аудитории →</a> · <a href="{{catalogediturl}}">Редактор каталога →</a></p></section>{{/author}}
+{{#grantor}}<section class="u-library__section"><h2>Предоставить доступ</h2>
+{{#hastargets}}<form class="u-library__checksedit" method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="grant"><input type="hidden" name="nonce" value="{{nonce}}">
+<label class="u-field">Сотрудник<select name="targetuserid" required>{{#targets}}<option value="{{value}}">{{label}}</option>{{/targets}}</select></label>
+<label class="u-field">Материал<select name="offerid" required>{{#grantoffers}}<option value="{{value}}">{{label}}</option>{{/grantoffers}}</select></label>
+<label class="u-field">Комментарий<input name="comment" maxlength="1000"></label><button class="u-btn u-btn--primary" type="submit">Предоставить доступ</button></form>{{/hastargets}}
+{{^hastargets}}<p class="u-muted">В вашей области управления нет сотрудников для назначения.</p>{{/hastargets}}
+<h3>История доступа</h3><ul class="u-library__checks">{{#grants}}<li class="u-checkrow"><div><strong>{{person}} · {{title}}</strong><span class="u-muted">{{source}} · {{date}} · {{status}}</span></div>
+{{#canrevoke}}<form method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="revoke"><input type="hidden" name="grantid" value="{{id}}"><button class="u-btn" type="submit">Отозвать доступ</button></form>{{/canrevoke}}
+{{#canrefund}}<form method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="refund"><input type="hidden" name="grantid" value="{{id}}"><button class="u-btn" type="submit">Вернуть USCOIN и закрыть покупку</button></form>{{/canrefund}}</li>{{/grants}}</ul></section>{{/grantor}}
+{{#admin}}<details class="u-library__section"><summary>Настройки продаж</summary><form class="u-library__checksedit" method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="settings"><input type="hidden" name="settingsrevision" value="{{settingsrevision}}">
+<label class="u-choice"><input type="checkbox" name="storeenabled" value="1" {{#storeenabled}}checked{{/storeenabled}}>Разрешить покупки за USCOIN</label>
+<div class="u-library__fields"><label class="u-field">Минимальная цена<input type="number" name="pricemin" value="{{pricemin}}" min="1" required></label><label class="u-field">Максимальная цена<input type="number" name="pricemax" value="{{pricemax}}" min="1" max="1000000" required></label></div><button class="u-btn" type="submit">Сохранить настройки</button></form></details>{{/admin}}
+{{#assessor}}<details class="u-library__section" {{#checkid}}open{{/checkid}}><summary>Редактор проверок знаний</summary><p class="u-muted">Короткие проверки сохраняют отметку. Обязательные аттестации маршрута создаются в Студии.</p>
+<form class="u-library__checksedit" method="post" action="{{actionurl}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="savecheck"><input type="hidden" name="id" value="{{checkid}}"><input type="hidden" name="expectedrevision" value="{{checkrevision}}">
+<label class="u-field">Название<input name="title" value="{{checktitle}}" maxlength="255" required></label>
+<label class="u-field">Связь с темой, навыком или группой<select name="targetref">{{#targetrefs}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/targetrefs}}</select></label>
+<label class="u-field">Тема (для тематической проверки)<input name="topic" value="{{topic}}" maxlength="128"></label>
+<div class="u-library__fields"><label class="u-field">Вопросов за попытку<input type="number" name="questioncount" value="{{questioncount}}" min="1" max="100" required></label><label class="u-field">Порог прохождения, %<input type="number" name="passpercent" value="{{passpercent}}" min="1" max="100" required></label><label class="u-field">Попыток на версию<input type="number" name="maxattempts" value="{{maxattempts}}" min="1" max="100" required></label><label class="u-field">Публикация<select name="status">{{#checkstatuses}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/checkstatuses}}</select></label></div>
+<p class="u-muted">Заполните нужные вопросы; пустые блоки пропускаются. Укажите 2–6 вариантов и отметьте верный.</p>
+{{#questionfields}}<fieldset class="u-library__questionedit"><legend>Вопрос {{number}}</legend><label class="u-field">Текст вопроса<textarea name="questions[{{index}}][text]" rows="2">{{text}}</textarea></label>{{#options}}<div class="u-library__answeredit"><label><input type="radio" name="questions[{{question}}][correct]" value="{{index}}" {{#checked}}checked{{/checked}}>Верный</label><input aria-label="Ответ {{number}} на вопрос {{question}}" name="questions[{{question}}][options][{{index}}]" value="{{value}}" maxlength="1000"></div>{{/options}}</fieldset>{{/questionfields}}
+<button class="u-btn u-btn--primary" type="submit">Сохранить проверку как новую версию</button></form>
+<ul>{{#checks}}<li><a href="{{editurl}}">{{title}}</a></li>{{/checks}}</ul></details>{{/assessor}}
+<section class="u-library__section"><h2>Предложения Библиотеки</h2><ul class="u-library__checks">{{#offers}}<li class="u-checkrow"><div><strong>{{title}}</strong><span class="u-muted">{{policy}} · {{status}}</span></div>{{#author}}<a class="u-btn" href="{{editurl}}">Настроить</a>{{/author}}</li>{{/offers}}</ul>{{#hasmoreoffers}}<a class="u-btn" href="{{nexturl}}">Следующие предложения →</a>{{/hasmoreoffers}}</section>
+{{/writable}}</div>

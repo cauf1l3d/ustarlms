@@ -121,6 +121,42 @@ final class connect_identity_test extends \advanced_testcase {
         $this->assertSame(1, $DB->count_records('local_ustar_conn_links'));
     }
 
+    public function test_revoked_telegram_can_be_replaced_and_restored_by_the_same_owner(): void {
+        global $DB, $USER;
+        $owner = clone $USER;
+        $first = $this->complete();
+        identity_service::revoke($first['id']);
+        $second = $this->complete('1234');
+
+        $this->assertNotSame($first['id'], $second['id']);
+        $this->assertSame(0, identity_service::resolve_active_user($this->telegram()));
+        $this->assertSame((int)$owner->id, identity_service::resolve_active_user($this->telegram('1234')));
+        $this->assertSame(1, $DB->count_records('local_ustar_conn_links', ['state' => 'linked']));
+        $this->denied(fn() => $this->complete(), 'link_conflict');
+
+        $this->setUser($this->getDataGenerator()->create_user());
+        $this->denied(fn() => $this->complete(), 'link_conflict');
+        $this->setUser($owner);
+        identity_service::revoke($second['id']);
+        $restored = $this->complete();
+
+        $this->assertSame($first['id'], $restored['id']);
+        $this->assertGreaterThan($first['revision'], $restored['revision']);
+        $this->assertSame((int)$owner->id, identity_service::resolve_active_user($this->telegram()));
+        $this->assertSame(0, identity_service::resolve_active_user($this->telegram('1234')));
+        $this->assertSame(2, $DB->count_records('local_ustar_conn_links'));
+    }
+
+    public function test_repeated_revoke_does_not_expire_a_fresh_challenge(): void {
+        $first = $this->complete();
+        identity_service::revoke($first['id']);
+        $challenge = identity_service::issue('telegram', '123456');
+        identity_service::revoke($first['id']);
+
+        identity_service::claim_verified($challenge['code'], $this->telegram(), $this->proof('fresh-after-revoke'));
+        $this->assertSame($first['id'], identity_service::confirm($challenge['code'])['id']);
+    }
+
     public function test_pending_can_link_but_never_resolves_as_active_employee(): void {
         global $USER;
         employment::register_pending((int)$USER->id);

@@ -69,6 +69,8 @@ assert.equal(list.lastElementChild.classList.contains('is-dragging'), true);
 list.lastElementChild.dispatchEvent(new dom.window.Event('dragend', {bubbles: true}));
 assert.equal(list.querySelector('.is-dragging'), null);
 
+const hidden=dom.window.document.createElement('article');hidden.className='u-route-editor__point';hidden.dataset.uPointActive='0';list.firstElementChild.after(hidden);list.firstElementChild.querySelector('[data-u-move=down]').click();assert.deepEqual([...list.querySelectorAll('input[name="pointids[]"]')].map(x=>x.value),['1','2'],'Keyboard movement must skip hidden points');
+
 assert.match(template, /name="revision" value="{{revision}}"/);
 assert.match(template, /name="expectedmodified" value="{{expectedmodified}}"/);
 assert.match(template, /name="action" value="make_override"/);

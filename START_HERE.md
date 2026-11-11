@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально01.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
+Актуально 11.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
 PR110 (RSS2803) и PR111 (ролевой Connect/графика) объединены после единой FullRC.
 [Интеграция](context/runtime/connect_feed_integration_order_20261101.json).
 
@@ -8,25 +8,36 @@ PR110 (RSS2803) и PR111 (ролевой Connect/графика) объедин�
 2. [Owner2900](context/runtime/connect_role_bot_owner_deploy_20261029.json).
 3. [Owner267](context/runtime/connect_visual_owner_deploy_20261101.json), [архитектура](context/architecture/overview.md).
 
+## Текущая работа
+
+11.11.2026. Исправление Telegram квалифицировано. [Установка](docs/CONNECT_RELINK_INSTALL_RU.md).
+[Разбор](context/reviews/20261111/CONNECT_RELINK.md), [задачи](context/tasks/ACTIVE.md).
+
 ## Подтверждённое состояние
 
-Owner29Oct установил app2900/theme2700 и включил роли tool9a68246b. Owner1Nov
-восстановил общий Telegram egress и установил worker267e5587: visuals_active,
+Owner1Nov восстановил egress и установил worker267e5587: visuals_active,
 visuals_ready/recovery_required:false. Оба бота отвечают; PNG/кнопки/читаемость и
 задачи/возврат/исполнение/фото приняты владельцем. Остальные процессы проверяет
 руководство с2Nov; публичный HTTPS и Mini App ожидают согласования.
 
-Точный payload606/103 — проверенный комплект, не новая whole-host инвентаризация.
-Приложение и worker имеют разные SHA; слияние Git не меняло production.
-Старые контроллеры/архивы не переписывать и не применять повторно по датированной истории.
+Merge не меняет production.
+## Библиотека и Студия0200
 
-## Следующий доступный этап — PERF-01
+Последняя полная terminal receipt: app719bf47c/toolaa61d595 установлен5Nov,
+[квитанция](context/runtime/library_discovery_owner_deploy_20261105.json).
+Marketplace скрыт по умолчанию; admin выбирает отделы. Исходники editor-only.
+[Правила доступа](docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md). Main2900 отдельно;
+PR112/113/114 открыты без разрешения merge.
 
-Пассивный отчёт обычного рабочего дня: latency, SQL, cron lag и нагрузка.
-Сборщик2900 уже подготовлен; фактический8h отчёт ещё не получен. Нет вывода о SLO,
-SQL/page, Web-SAPI OPcache или производительности из одного статуса служб.
-Предыдущий cron29Oct03:37MSK exit0/1.282s и adhoc1/overdue56/failed2 — история,
-а не свежая проверка очереди. [Активная работа](context/tasks/ACTIVE.md).
+Preview app2cb233d9/tool ed292313 принят владельцем по работе интерфейса.
+[Приёмка](context/runtime/studio_preview_owner_acceptance_20261106.json),
+[квалификация](context/runtime/studio_preview_qualification_20261106.json).
+Последняя полная квитанция терминала относится к discovery app719bf47c.
+
+## PERF-01 после Библиотеки
+
+Пассивный отчёт обычного рабочего дня ещё не получен. Сборщик2900 требует адаптации
+для0200. Нет вывода о SLO, SQL/page или Web-SAPI OPcache из одного статуса служб.
 
 ## Правила продолжения
 

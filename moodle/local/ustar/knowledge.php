@@ -18,6 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ['view' => 'knowledge', 'theme' => 'ustar']));
 }
 
+if (get_config('local_ustar','library_rail')) {
+    redirect(new moodle_url('/local/ustar/library.php',['tab'=>'mine','q'=>optional_param('q','',PARAM_TEXT)]));
+}
+
 $context =
     context_system::instance();
 

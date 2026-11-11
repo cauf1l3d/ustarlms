@@ -50,3 +50,12 @@ $string['notification_read'] = 'Read';
 $string['privacy:metadata:connect:acktokens'] = 'Hashed actions for personal notification acknowledgement; no raw action credentials.';
 
 $string['privacy:metadata:connect:bot'] = 'Short-lived Connect conversation drafts, action confirmations and authorized report photographs.';
+
+$string['task_route_access'] = 'Close expired route review windows';
+$string['privacy:metadata:route_access'] = 'Learning point review windows: learner, version, deadline and confirmed access closure.';
+
+$string['libraryerror'] = 'Library: {$a}';
+$string['ustar:librarypublish'] = 'Manage Library offers';
+$string['ustar:librarygrant'] = 'Grant Library access within scope';
+$string['ustar:libraryassess'] = 'Author optional Library checks';
+$string['privacy:metadata:library'] = 'Library access history and optional assessment attempts.';

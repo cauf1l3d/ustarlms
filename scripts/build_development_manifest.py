@@ -23,7 +23,8 @@ def generate(ref='HEAD'):
     names = git('ls-tree', '-r', '--name-only', ref, '--', *scopes).decode().splitlines()
     contents = {p: git('show', ref + ':' + p) for p in names}
     manifest = {
-        'kind': 'unmerged_development_source', 'deployed': False,
+        'kind': 'unmerged_development_source', 'deployed': bool(candidate.get('deployed', False)),
+        'deployment_evidence': candidate.get('owner_receipt') if candidate.get('deployed') else None,
         'baseline_commit': state['code_baseline']['commit'],
         'component_tree_ids': {p: git('rev-parse', ref + ':' + p).decode().strip() for p in scopes},
         'versions': {key: int(re.search(rb'\$plugin->version\s*=\s*(\d+)',
@@ -34,7 +35,8 @@ def generate(ref='HEAD'):
         'files': [{'path': p, 'sha256': hashlib.sha256(contents[p]).hexdigest()} for p in sorted(names)],
     }
     (ROOT / candidate['manifest']).write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
-    print('DEVELOPMENT_MANIFEST files=%s tables=%s; NOT_DEPLOYED' % tuple(manifest['counts'].values()))
+    print('DEVELOPMENT_MANIFEST files=%s tables=%s; %s' % (*manifest['counts'].values(),
+        'OWNER_DEPLOYED_UNMERGED' if manifest['deployed'] else 'NOT_DEPLOYED'))
 
 
 if __name__ == '__main__':

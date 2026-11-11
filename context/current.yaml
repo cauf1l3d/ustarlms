@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-01'
+updated_at: '2026-11-11'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -25,58 +25,61 @@ application_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
-  latest_owner_browser_acceptance: context/runtime/feed2803_owner_deploy_20261029.json
+  latest_SCORM_tracking_evidence: context/runtime/scorm_tracking_owner_20261102.json
+  latest_SCORM_functional_acceptance: context/runtime/scorm_tracking_owner_20261102.json
+  latest_owner_browser_acceptance: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
   latest_cron_contract: context/runtime/feed2803_owner_deploy_20261029.json
   previous_scheduled_cron_receipt: context/runtime/perf2802_owner_deploy_20261029.json
-  latest_addon_preflight: context/runtime/connect_role_bot_owner_deploy_20261029.json
+  latest_addon_preflight: context/runtime/library_discovery_owner_deploy_20261105.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   latest_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
   latest_worker_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
   effective_addon_deployment:
-    receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
-    reported_date_msk: '2026-10-29'
-    status: owner_installed_main_integrated_remaining_leadership_acceptance
-    installer_commit: 9a68246b170dd6a08dc6a8e2118e69f32e16bea9
-    payload_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
-    versions:
-      local_ustar: 2026102900
-      theme_ustar: 2026102700
-    files: 606
-    tables: 103
-    counts_basis: fixed_controller_payload_not_new_whole_host_manifest
+    receipt: context/runtime/library_discovery_owner_deploy_20261105.json
+    reported_date_msk: '2026-11-05'
+    status: owner_installed_library_discovery0200
+    installer_commit: aa61d5954d96c33b8de2845cf2c0891ba428c76d
+    payload_commit: 719bf47c1ba5942c094a04312898890ec7de00c1
+    versions: &id001
+      local_ustar: 2026110200
+      theme_ustar: 2026110200
+    files: 649
+    tables: 108
+    counts_basis: fixed_controller_payload_not_a_new_whole_host_manifest
     independent_probe: false
     worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
     worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
-    worker_rollout: true
+    worker_rollout: false
     previous_exact_terminal_receipt: context/runtime/feed2803_owner_deploy_20261029.json
     previous_2801_preflight_in_same_receipt: false
-    post_deploy_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
-    browser_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+    post_deploy_receipt: context/runtime/library_discovery_owner_deploy_20261105.json
+    browser_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
     role_bot_enabled: true
     runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
-    post_check: role_bot_ready
+    post_check: active
     live_role_acceptance: owner accepted tasks, return/execution, photos and visual
       readability; remaining processes with leadership from2Nov
-    latest_functional_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
-  status: owner_installed_tasks_photo_visuals_accepted_remaining_leadership
-  observed_at: '2026-10-29'
-  source: context/runtime/evidence_connect2900_20261029.yaml
+    latest_functional_receipt: context/runtime/library_discovery_owner_deploy_20261105.json
+    previous_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
+    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh
+      service query in2Nov SCORM receipt
+  status: owner_installed_library_discovery0200
+  observed_at: '2026-11-05'
+  source: context/runtime/evidence_library_discovery0200_20261105.yaml
   independently_measured: false
-  current_source_commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
-  current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh
-    host filesystem census
-  current_versions:
-    local_ustar: 2026102900
-    theme_ustar: 2026102700
+  current_source_commit: 719bf47c1ba5942c094a04312898890ec7de00c1
+  current_source_commit_scope: Owner aa61 active postcheck verifies fixed649 addon
+    payload; no independent probe.
+  current_versions: *id001
   last_exact_source_manifest:
-    commit: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
-    date: '2026-10-29'
-    matching_files: 606
+    commit: 719bf47c1ba5942c094a04312898890ec7de00c1
+    date: '2026-11-05'
+    matching_files: 649
     kind: owner_verified_controller_payload_not_fresh_manifest
-    evidence: context/runtime/connect_role_bot_owner_deploy_20261029.json
+    evidence: context/runtime/library_discovery_owner_deploy_20261105.json
   cron: completed29Oct03_37MSK_exit0_1_282s_no_new_failures; current_adhoc1_overdue56_failed2_not_yet_drained
   cron_current_receipt: context/runtime/feed2803_owner_deploy_20261029.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
@@ -92,24 +95,61 @@ production:
     Docker: 29.9.0
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
-  post_deploy_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
-  previous_addon_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+  post_deploy_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
+  previous_addon_receipt: context/runtime/connect_role_bot_owner_deploy_20261029.json
   post2900_cron_run_receipt: pending; last supplied scheduled cron remains pre2900
   current_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
   current_worker_observed_at: '2026-11-01'
   current_worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+  latest_assessment_issue: context/runtime/studio_assessment_route_20261102.json
+  historical_incomplete_update_attempt: context/runtime/route_review_recovery_20261102.json
+  latest_library_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+  previous_effective_addon_deployment:
+    receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+    reported_date_msk: '2026-11-03'
+    status: owner_installed_marketplace0200_general_functional_acceptance
+    installer_commit: 59f482ee2f086e5df202235880e376b1d25a7b1a
+    payload_commit: 4715383b8f6ec4b48fef855944be13a51c3cad61
+    versions:
+      local_ustar: 2026110200
+      theme_ustar: 2026110200
+    files: 649
+    tables: 108
+    counts_basis: fixed_controller_payload_not_a_new_whole_host_manifest
+    independent_probe: false
+    worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
+    worker_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+    worker_rollout: true
+    previous_exact_terminal_receipt: context/runtime/feed2803_owner_deploy_20261029.json
+    previous_2801_preflight_in_same_receipt: false
+    post_deploy_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+    browser_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+    role_bot_enabled: true
+    runtime_generation: 3372c69ec0ad49249b8af9994d85b0e8
+    post_check: active
+    live_role_acceptance: owner accepted tasks, return/execution, photos and visual
+      readability; remaining processes with leadership from2Nov
+    latest_functional_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+    previous_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
+    role_bot_runtime_basis: retained29Oct generation; worker267 accepted1Nov; no fresh
+      service query in2Nov SCORM receipt
+  latest_library_navigation_owner_receipt: context/runtime/library_navigation_owner_deploy_20261103.json
+  latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
+  latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: PR110/111 integrated after one qualified combined FullRC. Owner accepted
-    bot graphics/readability and task execution/return/photo. Other processes are
-    tested with leadership from2Nov; public HTTPS and Mini App await approval. Next
-    PERF-01 is passive ordinary-workday latency/SQL/cron/host baseline; no new production
-    change.
-  next_task: PERF-01
+  activity: Telegram relink 53fab3b6 qualified with 4 workflows and 11 FullRC jobs.
+    Both Moodle profiles passed 432 tests and 2000 assertions. Archive dc3a3c54 awaits
+    owner installation. Its preflight checks Preview 2cb233d9 and the active Preview
+    journal.
+  next_task: CONNECT-RELINK-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
+    AUDIT-20261103: done
+    AUDIT-FIX-01: in_progress
     B2B-01: planned
     B2B-02: planned
+    CONNECT-RELINK-01: qualified_awaiting_owner_installation
     DOC-01: done
     DOC-02: done
     DOC-03: done
@@ -130,6 +170,10 @@ current_work:
     INF-13: planned
     INF-14: in_progress
     INTEGRATIONS-01: in_progress
+    LEARN-ASSESS-01: done
+    LEARN-SCORM-01: done
+    LEARN-SCORM-02: done
+    LIBRARY-01: in_progress
     MOB-01: planned
     MOB-02: planned
     MOB-03: planned
@@ -140,8 +184,13 @@ current_work:
     PERF-01: in_progress
     PLAT-01: deferred
     PRIVACY-01: deferred
+    REWARD-SHOP-01: design
+    ROUTE-EDITOR-01: awaiting_owner_deployment
     RSS-01: done
     STUDIO-01: done
+    STUDIO-CSP-01: awaiting_owner_deployment
+    STUDIO-PREVIEW-01: awaiting_owner_deployment
+    STUDIO-SCORM-01: in_progress
     TECH-01: planned
 server_facts:
   status: partial

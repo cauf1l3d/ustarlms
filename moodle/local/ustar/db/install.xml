@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026102200" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026110200" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -774,6 +774,7 @@
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="summary" TYPE="text" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="requirementsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="accesspolicyjson" TYPE="text" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="renewalpolicy" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="keep" SEQUENCE="false" />
         <FIELD NAME="validdays" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
         <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" />
@@ -811,6 +812,29 @@
         <INDEX NAME="user_point_version_uix" UNIQUE="true" FIELDS="userid, pointid, versionid" />
         <INDEX NAME="user_status_idx" UNIQUE="false" FIELDS="userid, status, completedat" />
         <INDEX NAME="point_version_idx" UNIQUE="false" FIELDS="pointid, versionid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_route_access" COMMENT="Review windows after verified learning; not a second completion ledger">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="pointid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="studyat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="openedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="deadline" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="closedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="closereason" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="versionid_fk" TYPE="foreign" FIELDS="versionid" REFTABLE="local_ustar_route_versions" REFFIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_version_study_uix" UNIQUE="true" FIELDS="userid,pointid,versionid,studyat" />
+        <INDEX NAME="open_deadline_idx" UNIQUE="false" FIELDS="closedat,deadline" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_assess_policy" COMMENT="Versioned assessment lifecycle policy for route checkpoint versions">
@@ -2122,6 +2146,109 @@
       <INDEXES>
         <INDEX NAME="event_uix" UNIQUE="true" FIELDS="eventhash"/>
         <INDEX NAME="created_idx" UNIQUE="false" FIELDS="timecreated"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_library_offer" COMMENT="USTAR Library offer">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="itemtype" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="summary" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="pricecoin" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="accesspolicy" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" DEFAULT="free" />
+        <FIELD NAME="gatepointid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="visibility" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" DEFAULT="draft" />
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="subject_uix" UNIQUE="true" FIELDS="itemtype,itemid" />
+        <INDEX NAME="visibility_idx" UNIQUE="false" FIELDS="visibility,sortorder" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_library_grant" COMMENT="USTAR Library grant">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="offerid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="source" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="grantedby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="ledgerid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="validfrom" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="validto" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="revokedat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="revokerid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="refundedat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="comment" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="idempotencykey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="idem_uix" UNIQUE="true" FIELDS="idempotencykey" />
+        <INDEX NAME="access_idx" UNIQUE="false" FIELDS="userid,offerid,revokedat" />
+        <INDEX NAME="ledger_idx" UNIQUE="false" FIELDS="ledgerid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_library_assessment" COMMENT="USTAR Library assessment">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="sourcekey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="targettype" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" DEFAULT="topic" />
+        <FIELD NAME="targetkey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="questionsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="questioncount" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="2" />
+        <FIELD NAME="passpercent" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="100" />
+        <FIELD NAME="maxattempts" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="3" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" DEFAULT="draft" />
+        <FIELD NAME="revision" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="1" />
+        <FIELD NAME="inputhash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="source_uix" UNIQUE="true" FIELDS="sourcekey" />
+        <INDEX NAME="target_idx" UNIQUE="false" FIELDS="targettype,targetkey" />
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_library_attempt" COMMENT="USTAR Library attempt">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="assessmentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="versionno" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="1" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" DEFAULT="started" />
+        <FIELD NAME="score" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="passed" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="questionsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="passpercent" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="100" />
+        <FIELD NAME="maxattempts" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="3" />
+        <FIELD NAME="answersjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="submissionhash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="idempotencykey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="startedat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="submittedat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="idem_uix" UNIQUE="true" FIELDS="idempotencykey" />
+        <INDEX NAME="learner_idx" UNIQUE="false" FIELDS="assessmentid,userid,versionno,status" />
       </INDEXES>
     </TABLE>
 </TABLES>

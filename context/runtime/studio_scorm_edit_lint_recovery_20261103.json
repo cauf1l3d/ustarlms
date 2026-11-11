@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "date": "2026-11-03",
+  "status": "corrected_operator13_CI_PASS_application_qualification_retained_owner_install_pending",
+  "application_commit": "5e61c0d2566e8103d01121968d56852e26da99fa",
+  "baseline_commit": "4715383b8f6ec4b48fef855944be13a51c3cad61",
+  "supersedes_operator": "a8d44b206154343f49627f8b773f2633b2cd8802",
+  "owner_failure_receipt": "context/runtime/studio_scorm_edit_20261103.json",
+  "root_cause": "Frozen transaction applied php -n -l to every payload value, including model.js. Default short_open_tag=1 parsed its embedded <?xml version declaration as PHP and failed before backups/web stop/source writes.",
+  "reproduction": "Exact qualified model.js on actual PHP stdin with short tags enabled fails unexpected identifier version on line27; old operator transaction regression failed host_command_failed.",
+  "test_gap": "Old source PHP checks tested PHP paths, while transaction Host.lint was mocked. Native addon/browser tests did not exercise the mixed-type installer PHP stdin loop.",
+  "fix": "Separate immutable successor routes qualified payload bytes by their manifest file path; only .php reaches unchanged PHP linter, .js/.html use retained application CI. Unknown/ambiguous types refused; PHP lint failure identifies the source path. Frozen prior operators unchanged.",
+  "journal": "/var/lib/ustar-studio-scorm-edit-lint-5e61c0d2566e/state.json",
+  "deployed": false,
+  "agent_SSH": false,
+  "merge_performed": false,
+  "addon_source_changed": false,
+  "schema_changed": false,
+  "worker_changed": false,
+  "business_database_restore": false,
+  "local_tests": "13 run, 12 PASS / actualUID33 skipped locally; new tests use actual PHP -n short_open_tag=1 stdin for all six exact application files and invalid PHP refusal before outage",
+  "retained_application_qualification": {
+    "commit": "a8d44b206154343f49627f8b773f2633b2cd8802",
+    "review_run": 41626487399,
+    "moodle_each": {
+      "tests": 423,
+      "assertions": 1957
+    },
+    "application_trees_unchanged": true,
+    "scope": "Application/native/browser qualification retained. It did not prove the old mixed-file installer lint integration."
+  },
+  "owner_installation": "pending corrected package",
+  "tool_commit": "4aee12968ceefe6189143f3c40f59976831f6513",
+  "operator_qualification": {
+    "infra_run": 41652846252,
+    "job": 125975274708,
+    "result": "SUCCESS",
+    "tests": 13,
+    "real_php_stdin": "PASS actual qualified six-file payload, exactly three PHP lints, short_open_tag=1",
+    "invalid_php_before_outage": "PASS",
+    "actual_UID33_root_group_xattrs": "PASS",
+    "full_current_RC": "automatically triggered, pending at package handoff; retained application qualification separately cited"
+  },
+  "package": {
+    "filename": "ustar-studio-scorm-edit-lint-4aee1296.tar.gz",
+    "bytes": 172727,
+    "sha256": "d558a90a1bfbe8952c8482567f63e53f15887b4d650afd90a650c4d680c654e2",
+    "script_sha256": "d7021f9af80dde6f3361d2f52478c066c930767b096f07ac9af3633d49e3e7e1",
+    "ci_artifact_id": 13238421469,
+    "ci_zip_sha256": "933f22088a6426809febdb7b5c9c929e15ae80e74b90dd8d65996a66c69b5339",
+    "zip_crc_and_members": "PASS",
+    "independent_build_bytes_identical": true,
+    "library_file_id": "libfile_0068fa351e6c8191940b36847a3d6012",
+    "saved_download_readback_verified": true
+  }
+}

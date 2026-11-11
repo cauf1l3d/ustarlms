@@ -60,12 +60,8 @@ try {
         echo json_encode($response);
         die;
     }
+    if (!\local_ustar\employment::learning_allowed((int)$USER->id)) { echo json_encode($response); die; }
     $response['active'] = true;
-    // Keep a confirmed result in this launch context: retrying a lost response is harmless.
-    if (!empty($context['confirmedresponse'])) {
-        echo json_encode($context['confirmedresponse']);
-        die;
-    }
     if (!$confirm) { \core\session\manager::write_close(); }
 
     $pointid =
@@ -149,6 +145,24 @@ try {
             echo json_encode($response);
             die;
         }
+        $policy = \local_ustar\route_point_access::policy($published);
+        if (trim((string)($published->accesspolicyjson ?? '')) !== ''
+                && \local_ustar\route_point_access::allowed_cmid((int)$USER->id,$cmid) === false) {
+            $response['closed'] = true;
+            $response['targeturl'] = $response['routeurl'];
+            echo json_encode($response);
+            die;
+        }
+        // Replays can still return the protected result, after current access/version validation.
+        if ($confirm && !empty($context['confirmedresponse'])) {
+            $cached = $context['confirmedresponse'];
+            if (optional_param('returntoroute',0,PARAM_BOOL)) {
+                $cached['targeturl'] = $response['routeurl']; $cached['navigate'] = true; $cached['hasnext'] = false;
+            }
+            echo json_encode($cached);
+            die;
+        }
+
     }
 
     $attempt =
@@ -230,6 +244,14 @@ try {
         }
     }
 
+    if (!$remediationmode) {
+        $savedprogress = $DB->get_record('local_ustar_route_progress', [
+            'userid'=>(int)$USER->id,'pointid'=>$pointid,'versionid'=>(int)$published->id,'status'=>'complete']);
+        if ($savedprogress && (empty($savedprogress->expiresat) || (int)$savedprogress->expiresat >= time())) {
+            $freshstatus = true;
+            $completedat = (int)$savedprogress->completedat;
+        }
+    }
     if (!$freshstatus) {
         echo json_encode($response);
         die;
@@ -316,9 +338,19 @@ try {
 
     $response['confirmed'] = true;
 
-    $target = \local_ustar\route_continue::destination($route, '', $cmid);
+    $policy = \local_ustar\route_point_access::policy($published);
+    $holding = (int)($route['currentpoint']['id'] ?? 0) === $pointid;
+    $target = ($holding || $policy['finish'] !== 'next')
+        ? new moodle_url('/local/ustar/route.php')
+        : \local_ustar\route_continue::destination($route, '', $cmid);
     $response['targeturl'] = $target->out(false);
-    $response['hasnext'] = $target->get_path() !== '/local/ustar/route.php';
+    $response['hasnext'] = $target->get_path() !== (new moodle_url('/local/ustar/route.php'))->get_path();
+    $response['navigate'] = $policy['finish'] !== 'stay';
+    if (optional_param('returntoroute',0,PARAM_BOOL)) {
+        $response['targeturl'] = $response['routeurl']; $response['navigate'] = true; $response['hasnext'] = false;
+    }
+    $response['reviewing'] = !empty($route['currentpoint']['reviewing']) && $holding;
+
 
     $SESSION->ustar_scorm_route['confirmedresponse'] = $response;
 

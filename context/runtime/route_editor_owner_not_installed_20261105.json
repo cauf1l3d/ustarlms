@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-05",
+  "kind": "owner_statement",
+  "source": "owner multiple-choice reply in current dialogue",
+  "archive": "ustar-route-editor-45e9d6b7.tar.gz",
+  "installed": false,
+  "owner_answer": "Ещё не устанавливал",
+  "production_reference": "context/runtime/library_discovery_owner_deploy_20261105.json",
+  "new_server_probe": false,
+  "next": "One cumulative route-editor + Studio CSP successor from719bf47c"
+}

@@ -288,6 +288,20 @@
                     {{#canlaunch}}
                     <a class="u-route2-link" href="{{launchurl}}">{{actionlabel}}</a>
                     {{/canlaunch}}
+                    {{#reviewing}}
+                    <div class="u-route2-review" role="status">
+                        <p><strong>Изучение засчитано.</strong> Материал доступен для повторения до перехода дальше.</p>
+                        {{#hasaccessdeadline}}<p>Срок повторения: до {{accessdeadlinelabel}}. <span data-route-deadline="{{accessdeadline}}" data-route-now="{{servernow}}"></span></p>{{/hasaccessdeadline}}
+                        {{#reviewlinks}}<a class="u-route2-link" href="{{url}}">Повторить: {{label}}</a> {{/reviewlinks}}
+                        {{#canadvance}}
+                        <form method="post" action="{{accesscommandurl}}" data-route-advance data-closes-access="{{#closesaccess}}1{{/closesaccess}}{{^closesaccess}}0{{/closesaccess}}">
+                            <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="pointid" value="{{id}}">
+                            <input type="hidden" name="versionid" value="{{versionid}}"><input type="hidden" name="accessid" value="{{accessid}}">
+                            <button class="u-btn u-btn--primary" type="submit">Далее →</button>
+                        </form>
+                        {{/canadvance}}
+                    </div>
+                    {{/reviewing}}
                 </div>
             </article>
             {{/points}}
@@ -296,6 +310,8 @@
 
     {{/route}}
     {{/hasroute}}
+
+    {{^previewing}}<form method="post" data-route-deadline-sync hidden><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="sync"></form>{{/previewing}}
 
     {{#noroute}}
     <section class="u-empty-state u-route2-empty">

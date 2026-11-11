@@ -25,8 +25,8 @@ for(const trigger of ['click','change']){
  check(w.document.body.classList.contains('ustar-scorm-inline'),'inline layout enabled');
  check(!!w.document.querySelector('form.ustar-scorm-legacy'),'outer course button hidden');
  check(!!w.document.body.style.getPropertyValue('--ustar-scorm-height'),'viewport fit calculated');
- check(posts.length===0&&gets===0,'no request or navigation before finish');
- if(trigger==='click'){inner.querySelector('button').click();await tick();await poll();check(posts.length===0&&gets===0,'click alone cannot advance before studied state');}
+ check(posts.length===0&&gets<=1,'only read-only readiness before finish');
+ if(trigger==='click'){inner.querySelector('button').click();await tick();await poll();check(posts.length===0,'click alone cannot advance before studied state');}
  inner.querySelector('button').textContent='Изучено';
  await tick();await poll();check(gets>0&&posts.length===0,'finish waits for server completion');
  ready=true;mode='stale';await poll();check(posts.length===0,'stale launch cannot confirm');

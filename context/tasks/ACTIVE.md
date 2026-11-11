@@ -1,43 +1,41 @@
-# Активная работа —01.11.2026
+# Активная работа · 11.11.2026
 
-## PERF-01: производительность и стабильность обычного рабочего дня
+## Повторная привязка Telegram
 
-PR110/111 объединены в main после единой FullRC по
-[поручению владельца](../runtime/connect_feed_integration_order_20261101.json).
-Код приложения5cc02944/local2900/theme2700; текущий worker267e5587.
-Приложение/worker уже установлены владельцем; merge не означает новый deploy.
+CONNECT-RELINK-01. Отзыв освобождает возможность подключить другой Telegram после
+новой ссылки и подтверждения. История связей и прежний контроль владельца сохранены.
+Два воспроизведённых отказа проходят после исправления в PHP/SQLite. Moodle 5.1.1 и 5.1.8 прошли по 432 теста. Установщик dc3a3c54 ожидает запуска владельцем.
+[Разбор](../reviews/20261111/CONNECT_RELINK.md), [проверки](../runtime/connect_relink_qualification_20261111.json),
+[установка](../../docs/CONNECT_RELINK_INSTALL_RU.md).
 
-Следующая доступная работа — пассивное наблюдение: latency, SQL, cron lag и
-нагрузка хоста/БД в обычный рабочий день. Сборщик observe.py из frozen9a поддерживает2900:
-[builder/derive_observer](../../scripts/infra/build_connect_role_bot_update.py).
-Исходный workday_observer.py остаётся frozen2802/2803, его напрямую для2900 не запускать;
-фактический8h отчёт ещё не получен. Подготовить исходный срез, получить наблюдения,
-затем выбирать изменения по найденным узким местам. SQL/page, Web-SAPI OPcache и
-concurrency/SLO не выводить из Apache aggregate или одного ответа status.
+Владелец подтвердил, что «Управление Библиотекой» f374d2d9 ещё не установлено.
+REWARD-SHOP-01. Следующая задача — витрина за USCOIN и очередь выдачи в админке.
 
-Последний переданный scheduled cron29Oct03:37MSK: exit0/1.282s, new failures[],
-USTAR counters0. Adhoc1/overdue56/failed2 — отдельный старый срез; не сбрасывать
-историю и не объявлять очередь разгруженной без свежих данных. Напоминание30Oct
-создано ранее, запуск observe/report им не подтверждён.
+## Установленная Академия
 
-## INTEGRATIONS-01: принятое и ожидающее руководства
+Owner5Nov: discovery app719bf47c/toolaa61d595 — SHA OK, ready→active,exit0,
+конечный readonly active. [Квитанция](../runtime/library_discovery_owner_deploy_20261105.json).
+Повторная установка/recovery не нужны. Local/theme0200,649fixed files/108tables;
+не whole-host census. CI4/FullRC8 PASS, native426/1975 в обоихruntime.
+Подробная employee browser-приёмка Library не перечислена.
+SCORM app5e61/tool4aee принят3Nov; marketplace471/tool59f принят «Отлично работает».
+Default hidden/exact department allowlist/source files editor-only сохранены.
+Main2900 отдельно,PR112/113/114 не объединены.
 
-Owner29Oct установил app2900 и включил role-bot штатным9a:
-[receipt](../runtime/connect_role_bot_owner_deploy_20261029.json).
-Owner1Nov восстановил egress (CONNECT200/HTTP302/TLS0), оба бота отвечают;
-worker267 прошёл visuals_active/visuals_ready, recovery_required:false.
-[Квитанция](../runtime/connect_visual_owner_deploy_20261101.json).
-PNG/кнопки/читаемость, обмен задачами2учёток, возврат/исполнение и фото приняты.
-Повторять эту приёмку не требуется. Остальные процессы с руководством с2Nov;
-публичный HTTPS и Mini App ждут его согласования. Bitrix/WhatsApp не включены.
+## Аудит и оставшаяся работа
 
-Существующие Academy actor/capability/scope/writers и история сохраняются.
-Инструкции владельцу — прямо в чат. Самостоятельно, без субагентов; рациональные
-проверки. Разрешённые merge110/111 завершены; новых автоматических слияний,
-agent SSH и provider sends нет.
+[Общий аудит](../reviews/20261103/AUDIT_RU.md),
+[углубление](../reviews/20261104/DEEP_AUDIT_RU.md),
+[план T01–T10](../../docs/superpowers/plans/2026-11-03-project-audit-remediation.md).
+U01/U02/U05 source fixes поставлены; U03/U04/U09/U10 и общие инженерные пакеты остаются.
+PERF-01: нет рабочего дня latency/SQL/cron/concurrency; observer2900 требует successor0200.
+Не сбрасывать прежниеcron19/failed2/backoff. Worker267 принят1Nov: задачи/возврат/
+фото/PNG/читаемость; остальные процессы с руководством. Public HTTPS/Mini App ждут согласования.
 
-## RSS-01: принят владельцем
+## Границы
 
-[Owner2803](../runtime/feed2803_owner_deploy_20261029.json) принял RSS и раскрытие
-вложений через «Ещё». Код2803 входит в app2900/main. Старые операторы и
-квалификационные квитанции сохраняются неизменными; новый deploy не требуется.
+Без субагентов,agent SSH/provider sends. Новые merge требуют поручения.
+Frozen installers неизменны; Docker rotation/recreate отложены до Moodle/PHP окна
+или abnormal growth trigger. Принятые host/storage/DB/code/HTTPS циклы не повторять.
+STATE/ADR/canonical writers обязательны. Код/CI/owner receipt/живые измерения различать.
+Команды владельцу давать короткими блоками в чате после квалификации архива.

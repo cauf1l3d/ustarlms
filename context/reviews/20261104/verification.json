@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-04",
+  "application_commit": "719bf47c1ba5942c094a04312898890ec7de00c1",
+  "tool_commit": "aa61d5954d96c33b8de2845cf2c0891ba428c76d",
+  "ci": {
+    "review": 41763983489,
+    "infra": 41763983484,
+    "context": 41763983478,
+    "console": 41763983508,
+    "conclusion": "success",
+    "native_each": {
+      "tests": 426,
+      "assertions": 1975
+    },
+    "review_jobs": 8
+  },
+  "archive": {
+    "filename": "ustar-library-discovery-aa61d595.tar.gz",
+    "bytes": 124077,
+    "sha256": "07ae14865da94e73f02bd314819f44a715166b156ec55174e9292754534fd666",
+    "ci_artifact_id": 13291533803,
+    "ci_byte_identical": true,
+    "retained_copy_byte_identical": true,
+    "library_file_id": "libfile_36247c69b5d48191a497fd257ed113b1"
+  },
+  "local": [
+    "PHP contracts PASS",
+    "full npm PASS",
+    "DOM RED-GREEN",
+    "grant501 RED-GREEN",
+    "grant2000/lastpage PASS",
+    "source checks445PHP34JS108tables69templates PASS",
+    "operator12PASS/1UID33 local skip; dedicated sudo CI PASS",
+    "offline bundle SHA/PLAN_ONLY PASS"
+  ],
+  "limitations": [
+    "production not changed",
+    "no production load, fresh SQL profile, penetration test or user interviews",
+    "U03/U04/U09/U10 and remaining engineering packages not included"
+  ]
+}

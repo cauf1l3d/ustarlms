@@ -43,8 +43,8 @@
       {{#linked}}<p>Связь активна. Доступ зависит от текущего состояния учётной записи и прав Академии.</p>
       <form method="post" action="{{url}}"><input type="hidden" name="action" value="revoke">
         <input type="hidden" name="linkid" value="{{id}}"><input type="hidden" name="sesskey" value="{{sesskey}}">
-        <button class="u-btn" type="submit">Отозвать связь с {{providerlabel}}</button></form>{{/linked}}
-      {{^linked}}<p>Связь отозвана. Старая ссылка подтверждения её не восстановит.</p>{{/linked}}
+        <button class="u-btn" type="submit">Отвязать {{providerlabel}}</button></form>{{/linked}}
+      {{^linked}}<p>Связь отозвана. Для подключения создайте новую персональную ссылку.</p>{{/linked}}
     </article>{{/links}}
     {{^haslinks}}<p>Подтверждённых подключений пока нет.</p>{{/haslinks}}
   </section>

@@ -415,7 +415,8 @@ final class organization_identity_test extends \advanced_testcase {
     public function test_access_migration_dry_run_is_read_only_and_apply_is_repeatable(): void {
         global $DB;
         $user = $this->employee('retail_head');
-        $roleid = create_role('Legacy projected manager', 'ustar_manager', 'Fixture');
+        $roleid = (int)$DB->get_field('role','id',['shortname'=>'ustar_manager'])
+            ?: create_role('Legacy projected manager', 'ustar_manager', 'Fixture');
         role_assign($roleid, $user->id, \context_system::instance()->id, 'local_ustar', 0);
         $before = $DB->perf_get_writes();
         $report = access_migration::report();
@@ -447,7 +448,8 @@ final class organization_identity_test extends \advanced_testcase {
         global $DB;
         $first = $this->employee('retail_head');
         $second = $this->employee('retail_head');
-        $roleid = create_role('Legacy projected manager', 'ustar_manager', 'Fixture');
+        $roleid = (int)$DB->get_field('role','id',['shortname'=>'ustar_manager'])
+            ?: create_role('Legacy projected manager', 'ustar_manager', 'Fixture');
         $contextid = \context_system::instance()->id;
         foreach ([$first, $second] as $user) {
             role_assign($roleid, $user->id, $contextid, 'local_ustar', 0);

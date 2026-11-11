@@ -8,6 +8,8 @@ from pathlib import Path
 import sys
 from types import SimpleNamespace
 import xml.etree.ElementTree as ET
+from route_access_task_projection import TASK as ROUTE_ACCESS_TASK, project as project_route_task
+from library_task_projection import TASK as LIBRARY_TASK, project as project_library_tasks
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location('connect_installer_stage', ROOT / 'scripts/infra/connect_academy_installer.py')
@@ -45,11 +47,19 @@ elif sys.argv[1:] == ['verify']:
         'candidate': {'tables': sorted(candidate_fields), 'versions': {
             'local_ustar': source_version('local/ustar'), 'theme_ustar': source_version('theme/ustar')}}}, schema_fields=candidate_fields)
     x.verify_versions(d, before, before, False)
-    x.verify_versions(d, candidate, before, True)
-    x.verify_versions(d, repeat, before, True)
+    if ROUTE_ACCESS_TASK in before['tasks'] or ROUTE_ACCESS_TASK in restored['tasks']:
+        raise RuntimeError('route_access_task_in_legacy_fixture')
+    # The old operator remains frozen. Check the one declared successor task
+    # independently, then exercise its original exact task contract unchanged.
+    if LIBRARY_TASK in before['tasks'] or LIBRARY_TASK in restored['tasks']:
+        raise RuntimeError('library_task_in_legacy_fixture')
+    projection=project_library_tasks if source_version('local/ustar')==2026110200 else project_route_task
+    x.verify_versions(d, projection(candidate), before, True)
+    x.verify_versions(d, projection(repeat), before, True)
     if (candidate['schema'], candidate['indexes']) != (repeat['schema'], repeat['indexes']):
         raise RuntimeError('native_repeat_changed')
     x.verify_versions(d, restored, before, False)
     print('CONNECT_INSTALLER_NATIVE_SQL_VERSIONS_TASKS_COLUMNS_INDEXES=PASS')
+    print('ROUTE_ACCESS_TASK_FLAGS_VERIFIED_SEPARATELY=PASS legacy_validator_unchanged=true')
 else:
     raise RuntimeError('fixture_command_required')

@@ -1,0 +1,15 @@
+<fieldset class="u-route-editor__requirements"><legend>Что нужно пройти</legend>
+<p>Каждая строка — отдельное условие. Существующее обучение сохраняется, пока вы явно не отметите «Убрать». Навыки описывают результат обучения и не блокируют завершение.</p>
+<label><span>Найти обучение для добавления</span><input name="sourceq" value="{{sourceq}}" placeholder="Название материала, курса или навыка"></label><button class="u-btn" name="intent" value="search" type="submit" formnovalidate>Обновить список</button><p class="u-route-editor__muted">В списке до 200 совпадений. Уточните название, если нужного нет. Сохранённые условия остаются на своих местах.</p>
+{{#requirementrows}}<div class="u-route-editor__requirement" data-u-requirement>
+<input type="hidden" name="rows[{{index}}][base]" value="{{base}}">
+{{#existing}}<strong>{{label}}</strong>{{/existing}}
+{{^existing}}<label><span>Добавить обучение или навык</span><select name="rows[{{index}}][subject]"><option value="">Не добавлять</option>{{#choices}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/choices}}</select></label>{{/existing}}
+<label class="u-route-editor__check"><input type="checkbox" name="rows[{{index}}][required]" value="1" {{#required}}checked{{/required}}> Обязательно для завершения</label>
+{{#iscontent}}<label><span>Когда засчитать материал</span><select name="rows[{{index}}][completionmode]"><option value="open" {{#open}}selected{{/open}}>После открытия</option><option value="ack" {{#ack}}selected{{/ack}}>После подтверждения ознакомления</option></select></label>{{/iscontent}}
+{{^existing}}<label><span>Учёт нового текстового материала</span><select name="rows[{{index}}][completionmode]"><option value="open" {{#open}}selected{{/open}}>После открытия</option><option value="ack" {{#ack}}selected{{/ack}}>После подтверждения ознакомления</option></select></label><label class="u-route-editor__check"><input type="checkbox" name="rows[{{index}}][primary]" value="1"> Главный навык (если выбран навык)</label>{{/existing}}
+{{#isskill}}<label class="u-route-editor__check"><input type="checkbox" name="rows[{{index}}][primary]" value="1" {{#primary}}checked{{/primary}}> Главный навык</label>{{/isskill}}
+<label class="u-route-editor__check"><input type="checkbox" name="rows[{{index}}][remove]" value="1" {{#remove}}checked{{/remove}}> Убрать из новой версии</label>
+</div>{{/requirementrows}}
+<button class="u-btn" type="submit" name="intent" value="addrow" formnovalidate>Добавить ещё строку</button>
+</fieldset>

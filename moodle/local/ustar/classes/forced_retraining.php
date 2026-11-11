@@ -210,6 +210,21 @@ final class forced_retraining {
         return $cards;
     }
 
+    /** Independent active assignment grants its pinned material without changing ordinary route access. */
+    public static function material_access(int $userid, int $cmid, int $courseid, string $positionid): bool {
+        global $DB;
+        if ($positionid === '' || !employment::learning_allowed($userid)) { return false; }
+        foreach (self::active_assignments($userid,false) as $assignment) {
+            if ((string)($assignment['positionid'] ?? '') !== $positionid
+                    || !$DB->record_exists('local_ustar_assess_policy',['id'=>(int)($assignment['policyid'] ?? 0)])) { continue; }
+            $version = $DB->get_record('local_ustar_route_versions',[
+                'id'=>(int)($assignment['remediationversionid'] ?? 0),
+                'pointid'=>(int)($assignment['remediationpointid'] ?? 0)]);
+            if ($version && route_point_access::contains($version,$cmid,$courseid)) { return true; }
+        }
+        return false;
+    }
+
     /** @return array<int,array<string,mixed>> */
     public static function active_for_manager(int $actorid, int $userid): array {
         self::assert_target_allowed($actorid, $userid);

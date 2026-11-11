@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "date_msk": "2026-11-03",
+  "task": "LIBRARY-01",
+  "status": "qualified_archive_delivered_owner_deploy_pending",
+  "owner_order": "полностью скрыт с возможностью открывать по отделам с админки",
+  "source_download_order": "убрать возможность скачивания в маркетплейсе",
+  "baseline_application": "f89dde49cf22225653349fa519c00b1c0aaf1358",
+  "application_commit": "4715383b8f6ec4b48fef855944be13a51c3cad61",
+  "deployed": false,
+  "schema_changed": false,
+  "versions": {
+    "local_ustar": 2026110200,
+    "theme_ustar": 2026110200
+  },
+  "source_files": 649,
+  "changed_files": 13,
+  "tables": 108,
+  "default_departments": [],
+  "department_source": "structure/content canonical user scope; exact IDs, no implied subtree",
+  "marketplace_config": "local_ustar/library_marketplace_departments",
+  "settings_writer": "library_access::save_marketplace_departments; actor/admin/sesskey/lock/DB revision/audit",
+  "access_boundaries": [
+    "hidden tab",
+    "direct shop entry",
+    "unowned offer GET/launch",
+    "purchase service",
+    "storefront service",
+    "catalog source URLs and filename presenter",
+    "catalog_source pluginfile; images unchanged"
+  ],
+  "independent_entitlements": "Existing assignments/purchases from My materials and mandatory-route access preserved. Marketplace visibility does not grant content access.",
+  "seed_change": "New seed entries draft/assigned; existing offers/grants/attempts/coins are not rewritten.",
+  "finding": "Installer6ee called seed which used free/published for all existing published sources, producing broad open storefront. Source file links were exposed by catalog presenter and allowed by pluginfile whenever product body was open.",
+  "verification": {
+    "php_contract_assertions": 27,
+    "current_source_lint": "445PHP/34JS/108tables/69templates PASS before tool qualification",
+    "native_tests_added": 5,
+    "native_tests_status": "PASS both historical Moodle5.1.1 and production-aligned Moodle5.1.8",
+    "operator_tests_local": "11 tests;10passed,actualUID33 delegated to CI",
+    "all4CI_success_claimed": true,
+    "php_contract_scripts": 5,
+    "js_dom_suite": "PASS local with PHP8.3 mbstring/dom/zip; full tests/release_20260912 npm suite",
+    "operator_tests_CI": "11/11 PASS including actualUID33/root, mixed metadata/xattrs, interruption/repeat/recovery, cache purge and unknown source refusal",
+    "operator_CI_run": 41611003851,
+    "operator_CI_job": 125832560113,
+    "review_gate_run": 41611003876,
+    "source_PHP82_PHP83": "SUCCESS both jobs",
+    "python_r16_PHP83": "1567 tests PASS;268 conditional skips; actualUID33 successor cases separately required and PASS in infra",
+    "browser": "36 synthetic views PASS at390/768/1440 in light/dark; real Mustache and theme tokens; not production employee acceptance",
+    "browser_source_artifact_id": 13219906180,
+    "manual_review": "Read actor/admin/view-as, shared revision/lock, current canonical department, unowned versus granted offer, source presenter/pluginfile, bounded deployment and frozen recovery paths. No additional blocker found; no independent reviewer/subagent used.",
+    "Moodle_historical": {
+      "job": 125837343697,
+      "tests": 420,
+      "assertions": 1942,
+      "result": "PASS"
+    },
+    "Connect_PG16": {
+      "job": 125837206433,
+      "tests": 172,
+      "assertions": 875,
+      "result": "PASS",
+      "library_native_upgrade_repeat_fresh": "PASS;108 tables;changed grant type/unexpected index/disabled task/missing idempotency index refused"
+    },
+    "workflows": [
+      {
+        "id": 41611003851,
+        "name": "USTAR infrastructure verification",
+        "conclusion": "success"
+      },
+      {
+        "id": 41611003853,
+        "name": "USTAR console",
+        "conclusion": "success"
+      },
+      {
+        "id": 41611003882,
+        "name": "USTAR context integrity",
+        "conclusion": "success"
+      },
+      {
+        "id": 41611003876,
+        "name": "USTAR review gate",
+        "conclusion": "success"
+      }
+    ],
+    "review_jobs": [
+      {
+        "id": 125832559981,
+        "name": "rollback",
+        "conclusion": "success"
+      },
+      {
+        "id": 125832560171,
+        "name": "source (8.3)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125832560364,
+        "name": "source (8.2)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125837206306,
+        "name": "prepare-rc",
+        "conclusion": "success"
+      },
+      {
+        "id": 125837206433,
+        "name": "connect-db",
+        "conclusion": "success"
+      },
+      {
+        "id": 125837343697,
+        "name": "moodle-db (historical, tests/stage/compose.yaml, moodle-db-evidence)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125837343824,
+        "name": "moodle-db (patch-518, tests/stage/patch-compose.yaml, moodle-patch-evidence)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125842016708,
+        "name": "gate",
+        "conclusion": "success"
+      }
+    ],
+    "Moodle_518": {
+      "job": 125837343824,
+      "tests": 420,
+      "assertions": 1942,
+      "result": "PASS",
+      "actual_PG16_library_upgrade_repeat_fresh": "PASS"
+    }
+  },
+  "guide": "docs/MARKETPLACE_DEPARTMENTS_INSTALL_RU.md",
+  "previous_owner_receipt": "context/runtime/library_navigation_owner_deploy_20261103.json",
+  "runtime_limits": [
+    "Source-only successor on f89/active nav5131; old archives/operators unchanged.",
+    "No schema/core/plugin version upgrade, no seed or business-data restoration.",
+    "Native cache purge after restart updates Mustache caches and cache metadata.",
+    "Owner applies; no agent SSH, provider sends, subagents or merge."
+  ],
+  "tool_commit": "59f482ee2f086e5df202235880e376b1d25a7b1a",
+  "delivery": {
+    "archive": "ustar-library-marketplace-59f482ee.tar.gz",
+    "bytes": 152207,
+    "sha256": "08f397c57f5481edb1e997852bb6e33d89b1d6957c316cea6e7dd703c87639ca",
+    "script_sha256": "e457450a2a759a7649fb2be17bea87d862cabf45b177368de43fa4f7f67c0980",
+    "CI_artifact_id": 13219187179,
+    "CI_zip_sha256": "d17e8db5b556244d40486cd7425e61ee76c15897ddf57048b8e8cc12c94c0aab",
+    "CI_zip_CRC": "PASS",
+    "CI_archive_and_all3_members_byte_identity": "PASS",
+    "offline_plan": "PLAN_ONLY/host_access:false/source_only:true",
+    "library_file_id": "libfile_f348a6d69d0c8191bfb7cee631ffafab",
+    "saved_copy_downloaded_exact_identity": true,
+    "issued": true
+  },
+  "qualified_commit": "59f482ee2f086e5df202235880e376b1d25a7b1a",
+  "merged": false,
+  "owner_acceptance": "pending: terminal install/postcheck, regular employee, enabled/foreign department, editor/source URL"
+}

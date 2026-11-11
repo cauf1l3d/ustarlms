@@ -1,0 +1,12 @@
+{
+  "scope": "actual Journal SQLite on synthetic 10000 terminal events; runtime exit behavior inspected, not executed",
+  "before_7_days": {
+    "sent": 10000
+  },
+  "new_event": "journal_full",
+  "after_7_days_one_cleanup": {
+    "sent": 9500
+  },
+  "new_event_after_cleanup": "accepted",
+  "service_contract": "JournalError -> exit4; RestartPreventExitStatus includes4"
+}

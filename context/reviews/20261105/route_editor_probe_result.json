@@ -1,0 +1,42 @@
+{
+  "scope": "actual PHP projection, real Mustache form and route_point_access validation; synthetic catalogue; no HTTP501 or production point identity claimed",
+  "source_commit": "719bf47c1ba5942c094a04312898890ec7de00c1",
+  "initial_requirements": [
+    {
+      "type": "cm",
+      "sourceid": 37,
+      "required": true,
+      "label": "SCORM fixture"
+    },
+    {
+      "type": "cm",
+      "sourceid": 40,
+      "required": false,
+      "label": "Quiz fixture"
+    }
+  ],
+  "projected_activity_ids": [
+    40
+  ],
+  "original_policy_validation": {
+    "accepted": true
+  },
+  "serialized_policy_validation": {
+    "accepted": false,
+    "exception": "invalid_parameter_exception",
+    "message": "Правила повторного доступа применяются к точке со SCORM-курсом или SCORM-активностью."
+  },
+  "form": {
+    "inputs": 29,
+    "fieldsets": 4,
+    "collapsed_sections": 0,
+    "required_checkbox_always_checked": true,
+    "active_unchecked_not_submitted": true,
+    "draft_status_submitted": "draft"
+  },
+  "observations": [
+    "Unchecking active correctly omits it; optional_param default0 is expected, not a PARAM_BOOL failure",
+    "Multiple CMs collapse to last CM; non-SCORM last selection fails unchanged SCORM review policy",
+    "Per-requirement optional flag is not representable by the always-checked required checkbox"
+  ]
+}

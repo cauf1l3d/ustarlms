@@ -6,20 +6,20 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 921,
-      "sha256": "3cc8bf12de4e5ef149777b93e989775c16152ec2fec0bf9950798f9151d651bb"
+      "size": 1625,
+      "sha256": "6ff0f60d2cf5fa3db65a4548dc1aebe4f6ca14b2444c8ba5c5f536a022e9128f"
     },
     {
       "path": "context/agents/astra.md",
       "domain": "agents",
-      "size": 2100,
-      "sha256": "2f7e5fab4bbe790c54c7b417f5b30620f5da5f131a788680747796463057d849"
+      "size": 4717,
+      "sha256": "2d3984cca9ed381d72003d67db9bbc61bc2edb9f71627f0cfde12e1d64958fbc"
     },
     {
       "path": "context/architecture/access_matrix.yaml",
       "domain": "architecture",
-      "size": 35106,
-      "sha256": "d165c48db34573cbc692c236bb32d7f659a10c69e9537ffde2baa68f92aa84f2"
+      "size": 36490,
+      "sha256": "880347c8bac15cd0d781e4cd22db106686babfd00c94e481feb21f17e68b6f6a"
     },
     {
       "path": "context/architecture/boundaries.md",
@@ -54,8 +54,8 @@
     {
       "path": "context/architecture/overview.md",
       "domain": "architecture",
-      "size": 2152,
-      "sha256": "0e36225e735493bd3296826bcd5056194ce59c0ec38a3788e35b7b4def34a833"
+      "size": 2393,
+      "sha256": "3b9b2be47db2b9a492467af91ff711ff433b4a850a5f3f80b1fa53d460fec243"
     },
     {
       "path": "context/architecture/refactor_20260920.md",
@@ -504,8 +504,8 @@
     {
       "path": "context/audits/README.md",
       "domain": "audits",
-      "size": 765,
-      "sha256": "c0145d9c3f7646b6ec2b6f72c2d1deea8b22e4edadfa71bf9c068d9a76f54b0b"
+      "size": 1089,
+      "sha256": "95222ebc19403a7caadc12047eab794d5cb00a81100b1d292789d833b07b625f"
     },
     {
       "path": "context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md",
@@ -528,8 +528,8 @@
     {
       "path": "context/code_map/README.md",
       "domain": "code_map",
-      "size": 1401,
-      "sha256": "4b210d0b26a3b8482bd759cae6e73fa80834ab1d475b5637022d9b889cbc659a"
+      "size": 2223,
+      "sha256": "ea2bd81696f27e3f181ff874658aad1023608aed9f4bd9caec9a8e4cb3759af7"
     },
     {
       "path": "context/code_map/backend.yaml",
@@ -558,8 +558,8 @@
     {
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
-      "size": 89132,
-      "sha256": "be0d34986b9499eb5f1e24823eb26b79a2b3c29647dd50bb87d2d51300e5e627"
+      "size": 104745,
+      "sha256": "5c45075b2f573b504db14f990576278f72afa660c9636cb1f2bac6f37eca2065"
     },
     {
       "path": "context/code_map/feed_media_development_source.json",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 9673,
-      "sha256": "f35f8d6754610d4684077ab85e40623c288a64944745f7e5809ba86544d1f57f"
+      "size": 12528,
+      "sha256": "b7e4bc69a1927cd73ba117fb3316a8de69c0a5d011d2f5dd51ecfcddf9bc777c"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -718,6 +718,12 @@
       "sha256": "7b9503562121227383dd190dc8e4b2f3fa634a3f9bb8e418ef36ac7765325fed"
     },
     {
+      "path": "context/decisions/0019-library-unified-domain.md",
+      "domain": "decisions",
+      "size": 7621,
+      "sha256": "907a91be4062304cdcd008546cdb279f6fbdac46c676fac57a8a6aa8e5431156"
+    },
+    {
       "path": "context/decisions/ADR-0001-git-source-of-truth.md",
       "domain": "decisions",
       "size": 156,
@@ -768,8 +774,8 @@
     {
       "path": "context/decisions/README.md",
       "domain": "decisions",
-      "size": 497,
-      "sha256": "319e79a5d18068f5a6144c17510dd8ddeca2f3654c4d118ec59a642f4fa9bb91"
+      "size": 713,
+      "sha256": "c24a4263bbb28dfbbe79986d48e47620aa3547eb4d6a313d8b4cb86ebf527360"
     },
     {
       "path": "context/design/README.md",
@@ -826,6 +832,12 @@
       "sha256": "12a52949e249b01fdda54163de8c64f46db3e7ecf2862b1cbcd782afec259fea"
     },
     {
+      "path": "context/domains/library.yaml",
+      "domain": "domains",
+      "size": 1487,
+      "sha256": "5548a26bd8fbab1b7764f2c009f7f7d492059fd3ed7389082a60c62c4f21f94c"
+    },
+    {
       "path": "context/domains/messaging.yaml",
       "domain": "domains",
       "size": 898,
@@ -852,8 +864,8 @@
     {
       "path": "context/domains/routes.yaml",
       "domain": "domains",
-      "size": 1893,
-      "sha256": "888201a978b809e90eee4dff59d487d07f888b7c4a6706f8d258c2b831590b1f"
+      "size": 2032,
+      "sha256": "4e08a7bc447d4a7051a6ad4f6eb30d897a4f8b7e876acffa7be226d67424749f"
     },
     {
       "path": "context/domains/work.yaml",
@@ -882,8 +894,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 3119,
-      "sha256": "9738d86137a461a8157bc71e3aa87f21aaafde8b90050c094702e54442acc526"
+      "size": 3369,
+      "sha256": "8f202c82e6d583409cbaf340afc4012f31862dd8ca461c07a93cf3d2a8be5e97"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1426,6 +1438,150 @@
       "sha256": "8121f2aaa6196fc8dc3fa1b9a10de2189c6ea9baf9f63a9b68c78fe47558634a"
     },
     {
+      "path": "context/reviews/20261102/library_intake.md",
+      "domain": "reviews",
+      "size": 2682,
+      "sha256": "05b01122aa9157dc2ce088a5f9d4bb61cc187f3f11ae3a5b6e13d2bde1c35f93"
+    },
+    {
+      "path": "context/reviews/20261103/AUDIT_RU.md",
+      "domain": "reviews",
+      "size": 87275,
+      "sha256": "0ad9044a0bf4f6e1c8a668c3f81c1eefd69576bbce244ac933f41f26d27177d0"
+    },
+    {
+      "path": "context/reviews/20261103/code_metrics.json",
+      "domain": "reviews",
+      "size": 4945,
+      "sha256": "275da26f6d2a7519f5a4621787df41494fcd86659ba1b0a60a65fbc3930e2220"
+    },
+    {
+      "path": "context/reviews/20261103/connect_capacity_result.json",
+      "domain": "reviews",
+      "size": 374,
+      "sha256": "d036f8ac02463036947a0bd523be634038b39375077a6d1fc012d02105deed9e"
+    },
+    {
+      "path": "context/reviews/20261103/findings.json",
+      "domain": "reviews",
+      "size": 68145,
+      "sha256": "9efc331f3dac4e3d2225e8a30dd5f010706be9fd3711a3c38df1aeba79d00bfd"
+    },
+    {
+      "path": "context/reviews/20261103/library_probe_result.json",
+      "domain": "reviews",
+      "size": 1443,
+      "sha256": "1e61964ce4e506971b8e008900a5f8f0d404485cc89c4fd57fbc836fb5377484"
+    },
+    {
+      "path": "context/reviews/20261103/monthly_change_evidence.json",
+      "domain": "reviews",
+      "size": 58522,
+      "sha256": "cd535daee0b057b51120bb97ac65f4fceb6280bcc15c82b0d0e7102c0c053eff"
+    },
+    {
+      "path": "context/reviews/20261103/probes/README.md",
+      "domain": "reviews",
+      "size": 2241,
+      "sha256": "b02f2f6ab5437ecd23269ab7797ca100a744e319a916fab543d075d1c8715ec8"
+    },
+    {
+      "path": "context/reviews/20261103/ui_probe_result.json",
+      "domain": "reviews",
+      "size": 554,
+      "sha256": "b44292b46887a5451d11c99999d850ded9410baf01b49e22561367084932d89a"
+    },
+    {
+      "path": "context/reviews/20261103/verification.json",
+      "domain": "reviews",
+      "size": 7962,
+      "sha256": "ab38a1c2aa0cfe7bc6b2ab26afaaf4697b92fa594d2fec4a4cbc8eb3adc1678f"
+    },
+    {
+      "path": "context/reviews/20261104/DEEP_AUDIT_RU.md",
+      "domain": "reviews",
+      "size": 9229,
+      "sha256": "f640d6102f787ccc1c3461fbb1df481ca30a3f6968e780da39f0efe55e43edc3"
+    },
+    {
+      "path": "context/reviews/20261104/WORKLOG.md",
+      "domain": "reviews",
+      "size": 2500,
+      "sha256": "92b1dd8386ca945e2ff6d5cd2cd5f1f957ef838152eaaeb505d43ce076c0d169"
+    },
+    {
+      "path": "context/reviews/20261104/grants_2000_result.json",
+      "domain": "reviews",
+      "size": 200,
+      "sha256": "48bec800358444644f42cb45b79e0abb7080f15abfb37bd2d2b471db32dbc432"
+    },
+    {
+      "path": "context/reviews/20261104/studio_lookup_result.json",
+      "domain": "reviews",
+      "size": 493,
+      "sha256": "e7b5563edb606ab3fb31be4ef6d9b12f4a95bfd5cdce144e27adac7b43209217"
+    },
+    {
+      "path": "context/reviews/20261104/verification.json",
+      "domain": "reviews",
+      "size": 1268,
+      "sha256": "fbdffcf36caa5474b34e9fd9a35d6be40850a1ac159065aef4471e5ab801b6a9"
+    },
+    {
+      "path": "context/reviews/20261105/ROUTE_EDITOR_IMPLEMENTATION.md",
+      "domain": "reviews",
+      "size": 7388,
+      "sha256": "4f3273f8b6b4b9cb78dd97fd31e70452808226254b7d890e1d0e0fbd5bb25026"
+    },
+    {
+      "path": "context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md",
+      "domain": "reviews",
+      "size": 10351,
+      "sha256": "80511d115df93e2990afc61c015d0e51a3dfa521294cfc33b51b6aa304b6859e"
+    },
+    {
+      "path": "context/reviews/20261105/STUDIO_CSP_IMPLEMENTATION.md",
+      "domain": "reviews",
+      "size": 2822,
+      "sha256": "810d5a04b92873d4c742f389a57998ce3596ff72db630dcf275ae618fc001cd1"
+    },
+    {
+      "path": "context/reviews/20261105/STUDIO_CSP_REVIEW_RU.md",
+      "domain": "reviews",
+      "size": 4457,
+      "sha256": "1ded927a162a888e3cc6951d3893cb3c7e9625b37fb33f41d67c7e5bce62a92e"
+    },
+    {
+      "path": "context/reviews/20261105/module_names_probe_result.json",
+      "domain": "reviews",
+      "size": 447,
+      "sha256": "c67755f494a67158ad96ad9810aeb03f5189c448c341e49409bbff644e72dfa8"
+    },
+    {
+      "path": "context/reviews/20261105/page_context_http_failure.json",
+      "domain": "reviews",
+      "size": 1234,
+      "sha256": "a16095f160c0c844ac1e811c67dda6b591d37c5fa5701dc08203165109b1b55c"
+    },
+    {
+      "path": "context/reviews/20261105/route_editor_probe_result.json",
+      "domain": "reviews",
+      "size": 1401,
+      "sha256": "46c0e3f90d27b530c07da71fcf0b09c2b2dadd9636ab804bc19c2ffc0688194f"
+    },
+    {
+      "path": "context/reviews/20261106/STUDIO_PREVIEW_IMPLEMENTATION.md",
+      "domain": "reviews",
+      "size": 4949,
+      "sha256": "4a401ca0bfbce592437bdaf470f30bffef82d2f963100281a9185573e9995149"
+    },
+    {
+      "path": "context/reviews/20261111/CONNECT_RELINK.md",
+      "domain": "reviews",
+      "size": 2888,
+      "sha256": "2b4b4a260933f5d891c37251223b378de7b9d8364edcee171e601d8889d7fefc"
+    },
+    {
       "path": "context/roadmap/ACCEPTED_RISKS.yaml",
       "domain": "roadmap",
       "size": 983,
@@ -1444,10 +1600,16 @@
       "sha256": "fa5bb6084d72285eea0cff1113054949b9e31941d2cbcf771ffdfb656140fa78"
     },
     {
+      "path": "context/roadmap/AUDIT_REMEDIATION_20261103_RU.md",
+      "domain": "roadmap",
+      "size": 708,
+      "sha256": "b7d82efae6aead2fee86f447ad1296c34a8e3925c603b0214475fdcdbdd53cd2"
+    },
+    {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 38300,
-      "sha256": "e87c16f5eae0dc7041996429aca67fe55e117dec5796b535c553ec903a499a96"
+      "size": 49043,
+      "sha256": "130272ac531d94e59264d13f8886ac245992bd0c7915c330179b182656120e44"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1470,8 +1632,8 @@
     {
       "path": "context/roadmap/README.md",
       "domain": "roadmap",
-      "size": 379,
-      "sha256": "2ea24c807e241fe7e7e6600a3bec265284a799156b2f347a49f3a37e7cf80567"
+      "size": 589,
+      "sha256": "3202ccb17cfca85a8ea82c68822c1c691bd15a594f44cfa784ef8ee3035c9a8e"
     },
     {
       "path": "context/roadmap/REWARD_CONTRACT.md",
@@ -1500,8 +1662,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 18553,
-      "sha256": "6da037f04ccee61d23a4a2e03acc5513ea4078e74a484866ecba3fb39ccf68c2"
+      "size": 22506,
+      "sha256": "dcea35a7ab51a91300f3ebd842165b53375434897e1734581e8a49957fb8a213"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1590,14 +1752,14 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 792,
-      "sha256": "4ce442e3c1f7273fff8d19f3febaf74ff5837fba9e7aff79c23c149a8b208dab"
+      "size": 4228,
+      "sha256": "63d24048247259d7faccef2f17aff60fee8feadce8f6d88cb159577c3ffa9460"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 95768,
-      "sha256": "0dee41cb90ca65da3b844898d25e45082613ae91f5cb11dbb47973f4aab204b2"
+      "size": 103118,
+      "sha256": "c2bd59799aee4279a2ea434503c7a0456aad13dd68efa5ae90ccb978700811a2"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -2038,6 +2200,12 @@
       "sha256": "4b4ff9fef1c04a36115914d3f54c955a80ca722bd55a5191a3ba99a81443f529"
     },
     {
+      "path": "context/runtime/connect_relink_qualification_20261111.json",
+      "domain": "runtime",
+      "size": 4966,
+      "sha256": "85aa46011dae7b71c930a07fe37932acaf84935096919fc17a347ac73b58c946"
+    },
+    {
       "path": "context/runtime/connect_role_bot_cron_preflight_fix_20261029.json",
       "domain": "runtime",
       "size": 4407,
@@ -2416,6 +2584,42 @@
       "sha256": "cf23b7dbe0caf388bf902bf846d695bee0172c0ccfdc87b1f4e68752ecb666ea"
     },
     {
+      "path": "context/runtime/evidence_library0200_20261103.yaml",
+      "domain": "runtime",
+      "size": 5694,
+      "sha256": "e1e7c89ccc905a0f817262118df8bf61c9e38374e4bf338378bacf54174c18f0"
+    },
+    {
+      "path": "context/runtime/evidence_library_discovery0200_20261105.yaml",
+      "domain": "runtime",
+      "size": 6155,
+      "sha256": "a48d2ee28d9331e740eb4623cf82d183a7c6ea0a0fde43c1001e725aa5508d79"
+    },
+    {
+      "path": "context/runtime/evidence_library_navigation0200_20261103.yaml",
+      "domain": "runtime",
+      "size": 5896,
+      "sha256": "56292bfdfc0f1ff8881c6dcd783e8c0ab526ee6a752b8d8a9fcfa135e62bbce5"
+    },
+    {
+      "path": "context/runtime/evidence_marketplace0200_20261103.yaml",
+      "domain": "runtime",
+      "size": 5942,
+      "sha256": "5e7bccb01fbceec7be214554d7cdf17dc632d2181c5c72a498ac01ecf7527fe9"
+    },
+    {
+      "path": "context/runtime/evidence_scorm1100_20261102.yaml",
+      "domain": "runtime",
+      "size": 5191,
+      "sha256": "adb4c4af480e33ab6d55c3ca4c026a39e51d2980b37f5d4aa801e77da4725153"
+    },
+    {
+      "path": "context/runtime/evidence_studio_scorm0200_20261103.yaml",
+      "domain": "runtime",
+      "size": 5861,
+      "sha256": "2059798da1fc1aa5b5fa0fbffb72988a342682fbf88e5f15b97c750ebeeaa969"
+    },
+    {
       "path": "context/runtime/external_network_result_20261017.json",
       "domain": "runtime",
       "size": 2412,
@@ -2450,6 +2654,12 @@
       "domain": "runtime",
       "size": 611,
       "sha256": "aab4b47b2aae8a77c23db961d5490a58b86a50c3b931fc222bbe3d6090d8be26"
+    },
+    {
+      "path": "context/runtime/github_monthly_refresh_20261103.json",
+      "domain": "runtime",
+      "size": 2187,
+      "sha256": "fbd04550df51fd7b63e814731275149f600650261e23263b65b18dc1b99f4f24"
     },
     {
       "path": "context/runtime/hdd_backup_20261006.md",
@@ -3016,10 +3226,58 @@
       "sha256": "361dfbb57fafa9e0bdaddbf1920c2744be6402d73b0b4a5ff9c217fd624b6231"
     },
     {
+      "path": "context/runtime/library_discovery_owner_deploy_20261105.json",
+      "domain": "runtime",
+      "size": 2188,
+      "sha256": "7f0b4d6e7f825c202a7463aae256581e59a74c52d5db90aa18f219097566133c"
+    },
+    {
+      "path": "context/runtime/library_integration_progress_20261102.md",
+      "domain": "runtime",
+      "size": 9738,
+      "sha256": "5acd53d9bef23ad7c343382bffc2afb3d886ec31f4a0eb4d42cd091cab29b7c0"
+    },
+    {
+      "path": "context/runtime/library_marketplace_owner_deploy_20261103.json",
+      "domain": "runtime",
+      "size": 3388,
+      "sha256": "65a4283c0579687e9c8ab0c7b64548307c7d2e3b27d42019a2be183196532be1"
+    },
+    {
+      "path": "context/runtime/library_navigation_owner_deploy_20261103.json",
+      "domain": "runtime",
+      "size": 3719,
+      "sha256": "5c17e70ee1187443d2431ecfa265542219eb4d50f2bba411e992c3737216ea68"
+    },
+    {
+      "path": "context/runtime/library_owner_navigation_20261103.json",
+      "domain": "runtime",
+      "size": 4007,
+      "sha256": "279a04763f0aabdbb5e64db33150bfdfd84b059f0a90cf0a89ee52263d9d2e82"
+    },
+    {
+      "path": "context/runtime/library_parent_recovery_20261103.json",
+      "domain": "runtime",
+      "size": 2348,
+      "sha256": "ae8094ba429a9fdabbc06077099bec17facd74896927edd8078ecf87442365fc"
+    },
+    {
+      "path": "context/runtime/library_qualification_20261102.json",
+      "domain": "runtime",
+      "size": 6030,
+      "sha256": "35c6066d7d21f9c64da1d8ab804317a3c05cb54b2d7f60da6b10239c3541ca22"
+    },
+    {
+      "path": "context/runtime/marketplace_department_fix_20261103.json",
+      "domain": "runtime",
+      "size": 6783,
+      "sha256": "f539d55a94d171c1696b8b8b2f4cd21195ba17e7c18ff863dad53c58ba73c37c"
+    },
+    {
       "path": "context/runtime/moodle.yaml",
       "domain": "runtime",
-      "size": 1193,
-      "sha256": "17cab3c079d764fde7c6b24ee2febf5c43384343602dcf8595ad932159159e9f"
+      "size": 1197,
+      "sha256": "ba54b608e7f96e03614efad451b362091a2fe2b7e44bb47f61cbd24f9892cc6e"
     },
     {
       "path": "context/runtime/moodle53_preparation_20261014.md",
@@ -3280,6 +3538,18 @@
       "sha256": "9c53fd98931eaecb97462c09d068e2c3b08005131b7432ff94eae3136fd4950c"
     },
     {
+      "path": "context/runtime/route_editor_owner_not_installed_20261105.json",
+      "domain": "runtime",
+      "size": 446,
+      "sha256": "ba35bad029dc906a44dd7f40c700f2d4812113b097066a43f6acca91e386c7b8"
+    },
+    {
+      "path": "context/runtime/route_editor_qualification_20261105.json",
+      "domain": "runtime",
+      "size": 7509,
+      "sha256": "11aa0facf1be1b0f9b1ec47c616eae01b26894952e839bd6eae02e03c308b68a"
+    },
+    {
       "path": "context/runtime/route_refresh_db_result_20261014.json",
       "domain": "runtime",
       "size": 1723,
@@ -3296,6 +3566,42 @@
       "domain": "runtime",
       "size": 7590,
       "sha256": "81bac639785b4f69294067d8f8ffd959f4982ef4eb16de0038b9b93ee5968e8c"
+    },
+    {
+      "path": "context/runtime/route_review_recovery_20261102.json",
+      "domain": "runtime",
+      "size": 2794,
+      "sha256": "496c44ff8b73779a0341eadc5baa4dc4be1dc8cb28c306ddebc54b4aa97b39de"
+    },
+    {
+      "path": "context/runtime/route_scorm_access_owner_order_20261101.json",
+      "domain": "runtime",
+      "size": 5125,
+      "sha256": "b33a4ee517b297ed50f01e091ec141b980e483565df6143c85e6247121c72b7c"
+    },
+    {
+      "path": "context/runtime/route_scorm_access_qualification_20261102.json",
+      "domain": "runtime",
+      "size": 6012,
+      "sha256": "3fc6933cf59837135d72f7ba2b5f254cc5a91d910fb9bd8c0d40ad767a42ed4d"
+    },
+    {
+      "path": "context/runtime/route_scorm_launch_20261101.json",
+      "domain": "runtime",
+      "size": 7175,
+      "sha256": "1e5b5a8f48a305e320144e67560f7961d690c5f653b9996114b81ebf607be163"
+    },
+    {
+      "path": "context/runtime/scorm_tracking_20261102.json",
+      "domain": "runtime",
+      "size": 8143,
+      "sha256": "7c555e0c7fd4e0a97b31f36271ad65e718440ea737255578cbad476712407cc9"
+    },
+    {
+      "path": "context/runtime/scorm_tracking_owner_20261102.json",
+      "domain": "runtime",
+      "size": 3003,
+      "sha256": "4362e03087a431f74cdaae4a50aca38dfcea7f2383e46b83707c9e46e285ee4a"
     },
     {
       "path": "context/runtime/server-extra/20261017T095914Z-0411e053/README.md",
@@ -3550,6 +3856,12 @@
       "sha256": "857408bc6b31a4e4b527fb04527719a34fb0b89d13ee91b736d4f249441563ab"
     },
     {
+      "path": "context/runtime/studio_assessment_route_20261102.json",
+      "domain": "runtime",
+      "size": 2458,
+      "sha256": "0fc85aee5ab743162f70a5e1252d2856da4fc84d093bdbfcc00a9e07fbf08e25"
+    },
+    {
       "path": "context/runtime/studio_colors_canvas_progress_20261028.md",
       "domain": "runtime",
       "size": 4066,
@@ -3580,6 +3892,12 @@
       "sha256": "a32e862c0eaaddb2c9ccb8df2ba6540b6f25a64fea3731af06a89a0d3f7e31de"
     },
     {
+      "path": "context/runtime/studio_csp_qualification_20261105.json",
+      "domain": "runtime",
+      "size": 11732,
+      "sha256": "dbfcc462bf7ea0957fa01e7250a56079418c68a91c28bb13d9efdb88606933e6"
+    },
+    {
       "path": "context/runtime/studio_materials_delivery_20261028.json",
       "domain": "runtime",
       "size": 1459,
@@ -3602,6 +3920,36 @@
       "domain": "runtime",
       "size": 4389,
       "sha256": "e62fc85707c8412ff13a4e289d5d4269b82277e52225ae418c55a0f3678ccbe9"
+    },
+    {
+      "path": "context/runtime/studio_preview_owner_acceptance_20261106.json",
+      "domain": "runtime",
+      "size": 798,
+      "sha256": "ce40abc1cbfbd898e8d68a7a370b44e955d5a2f2750cad2966ba3f081f74d2fb"
+    },
+    {
+      "path": "context/runtime/studio_preview_qualification_20261106.json",
+      "domain": "runtime",
+      "size": 7552,
+      "sha256": "17e13ade661d55dd98e49274f9059532894438ea8c4fac5ba4c759d129740753"
+    },
+    {
+      "path": "context/runtime/studio_scorm_edit_20261103.json",
+      "domain": "runtime",
+      "size": 5743,
+      "sha256": "7ebe830b5d5d5d0d5636a9bb132c6de4909fc3ae568cba7bee51837e6e9f1dc2"
+    },
+    {
+      "path": "context/runtime/studio_scorm_edit_lint_recovery_20261103.json",
+      "domain": "runtime",
+      "size": 3336,
+      "sha256": "e789efd5a9e505df5a2eb72b15418a7e545515e74673ea0ac9e225594914ae58"
+    },
+    {
+      "path": "context/runtime/studio_scorm_edit_owner_deploy_20261103.json",
+      "domain": "runtime",
+      "size": 2043,
+      "sha256": "7014ce9d2f2cf5b90ea2f5a7880eb17b8ac4fe6061fb3a44441ced9070f0c73b"
     },
     {
       "path": "context/runtime/studio_viewport_delivery_20261028.json",
@@ -3690,8 +4038,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3579,
-      "sha256": "ed52f3da59257db1a64a8977270064eba25b7b4c230a966c16156ce176c81bd2"
+      "size": 3282,
+      "sha256": "74120cafafcfc6723fed815ca9c7d7ae161c6ea3ba2f5a1dc236378cd296f5f4"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",
@@ -3704,6 +4052,24 @@
       "domain": "tasks",
       "size": 133,
       "sha256": "08efe768ed1cea63da4f638d08e5ee84357a58316cfbea1c14f0b0c4a4707045"
+    },
+    {
+      "path": "context/tasks/route_scorm_access_20261101.md",
+      "domain": "tasks",
+      "size": 8689,
+      "sha256": "111daa8ad63f58a29dfc99c49e03e3e86646dbf4bccb8921feabdfe8270e8dd0"
+    },
+    {
+      "path": "context/tasks/route_scorm_access_plan_20261101.md",
+      "domain": "tasks",
+      "size": 8206,
+      "sha256": "012b8f76c9d0594807a4a5bfe530902312440d51a541305aef0ac36abbd2b514"
+    },
+    {
+      "path": "context/tasks/scorm_tracking_fix_20261102.md",
+      "domain": "tasks",
+      "size": 1828,
+      "sha256": "373ed5f89cbd7d149cc361b3a390314fe777fe74c6a5b761c16f504279c3ea82"
     }
   ]
 }

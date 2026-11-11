@@ -1,0 +1,58 @@
+{
+  "scope": "real production reader methods with counting synthetic DB; DB calls, not actual PostgreSQL SQL count or latency",
+  "storefront": [
+    {
+      "offers": 24,
+      "rendered": 24,
+      "db_calls": 101,
+      "by_method_table": {
+        "exists:user": 75,
+        "select:local_ustar_library_offer": 1,
+        "select:local_ustar_library_grant": 1,
+        "get:local_ustar_content": 24
+      }
+    },
+    {
+      "offers": 240,
+      "rendered": 24,
+      "db_calls": 965,
+      "by_method_table": {
+        "exists:user": 723,
+        "select:local_ustar_library_offer": 1,
+        "select:local_ustar_library_grant": 1,
+        "get:local_ustar_content": 240
+      }
+    },
+    {
+      "offers": 2400,
+      "rendered": 24,
+      "db_calls": 9605,
+      "by_method_table": {
+        "exists:user": 7203,
+        "select:local_ustar_library_offer": 1,
+        "select:local_ustar_library_grant": 1,
+        "get:local_ustar_content": 2400
+      }
+    }
+  ],
+  "mine_501": {
+    "active_grants": 501,
+    "searched_exact_title": "ONLY-OLDEST",
+    "found_exact": false,
+    "matched_count": 0,
+    "db_calls": 4001
+  },
+  "hidden_market_catalog": {
+    "cards": [
+      {
+        "id": 1,
+        "isfolder": false,
+        "title": "Restricted product",
+        "url": "/local/ustar/library.php?tab=shop&open=1",
+        "locked": true
+      }
+    ],
+    "can_view_marketplace": false,
+    "can_view_offer_page": false
+  }
+}

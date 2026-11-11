@@ -848,7 +848,8 @@ tasks:
   - Повторная отвязка сохраняет новый код подтверждения
 - id: REWARD-SHOP-01
   title: Магазин наград за USCOIN
-  status: design
+  status: in_progress
+  reference: docs/superpowers/plans/2026-11-11-reward-shop.md
   depends_on: []
   acceptance:
   - Витрина и история заявок сотрудника

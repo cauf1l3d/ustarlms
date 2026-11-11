@@ -74,6 +74,7 @@ capabilities:
   - moodle/local/ustar/classes/knowledge_index.php
   - moodle/local/ustar/classes/library_access.php
   - moodle/local/ustar/classes/reward_control.php
+  - moodle/local/ustar/classes/reward_shop.php
   - moodle/local/ustar/classes/route_tester.php
   - moodle/local/ustar/classes/staffing_requests.php
   - moodle/local/ustar/classes/standard_model.php
@@ -126,6 +127,7 @@ capabilities:
   - moodle/local/ustar/classes/hr_people.php
   - moodle/local/ustar/classes/library_access.php
   - moodle/local/ustar/classes/reward_control.php
+  - moodle/local/ustar/classes/reward_shop.php
   - moodle/local/ustar/classes/staffing_requests.php
   - moodle/local/ustar/classes/standard_model.php
   - moodle/local/ustar/classes/structure.php
@@ -635,6 +637,7 @@ capabilities:
   - moodle/local/ustar/notifications.php
   - moodle/local/ustar/profile.php
   - moodle/local/ustar/profile_settings.php
+  - moodle/local/ustar/reward_shop.php
   - moodle/local/ustar/route.php
   - moodle/local/ustar/route_access.php
   - moodle/local/ustar/route_career.php
@@ -696,6 +699,7 @@ capabilities:
   - moodle/local/ustar/notifications.php
   - moodle/local/ustar/profile.php
   - moodle/local/ustar/profile_settings.php
+  - moodle/local/ustar/reward_shop.php
   - moodle/local/ustar/route.php
   - moodle/local/ustar/route_access.php
   - moodle/local/ustar/route_career.php

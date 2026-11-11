@@ -1,11 +1,11 @@
 schema_version: 2
 updated_at: '2026-11-11'
 project: USTAR Academy
-stage: reward_shop_qualification
-stage_label: Reward shop native qualification
-current_activity: Reward shop catalogue, scoped access, USCOIN orders and administrative
-  fulfillment implemented. Awaiting isolated Moodle 5.1.1/5.1.8 and PostgreSQL checks.
-  The shop is closed by default. Deployment awaits a schema-aware successor package.
+stage: reward_shop_qualified_install_package_pending
+stage_label: Reward shop verified in Moodle; migration installer pending
+current_activity: Reward shop on f843abc8 verified in Moodle 5.1.1 and 5.1.8 with PostgreSQL.
+  Fresh install, exact Telegram source upgrade, repeat upgrade and the employee/admin
+  browser flow passed. The shop is closed by default. Production migration package pending.
 entrypoint: START_HERE.md
 next_task: REWARD-SHOP-01
 ready_tasks: []
@@ -397,7 +397,8 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   application_commit: 7570ffc25d2cc17ad339d63ec25ba7319e15f312
-  status: qualification_in_progress
+  status: native_qualified_install_package_pending
+  qualification: context/runtime/reward_shop_qualification_20261111.json
   branch: feat/reward-shop-20261111
   deployed: false
   local_ustar_version: 2026111100

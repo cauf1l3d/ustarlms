@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 1685,
-      "sha256": "4579ae14d121327f3388dde0c624f74e696a7f78ec07190337fe246f46804e61"
+      "size": 1754,
+      "sha256": "1c75e99a93a0b601b7ea90d101ab9626cc4412092b71d60ab7b06fe91d33b4a2"
     },
     {
       "path": "context/agents/astra.md",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 12520,
-      "sha256": "ce431dbdba77b3a8dc771b02f874d5c15d7b8c8fbb18ea75bed3724684a81d75"
+      "size": 12564,
+      "sha256": "721b5b4398eca15f92095577221b464425db0769976adf49559c48a36bf5672b"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -894,8 +894,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 3234,
-      "sha256": "fa50580f2f7097b2cb5758ec5ffb22a02fa219c3f087d15d9eb1e85cbfbbb8d9"
+      "size": 3342,
+      "sha256": "e2514db51135c14861862a12c208520fb3c9203de63de43ade46dd5dc7b8ee37"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1608,8 +1608,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 49110,
-      "sha256": "be84a5e64402b4c817e0580e83c26d602ca03b0cf03f267db380c0ea0eb352ec"
+      "size": 49212,
+      "sha256": "c451e5a8ccab33ac772aece4074c208cb7cb37279b17f6b91a08c57211df36a1"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1662,8 +1662,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22002,
-      "sha256": "87ba4077818913d76d1af835dbc6ff63ae7d1c87cb647b3f055ef08c496a609d"
+      "size": 22148,
+      "sha256": "9cf4a8588786b4d086ebe8d27907169a5e6005a0869fc3fcff9e9718688ff44f"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3538,6 +3538,12 @@
       "sha256": "9c53fd98931eaecb97462c09d068e2c3b08005131b7432ff94eae3136fd4950c"
     },
     {
+      "path": "context/runtime/reward_shop_qualification_20261111.json",
+      "domain": "runtime",
+      "size": 2725,
+      "sha256": "e113cbe7d75425cb6c84df25f3c178fda8c4609238cf771ad09c485e7a5e18a6"
+    },
+    {
       "path": "context/runtime/route_editor_owner_not_installed_20261105.json",
       "domain": "runtime",
       "size": 446,
@@ -4038,8 +4044,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3368,
-      "sha256": "cecca1790379e9169be2bfb8a43ab9f29aceb5424725f7dc45caf77238bb1c82"
+      "size": 3518,
+      "sha256": "6125f989bb64a7e8ecf10c8f410987a73893b4f4ec782b841f8213ced107c2ce"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

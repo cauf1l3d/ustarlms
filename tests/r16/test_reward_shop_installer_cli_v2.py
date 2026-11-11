@@ -1,5 +1,6 @@
 """Offline, read-only installer transaction and CLI failure-contract tests."""
 import importlib.util, json, tempfile, unittest
+from contextlib import nullcontext
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -67,6 +68,9 @@ class ClientCLI(unittest.TestCase):
              patch.object(mod,'read_state',return_value=None),\
              patch.object(mod,'predecessor_status',return_value='rolled_back_before_migration'),\
              patch.object(mod,'cli_preflight',return_value=mod.CONTAINER_CLI),\
+             patch.object(mod,'exclusive_operator_guards',return_value=nullcontext()),\
+             patch.object(mod,'code_status',return_value=(mod.BEFORE,lambda _: [])),\
+             patch.object(mod,'db_status',return_value={'version':mod.BEFORE,'tables':{t:False for t in mod.TABLES}}),\
              patch.object(mod,'backup',return_value='/test-backups/backup'),\
              patch.object(mod,'write_state',side_effect=lambda x:states.append(dict(x))),\
              patch.object(mod,'replace_code',return_value=[]),\

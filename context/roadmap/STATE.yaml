@@ -1,9 +1,9 @@
 schema_version: 2
 updated_at: '2026-11-12'
 project: USTAR Academy
-stage: connect_direct_broadcast_candidate
-stage_label: Direct Telegram broadcast under verification
-current_activity: Owner installed 814a99d9 and received the pilot publication notice. The successor sends explicitly approved text and files from Academy and the linked operator bot.
+stage: connect_direct_broadcast_qualified
+stage_label: Direct Telegram broadcast package ready for owner installation
+current_activity: Owner installed 814a99d9 and received the pilot publication notice. The verified d1e54624 successor is ready for installation and a live pilot of direct text and file delivery.
 entrypoint: START_HERE.md
 next_task: CONNECT-BROADCAST-01
 ready_tasks: []
@@ -34,8 +34,8 @@ production:
   latest_addon_preflight: context/runtime/library_discovery_owner_deploy_20261105.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
-  latest_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
-  latest_worker_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+  latest_worker_commit: 814a99d9b54196e34c5a2b86529f30e58027da2a
+  latest_worker_owner_receipt: context/runtime/connect_team_owner_deploy_20261112.json
   effective_addon_deployment:
     receipt: context/runtime/library_discovery_owner_deploy_20261105.json
     reported_date_msk: '2026-11-05'
@@ -395,9 +395,12 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: native_verification_pending
+  status: native_qualified_owner_install_pending
+  qualification: context/runtime/connect_broadcast_qualification_20261112.json
   previous_qualification: context/runtime/connect_team_qualification_20261112.json
   branch: feat/connect-direct-broadcast-20261112
+  application_commit: d1e546240e9339dd5f3263ca567ed9def64cc478
+  worker_commit: d1e546240e9339dd5f3263ca567ed9def64cc478
   deployed: false
   local_ustar_version: 2026111201
   theme_ustar_version: 2026110200

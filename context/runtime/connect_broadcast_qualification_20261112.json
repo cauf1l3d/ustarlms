@@ -1,0 +1,55 @@
+{
+  "task": "CONNECT-BROADCAST-01",
+  "date_msk": "2026-11-12",
+  "pull_request": 119,
+  "application_and_worker_commit": "d1e546240e9339dd5f3263ca567ed9def64cc478",
+  "application_and_worker_baseline": "814a99d9b54196e34c5a2b86529f30e58027da2a",
+  "local_ustar_version": 2026111201,
+  "theme_ustar_version": 2026110200,
+  "schema_changed": false,
+  "local_targeted_tests": 90,
+  "native": {
+    "run_id": 43251585459,
+    "result": "success",
+    "fresh_upgrade_repeat_schema_equal": true,
+    "profiles": [
+      {
+        "moodle": "5.1.1",
+        "job_id": 131298513029,
+        "artifact_id": 13960170888,
+        "artifact_zip_sha256": "0490235c685d4a2e087d497fc88fc706a0efbbd38efd40ef8f4026011160ee7d",
+        "announcement_tests": 4,
+        "announcement_assertions": 23
+      },
+      {
+        "moodle": "5.1.8",
+        "job_id": 131298512485,
+        "artifact_id": 13959587126,
+        "artifact_zip_sha256": "f02f1f95e34146d5495e2f6c8e99a4eda7f95797387bfc86958ed07e2499dbfe",
+        "announcement_tests": 4,
+        "announcement_assertions": 23
+      }
+    ]
+  },
+  "operator": "scripts/infra/connect_broadcast_release.py",
+  "builder": "scripts/infra/build_connect_broadcast_release.py",
+  "package_ci": {
+    "commit": "eff21cae9e932bc7649827cdda62910de8a40e4a",
+    "run_id": 43252875259,
+    "job_id": 131303173944,
+    "artifact_id": 13959861715,
+    "artifact_zip_sha256": "9e5dec65fa7b9c3aca71d5629ff340fadd4a70f2f825123b4f3c9c4b9006e762",
+    "archive": "ustar-connect-broadcast-d1e54624.tar.gz",
+    "archive_sha256": "635ecc456aed3a56f08f3a2ed2c94db45d75a1782a1b286408db2790cca7de3c",
+    "archive_bytes": 446302,
+    "archive_members": 17,
+    "application_files": 13,
+    "archive_membership_and_crc": "verified",
+    "artifact_matches_local_and_retained_download": true,
+    "tampered_payload_rejected": true,
+    "result": "success"
+  },
+  "server1": "awaiting_owner_installation",
+  "live_telegram_delivery": "awaiting_owner_pilot",
+  "guide": "docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md"
+}

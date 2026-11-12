@@ -36,8 +36,8 @@ production:
   latest_addon_preflight: context/runtime/library_discovery_owner_deploy_20261105.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
-  latest_worker_commit: 267e55874eb8f6c36259d748f28a2c636adc9810
-  latest_worker_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
+  latest_worker_commit: 814a99d9b54196e34c5a2b86529f30e58027da2a
+  latest_worker_owner_receipt: context/runtime/connect_team_owner_deploy_20261112.json
   effective_addon_deployment:
     receipt: context/runtime/library_discovery_owner_deploy_20261105.json
     reported_date_msk: '2026-11-05'
@@ -139,8 +139,8 @@ production:
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
   activity: Owner installed 814a99d9 and received the pilot publication notice. The
-    successor sends explicitly approved text and files from Academy and the linked
-    operator bot.
+    verified d1e54624 successor is ready for installation and a live pilot of direct
+    text and file delivery.
   next_task: CONNECT-BROADCAST-01
   ready_tasks: []
   task_statuses:
@@ -149,7 +149,7 @@ current_work:
     AUDIT-FIX-01: in_progress
     B2B-01: planned
     B2B-02: planned
-    CONNECT-BROADCAST-01: native_verification_pending
+    CONNECT-BROADCAST-01: native_qualified_owner_install_pending
     CONNECT-RELINK-01: qualified_awaiting_owner_installation
     CONNECT-TEAM-01: owner_installed_pilot_notice_delivered
     DOC-01: done

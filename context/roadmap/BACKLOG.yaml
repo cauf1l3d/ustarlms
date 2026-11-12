@@ -879,7 +879,8 @@ tasks:
   - Руководитель открывает достижения и навыки сотрудника в действующем контуре команды
 - id: CONNECT-BROADCAST-01
   title: Текст и вложения рассылки в личных чатах Telegram
-  status: native_verification_pending
+  status: native_qualified_owner_install_pending
+  qualification: context/runtime/connect_broadcast_qualification_20261112.json
   reference: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
   depends_on: [CONNECT-TEAM-01]
   acceptance:

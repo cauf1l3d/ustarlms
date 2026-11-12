@@ -1,5 +1,7 @@
 # Реестр кода, проверок и deployment evidence
 
+12.11.2026. PR119, приложение и Connect `d1e54624` поверх установленного `814a99d9`. Moodle 5.1.1 и 5.1.8 прошли сценарии прямой рассылки, включая выбор адресатов в боте. Архив и сохранённая копия совпали со сборкой CI. Ожидаются установка и пилот текста с вложением. [Проверки](connect_broadcast_qualification_20261112.json), [установка](../../docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md#установка-прямой-рассылки).
+
 11.11.2026. Повторная привязка Telegram, app53fab3b6/tool dc3a3c54. 4 CI и 11 задач FullRC прошли. Архив ожидает установки владельцем. [Проверки](connect_relink_qualification_20261111.json), [команды](../../docs/CONNECT_RELINK_INSTALL_RU.md).
 
 06.11.2026 — STUDIO-PREVIEW-01 app2cb233d9/tool ed292313 квалифицирован на exacted292313:4CI/11FullRC PASS; native430/1988 каждый, Connect172/875, PHP8.2/8.3 по1649tests/274conditional skips. Opaque preview создаёт собственные resource URLs;2source files/0added,0200/653files/108tables. PNG/font/API/fresh reload и eval/parent denial PASS в Moodle5.1.1/5.1.8; operator16actualPHP/UID33 PASS. Архив136074bytes SHA cf8c9b0b CI/retained byte-equal. Требует exact901 + active CSP journal. Owner подтвердил скрытие точек и сообщил Preview defect; это не exact deployment receipt. [Квалификация](studio_preview_qualification_20261106.json), [установка](../../docs/STUDIO_PREVIEW_INSTALL_RU.md).

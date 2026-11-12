@@ -1,6 +1,6 @@
 # Активная работа · 12.11.2026
 
-PR118. Архив Академии и Connect c2c4125e проверен и ждёт установки. [Сценарии](../../docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md), [проверки](../runtime/connect_team_qualification_20261112.json).
+PR118 установлен. Уведомление доставлено. Пакет прямой рассылки PR119 прошёл CI, ожидаются установка и пилот. [Сценарии](../../docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md), [проверки](../runtime/connect_broadcast_qualification_20261112.json).
 
 ## Повторная привязка Telegram
 

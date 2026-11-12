@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_announcements_and_team_candidate
+  stage: connect_direct_broadcast_candidate
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -35,11 +35,11 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: CONNECT-TEAM-01
-  related_task: REWARD-SHOP-UX
-  status: qualified_archive_awaiting_owner_installation
-  previous_qualification: context/runtime/reward_shop_ux_20261112.json
-  qualification: context/runtime/connect_team_qualification_20261112.json
+  task: CONNECT-BROADCAST-01
+  related_task: CONNECT-TEAM-01
+  status: native_verification_pending
+  previous_qualification: context/runtime/connect_team_qualification_20261112.json
+  previous_owner_receipt: context/runtime/connect_team_owner_deploy_20261112.json
   spec: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py

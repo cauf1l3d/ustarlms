@@ -62,9 +62,9 @@ final class notification_delivery {
             ORDER BY u.lastname, u.firstname, u.id', ['provider' => 'telegram', 'tenant' => $tenant, 'state' => 'linked']);
     }
 
-    public static function can_enqueue_announcement(int $userid, string $key): bool {
+    public static function can_enqueue_announcement(int $userid, string $key, string $event = announcements::EVENT): bool {
         return self::eligible((object)[
-            'userid' => $userid, 'eventtype' => 'feed_announcement', 'idempotencykey' => $key,
+            'userid' => $userid, 'eventtype' => $event, 'idempotencykey' => $key,
             'status' => 'unread', 'severity' => 'normal', 'timecreated' => time(),
         ]) !== null;
     }
@@ -110,9 +110,10 @@ final class notification_delivery {
             ['uid' => $notice->userid, 'id' => $row->id, 'channel' => 'telegram', 'leased' => 'leased', 'sending' => 'sending', 'now' => $now]);
         return notification_preferences::next_allowed($prefs, max($next, $busy));
     }
-    public static function lease(string $kid, string $provider, string $tenant, ?int $now = null): ?array {
+    public static function lease(string $kid, string $provider, string $tenant, ?int $now = null,
+            bool $broadcast = false): ?array {
         self::scope($kid, $provider, $tenant); $now ??= time();
-        return identity_service::atomic(function() use ($kid, $tenant, $now): ?array {
+        return identity_service::atomic(function() use ($kid, $tenant, $now, $broadcast): ?array {
             global $DB;
             if (!self::enabled() || self::channel() !== $tenant) { return null; }
             // A provider-wide429 must survive restarts and stop a different queued recipient too.
@@ -123,27 +124,48 @@ final class notification_delivery {
                 ['channel' => 'telegram', 'tenant' => $tenant, 'status' => 'retry_wait',
                     'limited' => 'rate_limited', 'unauthorized' => 'unauthorized']);
             if ($cooldown > $now) { return null; }
+            $params = ['channel' => 'telegram', 'tenant' => $tenant, 'pending' => 'pending',
+                'retry' => 'retry_wait', 'due' => $now, 'leased' => 'leased', 'sending' => 'sending', 'expired' => $now];
+            $filter = '';
+            if (!$broadcast) {
+                // Legacy workers can retire interrupted sends but cannot claim a direct broadcast.
+                $filter = 'AND (d.status = :interrupted OR NOT EXISTS (
+                    SELECT 1 FROM {local_ustar_notifications} n WHERE n.id = d.notificationid AND n.eventtype = :broadcast))';
+                $params += ['interrupted' => 'sending', 'broadcast' => announcements::BROADCAST_EVENT];
+            }
             $rows = $DB->get_records_sql('SELECT d.* FROM {local_ustar_notify_delivery} d
                 JOIN {local_ustar_conn_links} l ON l.id = d.connlinkid
                 WHERE d.connectversion = 1 AND d.channel = :channel AND l.tenant = :tenant
                   AND (((d.status = :pending OR d.status = :retry) AND d.nextattempt <= :due)
                     OR ((d.status = :leased OR d.status = :sending) AND d.connleaseuntil <= :expired))
-                ORDER BY d.id', ['channel' => 'telegram', 'tenant' => $tenant, 'pending' => 'pending',
-                    'retry' => 'retry_wait', 'due' => $now, 'leased' => 'leased', 'sending' => 'sending', 'expired' => $now], 0, 50);
+                ' . $filter . ' ORDER BY d.id', $params, 0, 50);
             foreach ($rows as $row) {
                 if ($row->status === 'sending') { self::state($row, 'uncertain', $now, 'interrupted'); continue; }
                 $notice = $DB->get_record('local_ustar_notifications', ['id' => $row->notificationid]);
-                if (!$notice || (int)$row->connexpires <= $now || !self::eligible($notice, $row)) {
+                $link = $notice ? self::eligible($notice, $row) : null;
+                if (!$link || (int)$row->connexpires <= $now) {
                     self::state($row, 'cancelled', $now); continue;
                 }
                 if ((int)$row->attempts >= 5) { self::state($row, 'failed', $now, 'max_attempts'); continue; }
                 $next = self::next_time($row, $notice, $now);
                 if ($next > $now) { $row->nextattempt = $next; self::state($row, 'pending', $now); continue; }
+                $content = null;
+                if ($notice->eventtype === announcements::BROADCAST_EVENT) {
+                    $content = broadcast_content::for_notice($notice);
+                    if (!$content) {
+                        self::state($row, 'cancelled', $now);
+                        continue;
+                    }
+                }
                 $secret = opaque_token::issue('ud1');
                 $row->connleasehash = opaque_token::digest($secret, 'ud1');
                 $row->connleaseuntil = $now + 60; $row->connkeyid = $kid;
                 self::state($row, 'leased', $now);
-                return ['delivery' => (int)$row->id, 'lease' => $secret, 'expires' => (int)$row->connleaseuntil];
+                $permit = ['delivery' => (int)$row->id, 'lease' => $secret, 'expires' => (int)$row->connleaseuntil];
+                if ($content !== null) {
+                    $permit['broadcast'] = $content + ['subject' => $link->subject];
+                }
+                return $permit;
             }
             return null;
         });
@@ -169,9 +191,29 @@ final class notification_delivery {
     }
     /** Version3 is a separate scope, never an extra field in an old permit. */
     public static function begin_v3(int $id, #[\SensitiveParameter] string $lease, string $kid,
-            string $provider, string $tenant, ?int $now = null): array {
+            string $provider, string $tenant, ?int $now = null, ?string $stamp = null): array {
         self::presentation_enabled();
-        return self::begin_permit($id, $lease, $kid, $provider, $tenant, $now, 3);
+        return self::begin_permit($id, $lease, $kid, $provider, $tenant, $now, 3, $stamp);
+    }
+
+    public static function broadcast_file(int $id, #[\SensitiveParameter] string $lease, int $fileid,
+            string $kid, string $provider, string $tenant): \stored_file {
+        return identity_service::atomic(function() use ($id, $lease, $fileid, $kid, $provider, $tenant): \stored_file {
+            global $DB;
+            self::presentation_enabled();
+            $row = self::fenced($id, $lease, $kid, $provider, $tenant);
+            $notice = $DB->get_record('local_ustar_notifications', ['id' => $row->notificationid]);
+            $now = time();
+            if ($row->status !== 'leased' || (int)$row->connleaseuntil <= $now || (int)$row->connexpires <= $now
+                    || !$notice || $notice->eventtype !== announcements::BROADCAST_EVENT || !self::eligible($notice, $row)) {
+                throw new \InvalidArgumentException('invalid_delivery');
+            }
+            $content = broadcast_content::for_notice($notice);
+            if (!$content) {
+                throw new \InvalidArgumentException('invalid_delivery');
+            }
+            return broadcast_content::leased_file($content, $fileid);
+        });
     }
     private static function presentation_enabled(): void {
         global $CFG;
@@ -181,9 +223,9 @@ final class notification_delivery {
         notification_action::require_enabled();
     }
     private static function begin_permit(int $id, #[\SensitiveParameter] string $lease, string $kid,
-            string $provider, string $tenant, ?int $now, int $version): array {
+            string $provider, string $tenant, ?int $now, int $version, ?string $stamp = null): array {
         $now ??= time();
-        return identity_service::atomic(function() use ($id, $lease, $kid, $provider, $tenant, $now, $version): array {
+        return identity_service::atomic(function() use ($id, $lease, $kid, $provider, $tenant, $now, $version, $stamp): array {
             if ($version === 3) { self::presentation_enabled(); }
             else if ($version === 2) { notification_action::require_enabled(); }
             global $DB;
@@ -192,13 +234,25 @@ final class notification_delivery {
             $notice = $DB->get_record('local_ustar_notifications', ['id' => $row->notificationid]);
             $link = $notice ? self::eligible($notice, $row) : null;
             if (!$link || (int)$row->connexpires <= $now) { return self::state($row, 'cancelled', $now); }
-            if ($notice->eventtype === announcements::EVENT && $version !== 3) {
+            if (in_array($notice->eventtype, [announcements::EVENT, announcements::BROADCAST_EVENT], true) && $version !== 3) {
                 $row->nextattempt = $now + 300;
                 return self::state($row, 'retry_wait', $now);
             }
             $next = self::next_time($row, $notice, $now);
             if ($next > $now) { $row->nextattempt = $next; return self::state($row, 'retry_wait', $now); }
             if ((int)$row->attempts >= 5) { return self::state($row, 'failed', $now, 'max_attempts'); }
+            $content = null;
+            if ($notice->eventtype === announcements::BROADCAST_EVENT) {
+                $content = broadcast_content::for_notice($notice);
+                if (!$content) {
+                    return self::state($row, 'cancelled', $now);
+                }
+                if ($stamp === null || !hash_equals($content['stamp'], $stamp)) {
+                    throw new \InvalidArgumentException('invalid_delivery');
+                }
+            } else if ($stamp !== null) {
+                throw new \InvalidArgumentException('invalid_delivery');
+            }
             $row->attempts = (int)$row->attempts + 1; $row->connbegun = $now;
             // This transaction commits before the private worker receives any permission to send.
             self::state($row, 'sending', $now);
@@ -207,9 +261,11 @@ final class notification_delivery {
                 'occurred_at' => (int)$notice->timecreated, 'send_before' => $now + 10];
             if ($version >= 2) {
                 $permit['version'] = $version;
-                $permit['ack'] = notification_action::issue($notice, $row, $link, $now);
+                $permit['ack'] = $content !== null && count($content['files']) > 1
+                    ? null : notification_action::issue($notice, $row, $link, $now);
             }
             if ($version === 3) { $permit['event'] = (string)$notice->eventtype; }
+            if ($content !== null) { $permit['stamp'] = $content['stamp']; }
             return $permit;
         });
     }

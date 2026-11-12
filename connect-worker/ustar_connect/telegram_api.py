@@ -8,6 +8,7 @@ from urllib.parse import urlsplit
 from urllib.request import Request, build_opener, HTTPSHandler, ProxyHandler
 
 from .bridge import _NoRedirect, _token
+from .notification_broadcast import MAX_FILE_BYTES, MAX_TOTAL_BYTES, valid_filename, valid_text
 from .notification_events import event_label
 
 REASONS = {'transport_unavailable', 'invalid_response', 'unauthorized', 'consumer_conflict',
@@ -62,6 +63,47 @@ def _multipart(payload):
     return body,'multipart/form-data; boundary='+boundary
 
 
+def _document_multipart(payload, files):
+    boundary = 'ustar-' + secrets.token_hex(24)
+    parts = []
+    for key, value in payload.items():
+        if not re.fullmatch(r'[a-z_]{1,40}', key):
+            raise ValueError('invalid_document_field')
+        text = value if isinstance(value, str) else json.dumps(value, ensure_ascii=False, allow_nan=False)
+        parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n{text}\r\n'.encode())
+    total = 0
+    for field, name, size, stream in files:
+        if (not re.fullmatch(r'(?:document|file[0-9])', field) or not valid_filename(name)
+                or type(size) is not int or not 0 < size <= MAX_FILE_BYTES):
+            raise ValueError('invalid_document')
+        total += size
+        parts.extend([
+            (f'--{boundary}\r\nContent-Disposition: form-data; name="{field}"; filename="{name}"\r\n'
+             'Content-Type: application/octet-stream\r\n\r\n').encode(),
+            (size, stream),
+            b'\r\n',
+        ])
+    if not 0 < total <= MAX_TOTAL_BYTES:
+        raise ValueError('documents_too_large')
+    parts.append(f'--{boundary}--\r\n'.encode())
+
+    def body():
+        for part in parts:
+            if isinstance(part, bytes):
+                yield part
+                continue
+            remaining, stream = part
+            while remaining:
+                chunk = stream.read(min(remaining, 65536))
+                if not chunk:
+                    raise OSError('incomplete_document')
+                remaining -= len(chunk)
+                yield chunk
+
+    length = sum(len(part) if isinstance(part, bytes) else part[0] for part in parts)
+    return body(), {'Content-Type': 'multipart/form-data; boundary=' + boundary, 'Content-Length': str(length)}
+
+
 class TelegramClient:
     def __init__(self, token, *, proxy=None,role_navigation=False):
         if not isinstance(token, str) or not re.fullmatch(r'[1-9][0-9]{0,19}:[A-Za-z0-9_-]{20,256}', token):
@@ -79,19 +121,24 @@ class TelegramClient:
         self._role_navigation=role_navigation
         self._opener = build_opener(ProxyHandler(proxies), HTTPSHandler(context=ssl.create_default_context()), _NoRedirect())
 
-    def _call(self, method, payload):
+    def _call(self, method, payload, *, files=()):
         if method not in ('getMe', 'getWebhookInfo', 'getUpdates', 'sendMessage',
-                          'answerCallbackQuery', 'editMessageReplyMarkup', 'editMessageText', 'getFile', 'sendPhoto', 'editMessageMedia'):
+                          'answerCallbackQuery', 'editMessageReplyMarkup', 'editMessageText', 'getFile', 'sendPhoto',
+                          'editMessageMedia', 'sendDocument', 'sendMediaGroup'):
             raise ValueError('invalid_api_method')
-        sending = method in ('sendMessage','editMessageText','sendPhoto','editMessageMedia')
-        if method in ('sendPhoto','editMessageMedia') and isinstance(payload.get('photo'),bytes):
-            body,content_type=_multipart(payload)
+        sending = method in ('sendMessage', 'editMessageText', 'sendPhoto', 'editMessageMedia',
+                             'sendDocument', 'sendMediaGroup')
+        if method in ('sendDocument', 'sendMediaGroup'):
+            body, headers = _document_multipart(payload, files)
+        elif method in ('sendPhoto','editMessageMedia') and isinstance(payload.get('photo'),bytes):
+            body, content_type = _multipart(payload)
+            headers = {'Content-Type': content_type}
         else:
             body = json.dumps(payload, separators=(',', ':'), allow_nan=False,ensure_ascii=False).encode()
-            content_type='application/json'
+            headers = {'Content-Type': 'application/json'}
             if len(body) > 16384:raise ValueError('api_payload_too_large')
         request = Request('https://api.telegram.org/bot'+self._token+'/'+method, data=body,
-                          headers={'Content-Type': content_type}, method='POST')
+                          headers=headers, method='POST')
         try:
             timeout = 35 if method == 'getUpdates' else (3 if method in ('answerCallbackQuery', 'editMessageReplyMarkup') else 10)
             with self._opener.open(request, timeout=timeout) as response:
@@ -122,7 +169,8 @@ class TelegramClient:
                     raise ValueError('invalid_response')
                 raise _error(code, value.get('parameters'), sending)
             result = value.get('result')
-            valid = result is True if method == 'answerCallbackQuery' else isinstance(result, list if method == 'getUpdates' else dict)
+            valid = result is True if method == 'answerCallbackQuery' else isinstance(
+                result, list if method in ('getUpdates', 'sendMediaGroup') else dict)
             if not valid:
                 raise ValueError('invalid_result')
             return result
@@ -287,6 +335,25 @@ class TelegramClient:
             'Подробности доступны в Академии с учётом ваших текущих прав. Откройте её в браузере и войдите своей учётной записью.',
             'reply_markup':{'inline_keyboard':keyboard},
             'link_preview_options':{'is_disabled':True}})
+
+    def send_broadcast(self, subject, text, files, *, ack=None):
+        if (type(subject) is not int or not 0 < subject < 2**52 or len(files) > 10
+                or not valid_text(text, bool(files)) or (len(files) > 1 and ack is not None)):
+            raise ValueError('invalid_broadcast')
+        keyboard = self._notification_keyboard('feed', role_navigation=self._role_navigation)
+        if ack is not None:
+            keyboard.insert(0, [{'text': 'Принял', 'callback_data': _token(ack['action'], 'ua1')}])
+        markup = {'reply_markup': {'inline_keyboard': keyboard}}
+        if not files:
+            return self._send(subject, {'text': text, 'link_preview_options': {'is_disabled': True}, **markup})
+        payload = {'chat_id': subject, 'protect_content': True}
+        if len(files) == 1:
+            return self._call('sendDocument', {**payload, 'caption': text, **markup},
+                              files=[('document', *files[0])])
+        attachments = [(f'file{index}', *item) for index, item in enumerate(files)]
+        media = [{'type': 'document', 'media': 'attach://' + field} for field, *_ in attachments]
+        media[0]['caption'] = text
+        return self._call('sendMediaGroup', {**payload, 'media': media}, files=attachments)
 
     @staticmethod
     def _notification_keyboard(category,*,role_navigation=False):

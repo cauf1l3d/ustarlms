@@ -1,0 +1,22 @@
+{
+  "date_msk": "2026-11-12",
+  "kind": "owner_terminal_and_telegram_screenshot",
+  "pull_request": 118,
+  "archive_sha256": "c2c4125e3548a93bbe437cd64809f03aa6fc41003083c69e519fcacd6137ffd7",
+  "previous_application": "fc6c8ca02d940cb346d8000783c4416ff7347784",
+  "application": {
+    "payload_commit": "814a99d9b54196e34c5a2b86529f30e58027da2a",
+    "local_ustar": 2026111200,
+    "theme_ustar": 2026110200,
+    "phase": "active"
+  },
+  "postcheck": {
+    "phase": "active",
+    "worker_commit": "814a99d9b54196e34c5a2b86529f30e58027da2a",
+    "receiver_running": true,
+    "notifier_running": true,
+    "announcements_enabled": true
+  },
+  "owner_pilot": "After personal Telegram opt-in, the bot delivered the release's fixed publication notice.",
+  "next_owner_requirement": "Send explicitly selected recipients the full approved text and attachments, with Academy and linked operator bot entrypoints."
+}

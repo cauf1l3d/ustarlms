@@ -868,7 +868,8 @@ tasks:
   - Прямая ссылка на фото учитывает публикацию и отдел сотрудника
 - id: CONNECT-TEAM-01
   title: Контролируемые рассылки Telegram, рейтинг отдела и профиль сотрудника
-  status: qualified_archive_awaiting_owner_installation
+  status: owner_installed_pilot_notice_delivered
+  owner_receipt: context/runtime/connect_team_owner_deploy_20261112.json
   qualification: context/runtime/connect_team_qualification_20261112.json
   reference: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
   depends_on: [REWARD-SHOP-UX]
@@ -876,6 +877,16 @@ tasks:
   - Оператор выбирает файлы и доступных получателей, подтверждает постановку в очередь
   - Активные сотрудники видят рейтинг текущего отдела по общему XP
   - Руководитель открывает достижения и навыки сотрудника в действующем контуре команды
+- id: CONNECT-BROADCAST-01
+  title: Текст и вложения рассылки в личных чатах Telegram
+  status: native_qualified_owner_install_pending
+  qualification: context/runtime/connect_broadcast_qualification_20261112.json
+  reference: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
+  depends_on: [CONNECT-TEAM-01]
+  acceptance:
+  - Оператор Академии или связанный оператор бота подтверждает выбранную публикацию и получателей
+  - Сотрудник получает исходный текст и файлы одним сообщением или группой документов
+  - Изменение редакции, файлов или доступа до отправки отменяет доставку
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

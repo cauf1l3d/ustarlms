@@ -1,5 +1,7 @@
 # Runtime evidence
 
+12.11.2026. Владелец установил Академию и Connect `814a99d9` и получил уведомление в Telegram. Пакет прямой рассылки `d1e54624` прошёл Moodle 5.1.1, 5.1.8 и сверку скачанного архива. Ожидаются установка и живая доставка текста и файлов. [Квитанция владельца](connect_team_owner_deploy_20261112.json), [проверки пакета](connect_broadcast_qualification_20261112.json).
+
 11.11.2026. Повторная привязка Telegram, app53fab3b6/tool dc3a3c54. 4 CI и 11 задач FullRC прошли. Архив ожидает установки владельцем. [Проверки](connect_relink_qualification_20261111.json), [команды](../../docs/CONNECT_RELINK_INSTALL_RU.md).
 
 06Nov: app2cb233d9/tool ed292313 квалифицирован на exacted292313:4CI/11FullRC PASS.

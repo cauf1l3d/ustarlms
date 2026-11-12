@@ -1,0 +1,50 @@
+name: USTAR Connect broadcast package
+
+on:
+  pull_request:
+    branches: [feat/connect-team-overview-20261112, main]
+    paths:
+      - 'scripts/infra/*connect_broadcast_release.py'
+      - 'tests/r16/test_connect_broadcast_release.py'
+      - '.github/workflows/ustar-connect-broadcast-package.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      USTAR_BROADCAST_SOURCE: d1e546240e9339dd5f3263ca567ed9def64cc478
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Verify both release operators and build the successor
+        run: |
+          git diff --exit-code "$USTAR_BROADCAST_SOURCE" HEAD -- moodle connect-worker
+          python3 -m unittest -v tests.r16.test_connect_broadcast_release tests.r16.test_connect_team_release
+          python3 scripts/infra/build_connect_broadcast_release.py --target "$USTAR_BROADCAST_SOURCE" --output artifacts
+          python3 scripts/infra/build_connect_broadcast_release.py --target "$USTAR_BROADCAST_SOURCE" --output repeat
+          archive="ustar-connect-broadcast-${USTAR_BROADCAST_SOURCE:0:8}.tar.gz"
+          cmp "artifacts/$archive" "repeat/$archive"
+          gzip -t "artifacts/$archive"
+          mkdir verify
+          tar --no-same-owner -xzf "artifacts/$archive" -C verify
+          cd verify
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -B update.py --verify
+          printf '\n' >> payload/classes/connect/broadcast_content.php
+          if python3 -I -B update.py --verify; then exit 1; fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ustar-connect-broadcast-update
+          path: artifacts/ustar-connect-broadcast-*.tar.gz
+          if-no-files-found: error

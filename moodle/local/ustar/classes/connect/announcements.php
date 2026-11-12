@@ -9,9 +9,10 @@ use local_ustar\team_access;
 use local_ustar\view_as;
 use local_ustar\workflow_notifications;
 
-/** An operator-controlled Telegram fanout of a published Academy feed item. */
+/** An operator-controlled Telegram broadcast of a published Academy feed item. */
 final class announcements {
     public const EVENT = 'feed_announcement';
+    public const BROADCAST_EVENT = 'feed_broadcast';
 
     public static function enabled(): bool {
         global $CFG;
@@ -24,7 +25,11 @@ final class announcements {
         global $USER;
         return $actorid > 1 && (int)$USER->id === $actorid && isloggedin() && !isguestuser()
             && !\core\session\manager::is_loggedinas() && !view_as::active()
-            && (is_siteadmin($actorid) || team_access::active_actor($actorid))
+            && self::operator_capability($actorid);
+    }
+
+    public static function operator_capability(int $actorid): bool {
+        return (is_siteadmin($actorid) || team_access::active_actor($actorid))
             && has_capability('local/ustar:admin', \context_system::instance(), $actorid)
             && feed_access::can_manage($actorid);
     }
@@ -40,33 +45,78 @@ final class announcements {
             && in_array($post->publishertype, ['academy', 'department'], true);
     }
 
-    private static function prefix(\stdClass $post): string {
-        return self::EVENT . ':' . (int)$post->id . ':' . (int)$post->version . ':';
+    public static function recent(int $actorid, int $offset, int $limit): array {
+        global $DB;
+        self::require_manager($actorid);
+        return $DB->get_records_select('local_ustar_feed_posts',
+            "status = :published AND publishertype IN ('academy', 'department') AND COALESCE(sourcepostid, 0) = 0",
+            ['published' => 'published'], 'publishedat DESC, id DESC', 'id,body,publishedat', $offset, $limit);
     }
 
-    private static function deliveries(\stdClass $post): array {
+    public static function post_for_notice(\stdClass $notice): ?\stdClass {
+        $event = $notice->eventtype;
+        $uid = (int)$notice->userid;
+        if (!self::enabled() || !in_array($event, [self::EVENT, self::BROADCAST_EVENT], true)) {
+            return null;
+        }
+        $stamp = $event === self::BROADCAST_EVENT ? ':[A-Za-z0-9_-]{43}' : '';
+        if (!preg_match('/\A'.$event.':([1-9][0-9]*):([1-9][0-9]*):'.$uid.$stamp.'\z/',
+                $notice->idempotencykey, $matches)) {
+            return null;
+        }
+        try {
+            $post = feed_access::readable((int)$matches[1], $uid, false);
+            return self::matches($post) && (int)$post->version === (int)$matches[2] ? $post : null;
+        } catch (\required_capability_exception $e) {
+            return null;
+        }
+    }
+
+    private static function deliveries(\stdClass $post, string $event): array {
         global $DB;
+        $prefix = $event . ':' . (int)$post->id . ':' . (int)$post->version . ':';
         return $DB->get_records_sql('SELECT n.userid, d.status
               FROM {local_ustar_notifications} n
               JOIN {local_ustar_notify_delivery} d ON d.notificationid = n.id AND d.channel = :channel
              WHERE n.eventtype = :event AND ' . $DB->sql_like('n.idempotencykey', ':prefix'),
-            ['channel' => 'telegram', 'event' => self::EVENT, 'prefix' => $DB->sql_like_escape(self::prefix($post)) . '%']);
+            ['channel' => 'telegram', 'event' => $event, 'prefix' => $DB->sql_like_escape($prefix) . '%']);
     }
 
     private static function preview_post(\stdClass $post): array {
         if (!self::matches($post)) {
             throw new \invalid_parameter_exception('Выберите опубликованное объявление Академии или отдела.');
         }
-        $deliveries = self::deliveries($post);
+        $deliveries = self::deliveries($post, self::BROADCAST_EVENT);
+        $legacy = self::deliveries($post, self::EVENT);
+        $error = '';
+        $stamp = '';
+        try {
+            $stamp = broadcast_content::snapshot($post)['stamp'];
+        } catch (\invalid_parameter_exception $e) {
+            $error = $e->debuginfo;
+        }
         $eligible = [];
-        if (self::enabled()) {
+        if (self::enabled() && $stamp !== '') {
             foreach (notification_delivery::announcement_candidates() as $userid => $user) {
                 if (!isset($deliveries[$userid]) && notification_delivery::can_enqueue_announcement($userid,
-                        self::prefix($post) . $userid)) {
+                        broadcast_content::key($post, $userid, $stamp), self::BROADCAST_EVENT)) {
                     $eligible[$userid] = ['id' => $userid, 'name' => fullname($user)];
                 }
             }
         }
+        $ids = array_keys($eligible);
+        sort($ids, SORT_NUMERIC);
+        return [
+            'id' => (int)$post->id, 'body' => (string)$post->body,
+            'people' => array_values($eligible), 'peoplecount' => count($ids),
+            'deliveries' => self::counts($deliveries), 'legacydeliveries' => self::counts($legacy),
+            'broadcast_error' => $error, 'sendable' => $stamp !== '',
+            'fingerprint' => hash('sha256', $post->id . ':' . $post->version . ':' . $stamp . ':' . implode(',', $ids)),
+            'stamp' => $stamp,
+        ];
+    }
+
+    private static function counts(array $deliveries): array {
         $statuslabels = [
             'pending' => 'В очереди', 'leased' => 'В очереди', 'sending' => 'Отправляется',
             'retry_wait' => 'Ожидает повтора', 'provider_accepted' => 'Принято Telegram',
@@ -81,13 +131,7 @@ final class announcements {
         foreach ($counts as $label => $count) {
             $status[] = ['label' => $label, 'count' => $count];
         }
-        $ids = array_keys($eligible);
-        sort($ids, SORT_NUMERIC);
-        return [
-            'id' => (int)$post->id, 'body' => (string)$post->body,
-            'people' => array_values($eligible), 'peoplecount' => count($ids), 'deliveries' => $status,
-            'fingerprint' => hash('sha256', self::prefix($post) . implode(',', $ids)),
-        ];
+        return $status;
     }
 
     public static function preview(int $actorid, int $postid): array {
@@ -111,21 +155,22 @@ final class announcements {
                 ['id' => $postid], MUST_EXIST);
             $preview = self::preview_post($post);
             $eligible = array_column($preview['people'], 'id');
-            if (!hash_equals($preview['fingerprint'], $fingerprint) || array_diff($recipientids, $eligible)) {
+            if (!$preview['sendable'] || !hash_equals($preview['fingerprint'], $fingerprint)
+                    || array_diff($recipientids, $eligible)) {
                 throw new \invalid_parameter_exception('Публикация или список получателей изменились. Проверьте предпросмотр.');
             }
             $url = (new \moodle_url('/local/ustar/feed.php', ['postid' => $postid]))->out(false);
             foreach ($recipientids as $userid) {
-                workflow_notifications::enqueue((int)$userid, self::EVENT, 'Объявление Академии',
+                workflow_notifications::enqueue((int)$userid, self::BROADCAST_EVENT, 'Объявление Академии',
                     'Откройте публикацию, чтобы прочитать объявление и посмотреть вложения.',
-                    $url, self::prefix($post) . $userid);
+                    $url, broadcast_content::key($post, (int)$userid, $preview['stamp']));
             }
-            $deliveries = self::deliveries($post);
+            $deliveries = self::deliveries($post, self::BROADCAST_EVENT);
             if (array_diff($recipientids, array_keys($deliveries))) {
                 throw new \invalid_parameter_exception('Настройки доставки изменились. Проверьте список получателей.');
             }
             $DB->insert_record('local_ustar_feed_events', (object)[
-                'postid' => $postid, 'actoruserid' => $actorid, 'action' => 'telegram_announcement',
+                'postid' => $postid, 'actoruserid' => $actorid, 'action' => 'telegram_broadcast',
                 'reason' => (string)count($recipientids), 'timecreated' => time(),
             ]);
             $tx->allow_commit();

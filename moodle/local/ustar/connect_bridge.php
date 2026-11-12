@@ -18,8 +18,14 @@ try {
     }
     $result = \local_ustar\connect\bridge_service::dispatch((string)$body, $headers,
         (array)($CFG->ustar_connect_bridge_keys ?? []));
+    if ($result instanceof \stored_file) {
+        header('Content-Type: application/octet-stream');
+        header('Content-Length: ' . $result->get_filesize());
+        $result->readfile();
+        exit;
+    }
     $flags=JSON_THROW_ON_ERROR;
-    if(isset($result['title'],$result['buttons'])){$flags|=JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES;}
+    if(isset($result['title'],$result['buttons']) || isset($result['broadcast'])){$flags|=JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES;}
     echo json_encode(['ok' => true, 'result' => $result], $flags);
 } catch (\local_ustar\registration_validation_exception $error) {
     http_response_code(422);

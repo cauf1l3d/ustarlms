@@ -192,3 +192,30 @@ class BridgeClient:
             raise ValueError('bridge_unavailable') from None
         except (URLError, OSError, ValueError, RecursionError):
             raise ValueError('bridge_unavailable') from None
+
+    def download_broadcast_file(self, lease, descriptor, target):
+        """Read one leased Moodle file from the signed v3 operation."""
+        signed = sign_request('notification.begin_v3', {**lease, 'file': str(descriptor['id'])},
+                              key_id=self._key_id, secret_hex=self._secret, now=int(time.time()))
+        request = Request(self._endpoint, data=signed.body, headers=signed.headers, method='POST')
+        remaining = descriptor['size']
+        digest = hashlib.sha1(usedforsecurity=False)
+        try:
+            with self._opener.open(request, timeout=10) as response:
+                if response.headers.get('Content-Type') != 'application/octet-stream':
+                    raise ValueError('invalid_broadcast_file_response')
+                while remaining:
+                    data = response.read(min(remaining, 65536))
+                    if not data:
+                        raise ValueError('incomplete_broadcast_file')
+                    remaining -= len(data)
+                    digest.update(data)
+                    target.write(data)
+                if response.read(1) or digest.hexdigest() != descriptor['hash']:
+                    raise ValueError('invalid_broadcast_file_content')
+        except HTTPError as error:
+            error.close()
+            raise ValueError('bridge_unavailable') from None
+        except (URLError, OSError):
+            raise ValueError('bridge_unavailable') from None
+        target.seek(0)

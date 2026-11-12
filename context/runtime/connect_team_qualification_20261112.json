@@ -1,0 +1,40 @@
+{
+  "task": "CONNECT-TEAM-01",
+  "date_msk": "2026-11-12",
+  "pull_request": 118,
+  "application_and_worker_commit": "814a99d9b54196e34c5a2b86529f30e58027da2a",
+  "application_baselines": [
+    "a7a34b4927ffd42db28a8d76e410d20a37d7a434",
+    "fc6c8ca02d940cb346d8000783c4416ff7347784"
+  ],
+  "worker_baseline": "267e55874eb8f6c36259d748f28a2c636adc9810",
+  "local_ustar_version": 2026111200,
+  "theme_ustar_version": 2026110200,
+  "schema_changed": false,
+  "announcements_default": false,
+  "native": {
+    "run_id": 43205004939,
+    "result": "success",
+    "fresh_upgrade_repeat_schema_equal": true,
+    "profiles": [
+      {
+        "moodle": "5.1.1",
+        "job_id": 131137838741,
+        "artifact_id": 13938530171,
+        "artifact_sha256": "aa3e73fefac1d09f5db26bcefe2a3a59ecc0eba084d9911a1301025ad0b15b3f"
+      },
+      {
+        "moodle": "5.1.8",
+        "job_id": 131137838576,
+        "artifact_id": 13938520158,
+        "artifact_sha256": "663c231ba5f183da7c5a5e295b16a1e3b347d4d120bfedb5177320dd66e9dd18"
+      }
+    ],
+    "browser": ["announcement attachments with delivery off", "department leaderboard", "team achievements and skills"]
+  },
+  "operator": "scripts/infra/connect_team_release.py",
+  "builder": "scripts/infra/build_connect_team_release.py",
+  "package_ci": "pending",
+  "server1": "awaiting_owner_installation",
+  "guide": "docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md"
+}

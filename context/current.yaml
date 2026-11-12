@@ -137,8 +137,9 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: PR118 on the qualified reward storefront baseline. Native team, ranking
-    and announcement checks run in isolation.
+  activity: PR118 app and worker 814a99d9 passed native Moodle 5.1.1 and 5.1.8. The
+    combined installer accepts either qualified reward shop baseline. Server1 installation
+    awaits the owner.
   next_task: CONNECT-TEAM-01
   ready_tasks: []
   task_statuses:
@@ -148,7 +149,7 @@ current_work:
     B2B-01: planned
     B2B-02: planned
     CONNECT-RELINK-01: qualified_awaiting_owner_installation
-    CONNECT-TEAM-01: native_verification_pending
+    CONNECT-TEAM-01: native_qualified_package_ci_pending
     DOC-01: done
     DOC-02: done
     DOC-03: done

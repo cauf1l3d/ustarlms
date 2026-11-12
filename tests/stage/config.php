@@ -26,3 +26,9 @@ $CFG->noemailever = true;
 $CFG->disableupdatenotifications = true;
 $CFG->upgradekey = 'fixture-only';
 require_once(__DIR__ . '/lib/setup.php');
+if ($httproot && (parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) === '/local/ustar/team_learning.php')) {
+    set_exception_handler(static function (Throwable $error): void {
+        error_log('Isolated team profile exception: ' . $error->getMessage() . ' in ' . $error->getFile() . ':' . $error->getLine());
+        default_exception_handler($error);
+    });
+}

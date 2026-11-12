@@ -4,7 +4,7 @@
   "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "9696c2e12b66f133355afc7a61ebfa6059469821",
+    "moodle/local/ustar": "1d4ba9c0e31d38254374eb8917901086ac4e5601",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
@@ -1918,7 +1918,7 @@
     },
     {
       "path": "moodle/local/ustar/team_learning.php",
-      "sha256": "6571fed4dcd750b282c008a122ff95b00d89202c4767330ff67cc157a9541378"
+      "sha256": "833d80b321fde19edf5f8e9853729bcdeceeae3343571b4743308146093b9fb7"
     },
     {
       "path": "moodle/local/ustar/templates/achievements.mustache",

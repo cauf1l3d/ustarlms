@@ -18,19 +18,6 @@ $userid =
         PARAM_INT
     );
 
-$data =
-    \local_ustar\department_learning::detail(
-        (int)$USER->id,
-        $userid
-    );
-
-$data['teamurl'] =
-    (
-        new moodle_url(
-            '/local/ustar/team.php'
-        )
-    )->out(false);
-
 $PAGE->set_context($context);
 $PAGE->set_url(
     new moodle_url(
@@ -43,6 +30,10 @@ $PAGE->set_title(
     'Профиль сотрудника | USTAR'
 );
 $PAGE->set_heading('USTAR Academy');
+
+// The profile projection resolves an avatar with this page's renderer.
+$data = \local_ustar\department_learning::detail((int)$USER->id, $userid);
+$data['teamurl'] = (new moodle_url('/local/ustar/team.php'))->out(false);
 
 $PAGE->requires->css(
     new moodle_url(

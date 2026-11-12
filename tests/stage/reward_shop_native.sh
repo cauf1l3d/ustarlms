@@ -23,9 +23,12 @@ export USTAR_STAGE_PREFIX=stage_
 install_sources /source/.stage-input/reward-shop-baseline/moodle
 install_site > /artifacts/reward-shop-baseline.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/reward-shop-before.json
+install_sources /source/.stage-input/reward-shop-installed/moodle
+php admin/cli/upgrade.php --non-interactive > /artifacts/reward-shop-installed.log 2>&1
+php /source/tests/stage/schema_snapshot.php > /artifacts/reward-shop-installed.json
 install_sources /source/moodle
-php admin/cli/upgrade.php --non-interactive > /artifacts/reward-shop-upgrade.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/reward-shop-after.json
+cmp /artifacts/reward-shop-installed.json /artifacts/reward-shop-after.json
 php admin/cli/upgrade.php --non-interactive > /artifacts/reward-shop-repeat.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/reward-shop-repeat.json
 cmp /artifacts/reward-shop-after.json /artifacts/reward-shop-repeat.json

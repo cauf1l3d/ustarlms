@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-11'
+updated_at: '2026-11-12'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -137,11 +137,10 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Reward shop on f843abc8 verified in Moodle 5.1.1 and 5.1.8 with PostgreSQL.
-    Fresh install, exact Telegram source upgrade, repeat upgrade and the employee/admin
-    browser flow passed. The shop is closed by default. Production migration package
-    pending.
-  next_task: REWARD-SHOP-01
+  activity: The owner confirmed the reward shop works. The new storefront and photo
+    management passed real browser checks in Moodle 5.1.1 and 5.1.8. The successor
+    uses the installed a7a34b49 V3 baseline and needs no schema migration.
+  next_task: REWARD-SHOP-UX
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -184,7 +183,8 @@ current_work:
     PERF-01: in_progress
     PLAT-01: deferred
     PRIVACY-01: deferred
-    REWARD-SHOP-01: native_qualified_install_package_pending
+    REWARD-SHOP-01: owner_ui_accepted
+    REWARD-SHOP-UX: native_qualified_owner_install_pending
     ROUTE-EDITOR-01: awaiting_owner_deployment
     RSS-01: done
     STUDIO-01: done

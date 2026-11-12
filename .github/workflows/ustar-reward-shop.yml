@@ -2,10 +2,12 @@ name: USTAR reward shop
 
 on:
   pull_request:
-    branches: [fix/connect-relink-20261111, main]
+    branches: [fix/connect-relink-20261111, feat/reward-shop-20261111, main]
     paths:
       - 'moodle/local/ustar/**'
       - 'tests/stage/reward_shop*'
+      - 'tests/r16/test_reward_shop_ux_release.py'
+      - 'scripts/infra/reward_shop_ux_release.py'
       - '.github/workflows/ustar-reward-shop.yml'
   workflow_dispatch:
 
@@ -41,6 +43,8 @@ jobs:
         run: |
           mkdir -p .stage-input/reward-shop-baseline artifacts
           git archive 53fab3b6fa4a00f492ff355546a2948890ce7395 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-baseline
+          mkdir -p .stage-input/reward-shop-installed
+          git archive a7a34b4927ffd42db28a8d76e410d20a37d7a434 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-installed
           docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml build --pull
       - name: Verify fresh install, upgrade, repeat upgrade and reward transactions
         run: |
@@ -72,3 +76,34 @@ jobs:
             [[ $id =~ ^[a-f0-9]{12,64}$ ]] && docker rm -f "$id" || true
           fi
           docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml down --volumes
+
+  storefront-package:
+    if: github.event.pull_request.base.ref == 'feat/reward-shop-20261111'
+    needs: native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Verify transaction and assemble the source-only update
+        run: |
+          python3 -m unittest tests.r16.test_reward_shop_ux_release -v
+          python3 scripts/infra/reward_shop_ux_release.py build --repo . --target "$(git rev-parse HEAD)" --output artifacts
+          mkdir -p artifacts/verify
+          tar --no-same-owner -xzf artifacts/ustar-reward-shop-ux-*.tar.gz -C artifacts/verify
+          cd artifacts/verify
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -B update.py verify
+          printf '\n' >> payload/classes/reward_shop_cover.php
+          if python3 -I -B update.py verify; then exit 1; fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ustar-reward-shop-storefront-update
+          path: artifacts/ustar-reward-shop-ux-*.tar.gz
+          if-no-files-found: error

@@ -147,6 +147,39 @@ final class reward_shop_test extends \advanced_testcase {
         $this->assertSame(3, economy::balance($employee->id));
     }
 
+    public function test_cover_access_follows_publication_and_department(): void {
+        $this->open();
+        $employee = $this->employee();
+        $other = $this->employee('shop_warehouse');
+        $path = make_request_directory().'/cover.png';
+        file_put_contents($path, base64_decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aQk0AAAAASUVORK5CYII='
+        ));
+        $offer = reward_shop::save_offer($this->admin, 0, 0, 'Награда', '', 7, 2, 'draft', $path);
+        $this->assertArrayHasKey($offer->id, reward_shop_cover::urls([$offer->id]));
+        $this->assertTrue(reward_shop_cover::can_read($this->admin, $offer->id));
+        $this->setUser($employee);
+        $this->assertFalse(reward_shop_cover::can_read($employee->id, $offer->id));
+
+        $this->setAdminUser();
+        $published = reward_shop::save_offer($this->admin, $offer->id, $offer->revision, 'Награда', '', 7, 2, 'published');
+        $this->setUser($employee);
+        $this->assertTrue(reward_shop_cover::can_read($employee->id, $offer->id));
+        $this->setUser($other);
+        $this->assertFalse(reward_shop_cover::can_read($other->id, $offer->id));
+
+        $this->setAdminUser();
+        $this->denied(fn() => reward_shop::save_offer($this->admin, $offer->id, $offer->revision,
+            'Награда', '', 7, 2, 'published', null, true), 'rewardshop_stale');
+        $this->assertArrayHasKey($offer->id, reward_shop_cover::urls([$offer->id]));
+        file_put_contents($path, 'Not an image');
+        $this->denied(fn() => reward_shop::save_offer($this->admin, $offer->id, $published->revision,
+            'Награда', '', 7, 2, 'published', $path), 'rewardshop_coverinvalid');
+        $this->assertArrayHasKey($offer->id, reward_shop_cover::urls([$offer->id]));
+        reward_shop::save_offer($this->admin, $offer->id, $published->revision, 'Награда', '', 7, 2, 'published', null, true);
+        $this->assertSame([], reward_shop_cover::urls([$offer->id]));
+    }
+
     public function test_erasing_pending_order_returns_stock_and_uscoin_before_anonymizing(): void {
         global $DB;
         $this->open();

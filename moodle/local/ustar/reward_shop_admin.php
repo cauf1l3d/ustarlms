@@ -2,6 +2,7 @@
 require_once(__DIR__.'/../../config.php');
 
 use local_ustar\reward_shop;
+use local_ustar\reward_shop_cover;
 
 require_login();
 $userid = (int)$USER->id;
@@ -22,8 +23,10 @@ $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Управление наградами | USTAR');
 $PAGE->set_heading('Управление наградами');
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/ux_tools.css'));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/reward_shop.css'));
 
 $error = '';
+$submittedoffer = [];
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     require_sesskey();
     try {
@@ -34,9 +37,24 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             redirect($url, 'Доступ к магазину обновлён.');
         }
         if ($section === 'offers' && $action === 'save') {
-            $saved = reward_shop::save_offer($userid, $edit, required_param('revision', PARAM_INT),
-                required_param('title', PARAM_TEXT), optional_param('description', '', PARAM_TEXT),
-                required_param('price', PARAM_INT), required_param('stock', PARAM_INT), required_param('publication', PARAM_ALPHA));
+            $submittedoffer = [
+                'revision'=>required_param('revision', PARAM_INT), 'title'=>required_param('title', PARAM_TEXT),
+                'description'=>optional_param('description', '', PARAM_TEXT), 'price'=>required_param('price', PARAM_INT),
+                'stock'=>required_param('stock', PARAM_INT), 'status'=>required_param('publication', PARAM_ALPHA),
+            ];
+            $upload = $_FILES['cover'] ?? [];
+            $coverpath = null;
+            if (($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+                if ($upload['error'] !== UPLOAD_ERR_OK || !is_string($upload['tmp_name'] ?? null)
+                        || !is_uploaded_file($upload['tmp_name'])) {
+                    throw new moodle_exception('rewardshop_coverinvalid', 'local_ustar');
+                }
+                $coverpath = $upload['tmp_name'];
+            }
+            $saved = reward_shop::save_offer($userid, $edit, $submittedoffer['revision'],
+                $submittedoffer['title'], $submittedoffer['description'], $submittedoffer['price'],
+                $submittedoffer['stock'], $submittedoffer['status'],
+                $coverpath, optional_param('removecover', 0, PARAM_BOOL));
             redirect(new moodle_url($base, ['section'=>'offers', 'edit'=>$saved->id]), 'Карточка награды сохранена.');
         }
         if ($section === 'orders' && in_array($action, ['issue', 'reject'], true)) {
@@ -54,6 +72,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 $data = [
     'url'=>$url->out(false), 'sesskey'=>sesskey(), 'error'=>$error,
     'achievementsurl'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),
+    'shopurl'=>(new moodle_url('/local/ustar/reward_shop.php'))->out(false),
+    'canshop'=>reward_shop::can_view_history($userid),
     'show'.$section=>true, 'tabs'=>[],
 ];
 foreach (['orders'=>'Заявки', 'offers'=>'Каталог наград', 'settings'=>'Доступ отделов'] as $key => $title) {
@@ -67,7 +87,10 @@ if ($section === 'settings') {
     }
 } else if ($section === 'offers') {
     $offer = $edit ? $DB->get_record(reward_shop::OFFER, ['id'=>$edit], '*', MUST_EXIST) : null;
-    $data['offer'] = (array)($offer ?? (object)['revision'=>0, 'stock'=>0, 'status'=>'draft']);
+    $current = (array)($offer ?? (object)['revision'=>0, 'stock'=>0, 'status'=>'draft']);
+    $data['offer'] = (($submittedoffer['revision'] ?? -1) === (int)$current['revision'] ? $submittedoffer : []) + $current;
+    $data['offer']['coverurl'] = $edit ? (reward_shop_cover::urls([$edit])[$edit] ?? '') : '';
+    $data['offer']['editing'] = (bool)$edit;
     $data['createurl'] = (new moodle_url($base, ['section'=>'offers']))->out(false);
     $labels = ['draft'=>'Черновик', 'published'=>'Опубликована', 'archived'=>'Архив'];
     foreach ($labels as $status => $label) {

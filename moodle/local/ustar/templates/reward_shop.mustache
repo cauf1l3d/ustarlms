@@ -1,54 +1,81 @@
-<main class="u-product-page u-library">
-  <header class="u-product-head">
-    <div><h1>Магазин наград</h1><p>Доступно {{balance}} USCOIN</p></div>
-    <a class="u-btn" href="{{achievementsurl}}">Достижения</a>
+<main class="u-product-page u-rewards">
+  <header class="u-product-head u-rewards__head">
+    <div>
+      <h1>Магазин наград</h1>
+      <p>Выберите награду за USCOIN и подайте заявку на выдачу.</p>
+    </div>
+    <div class="u-rewards__wallet">
+      <p>Доступно <strong>{{balance}} USCOIN</strong></p>
+      <a href="{{achievementsurl}}">Мои достижения</a>
+    </div>
   </header>
+  <nav class="u-rewards__nav" aria-label="Разделы магазина наград">
+    <a class="u-btn" href="#reward-catalog">Награды</a>
+    <a class="u-btn" href="#reward-orders">Мои заявки</a>
+  </nav>
   {{#error}}<div class="alert alert-warning" role="alert">{{error}}</div>{{/error}}
-  <section class="u-panel" aria-labelledby="reward-catalog">
+  <section aria-labelledby="reward-catalog">
     <h2 id="reward-catalog">Награды</h2>
     {{#showcatalog}}
-      <p>При заявке резервируются монеты и одна награда. При отклонении заявки монеты возвращаются.</p>
-      {{#hasoffers}}
-      <div class="u-library__grid">
-        {{#offers}}
-        <article class="u-lcard">
-          <div class="u-lcard__body">
-            <h3>{{title}}</h3><p>{{description}}</p>
-            <p><strong>{{price}} USCOIN</strong> · Остаток {{stock}}</p>
+    {{#hasoffers}}
+    <p class="u-rewards__note">При подаче заявки USCOIN и награда резервируются. Если заявку отклонят, монеты вернутся на баланс.</p>
+    <div class="u-rewards__grid">
+      {{#offers}}
+      <article class="u-rewards__card">
+        <div class="u-rewards__media">
+          {{#coverurl}}<img src="{{coverurl}}" alt="" loading="lazy" decoding="async">{{/coverurl}}
+          {{^coverurl}}{{{rewardicon}}}{{/coverurl}}
+        </div>
+        <div class="u-rewards__details">
+          <h3>{{title}}</h3>
+          {{#description}}<p class="u-rewards__description">{{description}}</p>{{/description}}
+        </div>
+        <footer class="u-rewards__action">
+          <div class="u-rewards__offer">
+            <strong>{{price}} USCOIN</strong>
+            {{#available}}<span>В наличии {{stock}}</span>{{/available}}
           </div>
-          <div class="u-lcard__actions">
-            {{#canrequest}}
-            <form action="{{url}}" method="post">
-              <input type="hidden" name="sesskey" value="{{sesskey}}">
-              <input type="hidden" name="offerid" value="{{id}}">
-              <input type="hidden" name="revision" value="{{revision}}">
-              <input type="hidden" name="price" value="{{price}}">
-              <input type="hidden" name="nonce" value="{{nonce}}">
-              <button type="submit" class="u-btn u-btn--primary">Подать заявку за {{price}} USCOIN</button>
-            </form>
-            {{/canrequest}}
-            {{^available}}<span>Нет в наличии</span>{{/available}}
-            {{#available}}{{^affordable}}<span>Недостаточно USCOIN</span>{{/affordable}}{{/available}}
-          </div>
-        </article>
-        {{/offers}}
-      </div>
-      {{/hasoffers}}
-      {{^hasoffers}}<p>На этой странице пока нет наград.</p>{{/hasoffers}}
-      {{{catalogpaging}}}
+          {{#canrequest}}
+          <form action="{{url}}" method="post">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="offerid" value="{{id}}">
+            <input type="hidden" name="revision" value="{{revision}}">
+            <input type="hidden" name="price" value="{{price}}">
+            <input type="hidden" name="nonce" value="{{nonce}}">
+            <button type="submit" class="u-btn u-btn--primary">Подать заявку за {{price}} USCOIN</button>
+          </form>
+          {{/canrequest}}
+          {{^available}}<p class="u-rewards__unavailable">Нет в наличии</p>{{/available}}
+          {{#available}}{{#shortfall}}<p class="u-rewards__unavailable">Не хватает {{shortfall}} USCOIN</p>{{/shortfall}}{{/available}}
+        </footer>
+      </article>
+      {{/offers}}
+    </div>
+    {{/hasoffers}}
+    {{^hasoffers}}<p class="u-rewards__empty">На этой странице пока нет наград.</p>{{/hasoffers}}
+    {{{catalogpaging}}}
     {{/showcatalog}}
-    {{^showcatalog}}<p>Сейчас витрина недоступна для вашего подразделения.</p>{{/showcatalog}}
+    {{^showcatalog}}<p class="u-rewards__empty">Сейчас витрина недоступна для вашего подразделения.</p>{{/showcatalog}}
   </section>
-  <section class="u-panel" aria-labelledby="reward-orders">
+  <section aria-labelledby="reward-orders">
     <h2 id="reward-orders">Мои заявки</h2>
-    {{#orders}}<article class="u-lcard">
-      <div class="u-lcard__body"><h3>{{title}}</h3>
-        <p>№ {{id}} · {{date}} · {{price}} USCOIN</p>
-        <p><strong>{{statuslabel}}</strong></p>
-        {{#hasreason}}<p>{{reason}}</p>{{/hasreason}}
-      </div>
-    </article>{{/orders}}
-    {{^hasorders}}<p>На этой странице пока нет заявок.</p>{{/hasorders}}
+    {{#hasorders}}
+    <ul class="u-rewards__orders">
+      {{#orders}}
+      <li>
+        <div class="u-rewards__orderhead">
+          <div>
+            <h3>{{title}}</h3>
+            <p class="u-rewards__note">№ {{id}} · {{date}} · {{price}} USCOIN</p>
+          </div>
+          <span class="u-rewards__status {{#issued}}is-issued{{/issued}} {{#rejected}}is-rejected{{/rejected}}">{{statuslabel}}</span>
+        </div>
+        {{#hasreason}}<p class="u-rewards__reason">{{reason}}</p>{{/hasreason}}
+      </li>
+      {{/orders}}
+    </ul>
+    {{/hasorders}}
+    {{^hasorders}}<p class="u-rewards__empty">На этой странице пока нет заявок.</p>{{/hasorders}}
     {{{orderpaging}}}
   </section>
 </main>

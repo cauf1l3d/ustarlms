@@ -1,0 +1,21 @@
+{
+  "task": "REWARD-SHOP-UX",
+  "date": "2026-11-12",
+  "application_baseline": "a7a34b4927ffd42db28a8d76e410d20a37d7a434",
+  "candidate_application_commit": "de652ae2c444f64850c525ad7abcd0191a4c03c0",
+  "pull_request": 117,
+  "owner_evidence": "Owner reported the original reward shop working and supplied screenshots of an issued request. UX deployment and exact production source postcheck are pending.",
+  "native_ci": {
+    "run_id": 43187176707,
+    "moodle_5_1_1_job": 131077144943,
+    "moodle_5_1_8_job": 131077145363,
+    "result": "success",
+    "checks": ["installed schema parity", "admin upload, replace and remove", "employee direct photo access", "light and dark action geometry", "request, issue and refund"]
+  },
+  "operator": "scripts/infra/reward_shop_ux_release.py",
+  "local_ustar_version": 2026111100,
+  "theme_ustar_version": 2026110200,
+  "schema_changed": false,
+  "worker_changed": false,
+  "guide": "docs/REWARD_SHOP_RU.md"
+}

@@ -1,13 +1,13 @@
 schema_version: 2
-updated_at: '2026-11-11'
+updated_at: '2026-11-12'
 project: USTAR Academy
-stage: reward_shop_qualified_install_package_pending
-stage_label: Reward shop verified in Moodle; migration installer pending
-current_activity: Reward shop on f843abc8 verified in Moodle 5.1.1 and 5.1.8 with PostgreSQL.
-  Fresh install, exact Telegram source upgrade, repeat upgrade and the employee/admin
-  browser flow passed. The shop is closed by default. Production migration package pending.
+stage: reward_shop_storefront_qualified
+stage_label: Reward shop in use; storefront and photos verified in Moodle
+current_activity: The owner confirmed the reward shop works. The new storefront and photo
+  management passed real browser checks in Moodle 5.1.1 and 5.1.8. The successor uses
+  the installed a7a34b49 V3 baseline and needs no schema migration.
 entrypoint: START_HERE.md
-next_task: REWARD-SHOP-01
+next_task: REWARD-SHOP-UX
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -396,18 +396,18 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  application_commit: 7570ffc25d2cc17ad339d63ec25ba7319e15f312
-  status: native_qualified_install_package_pending
-  qualification: context/runtime/reward_shop_qualification_20261111.json
-  branch: feat/reward-shop-20261111
+  application_commit: de652ae2c444f64850c525ad7abcd0191a4c03c0
+  status: native_qualified_owner_install_pending
+  qualification: context/runtime/reward_shop_ux_20261112.json
+  branch: feat/reward-shop-ux-20261112
   deployed: false
   local_ustar_version: 2026111100
   theme_ustar_version: 2026110200
-  schema_changed: true
+  schema_changed: false
   worker_rollout: false
   preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
-  deployment_baseline: 53fab3b6fa4a00f492ff355546a2948890ce7395
-  previous_qualified_delivery: context/runtime/connect_relink_qualification_20261111.json
-  progress: docs/superpowers/plans/2026-11-11-reward-shop.md
+  deployment_baseline: a7a34b4927ffd42db28a8d76e410d20a37d7a434
+  previous_qualified_delivery: context/runtime/reward_shop_qualification_20261111.json
+  progress: docs/REWARD_SHOP_RU.md
   owner_receipt: null
   execution_authorized: true

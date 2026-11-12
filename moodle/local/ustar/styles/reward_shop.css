@@ -1,0 +1,237 @@
+.u-rewards {
+    display: grid;
+    gap: 24px;
+    color: var(--u-text-primary);
+}
+
+.u-rewards__head,
+.u-rewards__nav,
+.u-rewards__offer,
+.u-rewards__orderhead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.u-rewards__nav {
+    justify-content: flex-start;
+}
+
+.u-rewards h2 {
+    margin: 0 0 12px;
+    font-size: clamp(1.375rem, 2.3vw, 1.75rem);
+    scroll-margin-top: 6rem;
+}
+
+.u-rewards__wallet {
+    padding: 12px 16px;
+    border: 1px solid var(--u-border-subtle);
+    border-radius: var(--u-r-md);
+    background: var(--u-surface);
+}
+
+.u-rewards__wallet p {
+    margin: 0 0 2px;
+}
+
+.u-rewards__wallet strong {
+    color: var(--u-text-primary);
+}
+
+.u-rewards__wallet a {
+    color: var(--u-text-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.u-rewards__note {
+    color: var(--u-text-secondary);
+}
+
+.u-rewards__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16.5rem), 1fr));
+    gap: 16px;
+}
+
+.u-rewards__card,
+.u-rewards__orders li,
+.u-rewards__empty {
+    border: 1px solid var(--u-border-subtle);
+    border-radius: var(--u-r-lg);
+    background: var(--u-surface-raised);
+    box-shadow: var(--u-e-1);
+}
+
+.u-rewards__card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.u-rewards__media {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    background: var(--u-surface-muted);
+    overflow: hidden;
+}
+
+.u-rewards__media img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.u-rewards__media .u-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--u-text-secondary);
+}
+
+.u-rewards__details,
+.u-rewards__action,
+.u-rewards__empty {
+    padding: 16px;
+    overflow-wrap: anywhere;
+}
+
+.u-rewards__details {
+    flex: 1;
+}
+
+.u-rewards__details h3,
+.u-rewards__orderhead h3 {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.u-rewards__description {
+    margin: 8px 0 0;
+    color: var(--u-text-secondary);
+    white-space: pre-line;
+}
+
+.u-rewards__action {
+    display: grid;
+    gap: 10px;
+    border-top: 1px solid var(--u-border-subtle);
+}
+
+.u-rewards__offer span {
+    color: var(--u-text-secondary);
+    font-size: .875rem;
+}
+
+.u-rewards__action form {
+    margin: 0;
+}
+
+.u-rewards__action .u-btn,
+.u-rewards__unavailable {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+}
+
+.u-rewards__unavailable {
+    display: grid;
+    place-items: center;
+    margin: 0;
+    padding: 8px 12px;
+    border-radius: var(--u-r-md);
+    background: var(--u-surface-muted);
+    color: var(--u-text-secondary);
+    font-weight: 600;
+}
+
+.u-rewards__empty {
+    margin: 0;
+    color: var(--u-text-secondary);
+}
+
+.u-rewards__orders {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.u-rewards__orders li {
+    padding: 12px 16px;
+    overflow-wrap: anywhere;
+}
+
+.u-rewards__orderhead p {
+    margin: 4px 0 0;
+}
+
+.u-rewards__status {
+    padding: 4px 10px;
+    border-radius: var(--u-r-full);
+    background: var(--u-brand-soft);
+    font-size: .875rem;
+    font-weight: 650;
+}
+
+.u-rewards__status.is-issued {
+    background: var(--u-success-bg);
+}
+
+.u-rewards__status.is-rejected {
+    background: var(--u-danger-bg);
+}
+
+.u-rewards__reason {
+    margin: 8px 0 0;
+}
+
+.u-rewards-admin nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.u-rewards-admin__fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: 0 16px;
+}
+
+.u-rewards-admin__cover {
+    margin: 16px 0;
+    padding: 12px 16px;
+    border: 1px solid var(--u-border);
+    border-radius: var(--u-r-md);
+}
+
+.u-rewards-admin__cover legend {
+    width: auto;
+    padding-inline: 8px;
+    font-size: 1rem;
+    font-weight: 650;
+}
+
+.u-rewards-admin__cover .u-rewards__media {
+    max-width: 280px;
+    border-radius: var(--u-r-md);
+}
+
+.u-rewards-admin__cover input[type="file"] {
+    display: block;
+    max-width: 100%;
+}
+
+.u-rewards-admin__cover p {
+    margin: 8px 0 0;
+}

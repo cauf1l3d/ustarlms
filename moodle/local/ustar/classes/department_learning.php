@@ -242,7 +242,7 @@ final class department_learning {
                 'id' => $userid,
                 'deleted' => 0,
             ],
-            'id,firstname,lastname,lastaccess',
+            'id,lastaccess,' . implode(',', \core_user\fields::get_name_fields()),
             MUST_EXIST
         );
 

@@ -11,14 +11,15 @@
             <input type="hidden" name="action" value="create">
             <input type="hidden" name="sesskey" value="{{sesskey}}">
             <input type="hidden" name="requestkey" value="{{requestkey}}">
-            <label>Подразделение
-                <select name="department" required>
-                    <option value="">Выберите подразделение</option>
-                    {{#departments}}<option value="{{id}}">{{name}}</option>{{/departments}}
-                </select>
-            </label>
-            <label>Текст объявления <textarea name="body" maxlength="5000" rows="5" required></textarea></label>
-            <label>Файлы <input type="file" name="attachments[]" multiple></label>
+            <label for="announce-department">Подразделение</label>
+            <select id="announce-department" name="department" required>
+                <option value="">Выберите подразделение</option>
+                {{#departments}}<option value="{{id}}">{{name}}</option>{{/departments}}
+            </select>
+            <label for="announce-body">Текст объявления</label>
+            <textarea id="announce-body" name="body" maxlength="5000" rows="5" required></textarea>
+            <label for="announce-files">Файлы</label>
+            <input id="announce-files" type="file" name="attachments[]" multiple>
             <p>До 10 файлов. Объявление появится в Ленте отдела, затем можно выбрать получателей для Telegram.</p>
             <button class="u-btn" type="submit">Опубликовать и открыть предпросмотр</button>
         </form>

@@ -4,7 +4,7 @@
   "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "ad009cb8e1767a352352b9dac75804b652f2df02",
+    "moodle/local/ustar": "9696c2e12b66f133355afc7a61ebfa6059469821",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
@@ -1982,7 +1982,7 @@
     },
     {
       "path": "moodle/local/ustar/templates/connect_announcements.mustache",
-      "sha256": "f07e51b7aa1b1ec0d8130e29ea929dbd72008ef3291904f598eabe98a2cfe5e7"
+      "sha256": "a470077353b9c28ab1af2787aaee2a95967d9d68ca7b42bbdace5a6673512e20"
     },
     {
       "path": "moodle/local/ustar/templates/content_view.mustache",

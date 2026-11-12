@@ -76,6 +76,6 @@ final class connect_announcements_test extends \advanced_testcase {
         $lease = notification_delivery::lease('tg_delivery', 'telegram', '123456');
         feed_service::revise($post, $actor, 1, 'Edited version');
         $this->assertSame(['status' => 'cancelled'],
-            notification_delivery::begin_v3($lease['delivery'], $lease['lease'], 'tg_delivery', '123456'));
+            notification_delivery::begin_v3($lease['delivery'], $lease['lease'], 'tg_delivery', 'telegram', '123456'));
     }
 }

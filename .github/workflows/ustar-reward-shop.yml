@@ -2,10 +2,11 @@ name: USTAR reward shop
 
 on:
   pull_request:
-    branches: [fix/connect-relink-20261111, feat/reward-shop-20261111, main]
+    branches: [fix/connect-relink-20261111, feat/reward-shop-20261111, feat/reward-shop-ux-20261112, main]
     paths:
       - 'moodle/local/ustar/**'
       - 'tests/stage/reward_shop*'
+      - 'connect-worker/**'
       - 'tests/r16/test_reward_shop_ux_release.py'
       - 'scripts/infra/reward_shop_ux_release.py'
       - '.github/workflows/ustar-reward-shop.yml'
@@ -39,6 +40,7 @@ jobs:
           node-version: '22'
       - run: npm ci --prefix tests/mobile
       - run: cd tests/mobile && npx playwright install --with-deps chromium
+      - run: python3 -m unittest tests.r16.test_connect_notifications tests.r16.test_connect_telegram_presentation
       - name: Export the previous application and build an isolated runtime
         run: |
           mkdir -p .stage-input/reward-shop-baseline artifacts

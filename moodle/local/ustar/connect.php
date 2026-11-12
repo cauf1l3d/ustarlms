@@ -93,6 +93,9 @@ foreach ($data['deliveries'] ?? [] as $i => $delivery) {
 }
 $data += ['url' => $url->out(false), 'profileurl' => (new moodle_url('/local/ustar/profile.php'))->out(false),
     'sesskey' => sesskey(), 'fullname' => fullname($USER), 'error' => $error, 'haslinks' => (bool)$data['links']];
+if (\local_ustar\connect\announcements::can_manage((int)$USER->id)) {
+    $data['announcementsurl'] = (new moodle_url('/local/ustar/connect_announcements.php'))->out(false);
+}
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_ustar/connect', $data);
 echo $OUTPUT->footer();

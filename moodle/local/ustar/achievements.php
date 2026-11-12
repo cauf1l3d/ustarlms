@@ -19,6 +19,7 @@ $data=['kpipoints'=>$kpipoints,
  'top'=>$top,'hastop'=>!empty($top),'rankrows'=>$rest,'hasrankrows'=>!empty($rest),'currentrank'=>$competition['current']??null,
  'coinbalance'=>$coin['balance'],'coinearned'=>$coin['earned'],'coinspent'=>$coin['spent'],'coindebt'=>$coin['debt'],'hascoindebt'=>$coin['debt']>0,'coinhistory'=>$history,'hascoinhistory'=>!empty($history),
 ];
+$data['departmentleaderboard'] = \local_ustar\department_leaderboard::for_user((int)$USER->id, $xp);
 $shopuserid = (int)$USER->id;
 if (\local_ustar\reward_shop::can_shop($shopuserid) || (\local_ustar\reward_shop::can_view_history($shopuserid)
         && $DB->record_exists(\local_ustar\reward_shop::ORDER, ['userid'=>$shopuserid]))) {

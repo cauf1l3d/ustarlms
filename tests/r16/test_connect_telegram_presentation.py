@@ -53,6 +53,17 @@ class TelegramPresentation(unittest.TestCase):
             self.assertEqual('https://ustar.local/local/ustar/tasks.php',
                 self.calls[-1][1]['reply_markup']['inline_keyboard'][0][0]['url'])
         self.assertNotEqual(*texts)
+    def test_announcement_only_sends_fixed_text_and_academy_link(self):
+        self.assertEqual('provider_accepted', self.run_worker({
+            **PERMIT, 'category': 'feed', 'event': 'feed_announcement',
+        })['status'])
+        method, payload = self.calls[-1]
+        self.assertEqual('sendMessage', method)
+        self.assertIn('Новое объявление в Академии', payload['text'])
+        self.assertNotIn('document', payload)
+        self.assertEqual('https://ustar.local/local/ustar/feed.php',
+            payload['reply_markup']['inline_keyboard'][0][0]['url'])
+
     def test_invalid_event_category_or_version_never_sends(self):
         variants=[{**PERMIT,'event':v} for v in ('private title',None,True,[],{},'feed_reply')]
         variants += [{**PERMIT,'category':[]},{**PERMIT,'severity':{}},{**PERMIT,'version':2},

@@ -40,7 +40,7 @@ $PAGE->set_url(
 );
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title(
-    'Обучение сотрудника | USTAR'
+    'Профиль сотрудника | USTAR'
 );
 $PAGE->set_heading('USTAR Academy');
 

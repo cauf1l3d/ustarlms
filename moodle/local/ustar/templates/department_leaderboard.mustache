@@ -1,0 +1,21 @@
+<section class="u-panel u-leaderboard" aria-labelledby="ustar-department-leaderboard">
+    <header class="u-panel-title">
+        <div><h2 id="ustar-department-leaderboard">Рейтинг отдела</h2>
+        {{#departmentleaderboard}}<p>{{name}} · XP за всё время</p>{{/departmentleaderboard}}</div>
+    </header>
+    {{#departmentleaderboard}}
+    <div class="u-rank-table">
+        {{#rows}}
+        <article class="u-rank-row {{#current}}is-current{{/current}}">
+            <b>#{{rank}}</b>
+            <span class="u-person-dot" aria-hidden="true">{{initials}}</span>
+            <strong>{{displayname}}{{#current}} · Вы{{/current}}</strong>
+            <span>{{xp}} XP</span>
+        </article>
+        {{/rows}}
+    </div>
+    {{#truncated}}<p>Показаны первые 50 участников.</p>{{/truncated}}
+    {{#current}}<div class="u-current-rank"><span>Ваша позиция</span><strong>#{{rank}} · {{xp}} XP</strong></div>{{/current}}
+    {{/departmentleaderboard}}
+    {{^departmentleaderboard}}<p class="u-empty-mini">Рейтинг доступен сотрудникам с назначенным подразделением.</p>{{/departmentleaderboard}}
+</section>

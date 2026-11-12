@@ -11,7 +11,7 @@ final class notification_policy {
         'task_started' => 'tasks', 'task_sent_for_review' => 'tasks', 'task_completed' => 'tasks',
         'task_approved' => 'tasks', 'task_returned' => 'tasks', 'task_cancelled' => 'tasks',
         'task_reminder' => 'tasks', 'task_escalation' => 'tasks',
-        'feed_comment' => 'feed', 'feed_reply' => 'feed',
+        'feed_comment' => 'feed', 'feed_reply' => 'feed', 'feed_announcement' => 'feed',
         'grade_request' => 'grades', 'grade_approved' => 'grades', 'grade_returned' => 'grades',
     ];
     public static function category(string $event): ?string { return self::EVENTS[$event] ?? null; }
@@ -28,6 +28,7 @@ final class notification_policy {
             'task_cancelled' => 'Задача отменена', 'task_reminder' => 'Напоминание о задаче',
             'task_escalation' => 'Требуется внимание к задаче',
             'feed_comment' => 'Новый комментарий', 'feed_reply' => 'Новый ответ на комментарий',
+            'feed_announcement' => 'Новое объявление в Академии',
             'grade_request' => 'Новая заявка на грейд', 'grade_approved' => 'Грейд подтверждён',
             'grade_returned' => 'Заявка на грейд возвращена', default => 'Событие',
         };
@@ -74,6 +75,18 @@ final class notification_policy {
                 && $r->status === ($event === 'grade_approved' ? 'approved' : 'rejected');
         }
         if (self::category($event) === 'feed') {
+            if ($event === 'feed_announcement') {
+                if (!announcements::enabled() || !preg_match('/\Afeed_announcement:([1-9][0-9]*):([1-9][0-9]*):'.$uid.'\z/',
+                        $key, $matches)) {
+                    return false;
+                }
+                try {
+                    $post = \local_ustar\feed_access::readable((int)$matches[1], $uid, false);
+                    return announcements::matches($post) && (int)$post->version === (int)$matches[2];
+                } catch (\required_capability_exception $error) {
+                    return false;
+                }
+            }
             if (!preg_match('/\A'.preg_quote($event, '/').':([1-9][0-9]*):'.$uid.':[0-9]+\z/', $key, $m)) { return false; }
             try { \local_ustar\feed_access::readable((int)$m[1], $uid); return true; }
             catch (\required_capability_exception $error) { return false; }

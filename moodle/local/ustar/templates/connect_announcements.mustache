@@ -1,0 +1,63 @@
+<main class="u-product-page u-ux-tools">
+    <a class="u-backlink" href="{{connecturl}}">← Мессенджеры</a>
+    <header class="u-product-head">
+        <div><h1>Рассылки Telegram</h1><p>Выберите публикацию, проверьте список и отметьте получателей.</p></div>
+    </header>
+    {{#error}}<div class="alert alert-warning" role="alert">{{error}}</div>{{/error}}
+    {{^enabled}}<div class="alert alert-info">Отправка сейчас закрыта. Предпросмотр и история доступны.</div>{{/enabled}}
+    <details class="u-panel u-ux-form">
+        <summary>Новая публикация с файлами</summary>
+        <form method="post" action="{{base}}" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="create">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="requestkey" value="{{requestkey}}">
+            <label>Подразделение
+                <select name="department" required>
+                    <option value="">Выберите подразделение</option>
+                    {{#departments}}<option value="{{id}}">{{name}}</option>{{/departments}}
+                </select>
+            </label>
+            <label>Текст объявления <textarea name="body" maxlength="5000" rows="5" required></textarea></label>
+            <label>Файлы <input type="file" name="attachments[]" multiple></label>
+            <p>До 10 файлов. Объявление появится в Ленте отдела, затем можно выбрать получателей для Telegram.</p>
+            <button class="u-btn" type="submit">Опубликовать и открыть предпросмотр</button>
+        </form>
+    </details>
+    <section class="u-panel u-ux-form" aria-labelledby="announce-select">
+        <h2 id="announce-select">Публикация из Ленты</h2>
+        <form action="{{base}}" method="get">
+            <label for="announce-post">Последние публикации Академии и отделов</label>
+            <select id="announce-post" name="postid" required>
+                <option value="">Выберите публикацию</option>
+                {{#options}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{date}} · {{title}}</option>{{/options}}
+            </select>
+            <button class="u-btn" type="submit">Предпросмотр</button>
+        </form>
+    </section>
+    {{#preview}}
+    <section class="u-panel u-ux-form" aria-labelledby="announce-preview">
+        <h2 id="announce-preview">Предпросмотр</h2>
+        <p style="white-space:pre-wrap;overflow-wrap:anywhere">{{body}}</p>
+        <a href="{{posturl}}">Открыть публикацию в Ленте</a>
+        <h3>Вложения</h3>
+        <ul>{{#files}}<li>{{name}}</li>{{/files}}{{^files}}<li>Вложений нет</li>{{/files}}</ul>
+        {{#deliveries}}<p>{{label}} · {{count}}</p>{{/deliveries}}
+        {{#enabled}}
+        <form method="post" action="{{formurl}}">
+            <input type="hidden" name="action" value="enqueue">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="fingerprint" value="{{fingerprint}}">
+            <fieldset>
+                <legend>Получатели с доступом к публикации · {{peoplecount}}</legend>
+                {{#people}}<label><input type="checkbox" name="recipients[]" value="{{id}}"> {{name}}</label>{{/people}}
+                {{^people}}<p>Нет новых получателей с активной привязкой и включёнными уведомлениями Ленты.</p>{{/people}}
+            </fieldset>
+            {{#peoplecount}}
+            <p>Бот сообщит об объявлении. Текст и файлы доступны в Академии.</p>
+            <button class="u-btn u-btn--primary" type="submit">Подтвердить отправку</button>
+            {{/peoplecount}}
+        </form>
+        {{/enabled}}
+    </section>
+    {{/preview}}
+</main>

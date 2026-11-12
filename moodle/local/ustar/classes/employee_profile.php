@@ -156,6 +156,10 @@ class employee_profile {
         ];
     }
 
+    public static function skills_for_user(int $userid): array {
+        return self::skills($userid, people::position_id($userid), structure::get(structure::NAME_STRUCTURE));
+    }
+
     /** @return array<string,mixed> */
     private static function skills(int $userid, string $positionid, array $structure): array {
         if ($positionid === '') {

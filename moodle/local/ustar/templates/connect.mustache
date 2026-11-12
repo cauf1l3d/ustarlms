@@ -1,6 +1,7 @@
 <main class="u-product-page u-ux-tools">
   <header class="u-product-head"><div><h1>Мессенджеры</h1><p>{{fullname}} · Связи вашей учётной записи Академии</p></div>
     <a class="u-btn" href="{{profileurl}}">Личный кабинет</a></header>
+  {{#announcementsurl}}<a class="u-btn" href="{{announcementsurl}}">Рассылки Telegram</a>{{/announcementsurl}}
   {{#error}}<div class="alert alert-warning" role="alert">{{error}}</div>{{/error}}
   {{#confirmed}}<div class="alert alert-success" role="status">Связь подтверждена. Отправьте боту новый /start. Права определяет ваша учётная запись Академии.</div>{{/confirmed}}
   <section class="u-panel u-ux-form">

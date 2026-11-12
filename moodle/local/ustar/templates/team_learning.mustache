@@ -14,7 +14,7 @@
 
     <div>
         <p class="u-page-kicker">
-            Обучение сотрудника
+            Профиль сотрудника
         </p>
 
         <h1>{{fullname}}</h1>
@@ -29,6 +29,30 @@
     </div>
 </header>
 {{/person}}
+
+{{#staffoverview}}
+<section class="u-panel" aria-labelledby="ustar-team-achievements">
+    <h2 id="ustar-team-achievements">Достижения</h2>
+    <div class="u-learning-profile-summary">
+        <article><span>Учебный опыт</span><strong>{{xp}} XP</strong><small>Уровень {{level}}</small></article>
+        <article><span>Рабочие результаты</span><strong>{{kpipoints}} KPI</strong></article>
+        <article><span>Курсы завершены</span><strong>{{completedCourses}}</strong></article>
+        <article><span>Активность за 30 дней</span><strong>{{activeDays30}} дн.</strong></article>
+    </div>
+    <h3>Награды</h3>
+    {{#hasbadges}}<div class="u-badge-grid">
+        {{#badges}}<article class="u-badge-card">{{{icon}}}<div><strong>{{name}}</strong><small>{{date}}</small></div></article>{{/badges}}
+    </div>{{/hasbadges}}
+    {{^hasbadges}}<p class="u-empty-mini">Наград пока нет.</p>{{/hasbadges}}
+</section>
+<section class="u-panel" aria-labelledby="ustar-team-skills">
+    <header class="u-panel-title"><div>
+        <h2 id="ustar-team-skills">Навыки по должности</h2>
+        {{#hasskills}}<p>Подтверждено {{skillconfirmed}} из {{skillrequired}} · Осталось {{skillgaps}}</p>{{/hasskills}}
+    </div></header>
+    {{> local_ustar/profile_skill_items}}
+</section>
+{{/staffoverview}}
 
 {{#snapshot}}
 <section class="u-learning-profile-summary">

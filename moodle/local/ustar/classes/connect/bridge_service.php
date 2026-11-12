@@ -5,7 +5,7 @@ defined('MOODLE_INTERNAL') || die();
 /** Fixed operation router. Service credentials cannot choose Moodle actors or PHP methods. */
 final class bridge_service {
     public static function dispatch(#[\SensitiveParameter] string $body, array $headers,
-            #[\SensitiveParameter] array $keys): array {
+            #[\SensitiveParameter] array $keys): array|\stored_file {
         $request = bridge_auth::verify($body, $headers, $keys, time());
         $op = $request['operation'];
         $payload = $request['payload'];
@@ -18,8 +18,13 @@ final class bridge_service {
             'registration.status', 'registration.options' => ['browser', 'session'],
             'registration.submit' => ['browser', 'command', 'departmentid', 'email', 'firstname', 'lastname', 'password', 'session', 'username'],
             'link.claim' => ['auth_date', 'code', 'proof', 'provider', 'subject', 'tenant'],
-            'notification.lease' => ['limit'],
-            'notification.begin', 'notification.begin_v2', 'notification.begin_v3' => ['delivery', 'lease'],
+            'notification.lease' => array_key_exists('broadcast', $payload) ? ['broadcast', 'limit'] : ['limit'],
+            'notification.begin', 'notification.begin_v2' => ['delivery', 'lease'],
+            'notification.begin_v3' => match (true) {
+                array_key_exists('file', $payload) => ['delivery', 'file', 'lease'],
+                array_key_exists('stamp', $payload) => ['delivery', 'lease', 'stamp'],
+                default => ['delivery', 'lease'],
+            },
             'notification.ack' => ['action', 'message_id', 'provider', 'subject', 'tenant'],
             'notification.finish' => ['delivery', 'lease', 'outcome', 'provider_ref', 'reason', 'retry_after'],
         };
@@ -43,7 +48,13 @@ final class bridge_service {
         if ($op==='bot.upload') { return bot_upload::chunk($sender,$payload); }
         if ($op === 'notification.lease') {
             if ($payload['limit'] !== '1') { throw new \InvalidArgumentException('invalid_payload'); }
-            return notification_delivery::lease($kid, $request['provider'], $request['tenant']) ?? ['status' => 'empty'];
+            $broadcast = array_key_exists('broadcast', $payload);
+            if ($broadcast && ($payload['broadcast'] !== '1'
+                    || !in_array('notification.begin_v3', $keys[$kid]['operations'], true))) {
+                throw new \InvalidArgumentException('forbidden_operation');
+            }
+            return notification_delivery::lease($kid, $request['provider'], $request['tenant'], null, $broadcast)
+                ?? ['status' => 'empty'];
         }
         if ($op === 'notification.ack') {
             return notification_action::acknowledge($payload['action'], $sender, $payload['message_id'], time());
@@ -54,8 +65,17 @@ final class bridge_service {
                 throw new \InvalidArgumentException('invalid_delivery');
             }
             if ($op !== 'notification.finish') {
+                if (isset($payload['file'])) {
+                    if (!preg_match('/\A[1-9][0-9]{0,18}\z/', $payload['file'])
+                            || filter_var($payload['file'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) === false) {
+                        throw new \InvalidArgumentException('invalid_delivery');
+                    }
+                    return notification_delivery::broadcast_file((int)$payload['delivery'], $payload['lease'], (int)$payload['file'],
+                        $kid, $request['provider'], $request['tenant']);
+                }
                 return match ($op) {
-                    'notification.begin_v3' => notification_delivery::begin_v3((int)$payload['delivery'], $payload['lease'], $kid, $request['provider'], $request['tenant']),
+                    'notification.begin_v3' => notification_delivery::begin_v3((int)$payload['delivery'], $payload['lease'],
+                        $kid, $request['provider'], $request['tenant'], null, $payload['stamp'] ?? null),
                     'notification.begin_v2' => notification_delivery::begin_v2((int)$payload['delivery'], $payload['lease'], $kid, $request['provider'], $request['tenant']),
                     default => notification_delivery::begin((int)$payload['delivery'], $payload['lease'], $kid, $request['provider'], $request['tenant']),
                 };

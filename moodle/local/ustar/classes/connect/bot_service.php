@@ -50,6 +50,7 @@ final class bot_service {
                         str_starts_with($intent,'work.')=>bot_work::route($d,$intent,$data,$p),
                         str_starts_with($intent,'people.')=>bot_people::route($d,$intent,$data,$p['text']),
                         str_starts_with($intent,'learn.')=>bot_learning::route($d,$intent,$data,$p['text']),
+                        str_starts_with($intent,'broadcast.')=>bot_broadcast::route($d,$intent,$data),
                         str_starts_with($intent,'settings')=>self::settings($d,$intent,$data),
                         default=>self::menu($d,bot_actor::link(new identity($p['provider'],$p['tenant'],$p['subject']))),
                     };
@@ -155,6 +156,9 @@ final class bot_service {
             $buttons[]=bot_store::button($d,'👤 Заявки сотрудников','people.requests');
         }
         if (bot_actor::capability($id,'executive')) { $buttons[]=bot_store::button($d,'🏢 Сводка компании','work.company'); }
+        if (announcements::enabled() && announcements::operator_capability($id)) {
+            $buttons[] = bot_store::button($d, '📣 Рассылки Telegram', 'broadcast.posts');
+        }
         return bot_store::card('USTAR · Ваш рабочий день','Выберите действие. Доступ определяется текущими правами в Академии.',$buttons);
     }
     public static function home(\stdClass $d): array { return bot_store::button($d,'⌂ Главное меню','menu'); }

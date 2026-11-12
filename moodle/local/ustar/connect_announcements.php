@@ -2,6 +2,7 @@
 require_once(__DIR__ . '/../../config.php');
 
 use local_ustar\connect\announcements;
+use local_ustar\connect\broadcast_content;
 use local_ustar\feed_service;
 use local_ustar\task_files;
 
@@ -26,9 +27,14 @@ try {
         require_sesskey();
         $action = required_param('action', PARAM_ALPHA);
         if ($action === 'create') {
+            $body = required_param('body', PARAM_TEXT);
+            $uploads = task_files::uploaded();
+            broadcast_content::require_fit($body, array_map(static fn(array $file): array => [
+                'name' => $file['filename'], 'size' => $file['size'],
+            ], $uploads));
             $postid = feed_service::create($actorid, 'academy', 'academy',
-                ['department:' . required_param('department', PARAM_ALPHANUMEXT)], required_param('body', PARAM_TEXT),
-                true, 0, task_files::uploaded(), required_param('requestkey', PARAM_ALPHANUMEXT));
+                ['department:' . required_param('department', PARAM_ALPHANUMEXT)], $body,
+                true, 0, $uploads, required_param('requestkey', PARAM_ALPHANUMEXT));
             redirect(new moodle_url($base, ['postid' => $postid]), 'Публикация готова. Выберите получателей в Telegram.');
         }
         if ($action !== 'enqueue') {
@@ -48,9 +54,7 @@ if ($postid > 0) {
         $error = $failure->debuginfo;
     }
 }
-$posts = $DB->get_records_select('local_ustar_feed_posts',
-    "status = :published AND publishertype IN ('academy', 'department') AND COALESCE(sourcepostid, 0) = 0",
-    ['published' => 'published'], 'publishedat DESC, id DESC', 'id,body,publishedat', 0, 50);
+$posts = announcements::recent($actorid, 0, 50);
 $options = [];
 foreach ($posts as $post) {
     $options[] = [

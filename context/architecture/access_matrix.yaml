@@ -100,6 +100,7 @@ capabilities:
   - moodle/local/ustar/operations.php
   - moodle/local/ustar/positions.php
   - moodle/local/ustar/route.php
+  - moodle/local/ustar/tests/connect_announcements_test.php
   direct_check_paths:
   - moodle/local/ustar/brand.php
   - moodle/local/ustar/checklist_studio.php
@@ -764,6 +765,7 @@ capabilities:
   - moodle/local/ustar/classes/feed_service.php
   - moodle/local/ustar/db/install.php
   - moodle/local/ustar/db/upgrade.php
+  - moodle/local/ustar/tests/connect_announcements_test.php
   - moodle/local/ustar/tests/feed_roles_test.php
   direct_check_paths:
   - moodle/local/ustar/classes/feed_access.php

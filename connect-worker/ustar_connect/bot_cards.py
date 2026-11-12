@@ -16,19 +16,24 @@ def _text(value, limit):
     return value[:limit]+('… [текст сокращён]' if clipped else '')
 
 
-def _confirmation_url(value, origin):
+def _academy_url(value, origin):
     if not isinstance(value,str) or not isinstance(origin,str):
         raise ValueError('invalid_bot_url')
     actual,base=urlsplit(value),urlsplit(origin)
     if (base.scheme!='https' or not base.hostname or base.username or base.password
             or base.path not in ('','/') or base.query or base.fragment
             or actual.scheme!=base.scheme or actual.netloc!=base.netloc or actual.username or actual.password
-            or actual.path!='/local/ustar/connect_bot_confirm.php' or actual.fragment):
+            or actual.fragment):
         raise ValueError('invalid_bot_url')
-    values=parse_qsl(actual.query,keep_blank_values=True,strict_parsing=True)
-    if len(values)!=1 or values[0][0]!='action':
+    values = parse_qsl(actual.query, keep_blank_values=True, strict_parsing=True)
+    if len(values) != 1:
         raise ValueError('invalid_bot_url')
-    _token(values[0][1],'cb4')
+    key, argument = values[0]
+    if actual.path == '/local/ustar/connect_bot_confirm.php' and key == 'action':
+        _token(argument, 'cb4')
+    elif (actual.path != '/local/ustar/feed.php' or key != 'postid'
+          or not re.fullmatch('[1-9][0-9]{0,18}', argument) or int(argument) >= 2**63):
+        raise ValueError('invalid_bot_url')
     return value
 
 
@@ -82,7 +87,7 @@ def render_view(view, *, academy_origin=None):
         style=button_style(button['label'])
         if style:item['style']=style
         if 'callback' in button:item['callback_data']=_token(button['callback'],'cb4')
-        else:item['url']=_confirmation_url(button['url'],academy_origin)
+        else:item['url']=_academy_url(button['url'],academy_origin)
         # One short action per row also accommodates long Russian labels on narrow phones.
         keyboard.append([item])
     value={'text':'\n\n'.join(parts),'parse_mode':'HTML','link_preview_options':{'is_disabled':True},

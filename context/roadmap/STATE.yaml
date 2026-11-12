@@ -1,11 +1,11 @@
 schema_version: 2
 updated_at: '2026-11-12'
 project: USTAR Academy
-stage: connect_announcements_and_team_candidate
-stage_label: Qualified Academy and Connect archive awaiting owner installation
-current_activity: PR118 app and worker 814a99d9 passed Moodle 5.1.1 and 5.1.8. Archive c2c4125e matches CI and the retained download. Server1 installation awaits the owner.
+stage: connect_direct_broadcast_candidate
+stage_label: Direct Telegram broadcast under verification
+current_activity: Owner installed 814a99d9 and received the pilot publication notice. The successor sends explicitly approved text and files from Academy and the linked operator bot.
 entrypoint: START_HERE.md
-next_task: CONNECT-TEAM-01
+next_task: CONNECT-BROADCAST-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -23,6 +23,7 @@ code_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
+  latest_connect_team_owner_receipt: context/runtime/connect_team_owner_deploy_20261112.json
   latest_SCORM_tracking_evidence: context/runtime/scorm_tracking_owner_20261102.json
   latest_SCORM_functional_acceptance: context/runtime/scorm_tracking_owner_20261102.json
   latest_owner_browser_acceptance: context/runtime/library_marketplace_owner_deploy_20261103.json
@@ -395,16 +396,16 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   status: native_verification_pending
-  previous_qualification: context/runtime/reward_shop_ux_20261112.json
-  branch: feat/connect-team-overview-20261112
+  previous_qualification: context/runtime/connect_team_qualification_20261112.json
+  branch: feat/connect-direct-broadcast-20261112
   deployed: false
-  local_ustar_version: 2026111200
+  local_ustar_version: 2026111201
   theme_ustar_version: 2026110200
   schema_changed: false
   worker_rollout: true
-  preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
-  deployment_baseline: fc6c8ca02d940cb346d8000783c4416ff7347784
-  previous_qualified_delivery: context/runtime/reward_shop_qualification_20261111.json
+  preserved_worker: 814a99d9b54196e34c5a2b86529f30e58027da2a
+  deployment_baseline: 814a99d9b54196e34c5a2b86529f30e58027da2a
+  previous_qualified_delivery: context/runtime/connect_team_qualification_20261112.json
   progress: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
   owner_receipt: null
   execution_authorized: true

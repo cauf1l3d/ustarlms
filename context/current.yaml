@@ -25,6 +25,7 @@ application_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
+  latest_connect_team_owner_receipt: context/runtime/connect_team_owner_deploy_20261112.json
   latest_SCORM_tracking_evidence: context/runtime/scorm_tracking_owner_20261102.json
   latest_SCORM_functional_acceptance: context/runtime/scorm_tracking_owner_20261102.json
   latest_owner_browser_acceptance: context/runtime/library_marketplace_owner_deploy_20261103.json
@@ -137,9 +138,10 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: PR118 app and worker 814a99d9 passed Moodle 5.1.1 and 5.1.8. Archive c2c4125e
-    matches CI and the retained download. Server1 installation awaits the owner.
-  next_task: CONNECT-TEAM-01
+  activity: Owner installed 814a99d9 and received the pilot publication notice. The
+    successor sends explicitly approved text and files from Academy and the linked
+    operator bot.
+  next_task: CONNECT-BROADCAST-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -147,8 +149,9 @@ current_work:
     AUDIT-FIX-01: in_progress
     B2B-01: planned
     B2B-02: planned
+    CONNECT-BROADCAST-01: native_verification_pending
     CONNECT-RELINK-01: qualified_awaiting_owner_installation
-    CONNECT-TEAM-01: qualified_archive_awaiting_owner_installation
+    CONNECT-TEAM-01: owner_installed_pilot_notice_delivered
     DOC-01: done
     DOC-02: done
     DOC-03: done

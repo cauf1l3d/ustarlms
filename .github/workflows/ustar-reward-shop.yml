@@ -2,7 +2,7 @@ name: USTAR reward shop
 
 on:
   pull_request:
-    branches: [fix/connect-relink-20261111, feat/reward-shop-20261111, feat/reward-shop-ux-20261112, main]
+    branches: [fix/connect-relink-20261111, feat/reward-shop-20261111, feat/reward-shop-ux-20261112, feat/connect-team-overview-20261112, main]
     paths:
       - 'moodle/local/ustar/**'
       - 'tests/stage/reward_shop*'
@@ -40,13 +40,17 @@ jobs:
           node-version: '22'
       - run: npm ci --prefix tests/mobile
       - run: cd tests/mobile && npx playwright install --with-deps chromium
-      - run: python3 -m unittest tests.r16.test_connect_notifications tests.r16.test_connect_telegram_presentation
+      - run: python3 -m unittest tests.r16.test_connect_notifications tests.r16.test_connect_telegram_presentation tests.r16.test_connect_direct_broadcast
       - name: Export the previous application and build an isolated runtime
         run: |
           mkdir -p .stage-input/reward-shop-baseline artifacts
           git archive 53fab3b6fa4a00f492ff355546a2948890ce7395 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-baseline
           mkdir -p .stage-input/reward-shop-installed
-          git archive fc6c8ca02d940cb346d8000783c4416ff7347784 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-installed
+          installed=fc6c8ca02d940cb346d8000783c4416ff7347784
+          if test "$GITHUB_BASE_REF" = feat/connect-team-overview-20261112; then
+            installed=814a99d9b54196e34c5a2b86529f30e58027da2a
+          fi
+          git archive "$installed" moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-installed
           docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml build --pull
       - name: Verify fresh install, upgrade, repeat upgrade and reward transactions
         run: |

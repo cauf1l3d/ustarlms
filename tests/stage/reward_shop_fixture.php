@@ -27,3 +27,8 @@ $userid = user_create_user((object)[
 unset_user_preference('auth_forcepasswordchange', $userid);
 \local_ustar\economy::post($userid, 20, 'fixture', 'fixture-reward-shop', '', '', '', (int)get_admin()->id);
 file_put_contents('/artifacts/reward-shop-fixture.json', json_encode(['employee' => $userid], JSON_THROW_ON_ERROR));
+\core\session\manager::set_user($DB->get_record('user', ['id' => $userid], '*', MUST_EXIST));
+$achievements = \local_ustar\achievement_summary::read($userid);
+if (!\local_ustar\department_leaderboard::for_user($userid, $achievements['xp'])) {
+    throw new RuntimeException('Missing current department leaderboard');
+}

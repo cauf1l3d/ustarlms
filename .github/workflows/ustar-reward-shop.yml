@@ -70,6 +70,7 @@ jobs:
             artifacts/reward-shop-*.log
             artifacts/reward-shop-*.json
             artifacts/reward-shop-*.xml
+            artifacts/shell-http-server.log
       - name: Dispose only the isolated test project
         if: always()
         run: |

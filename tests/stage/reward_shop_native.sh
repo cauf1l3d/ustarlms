@@ -39,8 +39,11 @@ cmp /artifacts/reward-shop-after.json /artifacts/reward-shop-fresh.json
 php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/reward-shop-phpunit-init.log 2>&1
 php vendor/bin/phpunit --display-notices --fail-on-notice --log-junit /artifacts/reward-shop-unit.xml \
     public/local/ustar/tests/reward_shop_test.php 2>&1 | tee /artifacts/reward-shop-unit.log
-php vendor/bin/phpunit --display-notices --fail-on-notice --filter 'team_achievements_test|connect_announcements_test' \
-    --log-junit /artifacts/reward-shop-team-connect.xml public/local/ustar/tests 2>&1 | tee /artifacts/reward-shop-team-connect.log
-php /source/tests/stage/reward_shop_fixture.php
+for feature in team_achievements connect_announcements; do
+    php vendor/bin/phpunit --display-notices --fail-on-notice --fail-on-empty-test-suite \
+        --log-junit "/artifacts/reward-shop-${feature}.xml" "public/local/ustar/tests/${feature}_test.php" \
+        2>&1 | tee "/artifacts/reward-shop-${feature}.log"
+done
+php /source/tests/stage/reward_shop_fixture.php 2>&1 | tee /artifacts/reward-shop-fixture.log
 echo 'REWARD_SHOP_SCHEMA_AND_DB=PASS'
 bash /source/tests/stage/authenticated_shell_smoke.sh studio-browser

@@ -17,7 +17,12 @@ function adminCookies() {
 }
 
 async function visit(page, url) {
-    assert.equal((await page.goto(url)).status(), 200);
+    const response = await page.goto(url);
+    if (response.status() !== 200) {
+        const message = await page.locator('.alert-danger, .errormessage').first().textContent({timeout: 1500})
+            .catch(() => '');
+        assert.equal(response.status(), 200, `${new URL(url).pathname}: ${message.trim()}`);
+    }
 }
 
 async function submit(button, page) {

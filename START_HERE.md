@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально 11.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
+Актуально 12.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
 PR110 (RSS2803) и PR111 (ролевой Connect/графика) объединены после единой FullRC.
 [Интеграция](context/runtime/connect_feed_integration_order_20261101.json).
 
@@ -9,6 +9,8 @@ PR110 (RSS2803) и PR111 (ролевой Connect/графика) объедин�
 3. [Owner267](context/runtime/connect_visual_owner_deploy_20261101.json), [архитектура](context/architecture/overview.md).
 
 ## Текущая работа
+
+12.11.2026. Владелец подтвердил работу магазина. [Витрина и фото наград](docs/REWARD_SHOP_RU.md) проверены в Moodle и готовятся к отдельной поставке.
 
 11.11.2026. Исправление Telegram квалифицировано. [Установка](docs/CONNECT_RELINK_INSTALL_RU.md).
 [Разбор](context/reviews/20261111/CONNECT_RELINK.md), [задачи](context/tasks/ACTIVE.md).

@@ -1,10 +1,10 @@
 schema_version: 2
-updated_at: '2026-11-11'
+updated_at: '2026-11-12'
 project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: reward_shop_qualified_install_package_pending
+  stage: reward_shop_storefront_qualified
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -35,11 +35,11 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: REWARD-SHOP-01
-  related_task: CONNECT-RELINK-01
-  status: native_qualified_install_package_pending
-  qualification: context/runtime/reward_shop_qualification_20261111.json
-  spec: docs/superpowers/plans/2026-11-11-reward-shop.md
+  task: REWARD-SHOP-UX
+  related_task: REWARD-SHOP-01
+  status: native_qualified_owner_install_pending
+  qualification: context/runtime/reward_shop_ux_20261112.json
+  spec: docs/REWARD_SHOP_RU.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py
   observation_sha256: ee883caff5be0b391db583bb4deeb795c1dbd3c1bba0c4127faa02f9cd444f92

@@ -6,6 +6,7 @@ services:
 - moodle/local/ustar/classes/economy.php
 - moodle/local/ustar/classes/reward_control.php
 - moodle/local/ustar/classes/reward_shop.php
+- moodle/local/ustar/classes/reward_shop_cover.php
 - moodle/local/ustar/classes/reward_conditions.php
 - moodle/local/ustar/classes/route_rewards.php
 - moodle/local/ustar/classes/competition.php
@@ -28,6 +29,7 @@ rules:
 - XP/KPI/competition points are distinct
 - Current named season ranking follows ADR0013, which supersedes pseudonym display
 - Reward reset retains history with compensating/accounting semantics
+- Reward covers belong to an offer in Moodle File API; employees read only published covers within current shop access
 entry_points:
 - moodle/local/ustar/achievements.php
 - moodle/local/ustar/competition_studio.php

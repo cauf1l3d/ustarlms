@@ -4,7 +4,7 @@
   "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "3120fbb19ba4c8420b021a50a51ec812bea1f453",
+    "moodle/local/ustar": "4224cf847db8301a9f7462ee602094255c3e34a7",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
@@ -12,7 +12,7 @@
     "theme_ustar": 2026110200
   },
   "counts": {
-    "files": 659,
+    "files": 661,
     "tables": 110
   },
   "files": [
@@ -846,7 +846,11 @@
     },
     {
       "path": "moodle/local/ustar/classes/reward_shop.php",
-      "sha256": "2786f3629e00ac46ce7546a76ca741681935eec622706cd21970c6dbc5f57262"
+      "sha256": "9d73c02d0e0a2bd9497f641e08ef6c8a369028be30081adf50ecc3e1111eb341"
+    },
+    {
+      "path": "moodle/local/ustar/classes/reward_shop_cover.php",
+      "sha256": "5615d854c9ec066b4fc0bf22b6400e779a224b18804d401ff6093c4de34a9877"
     },
     {
       "path": "moodle/local/ustar/classes/route_commands.php",
@@ -1490,11 +1494,11 @@
     },
     {
       "path": "moodle/local/ustar/lang/en/local_ustar.php",
-      "sha256": "8d809ffa32418deff764cc38bf80d72f866b665b4b6a11a321300b2898dd1013"
+      "sha256": "5e7292a58e6a582081d813c58c4a26c34c3f3a274c3e6f6de8f40201d688760f"
     },
     {
       "path": "moodle/local/ustar/lang/ru/local_ustar.php",
-      "sha256": "791f87cd9b8f4146b28571677cc1b1da3aa52ecd420939d5860b0a546ce7287f"
+      "sha256": "e08a6f9ccec74c31c236f38f537b95832e8b2f7a399a0aac99e957e1485fb64a"
     },
     {
       "path": "moodle/local/ustar/learning.php",
@@ -1506,7 +1510,7 @@
     },
     {
       "path": "moodle/local/ustar/lib.php",
-      "sha256": "aa2c22cddf2dc15242d1ee0bdbc0ab8246ebdcd46ca2891f48032f4918540b03"
+      "sha256": "1d99414bc0f8af9e098c96a5a954aef25e770d805c950537c96a7d77d6f208b5"
     },
     {
       "path": "moodle/local/ustar/library.php",
@@ -1686,11 +1690,11 @@
     },
     {
       "path": "moodle/local/ustar/reward_shop.php",
-      "sha256": "6d25d6d9b87fc127227f6a4289de0f830dbed6113d348b707f3b2fcb8ebbf381"
+      "sha256": "2af8cb70af88d437ab9e019e036c747236d839b6bf862993332560752fc946a6"
     },
     {
       "path": "moodle/local/ustar/reward_shop_admin.php",
-      "sha256": "01b42ba89ec594a3f7b62ee4e2471857004bcb848ea21b7a4a2307df80547efd"
+      "sha256": "80650b75fad3cf071f2bdd2d76c207639de616b527d68daa63c7cbfd3ae02fda"
     },
     {
       "path": "moodle/local/ustar/route.php",
@@ -1847,6 +1851,10 @@
     {
       "path": "moodle/local/ustar/styles/reward_control.css",
       "sha256": "ffd01c3fce0d4a566c38a435b9807ebfa35252c5139d770978dd05d3bb137a37"
+    },
+    {
+      "path": "moodle/local/ustar/styles/reward_shop.css",
+      "sha256": "5886c869e3bd82fbc5d423db0443599b910510b6b528d0f7029b648ee6bdde86"
     },
     {
       "path": "moodle/local/ustar/styles/route_flow.css",
@@ -2114,11 +2122,11 @@
     },
     {
       "path": "moodle/local/ustar/templates/reward_shop.mustache",
-      "sha256": "0aea9aabfdef6db4d7c5f3a03c457fd63590652a22dacd0b42c35e48613ede21"
+      "sha256": "468edef027e257e2899a5629a6239cd77fe1784f14143eaec8caff3ecfd8be5d"
     },
     {
       "path": "moodle/local/ustar/templates/reward_shop_admin.mustache",
-      "sha256": "344d3c07e3abe8b8072852ce80134293906233c323d391d5f0f06a60cdf99e1c"
+      "sha256": "1280a3344b7ff17651979fbbeba576c8c3efc33e0394c5ada9e007743f92b6d4"
     },
     {
       "path": "moodle/local/ustar/templates/role_quiz.mustache",
@@ -2358,7 +2366,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/reward_shop_test.php",
-      "sha256": "da1c7849e879b4253e7d503fdcd8d60427d63b5473159819a4dd1b70570da61b"
+      "sha256": "b5d37be9891a68adcac44ebe9a621e23d227b5e6f86920688629a1a78afcd08a"
     },
     {
       "path": "moodle/local/ustar/tests/reward_workspace_test.php",

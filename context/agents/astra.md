@@ -14,6 +14,8 @@ Moodle5.2/PG17/Docker rotation отложены; agent SSH/subagents/provider se
 
 Native UI — local_ustar/theme_ustar; frontend/legacy не входит в текущий CI/release. Не создавать вторые stores сотрудников/completion/rewards/messages. Сохранять историю и реальные роли, current scope, view-as read-only и install/upgrade parity.
 
+12Nov: владелец подтвердил работающий магазин. Витрина и фото наград PR117 прошли Moodle 5.1.1/5.1.8. Поставка поверх a7a34b49 V3, приёмка владельцем ожидается. [Проверки](../runtime/reward_shop_ux_20261112.json).
+
 03Nov: owner installed marketplace app4715383b/tool59f, success/exit0/postcheck active,
 «Отлично работает». [Receipt](../runtime/library_marketplace_owner_deploy_20261103.json).
 Production0200,649 fixed files/108tables; main2900 remains separate, PR112/113/114 open.

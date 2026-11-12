@@ -848,7 +848,7 @@ tasks:
   - Повторная отвязка сохраняет новый код подтверждения
 - id: REWARD-SHOP-01
   title: Магазин наград за USCOIN
-  status: native_qualified_install_package_pending
+  status: owner_ui_accepted
   qualification: context/runtime/reward_shop_qualification_20261111.json
   reference: docs/superpowers/plans/2026-11-11-reward-shop.md
   depends_on: []
@@ -856,6 +856,16 @@ tasks:
   - Витрина и история заявок сотрудника
   - Управление наградами и выдачей из админки
   - Списание и возврат через единый реестр USCOIN
+- id: REWARD-SHOP-UX
+  title: Витрина магазина и фото наград
+  status: native_qualified_owner_install_pending
+  qualification: context/runtime/reward_shop_ux_20261112.json
+  reference: docs/REWARD_SHOP_RU.md
+  depends_on: [REWARD-SHOP-01]
+  acceptance:
+  - Кнопка и состояния баланса и остатка помещаются в карточку
+  - Администратор загружает, заменяет и удаляет фото
+  - Прямая ссылка на фото учитывает публикацию и отдел сотрудника
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

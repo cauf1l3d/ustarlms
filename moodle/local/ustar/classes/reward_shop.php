@@ -104,7 +104,8 @@ final class reward_shop {
     }
 
     public static function save_offer(int $actor, int $id, int $revision, string $title,
-            string $description, int $price, int $stock, string $status): \stdClass {
+            string $description, int $price, int $stock, string $status,
+            ?string $coverpath = null, bool $removecover = false): \stdClass {
         self::require_manager($actor);
         $title = trim($title);
         $description = trim($description);
@@ -113,7 +114,10 @@ final class reward_shop {
                 || !in_array($status, ['draft', 'published', 'archived'], true)) {
             self::fail('invalid');
         }
-        return self::mutate(static function() use ($actor, $id, $revision, $title, $description, $price, $stock, $status) {
+        if ($coverpath !== null && $removecover) { self::fail('coverconflict'); }
+        $covermime = $coverpath !== null ? reward_shop_cover::validate($coverpath) : null;
+        return self::mutate(static function() use ($actor, $id, $revision, $title, $description, $price, $stock,
+                $status, $coverpath, $covermime, $removecover) {
             global $DB;
             self::require_manager($actor);
             $old = $id ? $DB->get_record(self::OFFER, ['id'=>$id]) : false;
@@ -129,6 +133,9 @@ final class reward_shop {
                 $DB->update_record(self::OFFER, $record);
             } else {
                 $record->id = $DB->insert_record(self::OFFER, $record);
+            }
+            if ($coverpath !== null || $removecover) {
+                reward_shop_cover::replace((int)$record->id, $coverpath, $covermime);
             }
             return $record;
         });

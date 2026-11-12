@@ -2,7 +2,7 @@ name: USTAR reward shop
 
 on:
   pull_request:
-    branches: [fix/connect-relink-20261111, main]
+    branches: [fix/connect-relink-20261111, feat/reward-shop-20261111, main]
     paths:
       - 'moodle/local/ustar/**'
       - 'tests/stage/reward_shop*'
@@ -41,6 +41,8 @@ jobs:
         run: |
           mkdir -p .stage-input/reward-shop-baseline artifacts
           git archive 53fab3b6fa4a00f492ff355546a2948890ce7395 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-baseline
+          mkdir -p .stage-input/reward-shop-installed
+          git archive a7a34b4927ffd42db28a8d76e410d20a37d7a434 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-installed
           docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml build --pull
       - name: Verify fresh install, upgrade, repeat upgrade and reward transactions
         run: |

@@ -3,6 +3,8 @@ require_once(__DIR__.'/../../config.php');
 
 use local_ustar\economy;
 use local_ustar\reward_shop;
+use local_ustar\reward_shop_cover;
+use local_ustar\ui;
 
 require_login();
 $context = context_system::instance();
@@ -17,7 +19,7 @@ $PAGE->set_url($url);
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Магазин наград | USTAR');
 $PAGE->set_heading('Магазин наград');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/library.css'));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/reward_shop.css'));
 
 $error = '';
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
@@ -37,10 +39,13 @@ $showcatalog = reward_shop::can_shop($userid);
 $balance = economy::balance($userid);
 $offers = [];
 if ($showcatalog) {
-    foreach ($DB->get_records(reward_shop::OFFER, ['status'=>'published'], 'title ASC, id ASC', '*', $catalogpage * 24, 24) as $offer) {
+    $published = $DB->get_records(reward_shop::OFFER, ['status'=>'published'], 'title ASC, id ASC', '*', $catalogpage * 24, 24);
+    $covers = reward_shop_cover::urls(array_keys($published));
+    foreach ($published as $offer) {
         $offers[] = (array)$offer + [
             'nonce'=>bin2hex(random_bytes(16)), 'available'=>$offer->stock > 0,
-            'affordable'=>$offer->price <= $balance, 'canrequest'=>$offer->stock > 0 && $offer->price <= $balance,
+            'canrequest'=>$offer->stock > 0 && $offer->price <= $balance,
+            'shortfall'=>max(0, (int)$offer->price - $balance), 'coverurl'=>$covers[$offer->id] ?? '',
         ];
     }
 }
@@ -48,6 +53,7 @@ $orders = [];
 foreach ($DB->get_records(reward_shop::ORDER, ['userid'=>$userid], 'id DESC', '*', $orderpage * 20, 20) as $order) {
     $orders[] = (array)$order + [
         'statuslabel'=>get_string('rewardshop_order_'.$order->status, 'local_ustar'),
+        'issued'=>$order->status === 'issued', 'rejected'=>$order->status === 'rejected',
         'date'=>userdate((int)$order->timecreated), 'hasreason'=>trim((string)$order->reason) !== '',
     ];
 }
@@ -55,6 +61,7 @@ $data = [
     'url'=>$url->out(false), 'sesskey'=>sesskey(), 'error'=>$error, 'balance'=>$balance,
     'achievementsurl'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),
     'showcatalog'=>$showcatalog, 'offers'=>$offers, 'hasoffers'=>(bool)$offers,
+    'rewardicon'=>ui::icon('trophy'),
     'orders'=>$orders, 'hasorders'=>(bool)$orders,
     'catalogpaging'=>$showcatalog ? $OUTPUT->paging_bar(
         $DB->count_records(reward_shop::OFFER, ['status'=>'published']), $catalogpage, 24,

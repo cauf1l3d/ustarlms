@@ -34,6 +34,18 @@ function local_ustar_pluginfile(
         return false;
     }
 
+    if ($filearea === \local_ustar\reward_shop_cover::AREA) {
+        if (count($args) !== 2 || !ctype_digit($args[0])) { return false; }
+        [$offerid, $filename] = $args;
+        if (!\local_ustar\reward_shop_cover::can_read((int)$USER->id, (int)$offerid)) { return false; }
+        $file = get_file_storage()->get_file($context->id, 'local_ustar', $filearea, (int)$offerid, '/', $filename);
+        if (!$file || $file->is_directory()) { return false; }
+        header('X-Content-Type-Options: nosniff');
+        header("Content-Security-Policy: sandbox; default-src 'none';");
+        send_stored_file($file, 0, 0, $forcedownload, $options);
+        return true;
+    }
+
     if ($filearea === \local_ustar\chat_files::AREA) {
         if (count($args) !== 2) { return false; }
         $messageid = (int)array_shift($args);

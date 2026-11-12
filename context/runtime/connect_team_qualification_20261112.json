@@ -34,7 +34,22 @@
   },
   "operator": "scripts/infra/connect_team_release.py",
   "builder": "scripts/infra/build_connect_team_release.py",
-  "package_ci": "pending",
+  "package_ci": {
+    "commit": "9d77a1485d7fac5c7808fca2022cba3c03833723",
+    "run_id": 43234703261,
+    "job_id": 131238851942,
+    "artifact_id": 13951248631,
+    "artifact_zip_sha256": "a394885745cae53415e80c4a5392d514f83f6b43ac4476d721400dfffad06e5f",
+    "archive": "ustar-connect-team-814a99d9.tar.gz",
+    "archive_sha256": "c2c4125e3548a93bbe437cd64809f03aa6fc41003083c69e519fcacd6137ffd7",
+    "archive_bytes": 501256,
+    "archive_members": 43,
+    "application_files": 39,
+    "transaction_tests": 11,
+    "archive_membership_and_crc": "verified",
+    "artifact_matches_local_and_retained_download": true,
+    "result": "success"
+  },
   "server1": "awaiting_owner_installation",
   "guide": "docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md"
 }

@@ -1,6 +1,6 @@
 # Активная работа · 12.11.2026
 
-PR118. Рассылки, рейтинг отдела и профиль сотрудника прошли Moodle 5.1.1 и 5.1.8. [Сценарии](../../docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md), [проверки](../runtime/connect_team_qualification_20261112.json).
+PR118. Архив Академии и Connect c2c4125e проверен и ждёт установки. [Сценарии](../../docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md), [проверки](../runtime/connect_team_qualification_20261112.json).
 
 ## Повторная привязка Telegram
 

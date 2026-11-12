@@ -868,7 +868,7 @@ tasks:
   - Прямая ссылка на фото учитывает публикацию и отдел сотрудника
 - id: CONNECT-TEAM-01
   title: Контролируемые рассылки Telegram, рейтинг отдела и профиль сотрудника
-  status: native_qualified_package_ci_pending
+  status: qualified_archive_awaiting_owner_installation
   qualification: context/runtime/connect_team_qualification_20261112.json
   reference: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
   depends_on: [REWARD-SHOP-UX]

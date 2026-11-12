@@ -37,7 +37,7 @@ current_operator_handoff:
 current_work:
   task: CONNECT-TEAM-01
   related_task: REWARD-SHOP-UX
-  status: native_qualified_package_ci_pending
+  status: qualified_archive_awaiting_owner_installation
   previous_qualification: context/runtime/reward_shop_ux_20261112.json
   qualification: context/runtime/connect_team_qualification_20261112.json
   spec: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md

@@ -59,14 +59,7 @@ $structure = \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE)
 $registrationdepartments = \local_ustar\registration_service::departments();
 $personalgrade = $pending ? ['enabled' => false] : \local_ustar\grade_promotion::current((int)$USER->id);
 
-$badges = [];
-foreach (($dashboard['badges'] ?? []) as $badge) {
-    $badges[] = [
-        'name' => (string)($badge['name'] ?? 'Награда'),
-        'date' => !empty($badge['dateissued']) ? userdate((int)$badge['dateissued'], '%d.%m.%Y') : '',
-        'icon' => \local_ustar\ui::icon('trophy', 'u-feature-icon'),
-    ];
-}
+$badges = \local_ustar\achievement_summary::badges_for_display($dashboard['badges'] ?? []);
 
 $kpipoints = \local_ustar\reward_control::kpi((int)$USER->id);
 $data = ['kpipoints'=>$kpipoints, 'cancontrolrewards'=>\local_ustar\reward_control::can_manage((int)$USER->id),

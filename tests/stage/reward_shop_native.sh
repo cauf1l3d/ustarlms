@@ -27,6 +27,7 @@ install_sources /source/.stage-input/reward-shop-installed/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/reward-shop-installed.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/reward-shop-installed.json
 install_sources /source/moodle
+php admin/cli/upgrade.php --non-interactive > /artifacts/reward-shop-successor.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/reward-shop-after.json
 cmp /artifacts/reward-shop-installed.json /artifacts/reward-shop-after.json
 php admin/cli/upgrade.php --non-interactive > /artifacts/reward-shop-repeat.log 2>&1
@@ -38,6 +39,11 @@ cmp /artifacts/reward-shop-after.json /artifacts/reward-shop-fresh.json
 php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/reward-shop-phpunit-init.log 2>&1
 php vendor/bin/phpunit --display-notices --fail-on-notice --log-junit /artifacts/reward-shop-unit.xml \
     public/local/ustar/tests/reward_shop_test.php 2>&1 | tee /artifacts/reward-shop-unit.log
-php /source/tests/stage/reward_shop_fixture.php
+php /source/tests/stage/reward_shop_fixture.php 2>&1 | tee /artifacts/reward-shop-fixture.log
+for feature in team_achievements connect_announcements; do
+    php vendor/bin/phpunit --display-notices --fail-on-notice --fail-on-empty-test-suite \
+        --log-junit "/artifacts/reward-shop-${feature}.xml" "public/local/ustar/tests/${feature}_test.php" \
+        2>&1 | tee "/artifacts/reward-shop-${feature}.log"
+done
 echo 'REWARD_SHOP_SCHEMA_AND_DB=PASS'
 bash /source/tests/stage/authenticated_shell_smoke.sh studio-browser

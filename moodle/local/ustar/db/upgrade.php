@@ -5031,5 +5031,9 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         }
         upgrade_plugin_savepoint(true, 2026111100, 'local', 'ustar');
     }
+    if ($oldversion < 2026111200) {
+        // Register the new Moodle cache definition; no tables or records are changed.
+        upgrade_plugin_savepoint(true, 2026111200, 'local', 'ustar');
+    }
 return true;
 }

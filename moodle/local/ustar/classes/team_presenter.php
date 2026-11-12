@@ -263,7 +263,7 @@ final class team_presenter {
         $user = $DB->get_record(
             'user',
             ['id' => $userid, 'deleted' => 0],
-            'id,firstname,lastname,email,picture,imagealt',
+            implode(',', \core_user\fields::for_userpic()->get_required_fields()),
             IGNORE_MISSING
         );
 

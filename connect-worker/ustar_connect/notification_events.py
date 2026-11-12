@@ -17,6 +17,7 @@ EVENTS = {
     'task_escalation': ('tasks', 'Требуется внимание к задаче'),
     'feed_comment': ('feed', 'Новый комментарий'),
     'feed_reply': ('feed', 'Новый ответ на комментарий'),
+    'feed_announcement': ('feed', 'Новое объявление в Академии'),
     'grade_request': ('grades', 'Новая заявка на грейд'),
     'grade_approved': ('grades', 'Грейд подтверждён'),
     'grade_returned': ('grades', 'Заявка на грейд возвращена'),

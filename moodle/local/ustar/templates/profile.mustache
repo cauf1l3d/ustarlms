@@ -92,17 +92,7 @@
 
         <section class="u-panel">
             <header class="u-panel-title"><div><p class="u-page-kicker">Учебные требования</p><h2>Прогресс обучения по навыкам</h2></div><span>{{readiness}}%</span></header>
-            {{#hasskills}}
-            <div class="u-skill-mini-list">
-                {{#skillitems}}
-                <div class="u-skill-mini {{#satisfied}}is-ok{{/satisfied}}">
-                    <div><strong>{{name}}</strong><small>{{category}} · уровень {{targetlevel}}</small></div>
-                    {{#satisfied}}<b>Обучение подтверждено</b>{{/satisfied}}{{^satisfied}}<b>Обучение ожидается</b>{{/satisfied}}
-                </div>
-                {{/skillitems}}
-            </div>
-            {{/hasskills}}
-            {{^hasskills}}<div class="u-empty-mini">Навыки появятся после назначения должности.</div>{{/hasskills}}
+            {{> local_ustar/profile_skill_items}}
         </section>
     </div>
 

@@ -187,9 +187,10 @@ final class feed_access {
     }
 
     /** Add this clause BEFORE keyset paging/limit; never fetch and filter in PHP. */
-    public static function audience_sql(int $userid, string $alias, array &$params, string $prefix = 'feed'): string {
+    public static function audience_sql(int $userid, string $alias, array &$params, string $prefix = 'feed',
+            bool $operatoroverride = true): string {
         self::require_reader($userid);
-        if (self::can_manage($userid) && !view_as::active()) {
+        if ($operatoroverride && self::can_manage($userid) && !view_as::active()) {
             return '1 = 1';
         }
         static $departments = [];
@@ -232,10 +233,10 @@ final class feed_access {
     }
 
     /** Published posts require both current ACLs; a repost never copies private content. */
-    public static function readable(int $postid, int $userid): \stdClass {
+    public static function readable(int $postid, int $userid, bool $operatoroverride = true): \stdClass {
         global $DB;
         $params = ['id' => $postid, 'published' => 'published'];
-        $audience = self::audience_sql($userid, 'p', $params);
+        $audience = self::audience_sql($userid, 'p', $params, 'feed', $operatoroverride);
         $post = $DB->get_record_sql("SELECT p.* FROM {local_ustar_feed_posts} p
                                       WHERE p.id = :id AND p.status = :published AND {$audience}", $params);
         if (!$post) {

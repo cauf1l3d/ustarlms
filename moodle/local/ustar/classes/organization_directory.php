@@ -8,9 +8,10 @@ final class organization_directory {
     public static function users(bool $activeonly = false): array {
         global $DB;
         $select = 'deleted = 0 AND id > 1' . ($activeonly ? ' AND suspended = 0' : '');
+        $fields = ['id', 'username', 'email', 'department', 'suspended', 'lastaccess', 'confirmed'];
+        $fields = implode(',', array_merge($fields, \core_user\fields::get_name_fields()));
         $rows = [];
-        foreach ($DB->get_records_select('user', $select, [], 'lastname ASC, firstname ASC',
-            'id,username,firstname,lastname,middlename,email,department,suspended,lastaccess,confirmed') as $user) {
+        foreach ($DB->get_records_select('user', $select, [], 'lastname ASC, firstname ASC', $fields) as $user) {
             $userid = (int)$user->id;
             if (!accounts::is_business_account($userid)) continue;
             if ($activeonly && !accounts::participates($userid)) continue;

@@ -1,5 +1,7 @@
 # Активная работа · 12.11.2026
 
+PR118. Архив Академии и Connect c2c4125e проверен и ждёт установки. [Сценарии](../../docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md), [проверки](../runtime/connect_team_qualification_20261112.json).
+
 ## Повторная привязка Telegram
 
 CONNECT-RELINK-01. Отзыв освобождает возможность подключить другой Telegram после

@@ -1,0 +1,12 @@
+{{#hasskills}}
+<div class="u-skill-mini-list">
+    {{#skillitems}}
+    <div class="u-skill-mini {{#satisfied}}is-ok{{/satisfied}}">
+        <div><strong>{{name}}</strong><small>{{category}} · уровень {{targetlevel}}</small></div>
+        {{#satisfied}}<b>Обучение подтверждено</b>{{/satisfied}}
+        {{^satisfied}}<b>Обучение ожидается</b>{{/satisfied}}
+    </div>
+    {{/skillitems}}
+</div>
+{{/hasskills}}
+{{^hasskills}}<div class="u-empty-mini">Для должности пока нет требований по навыкам.</div>{{/hasskills}}

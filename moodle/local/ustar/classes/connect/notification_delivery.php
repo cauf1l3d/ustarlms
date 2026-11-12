@@ -49,6 +49,26 @@ final class notification_delivery {
         }
         return in_array($userid, $ids, true);
     }
+    /** Recipient labels only. Telegram account identifiers stay in the delivery service. */
+    public static function announcement_candidates(): array {
+        global $DB;
+        $tenant = self::channel();
+        if (!self::enabled() || !$tenant) { return []; }
+        return $DB->get_records_sql('SELECT u.id, u.firstname, u.lastname, u.middlename,
+                u.firstnamephonetic, u.lastnamephonetic, u.alternatename
+            FROM {local_ustar_conn_links} l JOIN {user} u ON u.id = l.userid
+            WHERE l.provider = :provider AND l.tenant = :tenant AND l.state = :state
+              AND u.deleted = 0 AND u.suspended = 0 AND u.confirmed = 1
+            ORDER BY u.lastname, u.firstname, u.id', ['provider' => 'telegram', 'tenant' => $tenant, 'state' => 'linked']);
+    }
+
+    public static function can_enqueue_announcement(int $userid, string $key): bool {
+        return self::eligible((object)[
+            'userid' => $userid, 'eventtype' => 'feed_announcement', 'idempotencykey' => $key,
+            'status' => 'unread', 'severity' => 'normal', 'timecreated' => time(),
+        ]) !== null;
+    }
+
     /** Called only while the NEW canonical notification writer owns its transaction. */
     public static function enqueue(int $notificationid): void {
         global $DB;
@@ -172,6 +192,10 @@ final class notification_delivery {
             $notice = $DB->get_record('local_ustar_notifications', ['id' => $row->notificationid]);
             $link = $notice ? self::eligible($notice, $row) : null;
             if (!$link || (int)$row->connexpires <= $now) { return self::state($row, 'cancelled', $now); }
+            if ($notice->eventtype === announcements::EVENT && $version !== 3) {
+                $row->nextattempt = $now + 300;
+                return self::state($row, 'retry_wait', $now);
+            }
             $next = self::next_time($row, $notice, $now);
             if ($next > $now) { $row->nextattempt = $next; return self::state($row, 'retry_wait', $now); }
             if ((int)$row->attempts >= 5) { return self::state($row, 'failed', $now, 'max_attempts'); }

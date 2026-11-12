@@ -52,6 +52,7 @@ capabilities:
   - moodle/local/ustar/classes/branding.php
   - moodle/local/ustar/classes/capabilities.php
   - moodle/local/ustar/classes/checklist_service.php
+  - moodle/local/ustar/classes/connect/announcements.php
   - moodle/local/ustar/classes/content_admin.php
   - moodle/local/ustar/classes/external/admin_get_games.php
   - moodle/local/ustar/classes/external/admin_get_structure.php
@@ -106,6 +107,7 @@ capabilities:
   - moodle/local/ustar/classes/assessment_authoring.php
   - moodle/local/ustar/classes/branding.php
   - moodle/local/ustar/classes/checklist_service.php
+  - moodle/local/ustar/classes/connect/announcements.php
   - moodle/local/ustar/classes/content_admin.php
   - moodle/local/ustar/classes/external/admin_get_games.php
   - moodle/local/ustar/classes/external/admin_get_structure.php
@@ -183,6 +185,7 @@ capabilities:
   - moodle/local/ustar/tests/organization_identity_test.php
   - moodle/local/ustar/tests/recruiter_access_test.php
   - moodle/local/ustar/tests/task_workspace_test.php
+  - moodle/local/ustar/tests/team_achievements_test.php
   direct_check_paths:
   - moodle/local/ustar/classes/academy_guide.php
   - moodle/local/ustar/classes/adaptation_service.php
@@ -654,12 +657,14 @@ capabilities:
   - moodle/local/ustar/team.php
   - moodle/local/ustar/team_learning.php
   - moodle/local/ustar/tests/communication_test.php
+  - moodle/local/ustar/tests/connect_announcements_test.php
   - moodle/local/ustar/tests/connect_notification_ack_test.php
   - moodle/local/ustar/tests/connect_notification_action_test.php
   - moodle/local/ustar/tests/connect_notification_test.php
   - moodle/local/ustar/tests/feed_roles_test.php
   - moodle/local/ustar/tests/organization_identity_test.php
   - moodle/local/ustar/tests/recruiter_access_test.php
+  - moodle/local/ustar/tests/team_achievements_test.php
   - moodle/local/ustar/user_prefs.php
   - moodle/local/ustar/view.php
   - moodle/local/ustar/workspace.php

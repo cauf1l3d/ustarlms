@@ -242,7 +242,7 @@ final class department_learning {
                 'id' => $userid,
                 'deleted' => 0,
             ],
-            'id,firstname,lastname,lastaccess',
+            'id,lastaccess,' . implode(',', \core_user\fields::get_name_fields()),
             MUST_EXIST
         );
 
@@ -292,6 +292,7 @@ final class department_learning {
             'assessments' => $assessments,
             'hasassessments' => !empty($assessments),
             'person' => $person,
+            'staffoverview' => self::staff_overview($managerid, $userid),
             'snapshot' => $snapshot,
             'current' =>
                 $snapshot['currentpoint']
@@ -307,6 +308,31 @@ final class department_learning {
         ];
     }
 
+
+    private static function staff_overview(int $viewerid, int $userid): ?array {
+        global $USER;
+        if ((int)$USER->id !== $viewerid || view_as::active() || \core\session\manager::is_loggedinas()
+                || !accounts::participates($userid) || !team_access::active_actor($userid)) {
+            return null;
+        }
+        $achievements = achievement_summary::read($userid);
+        $badges = achievement_summary::badges_for_display($achievements['badges']);
+        $skills = employee_profile::skills_for_user($userid);
+        return [
+            'xp' => $achievements['xp'],
+            'level' => $achievements['level'],
+            'activeDays30' => $achievements['activeDays30'],
+            'completedCourses' => $achievements['completedCourses'],
+            'kpipoints' => reward_control::kpi($userid),
+            'badges' => $badges,
+            'hasbadges' => (bool)$badges,
+            'skillrequired' => $skills['required'],
+            'skillconfirmed' => $skills['confirmed'],
+            'skillgaps' => $skills['gaps'],
+            'skillitems' => $skills['items'],
+            'hasskills' => (bool)$skills['items'],
+        ];
+    }
 
     public static function can_view(
         int $managerid,

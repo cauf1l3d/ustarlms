@@ -75,7 +75,7 @@ final class notification_policy {
                 && $r->status === ($event === 'grade_approved' ? 'approved' : 'rejected');
         }
         if (self::category($event) === 'feed') {
-            if ($event === 'feed_announcement') {
+            if ($event === announcements::EVENT) {
                 if (!announcements::enabled() || !preg_match('/\Afeed_announcement:([1-9][0-9]*):([1-9][0-9]*):'.$uid.'\z/',
                         $key, $matches)) {
                     return false;

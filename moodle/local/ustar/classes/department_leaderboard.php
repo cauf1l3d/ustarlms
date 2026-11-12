@@ -17,7 +17,7 @@ final class department_leaderboard {
             return null;
         }
         $members = array_filter(organization_directory::users(true),
-            static fn($employee) => $employee->departmentid === $department);
+            static fn($employee) => $employee->confirmed && $employee->departmentid === $department);
         if (!isset($members[$userid])) {
             return null;
         }

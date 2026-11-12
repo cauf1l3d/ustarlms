@@ -137,10 +137,31 @@ function imageUpload(bytes) {
         await visit(learner, shopUrl);
         await card.locator('.u-rewards__media svg').waitFor();
         assert.equal((await employee.request.get(newCover)).status(), 404);
+
+        await visit(manager, base + '/local/ustar/connect_announcements.php');
+        await manager.getByText('Новая публикация с файлами', {exact: true}).click();
+        await manager.getByLabel('Подразделение', {exact: true}).selectOption('reward_fixture');
+        await manager.getByLabel('Текст объявления').fill('Файлы для команды');
+        await manager.getByLabel('Файлы', {exact: true}).setInputFiles(imageUpload(cover));
+        await submit(manager.getByRole('button', {name: 'Опубликовать и открыть предпросмотр'}), manager);
+        await manager.getByText('reward.png', {exact: true}).waitFor();
+        await manager.getByText('Отправка сейчас закрыта.', {exact: false}).waitFor();
+        const post = await manager.getByRole('link', {name: 'Открыть публикацию в Ленте'}).getAttribute('href');
+        await visit(learner, post);
+        await learner.getByText('Файлы для команды', {exact: true}).waitFor();
+        await visit(learner, base + '/local/ustar/achievements.php');
+        const ranking = learner.getByRole('region', {name: 'Рейтинг отдела'});
+        await ranking.getByText('Отдел проверки наград · XP за всё время', {exact: true}).waitFor();
+        await ranking.getByText(/Тестовый.*Вы|Сотрудник.*Вы/).waitFor();
+        const fixture = JSON.parse(fs.readFileSync('artifacts/reward-shop-fixture.json', 'utf8'));
+        await visit(manager, base + '/local/ustar/team_learning.php?userid=' + fixture.employee);
+        await manager.getByRole('heading', {name: 'Достижения', exact: true}).waitFor();
+        await manager.getByRole('heading', {name: 'Навыки по должности', exact: true}).waitFor();
         fs.writeFileSync('artifacts/reward-shop-browser.json', JSON.stringify({
             result: 'PASS', closedBeforeDepartmentSelection: true, employeeViewports: [390, 1366],
             publishedRewardPurchased: true, adminIssued: true, adminRejectedAndRefunded: true,
             coversUploadedReplacedRemovedAndRestricted: true, lightAndDarkActionBounds: true,
+            announcementFileUploadedWithSendingOff: true, departmentRankingAndTeamProfileRendered: true,
         }, null, 2));
         console.log('REWARD_SHOP_NATIVE_BROWSER=PASS');
     } finally {

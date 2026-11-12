@@ -1,13 +1,11 @@
 schema_version: 2
 updated_at: '2026-11-12'
 project: USTAR Academy
-stage: reward_shop_storefront_qualified
-stage_label: Reward shop in use; storefront and photos verified in Moodle
-current_activity: The owner confirmed the reward shop works. The new storefront and photo
-  management passed real browser checks in Moodle 5.1.1 and 5.1.8. The successor uses
-  the installed a7a34b49 V3 baseline and needs no schema migration.
+stage: connect_announcements_and_team_candidate
+stage_label: Controlled announcements and team profile under verification
+current_activity: PR118 on the qualified reward storefront baseline. Native team, ranking and announcement checks run in isolation.
 entrypoint: START_HERE.md
-next_task: REWARD-SHOP-UX
+next_task: CONNECT-TEAM-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -396,18 +394,17 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  application_commit: de652ae2c444f64850c525ad7abcd0191a4c03c0
-  status: native_qualified_owner_install_pending
-  qualification: context/runtime/reward_shop_ux_20261112.json
-  branch: feat/reward-shop-ux-20261112
+  status: native_verification_pending
+  previous_qualification: context/runtime/reward_shop_ux_20261112.json
+  branch: feat/connect-team-overview-20261112
   deployed: false
-  local_ustar_version: 2026111100
+  local_ustar_version: 2026111200
   theme_ustar_version: 2026110200
   schema_changed: false
-  worker_rollout: false
+  worker_rollout: true
   preserved_worker: 267e55874eb8f6c36259d748f28a2c636adc9810
-  deployment_baseline: a7a34b4927ffd42db28a8d76e410d20a37d7a434
+  deployment_baseline: fc6c8ca02d940cb346d8000783c4416ff7347784
   previous_qualified_delivery: context/runtime/reward_shop_qualification_20261111.json
-  progress: docs/REWARD_SHOP_RU.md
+  progress: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
   owner_receipt: null
   execution_authorized: true

@@ -46,7 +46,7 @@ jobs:
           mkdir -p .stage-input/reward-shop-baseline artifacts
           git archive 53fab3b6fa4a00f492ff355546a2948890ce7395 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-baseline
           mkdir -p .stage-input/reward-shop-installed
-          git archive a7a34b4927ffd42db28a8d76e410d20a37d7a434 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-installed
+          git archive fc6c8ca02d940cb346d8000783c4416ff7347784 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-installed
           docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml build --pull
       - name: Verify fresh install, upgrade, repeat upgrade and reward transactions
         run: |

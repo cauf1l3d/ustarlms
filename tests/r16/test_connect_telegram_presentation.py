@@ -61,7 +61,7 @@ class TelegramPresentation(unittest.TestCase):
         self.assertEqual('sendMessage', method)
         self.assertIn('Новое объявление в Академии', payload['text'])
         self.assertNotIn('document', payload)
-        self.assertEqual('https://ustar.local/local/ustar/feed.php',
+        self.assertEqual('https://ustar.local/local/ustar/notifications.php',
             payload['reply_markup']['inline_keyboard'][0][0]['url'])
 
     def test_invalid_event_category_or_version_never_sends(self):

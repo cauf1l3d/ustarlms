@@ -270,6 +270,8 @@ class TelegramClient:
             _token(ack['action'], 'ua1')
         date=datetime.fromtimestamp(occurred_at,timezone.utc).strftime('%d.%m.%Y %H:%M UTC')
         keyboard = self._notification_keyboard(category,role_navigation=self._role_navigation)
+        if event == 'feed_announcement':
+            keyboard[0][0]['url'] = 'https://ustar.local/local/ustar/notifications.php'
         if ack is not None:
             keyboard.insert(0, [{'text': 'Принял', 'callback_data': ack['action']}])
         if self._role_navigation:

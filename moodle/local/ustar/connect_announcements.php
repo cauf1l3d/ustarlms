@@ -24,11 +24,15 @@ $preview = null;
 try {
     if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         require_sesskey();
-        if (required_param('action', PARAM_ALPHA) === 'create') {
+        $action = required_param('action', PARAM_ALPHA);
+        if ($action === 'create') {
             $postid = feed_service::create($actorid, 'academy', 'academy',
                 ['department:' . required_param('department', PARAM_ALPHANUMEXT)], required_param('body', PARAM_TEXT),
                 true, 0, task_files::uploaded(), required_param('requestkey', PARAM_ALPHANUMEXT));
             redirect(new moodle_url($base, ['postid' => $postid]), 'Публикация готова. Выберите получателей в Telegram.');
+        }
+        if ($action !== 'enqueue') {
+            throw new invalid_parameter_exception('Неизвестное действие рассылки.');
         }
         $sent = announcements::enqueue($actorid, $postid, required_param('fingerprint', PARAM_ALPHANUM),
             optional_param_array('recipients', [], PARAM_INT));

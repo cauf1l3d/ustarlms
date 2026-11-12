@@ -866,6 +866,15 @@ tasks:
   - Кнопка и состояния баланса и остатка помещаются в карточку
   - Администратор загружает, заменяет и удаляет фото
   - Прямая ссылка на фото учитывает публикацию и отдел сотрудника
+- id: CONNECT-TEAM-01
+  title: Контролируемые рассылки Telegram, рейтинг отдела и профиль сотрудника
+  status: native_verification_pending
+  reference: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
+  depends_on: [REWARD-SHOP-UX]
+  acceptance:
+  - Оператор выбирает файлы и доступных получателей, подтверждает постановку в очередь
+  - Активные сотрудники видят рейтинг текущего отдела по общему XP
+  - Руководитель открывает достижения и навыки сотрудника в действующем контуре команды
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

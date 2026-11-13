@@ -44,10 +44,23 @@ final class notification_preferences {
         catch (\Throwable $error) { return self::defaults(); }
     }
     public static function save_own(array $value): array {
-        global $USER;
+        global $DB, $USER;
         identity_service::owned_links();
         $value = self::validate($value);
-        set_user_preference(self::NAME, json_encode($value, JSON_THROW_ON_ERROR), (int)$USER->id);
+        $userid = (int)$USER->id;
+        $save = static function() use ($userid, $value): void {
+            if (self::for_user($userid) === $value) {
+                return;
+            }
+            set_user_preference(self::NAME, json_encode($value, JSON_THROW_ON_ERROR), $userid);
+            notification_delivery::preferences_changed($userid);
+        };
+        // The bot already owns the identity lock and transaction.
+        if ($DB->is_transaction_started()) {
+            $save();
+        } else {
+            identity_service::atomic($save);
+        }
         return $value;
     }
     public static function allowed_now(array $value, int $now): bool {

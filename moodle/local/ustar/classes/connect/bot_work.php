@@ -37,7 +37,8 @@ final class bot_work {
         if ($intent==='work.checklist') {
             $payload=checklist_service::present($id,(string)$data['id'],(string)$data['date']); $c=$payload['current'];
             if (!$payload['canedit'] || !empty($c['hasfinal'])) {
-                return bot_store::card('☑️ '.$c['title'],'Сохранено '.$c['today']['done'].'/'.$c['today']['total'].'. Исправление отправленного чек-листа — с причиной в Академии.',[bot_service::home($d)]);
+                return bot_store::card('☑️ '.$c['title'],'Сохранено '.$c['today']['done'].'/'.$c['today']['total'].'. Исправление отправленного чек-листа — с причиной в Академии.',
+                    [bot_store::button($d, '← К чек-листам', 'work.checklists'), bot_service::home($d)]);
             }
             $fields=[];
             foreach (checklists::flat_items($c) as $key=>$item) {
@@ -53,7 +54,8 @@ final class bot_work {
             $comment=$v['comment']??''; unset($v['comment']); $answers=[];
             foreach ($v as $key=>$value) { $answers[$key]=['done'=>$value==='1','comment'=>'']; }
             $out=checklist_service::submit($id,(string)$c['id'],$answers,$comment,'final',(int)$c['revision'],'',(int)$c['definition']);
-            bot_store::state($d,'menu'); return bot_store::card('✓ Чек-лист отправлен','Сохранено в Академии: '.$out['done'].'/'.$out['total'],[bot_service::home($d)]);
+            bot_store::state($d,'menu'); return bot_store::card('✓ Чек-лист отправлен','Сохранено в Академии: '.$out['done'].'/'.$out['total'],
+                [bot_store::button($d, '← К чек-листам', 'work.checklists'), bot_service::home($d)]);
         }
         if ($intent==='work.report.commit') {
             $c=$data['context']; $v=$data['values']; $comment=$v['comment']??''; unset($v['comment']);
@@ -118,7 +120,7 @@ final class bot_work {
             $buttons[]=bot_store::button($d,'↩ Вернуть с комментарием','work.return',$target);
         }
         if(array_filter($t['files'],static fn($file)=>!empty($file['image']))){$buttons[]=bot_store::button($d,'📷 Показать фото','work.photos',$target);}
-        $buttons[]=bot_service::home($d); $last=$t['reports'][0]??null;
+        $last=$t['reports'][0]??null;
         $text=trim(html_entity_decode(strip_tags($t['description']),ENT_QUOTES,'UTF-8'));
         if ($last) {
             $text.="\n\nПоследний отчёт: ".(string)$last->commenttext;
@@ -133,6 +135,11 @@ final class bot_work {
         $pages=max(1,(int)ceil(\core_text::strlen($text)/1050));$part=min($pages-1,max(0,(int)($data['part']??0)));
         if($part){$buttons[]=bot_store::button($d,'← Предыдущая часть','work.task',['id'=>$t['id'],'part'=>$part-1]);}
         if($part+1<$pages){$buttons[]=bot_store::button($d,'Следующая часть →','work.task',['id'=>$t['id'],'part'=>$part+1]);}
+        if (isset($data['list']) && in_array($data['list'], ['work.mine', 'work.team', 'work.review'], true)) {
+            $buttons[] = bot_store::button($d, '← К списку задач', $data['list'],
+                ['offset' => (int)$data['offset'], 'filter' => (string)$data['filter']]);
+        }
+        $buttons[]=bot_service::home($d);
         return bot_store::guarded(bot_store::card('📋 '.$t['title'],($pages>1?'Часть '.($part+1).' из '.$pages."\n\n":'').\core_text::substr($text,$part*1050,1050),$buttons,[],
             [['Статус',bot_service::status_label($t['status'])],['Исполнитель',$t['assignee']],['Проверяет',$t['reviewer']],['Срок',self::date($t['dueat'])],['Версия',(string)$t['version']]]),['tasks'=>[$t['id']]]);
     }
@@ -164,7 +171,8 @@ final class bot_work {
         $page=service::rows($id,$scope,$filter,(int)floor($offset/50));
         $items=array_slice($page['items'],$offset%50,8); bot_store::state($d,'menu'); $buttons=[]; $rows=[];
         foreach ($items as $t) {
-            $buttons[]=bot_store::button($d,\core_text::substr($t['title'],0,52),'work.task',['id'=>$t['id']]);
+            $buttons[]=bot_store::button($d,\core_text::substr($t['title'],0,52),'work.task',
+                ['id'=>$t['id'], 'list'=>$intent, 'offset'=>$offset, 'filter'=>$filter]);
             $rows[]=[$t['assignee'],bot_service::status_label($t['status'])];
         }
         if ($offset>0) { $buttons[]=bot_store::button($d,'← Назад',$intent,['offset'=>max(0,$offset-8),'filter'=>$filter]); }
@@ -173,6 +181,9 @@ final class bot_work {
             foreach(['active'=>'▶ В работе','review'=>'⏳ На проверке','done'=>'✓ Завершённые','all'=>'Все задачи'] as $key=>$label){
                 if($key!==$filter){$buttons[]=bot_store::button($d,$label,$intent,['filter'=>$key]);}
             }
+        }
+        if ($scope === 'team') {
+            $buttons[] = bot_store::button($d, '← К управлению командой', 'team.menu');
         }
         $buttons[]=bot_service::home($d);
         return bot_store::guarded(bot_store::card($intent==='work.mine'?'📋 Мои задачи':($intent==='work.review'?'✅ Очередь проверки':'📊 Сводка по задачам'),

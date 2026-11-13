@@ -10,7 +10,7 @@ $PAGE->set_context($context);
 $PAGE->set_title('Лента · USTAR Academy');
 $PAGE->set_heading('Лента');
 $PAGE->set_pagelayout('ustar');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20261029-media']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20261113-actions']));
 $PAGE->requires->js(new moodle_url('/local/ustar/js/feed.js', ['v' => '20260928-rss-stage3']));
 $notice = '';
 $actorid = (int)$USER->id;
@@ -75,9 +75,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             \local_ustar\feed_service::revise($postid, $actorid, required_param('version', PARAM_INT),
                 required_param('body', PARAM_TEXT), optional_param('publish', 0, PARAM_BOOL));
         } else if ($action === 'delete') {
-            \local_ustar\feed_service::remove($postid, $actorid, required_param('version', PARAM_INT),
+            $status = \local_ustar\feed_service::remove($postid, $actorid, required_param('version', PARAM_INT),
                 optional_param('reason', '', PARAM_TEXT));
-            redirect(new moodle_url('/local/ustar/feed.php'));
+            $returnfilter = optional_param('returnfilter', 'all', PARAM_ALPHA);
+            $return = new moodle_url('/local/ustar/feed.php',
+                in_array($returnfilter, ['academy', 'department', 'mine'], true) ? ['filter' => $returnfilter] : []);
+            redirect($return, $status === 'deleted' ? 'Публикация удалена.' : 'Публикация скрыта.');
         } else if ($action === 'commentedit' || $action === 'commentdelete') {
             \local_ustar\feed_service::revise_comment(required_param('commentid', PARAM_INT),
                 $postid, $actorid, required_param('version', PARAM_INT),
@@ -249,6 +252,7 @@ $caninteract = !\local_ustar\view_as::active();
 $cancreate = $caninteract && \local_ustar\feed_access::can_create($actorid);
 $canpublish = $caninteract && \local_ustar\feed_access::can_publish($actorid);
 $canedit = $caninteract && \local_ustar\feed_access::can_edit($actorid);
+$canmoderate = $caninteract && \local_ustar\feed_access::can_moderate($actorid);
 $canwrite = $cancreate;
 $managed = $canpublish ? \local_ustar\feed_access::manageable_departments($actorid) : [];
 $canacademy = $canpublish && (\local_ustar\feed_access::can_manage($actorid)
@@ -476,6 +480,7 @@ $rendermedia = static function(array $files, bool $external, int $postid) use ($
 };
 foreach ($posts as $post) {
     $postid = (int)$post->id;
+    $isowner = (int)$post->actoruserid === $actorid;
     $author = $users[(int)$post->actoruserid] ?? null;
     $external = $post->publishertype === 'external' ? ($rssmeta[$postid] ?? null) : null;
     $name = $post->publishertype === 'academy' ? 'Академия USTAR' :
@@ -582,6 +587,28 @@ foreach ($posts as $post) {
     if ($post->status === 'draft') {
         echo html_writer::tag('p', 'Черновик · виден только вам', ['class' => 'u-feed__source']);
     }
+    if (($isowner && $cancreate) || (!$isowner && $canmoderate && $post->status === 'published')) {
+        if (!$isowner) {
+            echo html_writer::start_tag('details', ['class' => 'u-feed__panel u-feed__moderate-card']);
+            echo html_writer::tag('summary', 'Скрыть публикацию');
+        }
+        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__remove', 'action' => $url->out(false)]);
+        foreach (['sesskey' => sesskey(), 'postid' => $postid, 'version' => (int)$post->version,
+                'action' => 'delete', 'returnfilter' => $filter] as $field => $value) {
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
+        }
+        if (!$isowner) {
+            echo html_writer::tag('label', 'Причина скрытия', ['for' => 'feed-remove-' . $postid]);
+            echo html_writer::empty_tag('input', ['name' => 'reason', 'id' => 'feed-remove-' . $postid,
+                'required' => 'required', 'class' => 'form-control', 'maxlength' => 5000]);
+        }
+        echo html_writer::tag('button', $isowner ? 'Удалить публикацию' : 'Скрыть',
+            ['type' => 'submit', 'class' => 'u-feed__action u-feed__action--danger']);
+        echo html_writer::end_tag('form');
+        if (!$isowner) {
+            echo html_writer::end_tag('details');
+        }
+    }
     if ($post->status === 'published') {
         echo html_writer::start_div('u-feed__toolbar', ['role' => 'group',
             'aria-label' => 'Действия с публикацией']);
@@ -619,7 +646,6 @@ foreach ($posts as $post) {
     }
     if ($selected && (int)$selected->id === $postid) {
         echo html_writer::start_tag('section', ['class' => 'u-feed__detail']);
-        $isowner = (int)$post->actoruserid === $actorid;
         $caneditpost = ($isowner && $cancreate) || (!$isowner && $canedit);
         $canpublishpost = $isowner ? $cancreate : $canpublish;
         if ($caneditpost) {
@@ -644,21 +670,6 @@ foreach ($posts as $post) {
             }
             echo html_writer::end_div();
             echo html_writer::end_tag('form');
-            if ($isowner || \local_ustar\feed_access::can_moderate($actorid)) {
-                echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__inline']);
-                foreach (['sesskey' => sesskey(), 'postid' => $postid,
-                        'version' => (int)$post->version, 'action' => 'delete'] as $field => $value) {
-                    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
-                }
-                if (!$isowner) {
-                    echo html_writer::tag('label', 'Основание удаления', ['for' => 'feed-remove-' . $postid]);
-                    echo html_writer::empty_tag('input', ['name' => 'reason', 'id' => 'feed-remove-' . $postid,
-                        'required' => 'required', 'class' => 'form-control']);
-                }
-                echo html_writer::tag('button', 'Удалить публикацию', ['type' => 'submit',
-                    'class' => 'u-feed__like']);
-                echo html_writer::end_tag('form');
-            }
             echo html_writer::end_tag('details');
         }
         if ($post->status === 'published') {

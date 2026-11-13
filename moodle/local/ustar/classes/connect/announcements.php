@@ -75,10 +75,12 @@ final class announcements {
     private static function deliveries(\stdClass $post, string $event): array {
         global $DB;
         $prefix = $event . ':' . (int)$post->id . ':' . (int)$post->version . ':';
-        return $DB->get_records_sql('SELECT n.userid, d.status
+        return $DB->get_records_sql('SELECT d.id, d.status, d.attempts, d.nextattempt, d.lasterror,
+                    u.id AS userid, u.firstname, u.lastname, u.middlename, u.firstnamephonetic, u.lastnamephonetic, u.alternatename
               FROM {local_ustar_notifications} n
               JOIN {local_ustar_notify_delivery} d ON d.notificationid = n.id AND d.channel = :channel
-             WHERE n.eventtype = :event AND ' . $DB->sql_like('n.idempotencykey', ':prefix'),
+              JOIN {user} u ON u.id = n.userid
+             WHERE n.eventtype = :event AND ' . $DB->sql_like('n.idempotencykey', ':prefix') . ' ORDER BY d.id DESC',
             ['channel' => 'telegram', 'event' => $event, 'prefix' => $DB->sql_like_escape($prefix) . '%']);
     }
 
@@ -87,6 +89,7 @@ final class announcements {
             throw new \invalid_parameter_exception('Выберите опубликованное объявление Академии или отдела.');
         }
         $deliveries = self::deliveries($post, self::BROADCAST_EVENT);
+        $attempted = array_fill_keys(array_column($deliveries, 'userid'), true);
         $legacy = self::deliveries($post, self::EVENT);
         $error = '';
         $stamp = '';
@@ -98,7 +101,7 @@ final class announcements {
         $eligible = [];
         if (self::enabled() && $stamp !== '') {
             foreach (notification_delivery::announcement_candidates() as $userid => $user) {
-                if (!isset($deliveries[$userid]) && notification_delivery::can_enqueue_announcement($userid,
+                if (!isset($attempted[$userid]) && notification_delivery::can_enqueue_announcement($userid,
                         broadcast_content::key($post, $userid, $stamp), self::BROADCAST_EVENT)) {
                     $eligible[$userid] = ['id' => $userid, 'name' => fullname($user)];
                 }
@@ -109,7 +112,9 @@ final class announcements {
         return [
             'id' => (int)$post->id, 'body' => (string)$post->body,
             'people' => array_values($eligible), 'peoplecount' => count($ids),
-            'deliveries' => self::counts($deliveries), 'legacydeliveries' => self::counts($legacy),
+            'hasdeliveries' => (bool)$deliveries, 'deliveries' => self::counts($deliveries),
+            'legacydeliveries' => self::counts($legacy),
+            'history' => array_map(static fn(\stdClass $row): array => self::delivery_view($row), array_values($deliveries)),
             'broadcast_error' => $error, 'sendable' => $stamp !== '',
             'fingerprint' => hash('sha256', $post->id . ':' . $post->version . ':' . $stamp . ':' . implode(',', $ids)),
             'stamp' => $stamp,
@@ -117,14 +122,9 @@ final class announcements {
     }
 
     private static function counts(array $deliveries): array {
-        $statuslabels = [
-            'pending' => 'В очереди', 'leased' => 'В очереди', 'sending' => 'Отправляется',
-            'retry_wait' => 'Ожидает повтора', 'provider_accepted' => 'Принято Telegram',
-            'failed' => 'Ошибка доставки', 'uncertain' => 'Результат неизвестен', 'cancelled' => 'Отменено',
-        ];
         $counts = [];
         foreach ($deliveries as $delivery) {
-            $label = $statuslabels[$delivery->status] ?? 'Другой статус';
+            $label = self::status_label($delivery);
             $counts[$label] = ($counts[$label] ?? 0) + 1;
         }
         $status = [];
@@ -132,6 +132,45 @@ final class announcements {
             $status[] = ['label' => $label, 'count' => $count];
         }
         return $status;
+    }
+
+    private static function status_label(\stdClass $row): string {
+        return match ($row->status) {
+            'pending' => (int)$row->nextattempt > time() ? 'Запланировано' : 'В очереди',
+            'leased' => 'Подготавливается', 'sending' => 'Отправляется',
+            'retry_wait' => 'Ожидает повтора', 'provider_accepted' => 'Принято Telegram',
+            'failed' => 'Ошибка доставки', 'uncertain' => 'Результат неизвестен', 'cancelled' => 'Отменено',
+            default => 'Другой статус',
+        };
+    }
+
+    private static function delivery_view(\stdClass $row): array {
+        $reason = match ($row->lasterror) {
+            'quiet_hours' => 'Тихие часы получателя',
+            'recipient_interval' => 'Интервал между уведомлениями',
+            'recipient_busy' => 'Предыдущая отправка ещё обрабатывается',
+            'attachment_unavailable' => 'Не удалось подготовить вложение',
+            'permit_unavailable' => 'Не удалось подтвердить разрешение на отправку',
+            'worker_scope' => 'Получатель вне разрешённого контура бота',
+            'publication_changed' => 'Публикация изменилась или убрана из Ленты',
+            'expired' => 'Истёк срок доставки',
+            'no_longer_eligible' => 'Изменился доступ, привязка или настройка уведомлений',
+            'forbidden' => 'Telegram закрыл боту доступ к чату',
+            'api_rejected' => 'Telegram отклонил сообщение',
+            'rate_limited' => 'Telegram временно ограничил отправку',
+            'unauthorized' => 'Службе нужно восстановить доступ к Telegram',
+            'max_attempts' => 'Исчерпаны попытки доставки',
+            default => '',
+        };
+        if ($row->status === 'uncertain') {
+            $reason = 'Подтверждение отправки отсутствует. Проверьте чат получателя перед новой отправкой.';
+        }
+        if ($row->status === 'pending' && (int)$row->nextattempt > 0 && (int)$row->nextattempt <= time() - 60) {
+            $reason = 'Служба доставки ещё не начала обработку. Обновите статус.';
+        }
+        $next = in_array($row->status, ['pending', 'retry_wait'], true) && (int)$row->nextattempt > time()
+            ? userdate((int)$row->nextattempt, '%d.%m.%Y %H:%M') : '';
+        return ['name' => fullname($row), 'status' => self::status_label($row), 'reason' => $reason, 'next' => $next];
     }
 
     public static function preview(int $actorid, int $postid): array {
@@ -166,7 +205,7 @@ final class announcements {
                     $url, broadcast_content::key($post, (int)$userid, $preview['stamp']));
             }
             $deliveries = self::deliveries($post, self::BROADCAST_EVENT);
-            if (array_diff($recipientids, array_keys($deliveries))) {
+            if (array_diff($recipientids, array_column($deliveries, 'userid'))) {
                 throw new \invalid_parameter_exception('Настройки доставки изменились. Проверьте список получателей.');
             }
             $DB->insert_record('local_ustar_feed_events', (object)[

@@ -879,14 +879,26 @@ tasks:
   - Руководитель открывает достижения и навыки сотрудника в действующем контуре команды
 - id: CONNECT-BROADCAST-01
   title: Текст и вложения рассылки в личных чатах Telegram
-  status: native_qualified_owner_install_pending
+  status: owner_installed_direct_delivery_incident
   qualification: context/runtime/connect_broadcast_qualification_20261112.json
+  owner_receipt: context/runtime/connect_broadcast_owner_incident_20261113.json
   reference: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
   depends_on: [CONNECT-TEAM-01]
   acceptance:
   - Оператор Академии или связанный оператор бота подтверждает выбранную публикацию и получателей
   - Сотрудник получает исходный текст и файлы одним сообщением или группой документов
   - Изменение редакции, файлов или доступа до отправки отменяет доставку
+- id: CONNECT-DELIVERY-REPAIR
+  title: Надёжность прямой рассылки, удаление из Ленты и навигация бота
+  status: qualified_awaiting_owner_installation_and_pilot
+  qualification: context/runtime/connect_delivery_repair_qualification_20261113.json
+  runbook: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
+  reference: context/reviews/20261113/CONNECT_DELIVERY_UX_RU.md
+  depends_on: [CONNECT-BROADCAST-01]
+  acceptance:
+  - Действующее разрешение переживает переход секунды, история показывает задержку и отказ
+  - Автор удаляет публикацию с карточки, модератор скрывает с причиной, очереди пересчитываются безопасно
+  - Сотрудник возвращается к задачам и чек-листам, руководитель видит свои действия в разделе команды
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

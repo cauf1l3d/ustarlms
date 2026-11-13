@@ -1,6 +1,6 @@
-# Активная работа · 12.11.2026
+# Активная работа · 13.11.2026
 
-PR118 установлен. Уведомление доставлено. Пакет прямой рассылки PR119 прошёл CI, ожидаются установка и пилот. [Сценарии](../../docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md), [проверки](../runtime/connect_broadcast_qualification_20261112.json).
+PR120 `7fa3233f` готов к установке и пилоту поверх `d1e54624`. [Проверки и инцидент №508](../runtime/connect_delivery_repair_qualification_20261113.json), [команды](../../docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md#установка-исправления-доставки-от-13112026).
 
 ## Повторная привязка Telegram
 

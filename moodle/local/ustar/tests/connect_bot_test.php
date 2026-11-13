@@ -70,6 +70,18 @@ final class connect_bot_test extends \advanced_testcase {
             'policy'=>\local_ustar\task_workspace\policy::validate(['timezone'=>'UTC','mode'=>'calendar'])]);
         $this->setGuestUser();return $id;
     }
+    public function test_employee_menu_leads_to_tasks_checklists_and_parent_list(): void {
+        $sender = $this->linked();
+        $this->work($sender);
+        $menu = bot_service::update($sender, $this->request(70));
+        $this->assertSame(['📋 Мои задачи', '☑️ Чек-листы', '🎓 Обучение', '🔔 Уведомления', '⚙️ Настройки'],
+            array_column($menu['buttons'], 'label'));
+        $tasks = $this->click($sender, $menu, 'Мои задачи', 71);
+        $task = $this->click($sender, $tasks, 'Synthetic', 72);
+        $back = $this->click($sender, $task, 'К списку задач', 73);
+        $this->assertSame($tasks['title'], $back['title']);
+        $this->assertContains('Synthetic bot task', array_column($back['buttons'], 'label'));
+    }
     public function test_task_report_button_twice_keeps_one_canonical_report_and_guest_context(): void {
         global $DB,$USER;
         $sender=$this->linked();$id=$this->work($sender);
@@ -164,6 +176,7 @@ final class connect_bot_test extends \advanced_testcase {
             'firstname'=>'Pending','lastname'=>'Synthetic','email'=>'bot.confirm@example.invalid','departmentid'=>'retail']);
         $request=$DB->get_record('local_ustar_staff_requests',['employeeid'=>$uid]);
         $this->setGuestUser();$menu=bot_service::update($sender,$this->request(70));
+        $menu=$this->click($sender,$menu,'Управление командой',701);
         $list=$this->click($sender,$menu,'Заявки сотрудников',71);
         $card=$this->click($sender,$list,'Pending',72);$this->click($sender,$card,'Отклонить',73);
         $preview=bot_service::update($sender,$this->request(74,'Ошибочные данные, подайте заново'));

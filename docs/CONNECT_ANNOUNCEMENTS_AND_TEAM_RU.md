@@ -14,6 +14,51 @@
 
 Система повторно сверяет редакцию, точный состав файлов, доступ к публикации, согласие получателя и его текущую привязку перед передачей в Telegram. Очередь хранит одну доставку на получателя и редакцию. Для неизвестного исхода сетевого запроса в истории сохраняется отдельный статус. Уведомления о публикациях из поставки `814a99d9` видны в истории отдельно.
 
+## Установка исправления доставки от 13.11.2026
+
+Поставка [PR №120](https://github.com/cauf1l3d/ustarlms/pull/120) обновляет пару Академия и Connect с `d1e54624` до `7fa3233f` и версии плагина `2026111300`. Миграция перепроверяет время ожидающих рассылок из предыдущего выпуска. В ходе установки сохраняются резервные копии, Академия временно переходит в обслуживание и службы Connect перезапускаются.
+
+Положите `ustar-connect-delivery-repair-7fa3233f.tar.gz` в `/home/aduk/` и выполните предварительную проверку.
+
+```bash
+sudo bash <<'ROOT'
+set -euo pipefail
+umask 077
+archive=ustar-connect-delivery-repair-7fa3233f.tar.gz
+dir=/root/ustar-connect-delivery-repair-7fa3233f
+test ! -L "$dir"
+install -d -m 700 "$dir"
+cd "$dir"
+install -m 600 "/home/aduk/$archive" "$archive"
+printf '%s  %s\n' \
+  a270327c73422b982648c0dab18a3601ce4fd86c806dac95991d5d119b3aca9d \
+  "$archive" | sha256sum --check --strict -
+tar --no-same-owner -xzf "$archive"
+sha256sum --check --strict --quiet SHA256SUMS
+python3 -I -B update.py --check
+ROOT
+```
+
+При `phase: ready` запустите обновление.
+
+```bash
+sudo systemd-run --wait --collect \
+  --unit=ustar-connect-delivery-repair-20261113-01 \
+  --property=Type=oneshot --property=TimeoutStartSec=30min \
+  /usr/bin/python3 -I -B /root/ustar-connect-delivery-repair-7fa3233f/update.py \
+  --upgrade --acknowledge-outage
+```
+
+```bash
+sudo python3 -I -B /root/ustar-connect-delivery-repair-7fa3233f/update.py --check
+```
+
+Проверьте `phase: active`, обе версии исходников `7fa3233f`, `local_ustar: 2026111300`, `announcements_enabled: true` и оба запущенных сервиса Connect. При `managed_operation_busy_retry_later` дождитесь завершения текущей операции и повторите проверку. Если установщик сообщит `recovery_required`, сохраните вывод и выполните `--recover --acknowledge-outage` из этого же архива.
+
+Для живого пилота отправьте новую публикацию с небольшим PNG одному сотруднику с активной привязкой и включённой категорией «Лента». В личном чате проверьте текст и файл, в истории Академии — статус «Принято Telegram». Запись №508 имеет статус «Результат неизвестен». Уточните факт доставки в чате сотрудника перед повтором этого объявления.
+
+У автора действие «Удалить публикацию» доступно на карточке. Модератор использует «Скрыть публикацию» с причиной. В боте управленческие действия находятся в разделе «Управление командой». [Ревью Telegram и Ленты](../context/reviews/20261113/CONNECT_DELIVERY_UX_RU.md).
+
 ## Установка прямой рассылки
 
 Поставка от 12.11.2026 обновляет установленную пару Академия и Connect `814a99d9` до `d1e54624` и версии плагина `2026111201`. Установщик принимает текущую настройку рассылок, сохраняет резервные копии исходников и PostgreSQL, применяет версию плагина в режиме обслуживания и запускает Connect. Схема базы совпала после чистой установки, обновления и повторного запуска на Moodle 5.1.1 и 5.1.8. [PR №119](https://github.com/cauf1l3d/ustarlms/pull/119), [квитанция проверок](../context/runtime/connect_broadcast_qualification_20261112.json).

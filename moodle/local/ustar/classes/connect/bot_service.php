@@ -52,6 +52,7 @@ final class bot_service {
                         str_starts_with($intent,'learn.')=>bot_learning::route($d,$intent,$data,$p['text']),
                         str_starts_with($intent,'broadcast.')=>bot_broadcast::route($d,$intent,$data),
                         str_starts_with($intent,'settings')=>self::settings($d,$intent,$data),
+                        $intent === 'team.menu' => self::team_menu($d),
                         default=>self::menu($d,bot_actor::link(new identity($p['provider'],$p['tenant'],$p['subject']))),
                     };
                 });
@@ -107,14 +108,14 @@ final class bot_service {
         return match(trim($text)) {
             '/start','/menu','Меню','Главная','Назад'=>'menu', '/cancel','Отмена'=>'cancel','/help','Помощь'=>'help',
             '/tasks','Мои задачи'=>'work.mine','/checklists','Чек-листы'=>'work.checklists',
-            '/team','Моя команда'=>'work.team','/review','Проверить отчёты'=>'work.review',
+            '/team','Моя команда'=>'team.menu','/review','Проверить отчёты'=>'work.review',
             '/assign','Назначить задачу'=>'work.assign','/learn','Обучение'=>'learn.mine',
             '/results','Мои результаты'=>'learn.results','/settings','Настройки'=>'settings',
             '/register','Регистрация'=>'registration.start',default=>'input',
         };
     }
     private static function read_intent(string $intent): bool {
-        return in_array($intent,['menu','cancel','help','form.preview','work.mine','work.team','work.review','work.company','work.task','work.photos',
+        return in_array($intent,['menu','cancel','help','form.preview','team.menu','work.mine','work.team','work.review','work.company','work.task','work.photos',
             'work.checklists','work.checklist','work.report','work.return','work.assign','learn.mine','learn.results','learn.inbox',
             'learn.team','learn.person','settings','settings.edit','settings.unlink','people.requests','people.request',
             'people.request.approve','people.request.reject','people.request.adapt','people.hire','people.terminate','people.grades','people.grade',
@@ -139,27 +140,52 @@ final class bot_service {
                 'Рабочие действия требуют завершённой настройки учётной записи. Откройте Академию из офисной сети и выполните требование входа или смены первого пароля. Пароль в чат не отправляйте. Если для входа включён дополнительный фактор или внешний провайдер, используйте защищённую Академию.',
                 [bot_store::button($d,'Проверить доступ','menu')]);
         }
-        $buttons=[bot_store::button($d,'📋 Мои задачи','work.mine'),bot_store::button($d,'☑️ Чек-листы','work.checklists'),
-            bot_store::button($d,'🎓 Обучение','learn.mine'),bot_store::button($d,'📊 Мои результаты','learn.results'),
-            bot_store::button($d,'🔔 Уведомления','learn.inbox'),bot_store::button($d,'⚙️ Настройки','settings')];
-        $id=(int)$d->userid;
-        $buttons[]=bot_store::button($d,\local_ustar\adaptation_service::is_hrd_actor($id)?'🧭 Адаптация и эскалации':'🧭 Адаптация','people.adaptations');
-        if (\local_ustar\task_workspace\service::can_manage($id)) {
-            $buttons[]=bot_store::button($d,'👥 Моя команда','work.team');
-            $buttons[]=bot_store::button($d,'🎓 Обучение команды','learn.team');
-            $buttons[]=bot_store::button($d,'✅ Проверить отчёты','work.review');
-            $buttons[]=bot_store::button($d,'➕ Назначить задачу','work.assign');
+        $id = (int)$d->userid;
+        $buttons = [
+            bot_store::button($d, '📋 Мои задачи', 'work.mine'),
+            bot_store::button($d, '☑️ Чек-листы', 'work.checklists'),
+            bot_store::button($d, '🎓 Обучение', 'learn.mine'),
+        ];
+        $team = self::team_actions($id);
+        if ($team) {
+            $buttons[] = bot_store::button($d, '👥 Управление командой', 'team.menu');
         }
-        if (\local_ustar\hr_access::can_grade($id)) { $buttons[]=bot_store::button($d,'📝 Аттестации','people.grades'); }
-        if (\local_ustar\forced_retraining::can_manage($id)) { $buttons[]=bot_store::button($d,'🔁 Повторный курс','people.retrain'); }
-        if (bot_actor::capability($id,'hrmanage') || !empty(\local_ustar\staffing_requests::manager_scope($id)['allowed'])) {
-            $buttons[]=bot_store::button($d,'👤 Заявки сотрудников','people.requests');
-        }
-        if (bot_actor::capability($id,'executive')) { $buttons[]=bot_store::button($d,'🏢 Сводка компании','work.company'); }
+        $buttons[] = bot_store::button($d, '🔔 Уведомления', 'learn.inbox');
+        $buttons[] = bot_store::button($d, '⚙️ Настройки', 'settings');
         if (announcements::enabled() && announcements::operator_capability($id)) {
             $buttons[] = bot_store::button($d, '📣 Рассылки Telegram', 'broadcast.posts');
         }
-        return bot_store::card('USTAR · Ваш рабочий день','Выберите действие. Доступ определяется текущими правами в Академии.',$buttons);
+        return bot_store::card('USTAR · Главное меню', '', $buttons);
+    }
+
+    private static function team_actions(int $id): array {
+        $actions = [];
+        if (\local_ustar\task_workspace\service::can_manage($id)) {
+            $actions = [
+                'work.team' => '👥 Задачи команды', 'work.review' => '✅ Проверить отчёты',
+                'work.assign' => '➕ Назначить задачу', 'learn.team' => '🎓 Обучение команды',
+            ];
+        }
+        if (\local_ustar\hr_access::can_grade($id)) { $actions['people.grades'] = '📝 Аттестации'; }
+        if (\local_ustar\forced_retraining::can_manage($id)) { $actions['people.retrain'] = '🔁 Повторный курс'; }
+        if (bot_actor::capability($id,'hrmanage') || !empty(\local_ustar\staffing_requests::manager_scope($id)['allowed'])) {
+            $actions['people.requests'] = '👤 Заявки сотрудников';
+        }
+        if (\local_ustar\adaptation_service::is_hrd_actor($id)) {
+            $actions['people.adaptations'] = '🧭 Адаптация и эскалации';
+        }
+        if (bot_actor::capability($id,'executive')) { $actions['work.company'] = '🏢 Сводка компании'; }
+        return $actions;
+    }
+
+    private static function team_menu(\stdClass $d): array {
+        bot_store::state($d, 'menu');
+        $buttons = [];
+        foreach (self::team_actions((int)$d->userid) as $intent => $label) {
+            $buttons[] = bot_store::button($d, $label, $intent);
+        }
+        $buttons[] = self::home($d);
+        return bot_store::card('👥 Управление командой', count($buttons) === 1 ? 'Раздел доступен руководителям.' : '', $buttons);
     }
     public static function home(\stdClass $d): array { return bot_store::button($d,'⌂ Главное меню','menu'); }
     public static function cancel(\stdClass $d): array { return bot_store::button($d,'Отмена','cancel'); }

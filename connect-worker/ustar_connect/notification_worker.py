@@ -3,7 +3,7 @@ from contextlib import ExitStack
 import re
 import time
 
-from .bridge import _token
+from .bridge import _token, BridgeRejected
 from . import notification_broadcast
 from .telegram_api import TelegramError
 from .notification_events import event_label
@@ -97,20 +97,51 @@ class NotificationWorker:
                 return {'status':'unavailable'}
             _token(lease['lease'],'ud1')
             payload={'delivery':str(lease['delivery']),'lease':lease['lease']}
-            if 'broadcast' in lease:
-                details = lease['broadcast']
-                subject = details.get('subject') if isinstance(details, dict) else None
-                if not private_subject(subject) or (self.allowed_subjects is not None and subject not in self.allowed_subjects):
-                    return {'status': 'unavailable'}
+        except BridgeRejected as error:
+            return {'status': 'unavailable', 'reason': error.reason}
+        except Exception:
+            return {'status': 'unavailable', 'reason': 'lease_unavailable'}
+        direct = 'broadcast' in lease
+        if direct:
+            details = lease['broadcast']
+            subject = details.get('subject') if isinstance(details, dict) else None
+            if not private_subject(subject):
+                return self._unsent(payload, 'permit_unavailable')
+            if self.allowed_subjects is not None and subject not in self.allowed_subjects:
+                return self._unsent(payload, 'worker_scope')
+            try:
                 broadcast = notification_broadcast.stage(details, self.bridge, payload, resources,
                                                          self.clock, lease['expires'])
+            except Exception:
+                return self._unsent(payload, 'attachment_unavailable')
+        try:
             operation = {1: 'notification.begin', 2: 'notification.begin_v2', 3: 'notification.begin_v3'}[self.notification_contract]
             begin_requested = int(self.clock())
-            begin = {**payload, 'stamp': broadcast[0]} if broadcast is not None else payload
-            permit=self.request(operation,begin)
-        except Exception:return {'status':'unavailable'}
+            begin = {**payload, 'stamp': broadcast[0]} if direct else payload
+            permit = self.request(operation, begin)
+        except Exception:
+            return self._unsent(payload, 'permit_unavailable') if direct else {'status': 'unavailable'}
         if permit in ({'status':'cancelled'},{'status':'retry_wait'},{'status':'failed'}):return permit
-        # A lost or malformed begin must not authorize a send. Server retires sending as uncertain.
+        received = int(self.clock())
+        if not self._valid_permit(permit, broadcast, begin_requested, received):
+            return self._unsent(payload, 'permit_unavailable') if direct else {'status': 'unavailable'}
+        if direct and permit['subject'] != subject:
+            return self._unsent(payload, 'permit_unavailable')
+        return self._send(payload, permit, broadcast, received)
+
+    def _unsent(self, payload, reason):
+        # This path is reachable only before any provider call. A lost receipt can still time out.
+        outcome = 'failed' if reason == 'worker_scope' else 'retry_wait'
+        try:
+            receipt = self.request('notification.finish', {**payload, 'outcome': outcome, 'provider_ref': '',
+                'reason': reason, 'retry_after': '0'})
+            if set(receipt) == {'status'} and receipt['status'] in ('retry_wait', 'cancelled', 'failed'):
+                return {'status': receipt['status'], 'reason': reason}
+        except Exception:
+            pass
+        return {'status': 'receipt_unconfirmed', 'reason': reason}
+
+    def _valid_permit(self, permit, broadcast, requested, received):
         fields = {'status','subject','category','severity','occurred_at','send_before'}
         if self.notification_contract in (2, 3): fields |= {'version', 'ack'}
         if self.notification_contract == 3: fields.add('event')
@@ -120,28 +151,32 @@ class NotificationWorker:
                 or not isinstance(permit['category'], str)
                 or permit['category'] not in CATEGORIES or not isinstance(permit['severity'], str)
                 or permit['severity'] not in SEVERITIES or type(permit['occurred_at']) is not int
-                or not 0<permit['occurred_at']<=begin_requested+30 or type(permit['send_before']) is not int
-                or not int(self.clock())<permit['send_before']<=begin_requested+10):
-            return {'status':'unavailable'}
+                or not 0<permit['occurred_at']<=requested+30 or type(permit['send_before']) is not int
+                or not received < permit['send_before'] <= received + 10
+                or permit['send_before'] > requested + 20):
+            return False
         if self.notification_contract in (2, 3):
             if type(permit['version']) is not int or permit['version'] != self.notification_contract:
-                return {'status':'unavailable'}
+                return False
             ack = permit['ack']
             if ack is not None:
                 if (not isinstance(ack, dict) or set(ack) != {'action','expires'}
                         or type(ack['expires']) is not int
-                        or not int(self.clock()) < ack['expires'] <= permit['occurred_at']+86400):
-                    return {'status':'unavailable'}
+                        or not received < ack['expires'] <= permit['occurred_at']+86400):
+                    return False
                 try: _token(ack['action'], 'ua1')
-                except ValueError: return {'status':'unavailable'}
+                except ValueError: return False
         if self.notification_contract == 3:
             if broadcast is None:
                 try: event_label(permit['category'], permit['event'])
-                except ValueError: return {'status':'unavailable'}
+                except ValueError: return False
             elif (permit['event'] != notification_broadcast.EVENT or permit['category'] != 'feed'
                   or permit['severity'] != 'normal' or permit['stamp'] != broadcast[0]
-                  or permit['subject'] != subject or (len(broadcast[2]) > 1 and permit['ack'] is not None)):
-                return {'status': 'unavailable'}
+                  or (len(broadcast[2]) > 1 and permit['ack'] is not None)):
+                return False
+        return True
+
+    def _send(self, payload, permit, broadcast, now):
         outcome,ref,reason,retry='uncertain','','invalid_response',0
         self.next_attempt=now+1
         if self.allowed_subjects is not None and permit['subject'] not in self.allowed_subjects:
@@ -169,7 +204,7 @@ class NotificationWorker:
             if error.uncertain:outcome='uncertain'
             elif reason in ('rate_limited','unauthorized'):
                 outcome,retry='retry_wait',error.retry_after if reason=='rate_limited' else 300
-                self.next_attempt=now+retry
+                self.next_attempt=int(self.clock())+retry
                 if reason=='unauthorized':self.stopped=reason
             elif reason in ('forbidden','api_rejected'):outcome='failed'
             else:reason='invalid_response'

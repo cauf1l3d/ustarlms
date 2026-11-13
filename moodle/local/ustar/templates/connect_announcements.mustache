@@ -1,7 +1,7 @@
 <main class="u-product-page u-ux-tools">
     <a class="u-backlink" href="{{connecturl}}">← Мессенджеры</a>
     <header class="u-product-head">
-        <div><h1>Рассылки Telegram</h1><p>Выберите публикацию, проверьте список и отметьте получателей.</p></div>
+        <div><h1>Рассылки Telegram</h1><p>Отправьте текст и файлы публикации выбранным сотрудникам.</p></div>
     </header>
     {{#error}}<div class="alert alert-warning" role="alert">{{error}}</div>{{/error}}
     {{^enabled}}<div class="alert alert-info">Отправка сейчас закрыта. Предпросмотр и история доступны.</div>{{/enabled}}
@@ -42,8 +42,23 @@
         <a href="{{posturl}}">Открыть публикацию в Ленте</a>
         <h3>Вложения</h3>
         <ul>{{#files}}<li>{{name}}</li>{{/files}}{{^files}}<li>Вложений нет</li>{{/files}}</ul>
-        {{#legacydeliveries}}<p>Уведомление о публикации · {{label}} · {{count}}</p>{{/legacydeliveries}}
-        {{#deliveries}}<p>{{label}} · {{count}}</p>{{/deliveries}}
+        {{#hasdeliveries}}
+        <h3>Статус рассылки</h3>
+        <div role="status">
+            <ul>{{#deliveries}}<li>{{label}} · {{count}}</li>{{/deliveries}}</ul>
+        </div>
+        <a class="u-btn" href="{{formurl}}">Обновить статус</a>
+        <details>
+            <summary>Доставка по получателям</summary>
+            <ul>
+                {{#history}}
+                <li><strong>{{name}}</strong> · {{status}}{{#next}}<br>Следующая проверка {{next}} (ваш часовой пояс){{/next}}
+                    {{#reason}}<br>{{reason}}{{/reason}}</li>
+                {{/history}}
+            </ul>
+        </details>
+        {{/hasdeliveries}}
+        {{#legacydeliveries}}<p>Ранее отправленное уведомление · {{label}} · {{count}}</p>{{/legacydeliveries}}
         {{#broadcast_error}}<p class="alert alert-warning">{{broadcast_error}}</p>{{/broadcast_error}}
         {{#enabled}}
         {{#sendable}}
@@ -52,9 +67,9 @@
             <input type="hidden" name="sesskey" value="{{sesskey}}">
             <input type="hidden" name="fingerprint" value="{{fingerprint}}">
             <fieldset>
-                <legend>Получатели с доступом к публикации · {{peoplecount}}</legend>
+                <legend>Можно добавить в рассылку · {{peoplecount}}</legend>
                 {{#people}}<label><input type="checkbox" name="recipients[]" value="{{id}}"> {{name}}</label>{{/people}}
-                {{^people}}<p>Нет новых получателей с активной привязкой и включёнными уведомлениями Ленты.</p>{{/people}}
+                {{^people}}<p>Все доступные получатели уже выбраны или для этой публикации нет подходящих получателей.</p>{{/people}}
             </fieldset>
             {{#peoplecount}}
             <p>Текст и файлы будут отправлены в личные чаты выбранных получателей.</p>

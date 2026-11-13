@@ -116,11 +116,12 @@ final class feed_service {
         $post->timemodified = $now;
         $post->version++;
         $DB->update_record('local_ustar_feed_posts', $post);
+        \local_ustar\connect\notification_delivery::cancel_publication($postid, $version);
         self::event($postid, $actorid, $publish && $wasdraft ? 'publish' : 'edit');
         $transaction->allow_commit();
     }
 
-    public static function remove(int $postid, int $actorid, int $version, string $reason = ''): void {
+    public static function remove(int $postid, int $actorid, int $version, string $reason = ''): string {
         global $DB;
         feed_access::require_actor($actorid);
         $moderator = feed_access::can_moderate($actorid);
@@ -143,9 +144,11 @@ final class feed_service {
         $post->version++;
         $post->timemodified = time();
         $DB->update_record('local_ustar_feed_posts', $post);
+        \local_ustar\connect\notification_delivery::cancel_publication($postid, $version);
         self::event($postid, $actorid, $moderator && (int)$post->actoruserid !== $actorid ? 'moderate' : 'delete',
             trim($reason));
         $transaction->allow_commit();
+        return $post->status;
     }
 
     public static function like(int $postid, int $userid, bool $liked): void {
@@ -279,6 +282,9 @@ final class feed_service {
             $post->version++;
             $post->timemodified = time();
             $DB->update_record('local_ustar_feed_posts', $post);
+            if ($decision === 'hide') {
+                \local_ustar\connect\notification_delivery::cancel_publication($postid, $version);
+            }
         }
         $DB->execute("UPDATE {local_ustar_feed_reports} SET status = :status,
             resolvedby = :actor, timemodified = :modified WHERE postid = :postid AND status = :open", [

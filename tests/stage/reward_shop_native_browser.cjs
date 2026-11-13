@@ -154,6 +154,19 @@ function imageUpload(bytes) {
         const post = await manager.getByRole('link', {name: 'Открыть публикацию в Ленте'}).getAttribute('href');
         await visit(learner, post);
         await learner.getByText('Файлы для команды', {exact: true}).waitFor();
+        const feed = base + '/local/ustar/feed.php';
+        await visit(manager, feed + '?filter=mine');
+        const ownPost = manager.locator('.u-feed__post').filter({hasText: 'Файлы для команды'});
+        const removePost = ownPost.getByRole('button', {name: 'Удалить публикацию', exact: true});
+        await removePost.waitFor();
+        await submit(removePost, manager);
+        assert.equal(await ownPost.count(), 0);
+        assert.equal(new URL(manager.url()).searchParams.get('filter'), 'mine');
+        // The Moodle alert also contains the accessible name of its dismiss button.
+        const confirmation = manager.locator('#user-notifications .alert').filter({hasText: 'Публикация удалена.'});
+        await confirmation.waitFor({timeout: 5000});
+        await visit(learner, feed);
+        assert.equal(await learner.getByText('Файлы для команды', {exact: true}).count(), 0);
         await visit(learner, base + '/local/ustar/achievements.php');
         const ranking = learner.getByRole('region', {name: 'Рейтинг отдела'});
         await ranking.getByText('Отдел проверки наград · XP за всё время', {exact: true}).waitFor();
@@ -167,6 +180,7 @@ function imageUpload(bytes) {
             publishedRewardPurchased: true, adminIssued: true, adminRejectedAndRefunded: true,
             coversUploadedReplacedRemovedAndRestricted: true, lightAndDarkActionBounds: true,
             announcementFileUploadedWithSendingOff: true, departmentRankingAndTeamProfileRendered: true,
+            feedAuthorCanDeleteFromCard: true,
         }, null, 2));
         console.log('REWARD_SHOP_NATIVE_BROWSER=PASS');
     } finally {

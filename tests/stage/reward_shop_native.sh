@@ -40,10 +40,30 @@ php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/rewar
 php vendor/bin/phpunit --display-notices --fail-on-notice --log-junit /artifacts/reward-shop-unit.xml \
     public/local/ustar/tests/reward_shop_test.php 2>&1 | tee /artifacts/reward-shop-unit.log
 php /source/tests/stage/reward_shop_fixture.php 2>&1 | tee /artifacts/reward-shop-fixture.log
-for feature in team_achievements connect_announcements; do
+features=(team_achievements connect_announcements)
+if [[ ${USTAR_STAGE_BROADCAST_WIRE:-} = 1 ]]; then
+    features+=(connect_notification connect_bot feed_roles)
+fi
+for feature in "${features[@]}"; do
     php vendor/bin/phpunit --display-notices --fail-on-notice --fail-on-empty-test-suite \
         --log-junit "/artifacts/reward-shop-${feature}.xml" "public/local/ustar/tests/${feature}_test.php" \
         2>&1 | tee "/artifacts/reward-shop-${feature}.log"
 done
+if [[ ${USTAR_STAGE_BROADCAST_WIRE:-} = 1 ]]; then
+    (
+        set -Eeuo pipefail
+        export USTAR_STAGE_BROADCAST_FIXTURE=1
+        php /source/tests/stage/connect_broadcast_http_fixture.php
+        php -S 127.0.0.1:18087 /source/tests/stage/connect_broadcast_http_fixture.php \
+            > /artifacts/reward-shop-broadcast-http.log 2>&1 &
+        bridgepid=$!
+        trap 'kill "$bridgepid" 2>/dev/null || true; wait "$bridgepid" 2>/dev/null || true' EXIT
+        for attempt in $(seq 1 20); do
+            if curl --silent --max-time 2 http://127.0.0.1:18087/ -o /dev/null; then break; fi
+            sleep 1
+        done
+        python3 /source/tests/stage/connect_broadcast_http.py
+    ) 2>&1 | tee /artifacts/reward-shop-broadcast-wire.log
+fi
 echo 'REWARD_SHOP_SCHEMA_AND_DB=PASS'
 bash /source/tests/stage/authenticated_shell_smoke.sh studio-browser

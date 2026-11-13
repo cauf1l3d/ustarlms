@@ -13,6 +13,15 @@
     "passed": 136,
     "skipped": 0
   },
+  "local_r16_diagnostic": {
+    "tests": 1695,
+    "failures": 4,
+    "errors": 23,
+    "skipped": 297,
+    "result": "environment_limited",
+    "comparison": "All 27 failure and error test names matched on the 7fa3233f predecessor and the widget branch across six infrastructure test modules (151 tests per run).",
+    "environment": "Root ownership and filesystem boundaries, missing POSIX ACL support, free space limits and unavailable Go compiler."
+  },
   "native": {
     "run_id": 43443043683,
     "result": "success",
@@ -61,7 +70,7 @@
     "archive_bytes": 455862,
     "archive_members": 14,
     "application_files": 10,
-    "worker_archive_regular_members": 7,
+    "worker_archive_regular_members": 8,
     "archive_membership_and_crc": "verified",
     "artifact_matches_local_and_retained_download": true,
     "tampered_payload_rejected": true,

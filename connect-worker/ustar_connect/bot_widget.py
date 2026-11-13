@@ -32,6 +32,7 @@ function paint(pair,value){
   for(const button of pair){
     const selected=button.dataset.value===value;
     button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));
+    button.textContent=(selected?'✓ ':'')+(button.dataset.value==='1'?'Да':'Нет');
   }
 }
 function showProgress(){
@@ -67,6 +68,7 @@ function load(){
     for(const [value,text] of [['1','Да'],['0','Нет']]){
       const button=document.createElement('button');
       button.type='button';button.textContent=text;button.dataset.value=value;
+      button.setAttribute('aria-label',text);
       button.addEventListener('click',()=>{
         answers[index]=value;
         paint(pair,value);

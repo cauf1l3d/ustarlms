@@ -122,9 +122,15 @@ final class bot_checklist_widget {
     }
 
     private static function submit(int $userid, \stdClass $action, array $target, string $selected): array {
+        if ($target['date'] !== checklist_service::date_key()) {
+            return ['status' => 'stale'];
+        }
         $definition = checklists::find($target['id']);
         $position = (string)(structure::resolve_user($userid)['position']['id'] ?? '');
         if (!$definition || !checklists::applies_to($definition, $position)) {
+            return ['status' => 'stale'];
+        }
+        if ($target['definition'] !== max(1, (int)($definition['version'] ?? 1))) {
             return ['status' => 'stale'];
         }
         if ($action->status === 'done') {

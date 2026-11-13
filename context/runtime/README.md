@@ -2,7 +2,7 @@
 
 13.11.2026. Владелец подтвердил работу живых рассылок и поручил перейти к виджетам. [Приёмка](connect_delivery_repair_owner_acceptance_20261113.json).
 
-13.11.2026. Владелец установил `d1e54624`. Рассылка №508 осталась без подтверждения Telegram. Пакет `7fa3233f` прошёл проверки Moodle 5.1.1 и 5.1.8. Следующий шаг — установка и пилот с одним адресатом. [Инцидент](connect_broadcast_owner_incident_20261113.json), [проверки](connect_delivery_repair_qualification_20261113.json).
+13.11.2026. Владелец установил `d1e54624`. Рассылка №508 осталась без подтверждения Telegram. Пакет `7fa3233f` прошёл проверки Moodle 5.1.1 и 5.1.8. [Инцидент](connect_broadcast_owner_incident_20261113.json), [проверки](connect_delivery_repair_qualification_20261113.json).
 
 12.11.2026. Владелец установил Академию и Connect `814a99d9` и получил короткое уведомление в Telegram. [Квитанция владельца](connect_team_owner_deploy_20261112.json), [проверки поставки прямой рассылки `d1e54624`](connect_broadcast_qualification_20261112.json).
 

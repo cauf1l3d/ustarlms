@@ -15,7 +15,8 @@ const items = [
 ];
 
 async function assertFits(page, control, width) {
-    assert.ok(await page.locator('body').evaluate(el => el.scrollWidth <= el.clientWidth));
+    const [scrollWidth, clientWidth] = await page.locator('body').evaluate(el => [el.scrollWidth, el.clientWidth]);
+    assert.ok(scrollWidth <= clientWidth, JSON.stringify({width, scrollWidth, clientWidth}));
     const bounds = await control.boundingBox();
     assert.ok(bounds && bounds.height >= 44 && bounds.y + bounds.height < 580,
         JSON.stringify({width, bounds}));

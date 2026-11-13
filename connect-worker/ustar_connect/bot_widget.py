@@ -14,8 +14,8 @@ font-family:system-ui;font-size:var(--tg-text-font-size,15px);line-height:1.35}
 .row{margin:0 0 6px;padding:0 0 5px;border-bottom:1px solid var(--tg-theme-section-separator-color,#d4dfe7)}
 .label{display:block;margin-bottom:3px;overflow-wrap:anywhere}
 .options{display:flex;gap:6px}
-button{min-height:44px;font-family:inherit;font-size:inherit;border:0;border-radius:8px;padding:5px 8px}
-.options button,#nav button{flex:1;background:var(--tg-theme-secondary-bg-color,#eef4f8);color:inherit}
+button{min-height:44px;font-family:inherit;font-size:inherit;border:0;border-radius:8px;padding:5px 4px;overflow-wrap:anywhere}
+.options button,#nav button{flex:1;min-width:0;background:var(--tg-theme-secondary-bg-color,#eef4f8);color:inherit}
 .options .selected{background:var(--tg-theme-button-color,#266394);color:var(--tg-theme-button-text-color,#fff)}
 #save{width:100%;background:var(--tg-theme-button-color,#266394);color:var(--tg-theme-button-text-color,#fff)}
 #nav{display:flex;gap:6px;margin:3px 0 6px}#nav[hidden]{display:none}

@@ -1,6 +1,6 @@
 # Навигация по контексту
 
-- [Telegram и Лента, ревью доставки и UX](reviews/20261113/CONNECT_DELIVERY_UX_RU.md).
+- [Telegram и Лента, ревью доставки и UX](reviews/20261113/CONNECT_DELIVERY_UX_RU.md), [проверки пакета исправления](runtime/connect_delivery_repair_qualification_20261113.json).
 
 - [Рассылки Telegram и профиль команды](../docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md), [проверки прямой рассылки](runtime/connect_broadcast_qualification_20261112.json), [проверки первой поставки](runtime/connect_team_qualification_20261112.json).
 

@@ -890,7 +890,9 @@ tasks:
   - Изменение редакции, файлов или доступа до отправки отменяет доставку
 - id: CONNECT-DELIVERY-REPAIR
   title: Надёжность прямой рассылки, удаление из Ленты и навигация бота
-  status: native_verification_pending
+  status: qualified_awaiting_owner_installation_and_pilot
+  qualification: context/runtime/connect_delivery_repair_qualification_20261113.json
+  runbook: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
   reference: context/reviews/20261113/CONNECT_DELIVERY_UX_RU.md
   depends_on: [CONNECT-BROADCAST-01]
   acceptance:

@@ -37,7 +37,8 @@ current_operator_handoff:
 current_work:
   task: CONNECT-DELIVERY-REPAIR
   related_task: CONNECT-BROADCAST-01
-  status: native_verification_pending
+  status: qualified_awaiting_owner_installation_and_pilot
+  qualification: context/runtime/connect_delivery_repair_qualification_20261113.json
   previous_qualification: context/runtime/connect_broadcast_qualification_20261112.json
   previous_owner_receipt: context/runtime/connect_broadcast_owner_incident_20261113.json
   spec: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md

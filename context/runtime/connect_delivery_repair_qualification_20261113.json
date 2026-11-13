@@ -1,0 +1,87 @@
+{
+  "task": "CONNECT-DELIVERY-REPAIR",
+  "date_msk": "2026-11-13",
+  "pull_request": 120,
+  "previous_owner_receipt": "context/runtime/connect_broadcast_owner_incident_20261113.json",
+  "application_and_worker_commit": "7fa3233f3016eb968b7fadd3ae410ec330186b93",
+  "application_and_worker_baseline": "d1e546240e9339dd5f3263ca567ed9def64cc478",
+  "local_ustar_version": 2026111300,
+  "theme_ustar_version": 2026110200,
+  "schema_changed": false,
+  "migration": "Recheck pending schedules inherited from the previous broadcast release without replaying uncertain delivery.",
+  "local_targeted_python": {
+    "tests": 138,
+    "passed": 134,
+    "skipped": 4
+  },
+  "native": {
+    "run_id": 43402975196,
+    "fixture_commit": "3e5565292a1b8a40c76faf359a49aae9e65b40c9",
+    "result": "success",
+    "fresh_upgrade_repeat_schema_equal": true,
+    "signed_http_file_and_fake_telegram_receipt": "CONNECT_BROADCAST_WIRE_RECEIPT=PASS",
+    "profiles": [
+      {
+        "moodle": "5.1.1",
+        "job_id": 131810191699,
+        "artifact_id": 14026047483,
+        "artifact_zip_sha256": "e449d790d0751f767fc527c4debea0439b1b97eb59f5ee66afa98adab2ecba8f"
+      },
+      {
+        "moodle": "5.1.8",
+        "job_id": 131810192012,
+        "artifact_id": 14025623389,
+        "artifact_zip_sha256": "0cea5b96f61cb5d4293a40bc9118fcc1bbfb84a4a83b0f63a167ca1f9750dea5"
+      }
+    ],
+    "each_profile": {
+      "announcements": {
+        "tests": 7,
+        "assertions": 33
+      },
+      "notifications": {
+        "tests": 29,
+        "assertions": 128
+      },
+      "bot": {
+        "tests": 14,
+        "assertions": 40
+      },
+      "feed_roles": {
+        "tests": 9,
+        "assertions": 27
+      }
+    }
+  },
+  "browser": {
+    "run_id": 43402975196,
+    "fixture_commit": "3e5565292a1b8a40c76faf359a49aae9e65b40c9",
+    "result": "success",
+    "both_profiles": true,
+    "feed_author_deletes_from_card_and_returns_to_own_posts": true,
+    "deleted_post_disappears_for_employee": true
+  },
+  "operator": "scripts/infra/connect_delivery_repair_release.py",
+  "builder": "scripts/infra/build_connect_delivery_repair_release.py",
+  "package_ci": {
+    "run_id": 43401769059,
+    "job_id": 131806113231,
+    "artifact_id": 14024429960,
+    "artifact_zip_sha256": "76d187af54ba64e5a575195b04b24e3e4a5672bb39a96503fdcb0ca701e4593c",
+    "archive": "ustar-connect-delivery-repair-7fa3233f.tar.gz",
+    "archive_sha256": "a270327c73422b982648c0dab18a3601ce4fd86c806dac95991d5d119b3aca9d",
+    "archive_bytes": 469840,
+    "archive_members": 19,
+    "application_files": 15,
+    "worker_archive_regular_members": 8,
+    "archive_membership_and_crc": "verified",
+    "artifact_matches_local_and_retained_download": true,
+    "tampered_payload_rejected": true,
+    "result": "success"
+  },
+  "server1": "awaiting_owner_installation",
+  "live_telegram_delivery": "awaiting_owner_pilot",
+  "main_merge": "pending",
+  "review": "context/reviews/20261113/CONNECT_DELIVERY_UX_RU.md",
+  "guide": "docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md"
+}

@@ -3,7 +3,7 @@ updated_at: '2026-11-13'
 project: USTAR Academy
 stage: connect_delivery_repair
 stage_label: Telegram delivery repair and Feed actions
-current_activity: Owner installed d1e54624. The first direct broadcast failed before the provider call path; source repairs and current role navigation are under verification.
+current_activity: The owner confirmed d1e54624 and reported uncertain delivery for publication 508. PR120 fixes the permit and queue handling and provides the 7fa3233f installer for the owner pilot.
 entrypoint: START_HERE.md
 next_task: CONNECT-DELIVERY-REPAIR
 ready_tasks: []
@@ -396,7 +396,9 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: native_verification_pending
+  status: qualified_awaiting_owner_installation_and_pilot
+  qualification: context/runtime/connect_delivery_repair_qualification_20261113.json
+  pull_request: 120
   previous_qualification: context/runtime/connect_broadcast_qualification_20261112.json
   branch: fix/connect-broadcast-feed-20261113
   deployed: false

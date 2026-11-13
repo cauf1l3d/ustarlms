@@ -1,6 +1,6 @@
 # Активная работа · 13.11.2026
 
-PR119 установлен. Рассылка №508 остановилась до подтверждения Telegram. Исправление доставки и Ленты проходит проверки. [Инцидент](../runtime/connect_broadcast_owner_incident_20261113.json), [ревью](../reviews/20261113/CONNECT_DELIVERY_UX_RU.md).
+PR120 `7fa3233f` готов к установке и пилоту поверх `d1e54624`. [Проверки и инцидент №508](../runtime/connect_delivery_repair_qualification_20261113.json), [команды](../../docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md#установка-исправления-доставки-от-13112026).
 
 ## Повторная привязка Telegram
 

@@ -139,8 +139,9 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Owner installed d1e54624. The first direct broadcast failed before the
-    provider call path; source repairs and current role navigation are under verification.
+  activity: The owner confirmed d1e54624 and reported uncertain delivery for publication
+    508. PR120 fixes the permit and queue handling and provides the 7fa3233f installer
+    for the owner pilot.
   next_task: CONNECT-DELIVERY-REPAIR
   ready_tasks: []
   task_statuses:
@@ -150,7 +151,7 @@ current_work:
     B2B-01: planned
     B2B-02: planned
     CONNECT-BROADCAST-01: owner_installed_direct_delivery_incident
-    CONNECT-DELIVERY-REPAIR: native_verification_pending
+    CONNECT-DELIVERY-REPAIR: qualified_awaiting_owner_installation_and_pilot
     CONNECT-RELINK-01: qualified_awaiting_owner_installation
     CONNECT-TEAM-01: owner_installed_pilot_notice_delivered
     DOC-01: done

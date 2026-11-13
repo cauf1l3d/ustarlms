@@ -5,6 +5,8 @@ defined('MOODLE_INTERNAL') || die();
 /** Durable leases in the existing delivery store, never in a worker-side business queue. */
 final class notification_delivery {
     private const TABLE = 'local_ustar_notify_delivery';
+    private const SCHEDULE_REASONS = ['quiet_hours', 'recipient_interval', 'recipient_busy'];
+    private const UNSENT_REASONS = ['attachment_unavailable', 'permit_unavailable', 'worker_scope'];
     private static function channel(): ?string {
         global $CFG;
         $value = $CFG->ustar_connect_channels['telegram'] ?? null;
@@ -94,8 +96,48 @@ final class notification_delivery {
         $DB->update_record(self::TABLE, $row);
         return ['status' => $state];
     }
+
+    /** Discard only times calculated from personal settings, including rows from the prior release. */
+    public static function preferences_changed(int $userid): void {
+        global $DB;
+        [$reasons, $params] = $DB->get_in_or_equal(self::SCHEDULE_REASONS, SQL_PARAMS_NAMED, 'reason');
+        $now = time();
+        $DB->execute("UPDATE {local_ustar_notify_delivery} SET nextattempt = :next, lasterror = NULL
+             WHERE connectversion = 1 AND channel = :channel AND nextattempt > :now
+               AND ((status = :pending AND lasterror IS NULL) OR
+                    ((status = :scheduled OR status = :retry) AND lasterror {$reasons}))
+               AND notificationid IN (SELECT id FROM {local_ustar_notifications} WHERE userid = :userid)",
+            $params + ['next' => $now, 'now' => $now, 'channel' => 'telegram', 'pending' => 'pending',
+                'scheduled' => 'pending', 'retry' => 'retry_wait', 'userid' => $userid]);
+    }
+
+    public static function recheck_legacy_broadcast_schedule(): void {
+        global $DB;
+        $now = time();
+        $DB->execute('UPDATE {local_ustar_notify_delivery} SET nextattempt = :next
+                WHERE connectversion = 1 AND channel = :channel AND status = :pending
+                  AND lasterror IS NULL AND nextattempt > :now
+                  AND notificationid IN (SELECT id FROM {local_ustar_notifications} WHERE eventtype = :event)',
+            ['next' => $now, 'now' => $now, 'channel' => 'telegram', 'pending' => 'pending',
+                'event' => announcements::BROADCAST_EVENT]);
+    }
+
+    /** Called by the canonical Feed writer within the publication change transaction. */
+    public static function cancel_publication(int $postid, int $version): void {
+        global $DB;
+        $event = announcements::BROADCAST_EVENT;
+        $prefix = $DB->sql_like_escape($event . ':' . $postid . ':' . $version . ':') . '%';
+        $match = $DB->sql_like('idempotencykey', ':prefix');
+        $DB->execute("UPDATE {local_ustar_notify_delivery}
+                SET status = :cancelled, lasterror = :reason, nextattempt = NULL, timemodified = :now
+             WHERE connectversion = 1 AND channel = :channel AND status IN (:pending, :leased, :retry)
+               AND notificationid IN (SELECT id FROM {local_ustar_notifications} WHERE eventtype = :event AND {$match})",
+            ['cancelled' => 'cancelled', 'reason' => 'publication_changed', 'now' => time(), 'channel' => 'telegram',
+                'pending' => 'pending', 'leased' => 'leased', 'retry' => 'retry_wait', 'event' => $event, 'prefix' => $prefix]);
+    }
+
     /** Current quiet hours and recipient-wide cooldown. Never return a pre-rendered private message. */
-    private static function next_time(\stdClass $row, \stdClass $notice, int $now): int {
+    private static function next_time(\stdClass $row, \stdClass $notice, int $now): array {
         global $DB;
         $prefs = notification_preferences::for_user((int)$notice->userid);
         $last = (int)$DB->get_field_sql('SELECT MAX(d.connbegun) FROM {local_ustar_notify_delivery} d
@@ -108,7 +150,9 @@ final class notification_delivery {
             WHERE n.userid = :uid AND d.id <> :id AND d.connectversion = 1 AND d.channel = :channel
               AND (d.status = :leased OR d.status = :sending) AND d.connleaseuntil > :now',
             ['uid' => $notice->userid, 'id' => $row->id, 'channel' => 'telegram', 'leased' => 'leased', 'sending' => 'sending', 'now' => $now]);
-        return notification_preferences::next_allowed($prefs, max($next, $busy));
+        $base = max($next, $busy);
+        $allowed = notification_preferences::next_allowed($prefs, $base);
+        return [$allowed, $allowed > $base ? 'quiet_hours' : ($busy > $next ? 'recipient_busy' : 'recipient_interval')];
     }
     public static function lease(string $kid, string $provider, string $tenant, ?int $now = null,
             bool $broadcast = false): ?array {
@@ -125,7 +169,8 @@ final class notification_delivery {
                     'limited' => 'rate_limited', 'unauthorized' => 'unauthorized']);
             if ($cooldown > $now) { return null; }
             $params = ['channel' => 'telegram', 'tenant' => $tenant, 'pending' => 'pending',
-                'retry' => 'retry_wait', 'due' => $now, 'leased' => 'leased', 'sending' => 'sending', 'expired' => $now];
+                'retry' => 'retry_wait', 'due' => $now, 'leased' => 'leased', 'sending' => 'sending',
+                'expired' => $now, 'ttl' => $now];
             $filter = '';
             if (!$broadcast) {
                 // Legacy workers can retire interrupted sends but cannot claim a direct broadcast.
@@ -136,24 +181,34 @@ final class notification_delivery {
             $rows = $DB->get_records_sql('SELECT d.* FROM {local_ustar_notify_delivery} d
                 JOIN {local_ustar_conn_links} l ON l.id = d.connlinkid
                 WHERE d.connectversion = 1 AND d.channel = :channel AND l.tenant = :tenant
-                  AND (((d.status = :pending OR d.status = :retry) AND d.nextattempt <= :due)
+                  AND (((d.status = :pending OR d.status = :retry) AND (d.nextattempt <= :due OR d.connexpires <= :ttl))
                     OR ((d.status = :leased OR d.status = :sending) AND d.connleaseuntil <= :expired))
-                ' . $filter . ' ORDER BY d.id', $params, 0, 50);
+                ' . $filter . ' ORDER BY d.id FOR UPDATE OF d', $params, 0, 50);
             foreach ($rows as $row) {
                 if ($row->status === 'sending') { self::state($row, 'uncertain', $now, 'interrupted'); continue; }
+                if ((int)$row->connexpires <= $now) {
+                    $row->nextattempt = null;
+                    self::state($row, 'cancelled', $now, 'expired'); continue;
+                }
                 $notice = $DB->get_record('local_ustar_notifications', ['id' => $row->notificationid]);
                 $link = $notice ? self::eligible($notice, $row) : null;
-                if (!$link || (int)$row->connexpires <= $now) {
-                    self::state($row, 'cancelled', $now); continue;
+                if (!$link) {
+                    $row->nextattempt = null;
+                    self::state($row, 'cancelled', $now, 'no_longer_eligible'); continue;
                 }
                 if ((int)$row->attempts >= 5) { self::state($row, 'failed', $now, 'max_attempts'); continue; }
-                $next = self::next_time($row, $notice, $now);
-                if ($next > $now) { $row->nextattempt = $next; self::state($row, 'pending', $now); continue; }
+                [$next, $reason] = self::next_time($row, $notice, $now);
+                if ($next > $now) { $row->nextattempt = $next; self::state($row, 'pending', $now, $reason); continue; }
                 $content = null;
                 if ($notice->eventtype === announcements::BROADCAST_EVENT) {
+                    if ($row->status === 'leased') {
+                        self::retry_unsent($row, 'permit_unavailable', $now);
+                        continue;
+                    }
                     $content = broadcast_content::for_notice($notice);
                     if (!$content) {
-                        self::state($row, 'cancelled', $now);
+                        $row->nextattempt = null;
+                        self::state($row, 'cancelled', $now, 'publication_changed');
                         continue;
                     }
                 }
@@ -175,7 +230,9 @@ final class notification_delivery {
         self::scope($kid, $provider, $tenant);
         try { $hash = opaque_token::digest($lease, 'ud1'); }
         catch (\InvalidArgumentException $error) { throw new \InvalidArgumentException('invalid_delivery'); }
-        $row = $DB->get_record(self::TABLE, ['id' => $id, 'connectversion' => 1, 'channel' => 'telegram', 'connkeyid' => $kid]);
+        $row = $DB->get_record_sql('SELECT * FROM {local_ustar_notify_delivery}
+            WHERE id = :id AND connectversion = 1 AND channel = :channel AND connkeyid = :kid FOR UPDATE',
+            ['id' => $id, 'channel' => 'telegram', 'kid' => $kid]);
         $link = $row ? $DB->get_record('local_ustar_conn_links', ['id' => $row->connlinkid, 'provider' => $provider, 'tenant' => $tenant]) : false;
         if (!$row || !$link || !hash_equals($row->connleasehash, $hash)) { throw new \InvalidArgumentException('invalid_delivery'); }
         return $row;
@@ -230,22 +287,27 @@ final class notification_delivery {
             else if ($version === 2) { notification_action::require_enabled(); }
             global $DB;
             $row = self::fenced($id, $lease, $kid, $provider, $tenant);
+            if ($row->status === 'cancelled') { return ['status' => 'cancelled']; }
             if ($row->status !== 'leased' || (int)$row->connleaseuntil <= $now) { throw new \InvalidArgumentException('invalid_delivery'); }
             $notice = $DB->get_record('local_ustar_notifications', ['id' => $row->notificationid]);
             $link = $notice ? self::eligible($notice, $row) : null;
-            if (!$link || (int)$row->connexpires <= $now) { return self::state($row, 'cancelled', $now); }
+            if (!$link || (int)$row->connexpires <= $now) {
+                $row->nextattempt = null;
+                return self::state($row, 'cancelled', $now, $link ? 'expired' : 'no_longer_eligible');
+            }
             if (in_array($notice->eventtype, [announcements::EVENT, announcements::BROADCAST_EVENT], true) && $version !== 3) {
                 $row->nextattempt = $now + 300;
                 return self::state($row, 'retry_wait', $now);
             }
-            $next = self::next_time($row, $notice, $now);
-            if ($next > $now) { $row->nextattempt = $next; return self::state($row, 'retry_wait', $now); }
+            [$next, $reason] = self::next_time($row, $notice, $now);
+            if ($next > $now) { $row->nextattempt = $next; return self::state($row, 'retry_wait', $now, $reason); }
             if ((int)$row->attempts >= 5) { return self::state($row, 'failed', $now, 'max_attempts'); }
             $content = null;
             if ($notice->eventtype === announcements::BROADCAST_EVENT) {
                 $content = broadcast_content::for_notice($notice);
                 if (!$content) {
-                    return self::state($row, 'cancelled', $now);
+                    $row->nextattempt = null;
+                    return self::state($row, 'cancelled', $now, 'publication_changed');
                 }
                 if ($stamp === null || !hash_equals($content['stamp'], $stamp)) {
                     throw new \InvalidArgumentException('invalid_delivery');
@@ -254,6 +316,9 @@ final class notification_delivery {
                 throw new \InvalidArgumentException('invalid_delivery');
             }
             $row->attempts = (int)$row->attempts + 1; $row->connbegun = $now;
+            if ($content !== null) {
+                $row->connleaseuntil = $now + 120;
+            }
             // This transaction commits before the private worker receives any permission to send.
             self::state($row, 'sending', $now);
             $permit = ['status' => 'sending', 'subject' => $link->subject,
@@ -271,6 +336,12 @@ final class notification_delivery {
     }
     public static function finish(int $id, #[\SensitiveParameter] string $lease, string $outcome,
             string $ref, string $reason, int $retry, string $kid, string $provider, string $tenant): array {
+        if (in_array($reason, self::UNSENT_REASONS, true)) {
+            if ($ref !== '' || $retry !== 0 || $outcome !== ($reason === 'worker_scope' ? 'failed' : 'retry_wait')) {
+                throw new \InvalidArgumentException('invalid_delivery');
+            }
+            return self::finish_unsent($id, $lease, $reason, $kid, $provider, $tenant);
+        }
         if (!in_array($outcome, ['provider_accepted', 'retry_wait', 'uncertain', 'failed'], true)
                 || ($outcome === 'provider_accepted' ? (!preg_match('/\A[1-9][0-9]{0,18}\z/', $ref) || $reason !== '' || $retry !== 0)
                     : ($ref !== '' || !in_array($reason, ['rate_limited', 'unauthorized', 'forbidden', 'api_rejected',
@@ -291,10 +362,46 @@ final class notification_delivery {
             if ($row->status !== 'sending' && !($row->status === 'uncertain' && $outcome === 'provider_accepted')) {
                 throw new \InvalidArgumentException('receipt_conflict');
             }
-            $row->providerref = $ref ?: null; $row->nextattempt = $outcome === 'retry_wait' ? time() + $retry : null;
+            $now = time();
+            $row->providerref = $ref ?: null; $row->nextattempt = $outcome === 'retry_wait' ? $now + $retry : null;
             // Provider acceptance is never a human ACK or a business decision.
-            return self::state($row, $outcome, time(), $reason);
+            return self::state($row, $outcome, $now, $reason);
         });
+    }
+
+    private static function finish_unsent(int $id, string $lease, string $reason,
+            string $kid, string $provider, string $tenant): array {
+        return identity_service::atomic(function() use ($id, $lease, $reason, $kid, $provider, $tenant): array {
+            global $DB;
+            $row = self::fenced($id, $lease, $kid, $provider, $tenant);
+            $notice = $DB->get_record('local_ustar_notifications', ['id' => $row->notificationid]);
+            if (!$notice || $notice->eventtype !== announcements::BROADCAST_EVENT) {
+                throw new \InvalidArgumentException('invalid_delivery');
+            }
+            if ($row->status === 'cancelled' || ($row->lasterror === $reason
+                    && in_array($row->status, ['retry_wait', 'failed'], true))) {
+                return ['status' => $row->status];
+            }
+            $now = time();
+            if ((int)$row->connleaseuntil <= $now || !in_array($row->status, ['leased', 'sending'], true)
+                    || ($reason !== 'permit_unavailable' && $row->status !== 'leased')) {
+                throw new \InvalidArgumentException('receipt_conflict');
+            }
+            if (!self::eligible($notice, $row) || (int)$row->connexpires <= $now || !broadcast_content::for_notice($notice)) {
+                $row->nextattempt = null;
+                return self::state($row, 'cancelled', $now, 'no_longer_eligible');
+            }
+            return self::retry_unsent($row, $reason, $now);
+        });
+    }
+
+    private static function retry_unsent(\stdClass $row, string $reason, int $now): array {
+        if ($row->status === 'leased') {
+            $row->attempts = (int)$row->attempts + 1;
+        }
+        $terminal = $reason === 'worker_scope' || (int)$row->attempts >= 5;
+        $row->nextattempt = $terminal ? null : $now + 30 * (2 ** ((int)$row->attempts - 1));
+        return self::state($row, $terminal ? 'failed' : 'retry_wait', $now, $reason);
     }
     public static function own_summary(): array {
         global $DB, $USER;

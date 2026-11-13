@@ -1,0 +1,27 @@
+{
+  "date_msk": "2026-11-13",
+  "kind": "owner_terminal_and_queue_evidence",
+  "pull_request": 119,
+  "application_commit": "d1e546240e9339dd5f3263ca567ed9def64cc478",
+  "worker_commit": "d1e546240e9339dd5f3263ca567ed9def64cc478",
+  "local_ustar": 2026111201,
+  "theme_ustar": 2026110200,
+  "phase": "active",
+  "announcements_enabled": true,
+  "receiver_running": true,
+  "notifier_running": true,
+  "install_exit_status": 0,
+  "install_runtime_seconds": 25.839,
+  "incident": {
+    "publication_id": 508,
+    "worker_status_at_061707_msk": "unavailable",
+    "queue_snapshot_at_064530_msk": "uncertain",
+    "attempts": 1,
+    "original_due_msk": "06:17:06",
+    "lease_expiry_msk": "06:18:06",
+    "quiet_hours_at_snapshot": false,
+    "reported_message_received": false,
+    "exact_worker_permit_response": "unavailable_from_existing_logs",
+    "reproduced_code_defect": "Server permit computed one second later rejected by the former client deadline check."
+  }
+}

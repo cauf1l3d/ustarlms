@@ -39,7 +39,9 @@ final class notification_policy {
     public static function permitted(\stdClass $notice): bool {
         global $DB;
         $uid = (int)$notice->userid; $event = (string)$notice->eventtype; $key = (string)$notice->idempotencykey;
-        if (!self::category($event) || $notice->status !== 'unread'
+        $active = $event === announcements::BROADCAST_EVENT
+            ? in_array($notice->status, ['unread', 'read', 'acknowledged'], true) : $notice->status === 'unread';
+        if (!self::category($event) || !$active
                 || !$DB->record_exists('user', ['id' => $uid, 'deleted' => 0, 'suspended' => 0, 'confirmed' => 1])
                 || !\local_ustar\accounts::is_business_account($uid)) { return false; }
         $employment = \local_ustar\employment::resolve($uid)['status'];

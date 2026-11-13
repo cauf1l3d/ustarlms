@@ -70,6 +70,18 @@ final class connect_bot_test extends \advanced_testcase {
             'policy'=>\local_ustar\task_workspace\policy::validate(['timezone'=>'UTC','mode'=>'calendar'])]);
         $this->setGuestUser();return $id;
     }
+    public function test_employee_menu_leads_to_tasks_checklists_and_parent_list(): void {
+        $sender = $this->linked();
+        $this->work($sender);
+        $menu = bot_service::update($sender, $this->request(70));
+        $this->assertSame(['📋 Мои задачи', '☑️ Чек-листы', '🎓 Обучение', '🔔 Уведомления', '⚙️ Настройки'],
+            array_column($menu['buttons'], 'label'));
+        $tasks = $this->click($sender, $menu, 'Мои задачи', 71);
+        $task = $this->click($sender, $tasks, 'Synthetic', 72);
+        $back = $this->click($sender, $task, 'К списку задач', 73);
+        $this->assertSame($tasks['title'], $back['title']);
+        $this->assertContains('Synthetic bot task', array_column($back['buttons'], 'label'));
+    }
     public function test_task_report_button_twice_keeps_one_canonical_report_and_guest_context(): void {
         global $DB,$USER;
         $sender=$this->linked();$id=$this->work($sender);

@@ -81,9 +81,34 @@ class DirectBroadcastTest(unittest.TestCase):
         self.bridge.download_broadcast_file.assert_called_once()
         self.assertEqual(['getMe'], [method for method, _, _ in self.api_requests])
 
+    def test_failed_file_staging_is_recorded_without_begin_or_provider_send(self):
+        self.bridge.download_broadcast_file.side_effect = OSError('synthetic private detail')
+        self.replies(self.lease, {'status': 'retry_wait'})
+        self.assertEqual({'status': 'retry_wait', 'reason': 'attachment_unavailable'}, self.worker().step())
+        calls = self.bridge.request.call_args_list
+        self.assertEqual(['notification.lease', 'notification.finish'], [c.args[0] for c in calls])
+        self.assertEqual('attachment_unavailable', calls[-1].args[1]['reason'])
+        self.assertEqual('0', calls[-1].args[1]['retry_after'])
+        self.assertEqual(['getMe'], [method for method, _, _ in self.api_requests])
+
+    def test_permit_generated_on_next_second_is_accepted(self):
+        worker = self.worker()
+        worker.clock = Mock(side_effect=[NOW, NOW, NOW, NOW, NOW + 1])
+        self.replies(self.lease, {**self.permit, 'send_before': NOW + 11}, {'status': 'provider_accepted'})
+        self.assertEqual({'status': 'provider_accepted'}, worker.step())
+        self.assertEqual('sendDocument', self.api_requests[-1][0])
+
+    def test_expired_permit_is_reported_without_sending(self):
+        self.replies(self.lease, {**self.permit, 'send_before': NOW}, {'status': 'retry_wait'})
+        self.assertEqual({'status': 'retry_wait', 'reason': 'permit_unavailable'}, self.worker().step())
+        operation, payload = self.bridge.request.call_args.args
+        self.assertEqual('notification.finish', operation)
+        self.assertEqual('permit_unavailable', payload['reason'])
+        self.assertEqual(['getMe'], [method for method, _, _ in self.api_requests])
+
     def test_permit_cannot_send_with_a_different_content_stamp(self):
-        self.replies(self.lease, {**self.permit, 'stamp': 'b' * 64})
-        self.assertEqual({'status': 'unavailable'}, self.worker().step())
+        self.replies(self.lease, {**self.permit, 'stamp': 'b' * 64}, {'status': 'retry_wait'})
+        self.assertEqual({'status': 'retry_wait', 'reason': 'permit_unavailable'}, self.worker().step())
         self.assertEqual(['getMe'], [method for method, _, _ in self.api_requests])
 
     def test_attachment_read_is_signed_and_verifies_the_exact_content(self):

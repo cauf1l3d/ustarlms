@@ -1,11 +1,11 @@
 schema_version: 2
-updated_at: '2026-11-12'
+updated_at: '2026-11-13'
 project: USTAR Academy
-stage: connect_direct_broadcast_qualified
-stage_label: Direct Telegram broadcast package ready for owner installation
-current_activity: Owner installed 814a99d9 and received the pilot publication notice. The verified d1e54624 successor is ready for installation and a live pilot of direct text and file delivery.
+stage: connect_delivery_repair
+stage_label: Telegram delivery repair and Feed actions
+current_activity: Owner installed d1e54624. The first direct broadcast failed before the provider call path; source repairs and current role navigation are under verification.
 entrypoint: START_HERE.md
-next_task: CONNECT-BROADCAST-01
+next_task: CONNECT-DELIVERY-REPAIR
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -23,6 +23,7 @@ code_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
+  latest_connect_broadcast_owner_receipt: context/runtime/connect_broadcast_owner_incident_20261113.json
   latest_connect_team_owner_receipt: context/runtime/connect_team_owner_deploy_20261112.json
   latest_SCORM_tracking_evidence: context/runtime/scorm_tracking_owner_20261102.json
   latest_SCORM_functional_acceptance: context/runtime/scorm_tracking_owner_20261102.json
@@ -34,8 +35,8 @@ production:
   latest_addon_preflight: context/runtime/library_discovery_owner_deploy_20261105.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_visual_owner_deploy_20261101.json
-  latest_worker_commit: 814a99d9b54196e34c5a2b86529f30e58027da2a
-  latest_worker_owner_receipt: context/runtime/connect_team_owner_deploy_20261112.json
+  latest_worker_commit: d1e546240e9339dd5f3263ca567ed9def64cc478
+  latest_worker_owner_receipt: context/runtime/connect_broadcast_owner_incident_20261113.json
   effective_addon_deployment:
     receipt: context/runtime/library_discovery_owner_deploy_20261105.json
     reported_date_msk: '2026-11-05'
@@ -395,20 +396,17 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: native_qualified_owner_install_pending
-  qualification: context/runtime/connect_broadcast_qualification_20261112.json
-  previous_qualification: context/runtime/connect_team_qualification_20261112.json
-  branch: feat/connect-direct-broadcast-20261112
-  application_commit: d1e546240e9339dd5f3263ca567ed9def64cc478
-  worker_commit: d1e546240e9339dd5f3263ca567ed9def64cc478
+  status: native_verification_pending
+  previous_qualification: context/runtime/connect_broadcast_qualification_20261112.json
+  branch: fix/connect-broadcast-feed-20261113
   deployed: false
-  local_ustar_version: 2026111201
+  local_ustar_version: 2026111300
   theme_ustar_version: 2026110200
   schema_changed: false
   worker_rollout: true
-  preserved_worker: 814a99d9b54196e34c5a2b86529f30e58027da2a
-  deployment_baseline: 814a99d9b54196e34c5a2b86529f30e58027da2a
-  previous_qualified_delivery: context/runtime/connect_team_qualification_20261112.json
+  preserved_worker: d1e546240e9339dd5f3263ca567ed9def64cc478
+  deployment_baseline: d1e546240e9339dd5f3263ca567ed9def64cc478
+  previous_qualified_delivery: context/runtime/connect_broadcast_qualification_20261112.json
   progress: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
   owner_receipt: null
   execution_authorized: true

@@ -2,7 +2,7 @@ name: USTAR reward shop
 
 on:
   pull_request:
-    branches: [fix/connect-relink-20261111, feat/reward-shop-20261111, feat/reward-shop-ux-20261112, feat/connect-team-overview-20261112, main]
+    branches: [fix/connect-relink-20261111, feat/reward-shop-20261111, feat/reward-shop-ux-20261112, feat/connect-team-overview-20261112, feat/connect-direct-broadcast-20261112, main]
     paths:
       - 'moodle/local/ustar/**'
       - 'tests/stage/reward_shop*'
@@ -50,11 +50,18 @@ jobs:
           if test "$GITHUB_BASE_REF" = feat/connect-team-overview-20261112; then
             installed=814a99d9b54196e34c5a2b86529f30e58027da2a
           fi
+          if test "$GITHUB_BASE_REF" = feat/connect-direct-broadcast-20261112; then
+            installed=d1e546240e9339dd5f3263ca567ed9def64cc478
+          fi
           git archive "$installed" moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-installed
           docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml build --pull
       - name: Verify fresh install, upgrade, repeat upgrade and reward transactions
         run: |
-          id=$(docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml run --rm -d --publish 127.0.0.1:8087:8087 --entrypoint bash runner /source/tests/stage/reward_shop_native.sh)
+          broadcast_wire=0
+          if test "$GITHUB_BASE_REF" = feat/connect-direct-broadcast-20261112 || test "$GITHUB_EVENT_NAME" = workflow_dispatch; then
+            broadcast_wire=1
+          fi
+          id=$(docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml run --rm -d --publish 127.0.0.1:8087:8087 -e "USTAR_STAGE_BROADCAST_WIRE=$broadcast_wire" --entrypoint bash runner /source/tests/stage/reward_shop_native.sh)
           printf '%s\n' "$id" > artifacts/studio-browser-container-id
           for attempt in $(seq 1 180); do
             test ! -e artifacts/studio-browser-ready || exit 0

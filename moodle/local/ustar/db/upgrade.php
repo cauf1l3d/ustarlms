@@ -5038,5 +5038,9 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
     if ($oldversion < 2026111201) {
         upgrade_plugin_savepoint(true, 2026111201, 'local', 'ustar');
     }
+    if ($oldversion < 2026111300) {
+        \local_ustar\connect\notification_delivery::recheck_legacy_broadcast_schedule();
+        upgrade_plugin_savepoint(true, 2026111300, 'local', 'ustar');
+    }
 return true;
 }

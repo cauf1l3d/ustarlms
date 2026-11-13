@@ -125,6 +125,9 @@
 .u-feed__action[aria-pressed="true"] { color: var(--u-brand, #b44e7f); font-weight: 650; }
 .u-feed__action:disabled { opacity: .55; cursor: wait; }
 .u-feed__action--quiet { margin-left: auto; }
+.u-feed__remove { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 6px 0; }
+.u-feed__moderate-card { margin-top: 8px; }
+.u-feed__action--danger { color: var(--u-error, #b32333); min-height: 44px; font-weight: 650; }
 .u-feed__action-error { display: block; position: absolute; z-index: 1; top: 100%; left: 0;
   min-width: 220px; background: var(--u-surface-raised, #fff); padding: 8px; border-radius: 8px;
   color: var(--u-error, #b32333); border: 1px solid currentColor; font-size: .8rem; }

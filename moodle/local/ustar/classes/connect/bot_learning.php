@@ -45,6 +45,14 @@ final class bot_learning {
         }
         if($offset){$buttons[]=bot_store::button($d,'← Назад',$intent,['offset'=>max(0,$offset-8)]);}
         if($offset+8<count($all)){$buttons[]=bot_store::button($d,'Далее →',$intent,['offset'=>$offset+8]);}
+        if ($intent === 'learn.mine') {
+            $buttons[] = bot_store::button($d, 'Мои результаты', 'learn.results');
+            if (!\local_ustar\adaptation_service::is_hrd_actor($id)) {
+                $buttons[] = bot_store::button($d, 'Моя адаптация', 'people.adaptations');
+            }
+        } else {
+            $buttons[] = bot_store::button($d, '← К обучению', 'learn.mine');
+        }
         $buttons[]=bot_service::home($d);
         $current=$snapshot['currentpoint']['title']??'';
         $text=empty($snapshot['ok'])?'Для вашей должности маршрут пока не опубликован.':

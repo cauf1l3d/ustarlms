@@ -95,6 +95,68 @@ final class connect_announcements_test extends \advanced_testcase {
                 null, $lease['broadcast']['stamp']));
     }
 
+    public function test_changing_quiet_hours_releases_an_existing_announcement(): void {
+        global $DB;
+        $recipient = $this->recipient('77777');
+        $user = $DB->get_record('user', ['id' => $recipient], '*', MUST_EXIST);
+        $now = time();
+        $this->setUser($user);
+        notification_preferences::save_own([
+            'enabled' => true, 'categories' => ['feed'],
+            'quiet_start' => gmdate('H:i', $now - 600), 'quiet_end' => gmdate('H:i', $now + 3600),
+            'timezone' => 'UTC',
+        ] + notification_preferences::defaults());
+        $this->setAdminUser();
+        $actor = (int)get_admin()->id;
+        $post = feed_service::create($actor, 'academy', 'academy', ['user:' . $recipient], 'Quiet hours fixture',
+            true, 0, [], bin2hex(random_bytes(16)));
+        announcements::enqueue($actor, $post, announcements::preview($actor, $post)['fingerprint'], [$recipient]);
+        $this->assertNull(notification_delivery::lease('tg_delivery', 'telegram', '123456', null, true));
+        $row = $DB->get_record('local_ustar_notify_delivery', ['channel' => 'telegram'], '*', MUST_EXIST);
+        $this->assertGreaterThan($now, (int)$row->nextattempt);
+
+        $this->setUser($user);
+        notification_preferences::save_own([
+            'enabled' => true, 'categories' => ['feed'], 'quiet_start' => '00:00', 'quiet_end' => '00:00',
+        ] + notification_preferences::defaults());
+        $this->assertNotNull(notification_delivery::lease('tg_delivery', 'telegram', '123456', null, true));
+    }
+
+    public function test_reading_academy_notice_does_not_cancel_explicit_telegram_delivery(): void {
+        global $DB;
+        $recipient = $this->recipient('77777');
+        $this->setAdminUser();
+        $actor = (int)get_admin()->id;
+        $post = feed_service::create($actor, 'academy', 'academy', ['user:' . $recipient], 'Already read in Academy',
+            true, 0, [], bin2hex(random_bytes(16)));
+        announcements::enqueue($actor, $post, announcements::preview($actor, $post)['fingerprint'], [$recipient]);
+        $DB->set_field('local_ustar_notifications', 'status', 'read', ['eventtype' => 'feed_broadcast']);
+        $this->assertNotNull(notification_delivery::lease('tg_delivery', 'telegram', '123456', null, true));
+    }
+
+    public function test_unavailable_attachment_has_bounded_retry_and_feed_removal_cancels_it(): void {
+        global $DB;
+        $recipient = $this->recipient('77777');
+        $this->setAdminUser();
+        $actor = (int)get_admin()->id;
+        $post = feed_service::create($actor, 'academy', 'academy', ['user:' . $recipient], 'Retry fixture',
+            true, 0, [], bin2hex(random_bytes(16)));
+        announcements::enqueue($actor, $post, announcements::preview($actor, $post)['fingerprint'], [$recipient]);
+        $lease = notification_delivery::lease('tg_delivery', 'telegram', '123456', null, true);
+        $report = static fn() => notification_delivery::finish($lease['delivery'], $lease['lease'], 'retry_wait', '',
+            'attachment_unavailable', 0, 'tg_delivery', 'telegram', '123456');
+        $this->assertSame(['status' => 'retry_wait'], $report());
+        $this->assertSame(['status' => 'retry_wait'], $report());
+        $row = $DB->get_record('local_ustar_notify_delivery', ['id' => $lease['delivery']], '*', MUST_EXIST);
+        $this->assertSame(1, (int)$row->attempts);
+        $this->assertGreaterThan(time(), (int)$row->nextattempt);
+
+        feed_service::remove($post, $actor, 1);
+        $row = $DB->get_record('local_ustar_notify_delivery', ['id' => $lease['delivery']], '*', MUST_EXIST);
+        $this->assertSame('cancelled', $row->status);
+        $this->assertSame('publication_changed', $row->lasterror);
+    }
+
     public function test_legacy_notice_cannot_be_promoted_to_direct_delivery(): void {
         $recipient = $this->recipient('77777');
         $this->setAdminUser();

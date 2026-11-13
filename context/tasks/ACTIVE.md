@@ -1,6 +1,6 @@
-# Активная работа · 12.11.2026
+# Активная работа · 13.11.2026
 
-PR118 установлен. Уведомление доставлено. Пакет прямой рассылки PR119 прошёл CI, ожидаются установка и пилот. [Сценарии](../../docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md), [проверки](../runtime/connect_broadcast_qualification_20261112.json).
+PR119 установлен. Рассылка №508 остановилась до подтверждения Telegram. Исправление доставки и Ленты проходит проверки. [Инцидент](../runtime/connect_broadcast_owner_incident_20261113.json), [ревью](../reviews/20261113/CONNECT_DELIVERY_UX_RU.md).
 
 ## Повторная привязка Telegram
 

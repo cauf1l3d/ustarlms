@@ -1,5 +1,7 @@
 # Навигация по контексту
 
+- [Telegram и Лента, ревью доставки и UX](reviews/20261113/CONNECT_DELIVERY_UX_RU.md).
+
 - [Рассылки Telegram и профиль команды](../docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md), [проверки прямой рассылки](runtime/connect_broadcast_qualification_20261112.json), [проверки первой поставки](runtime/connect_team_qualification_20261112.json).
 
 - [Магазин наград](../docs/REWARD_SHOP_RU.md), [витрина и фото](runtime/reward_shop_ux_20261112.json), [первый выпуск](runtime/reward_shop_qualification_20261111.json).

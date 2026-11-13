@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
-      USTAR_REPAIR_SOURCE: fcf1a625817cfea2a335cba29ff289bacd6ab1bd
+      USTAR_REPAIR_SOURCE: 7fa3233f3016eb968b7fadd3ae410ec330186b93
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:

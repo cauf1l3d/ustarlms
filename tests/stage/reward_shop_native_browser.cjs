@@ -160,9 +160,11 @@ function imageUpload(bytes) {
         const removePost = ownPost.getByRole('button', {name: 'Удалить публикацию', exact: true});
         await removePost.waitFor();
         await submit(removePost, manager);
-        await manager.getByText('Публикация удалена.', {exact: true}).first().waitFor();
         assert.equal(await ownPost.count(), 0);
         assert.equal(new URL(manager.url()).searchParams.get('filter'), 'mine');
+        // The Moodle alert also contains the accessible name of its dismiss button.
+        const confirmation = manager.locator('#user-notifications .alert').filter({hasText: 'Публикация удалена.'});
+        await confirmation.waitFor({timeout: 5000});
         await visit(learner, feed);
         assert.equal(await learner.getByText('Файлы для команды', {exact: true}).count(), 0);
         await visit(learner, base + '/local/ustar/achievements.php');

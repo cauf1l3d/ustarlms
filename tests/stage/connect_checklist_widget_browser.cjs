@@ -113,6 +113,7 @@ async function exerciseTask(browser, width, fontSize, dark) {
         assert.equal(await page.locator('#due').textContent(), 'Срок: ' + details.due);
         assert.ok(await start.isHidden());
         assert.deepEqual(await page.evaluate(() => window.calls), [action + ':start', action + ':start']);
+        await page.goto('about:blank');
         await page.setContent(content.replace(JSON.stringify(JSON.stringify(initial)), JSON.stringify(JSON.stringify(after))));
         await page.getByText('Сохранено в Академии.').waitFor();
         assert.ok(await start.isHidden());

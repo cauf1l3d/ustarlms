@@ -12,6 +12,7 @@ if (PHP_SAPI === 'cli-server') {
     }
     // Emulate only Apache's trusted HTTPS server variable in the loopback test fixture.
     $_SERVER['HTTPS'] = 'on';
+    $_SERVER['SCRIPT_NAME'] = '/local/ustar/connect_bridge.php';
     require '/stage/moodle/public/local/ustar/connect_bridge.php';
     exit;
 }

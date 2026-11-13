@@ -26,6 +26,7 @@ $CFG->noemailever = true;
 $CFG->disableupdatenotifications = true;
 $CFG->upgradekey = 'fixture-only';
 if (getenv('USTAR_STAGE_BROADCAST_FIXTURE') === '1' && $prefix === 'stage_') {
+    $CFG->wwwroot = 'https://127.0.0.1:18087';
     $CFG->ustar_connect_channels = ['telegram' => ['tenant' => '123456', 'username' => 'ustarcorp_bot']];
     $CFG->ustar_connect_notifications_enabled = true;
     $CFG->ustar_connect_notify_since = 1;

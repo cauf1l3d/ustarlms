@@ -176,6 +176,7 @@ final class connect_bot_test extends \advanced_testcase {
             'firstname'=>'Pending','lastname'=>'Synthetic','email'=>'bot.confirm@example.invalid','departmentid'=>'retail']);
         $request=$DB->get_record('local_ustar_staff_requests',['employeeid'=>$uid]);
         $this->setGuestUser();$menu=bot_service::update($sender,$this->request(70));
+        $menu=$this->click($sender,$menu,'Управление командой',701);
         $list=$this->click($sender,$menu,'Заявки сотрудников',71);
         $card=$this->click($sender,$list,'Pending',72);$this->click($sender,$card,'Отклонить',73);
         $preview=bot_service::update($sender,$this->request(74,'Ошибочные данные, подайте заново'));

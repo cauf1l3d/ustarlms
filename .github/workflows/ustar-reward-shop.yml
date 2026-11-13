@@ -23,6 +23,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  widget-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: python3 -m unittest tests.r16.test_connect_checklist_widget
+      - run: npm ci --prefix tests/mobile
+      - run: cd tests/mobile && npx playwright install --with-deps chromium
+      - run: node tests/stage/connect_checklist_widget_browser.cjs
+
   native:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -84,10 +99,6 @@ jobs:
         run: |
           trap 'touch artifacts/studio-browser-done' EXIT
           node tests/stage/reward_shop_native_browser.cjs
-      - name: Verify the Telegram widget browser and transport
-        run: |
-          python3 -m unittest tests.r16.test_connect_checklist_widget
-          node tests/stage/connect_checklist_widget_browser.cjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

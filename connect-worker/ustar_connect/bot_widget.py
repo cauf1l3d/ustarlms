@@ -30,7 +30,7 @@ const widget=TelegramWidget;
 const items=document.querySelector('#items'),progress=document.querySelector('#progress');
 const save=document.querySelector('#save'),notice=document.querySelector('#notice');
 const nav=document.querySelector('#nav'),previous=document.querySelector('#previous'),next=document.querySelector('#next');
-let model={},answers=[],buttons=[],busy=false,finished=false,page=0,pageSize=5;
+let model={},answers=[],buttons=[],busy=false,finished=false,page=0,pageSize=3;
 function paint(pair,value){
   for(const button of pair){
     const selected=button.dataset.value===value;
@@ -69,9 +69,7 @@ function load(){
   page=0;render();
 }
 function render(){
-  const wide=matchMedia('(min-width: 300px)').matches;
-  const large=parseFloat(getComputedStyle(document.body).fontSize)>18;
-  pageSize=large?2:wide?5:3;
+  pageSize=parseFloat(getComputedStyle(document.body).fontSize)>18?2:3;
   page=Math.min(page,Math.ceil(answers.length/pageSize)-1);
   items.textContent='';buttons=[];
   const start=page*pageSize,end=Math.min(start+pageSize,answers.length);

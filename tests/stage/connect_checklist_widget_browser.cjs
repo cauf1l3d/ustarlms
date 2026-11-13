@@ -14,6 +14,13 @@ const items = [
     '<img src="https://example.invalid/unsafe"> Проверить полки',
 ];
 
+async function assertFits(page, control, width) {
+    assert.ok(await page.locator('body').evaluate(el => el.scrollWidth <= el.clientWidth));
+    const bounds = await control.boundingBox();
+    assert.ok(bounds && bounds.height >= 44 && bounds.y + bounds.height < 580,
+        JSON.stringify({width, bounds}));
+}
+
 async function exercise(browser, width, dark, pages, fontSize = 15) {
     const page = await browser.newPage({viewport: {width, height: 800}});
     try {
@@ -42,6 +49,7 @@ async function exercise(browser, width, dark, pages, fontSize = 15) {
         for (let index = 1; index < items.length; index++) {
             indexOnPage++;
             if (indexOnPage === await page.getByRole('group').count()) {
+                await assertFits(page, next, width);
                 await next.click();
                 indexOnPage = 0;
             }
@@ -49,9 +57,7 @@ async function exercise(browser, width, dark, pages, fontSize = 15) {
                 .getByRole('button', {name: index === 2 ? 'Нет' : 'Да', exact: true}).click();
         }
         assert.equal(await page.locator('.label').last().textContent(), items[4]);
-        assert.ok(await page.locator('body').evaluate(el => el.scrollWidth <= el.clientWidth));
-        const bounds = await save.boundingBox();
-        assert.ok(bounds.height >= 44 && bounds.y + bounds.height < 580, JSON.stringify({width, bounds}));
+        await assertFits(page, save, width);
         if (pages > 1) {
             await previous.click();
             assert.ok(await save.isHidden());
@@ -78,7 +84,7 @@ async function exercise(browser, width, dark, pages, fontSize = 15) {
     const browser = await chromium.launch({executablePath: process.env.USTAR_CHROMIUM_PATH});
     try {
         await exercise(browser, 200, false, 2);
-        await exercise(browser, 320, true, 1);
+        await exercise(browser, 320, true, 2);
         await exercise(browser, 200, true, 3, 22);
         console.log('CONNECT_CHECKLIST_WIDGET_BROWSER=PASS');
     } finally {

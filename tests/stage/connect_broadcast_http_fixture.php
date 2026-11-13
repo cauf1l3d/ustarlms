@@ -19,6 +19,11 @@ if (PHP_SAPI === 'cli-server') {
 define('CLI_SCRIPT', true);
 require '/stage/moodle/config.php';
 require_once($CFG->dirroot . '/user/lib.php');
+set_exception_handler(static function (Throwable $error): void {
+    fwrite(STDERR, $error::class . ': ' . $error->getMessage() . ' ' . ($error->debuginfo ?? '') . "\n"
+        . $error->getTraceAsString() . "\n");
+    exit(1);
+});
 
 if (($argv[1] ?? '') === 'verify') {
     $row = $DB->get_record_sql('SELECT d.* FROM {local_ustar_notify_delivery} d
@@ -53,11 +58,14 @@ $challenge = \local_ustar\connect\identity_service::issue('telegram', '123456');
 $admin = get_admin();
 \core\session\manager::set_user($admin);
 $actor = (int)$admin->id;
-$post = \local_ustar\feed_service::create($actor, 'academy', 'academy', ['user:' . $userid], 'Склад РЦ · сообщение',
+$post = \local_ustar\feed_service::create($actor, 'academy', 'academy', ['all'], 'Склад РЦ · сообщение',
     true, 0, [], bin2hex(random_bytes(16)));
 get_file_storage()->create_file_from_string([
     'contextid' => $context->id, 'component' => 'local_ustar',
     'filearea' => \local_ustar\feed_files::AREA, 'itemid' => $post, 'filepath' => '/v1/', 'filename' => 'График РЦ.txt',
 ], 'Synthetic attachment');
 $preview = \local_ustar\connect\announcements::preview($actor, $post);
+if (array_map('intval', array_column($preview['people'], 'id')) !== [(int)$userid]) {
+    throw new RuntimeException('fixture_recipient_not_eligible: ' . $preview['broadcast_error']);
+}
 \local_ustar\connect\announcements::enqueue($actor, $post, $preview['fingerprint'], [(int)$userid]);

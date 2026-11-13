@@ -66,6 +66,26 @@ get_file_storage()->create_file_from_string([
 ], 'Synthetic attachment');
 $preview = \local_ustar\connect\announcements::preview($actor, $post);
 if (array_map('intval', array_column($preview['people'], 'id')) !== [(int)$userid]) {
-    throw new RuntimeException('fixture_recipient_not_eligible: ' . $preview['broadcast_error']);
+    $event = \local_ustar\connect\announcements::BROADCAST_EVENT;
+    $preferences = \local_ustar\connect\notification_preferences::for_user($userid);
+    $publication = $DB->get_record('local_ustar_feed_posts', ['id' => $post], '*', MUST_EXIST);
+    $notice = (object)[
+        'userid' => $userid, 'eventtype' => $event, 'status' => 'unread', 'severity' => 'normal',
+        'timecreated' => time(), 'idempotencykey' => $preview['sendable']
+            ? \local_ustar\connect\broadcast_content::key($publication, $userid, $preview['stamp']) : '',
+    ];
+    $audience = $DB->get_fieldset_select('local_ustar_feed_audience', 'scopekind', 'postid = ?', [$post]);
+    throw new RuntimeException('fixture_recipient_not_eligible: ' . json_encode([
+        'announcements' => \local_ustar\connect\announcements::enabled(),
+        'candidates' => count(\local_ustar\connect\notification_delivery::announcement_candidates()),
+        'in_pilot' => \local_ustar\connect\notification_delivery::recipient_enabled($userid),
+        'employment' => \local_ustar\employment::resolve($userid)['status'],
+        'employee' => \local_ustar\accounts::is_business_account($userid),
+        'feed_access' => has_capability('local/ustar:use', $context, $userid),
+        'audience' => $audience,
+        'opted_in' => $preferences['enabled'] && in_array('feed', $preferences['categories'], true),
+        'permitted' => \local_ustar\connect\notification_policy::permitted($notice),
+        'sendable' => $preview['sendable'], 'content_error' => $preview['broadcast_error'],
+    ], JSON_THROW_ON_ERROR));
 }
 \local_ustar\connect\announcements::enqueue($actor, $post, $preview['fingerprint'], [(int)$userid]);

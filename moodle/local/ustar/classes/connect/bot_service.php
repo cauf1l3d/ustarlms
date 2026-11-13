@@ -12,7 +12,7 @@ final class bot_service {
             throw new \InvalidArgumentException('invalid_bot_request');
         }
         if (isset($p['widget'])) {
-            return bot_checklist_widget::update($sender, $p);
+            return bot_widgets::update($sender, $p);
         }
         try {
         $result=identity_service::locked(function() use($sender,$p):array {
@@ -34,7 +34,7 @@ final class bot_service {
             bot_store::save($d); // Count rejected inputs too, outside any business rollback.
             $action=$p['callback']!==''?bot_store::resolve($d,$p['callback']):null;
             $intent=$action?$action->intent:self::command($p['text']);
-            if ($intent === bot_checklist_widget::INTENT) {
+            if (bot_widgets::is_intent($intent)) {
                 throw new \InvalidArgumentException('invalid_bot_action');
             }
             $data=$action?json_decode($action->payload,true,32,JSON_THROW_ON_ERROR):[];

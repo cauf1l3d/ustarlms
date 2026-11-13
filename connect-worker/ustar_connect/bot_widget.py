@@ -116,6 +116,66 @@ widget.onEvent('chatDataChanged',load);load();widget.ready();
 </script></body></html>"""
 
 
+TASK_HTML = """<!doctype html><html lang="ru"><meta charset="utf-8">
+<style>
+body{margin:8px 12px;color:var(--tg-theme-text-color,#172b3d);
+font-family:system-ui;font-size:var(--tg-text-font-size,15px);line-height:1.35}
+p{margin:0 0 8px;overflow-wrap:anywhere}
+#status{font-weight:650}
+#due,#notice{color:var(--tg-theme-hint-color,#4e6373)}
+#details{max-height:8.1em;overflow:hidden}
+button{display:block;width:100%;min-height:44px;border:0;border-radius:8px;padding:5px 8px;
+font-family:inherit;font-size:inherit;overflow-wrap:anywhere;
+background:var(--tg-theme-button-color,#266394);color:var(--tg-theme-button-text-color,#fff)}
+button[hidden]{display:none}button:disabled{opacity:.55}
+#notice{margin:8px 0 0}#notice:empty{display:none}
+</style>
+<body><p id="status" aria-live="polite"></p><p id="due"></p><p id="details"></p>
+<button id="start" type="button" hidden>Взять в работу</button><p id="notice" role="status"></p>
+<script>
+const widget=TelegramWidget,start=document.querySelector('#start'),notice=document.querySelector('#notice');
+const status=document.querySelector('#status'),due=document.querySelector('#due'),details=document.querySelector('#details');
+let model={},busy=false,finished=false;
+function paint(data){
+  status.textContent=data.status==='assigned'?'Назначена':'В работе';
+  due.textContent=data.due?'Срок: '+data.due:'';
+  details.textContent=data.description||'';
+}
+function finish(result){
+  finished=true;busy=false;start.hidden=true;
+  if(result.status==='started'){
+    paint(result);notice.textContent='Сохранено в Академии.';
+  }else{
+    status.textContent='Задача изменилась';due.textContent='';details.textContent='';
+    notice.textContent='Откройте «Подробности задачи» под сообщением.';
+  }
+}
+function load(){
+  try{model=JSON.parse(widget.chatData||'{}');}catch{model={};}
+  if(model.status==='started'){finish(model);return;}
+  if(finished)return;
+  if(model.kind!=='task')return;
+  paint(model);
+  start.hidden=model.status!=='assigned'||!model.action;
+}
+function retry(){
+  if(finished)return;
+  busy=false;start.disabled=false;notice.textContent='Подтверждение не получено. Повторите действие.';
+}
+start.addEventListener('click',()=>{
+  if(busy||finished||start.hidden)return;
+  busy=true;start.disabled=true;notice.textContent='Сохраняем…';
+  widget.request(model.action+':start').then(answer=>{
+    if(finished)return;
+    const result=JSON.parse(answer.result||'{}');
+    if(result.status==='started'||result.status==='stale')finish(result);
+    else retry();
+  }).catch(retry);
+});
+widget.onEvent('chatDataChanged',load);load();widget.ready();
+</script></body></html>"""
+
+
 @dataclass(frozen=True, repr=False)
 class WidgetQuery:
     update_id: int
@@ -123,7 +183,7 @@ class WidgetQuery:
     subject: int
     message_id: int
     action: str
-    answers: str
+    command: str
 
 
 def _positive(value):
@@ -148,7 +208,7 @@ def parse_widget_query(update):
             or not isinstance(query['chat_instance'], str) or not re.fullmatch(r'-?[0-9]{1,20}', query['chat_instance'])
             or not isinstance(query['data'], str)):
         return None
-    match = re.fullmatch(r'(cb4_[A-Za-z0-9_-]{43}):([01]{1,5})', query['data'])
+    match = re.fullmatch(r'(cb4_[A-Za-z0-9_-]{43}):([01]{1,5}|start)', query['data'])
     if match is None:
         return None
     try:
@@ -176,8 +236,29 @@ def checklist_widget(view):
     return encode_state(view)
 
 
+def _task_details(value):
+    return (isinstance(value['description'], str) and len(value['description']) <= 160
+            and isinstance(value['due'], str) and 0 < len(value['due']) <= 64)
+
+
+def widget_content(view):
+    if isinstance(view, dict) and view.get('kind') == 'task':
+        if (set(view) != {'kind', 'status', 'description', 'due', 'action'} or not _task_details(view)
+                or view['status'] not in ('assigned', 'in_progress')):
+            raise ValueError('invalid_widget_view')
+        if view['status'] == 'assigned':
+            _token(view['action'], 'cb4')
+        elif view['action'] != '':
+            raise ValueError('invalid_widget_view')
+        return TASK_HTML, encode_state(view)
+    return HTML, checklist_widget(view)
+
+
 def widget_receipt(value):
     if value in ({'status': 'stale'}, {'status': 'retry'}):
+        return value
+    if (isinstance(value, dict) and set(value) == {'status', 'description', 'due'}
+            and value['status'] == 'started' and _task_details(value)):
         return value
     if (not isinstance(value, dict) or set(value) != {'status', 'done', 'total'}
             or value['status'] != 'saved' or type(value['done']) is not int or type(value['total']) is not int

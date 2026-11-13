@@ -2,12 +2,13 @@ name: USTAR reward shop
 
 on:
   pull_request:
-    branches: [fix/connect-relink-20261111, feat/reward-shop-20261111, feat/reward-shop-ux-20261112, feat/connect-team-overview-20261112, feat/connect-direct-broadcast-20261112, fix/connect-broadcast-feed-20261113, main]
+    branches: [fix/connect-relink-20261111, feat/reward-shop-20261111, feat/reward-shop-ux-20261112, feat/connect-team-overview-20261112, feat/connect-direct-broadcast-20261112, fix/connect-broadcast-feed-20261113, feat/connect-checklist-widget-20261113, main]
     paths:
       - 'moodle/local/ustar/**'
       - 'tests/stage/reward_shop*'
       - 'tests/stage/connect_broadcast_http*'
       - 'tests/stage/connect_checklist_widget*'
+      - 'tests/stage/connect_task_widget*'
       - 'tests/r16/test_connect_checklist_widget.py'
       - 'tests/stage/config.php'
       - 'connect-worker/**'
@@ -75,13 +76,17 @@ jobs:
           if test "$GITHUB_BASE_REF" = fix/connect-broadcast-feed-20261113; then
             installed=7fa3233f3016eb968b7fadd3ae410ec330186b93
           fi
+          if test "$GITHUB_BASE_REF" = feat/connect-checklist-widget-20261113; then
+            installed=5607ab6fca13f744b1157db0c03b0adc27f30c7f
+          fi
           git archive "$installed" moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-installed
           docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml build --pull
       - name: Verify fresh install, upgrade, repeat upgrade and reward transactions
         run: |
           broadcast_wire=0
           if [[ "$GITHUB_BASE_REF" = feat/connect-direct-broadcast-20261112 ||
-                "$GITHUB_BASE_REF" = fix/connect-broadcast-feed-20261113 || "$GITHUB_EVENT_NAME" = workflow_dispatch ]]; then
+                "$GITHUB_BASE_REF" = fix/connect-broadcast-feed-20261113 ||
+                "$GITHUB_BASE_REF" = feat/connect-checklist-widget-20261113 || "$GITHUB_EVENT_NAME" = workflow_dispatch ]]; then
             broadcast_wire=1
           fi
           id=$(docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml run -d --publish 127.0.0.1:8087:8087 -e "USTAR_STAGE_BROADCAST_WIRE=$broadcast_wire" --entrypoint bash runner /source/tests/stage/reward_shop_native.sh)

@@ -140,7 +140,7 @@ class BotHandler:
         markup = render_view({k: v for k, v in view.items() if k != 'widget'},
                              academy_origin=self.origin)['reply_markup']
         try:
-            result = self.api.send_checklist_widget(event.subject, view['title'], widget, markup)
+            result = self.api.send_widget(event.subject, view['title'], widget, markup)
         except TelegramError as error:
             if not error.uncertain and error.reason == 'api_rejected':
                 return False
@@ -149,13 +149,14 @@ class BotHandler:
         if not isinstance(result.get('widget'), dict):
             raise TelegramError('invalid_response', uncertain=True)
         reason = ''
-        try:
-            bound = self._widget_request(event.update_id, event.subject, mid, widget['action'], 'bind')
-            if bound != {'status': 'bound'}:
-                raise ValueError('invalid_widget_binding')
-        except (ValueError, OSError):
-            # The message is already visible and its ordinary form remains usable.
-            reason = 'widget_binding_unconfirmed'
+        if widget['action']:
+            try:
+                bound = self._widget_request(event.update_id, event.subject, mid, widget['action'], 'bind')
+                if bound != {'status': 'bound'}:
+                    raise ValueError('invalid_widget_binding')
+            except (ValueError, OSError):
+                # The message is already visible and its ordinary form remains usable.
+                reason = 'widget_binding_unconfirmed'
         self.journal.finish(event.update_id, 'sent', reason, mid)
         return True
 
@@ -179,7 +180,7 @@ class BotHandler:
         self.journal.phase(query.update_id, 'creating')
         try:
             result = widget_receipt(self._widget_request(query.update_id, query.subject, query.message_id,
-                                                        query.action, query.answers))
+                                                        query.action, query.command))
         except BridgeRejected as error:
             result = {'status': 'retry' if error.reason == 'rate_limited' else 'stale'}
         except (ValueError, OSError):
@@ -194,9 +195,9 @@ class BotHandler:
             if isinstance(error, TelegramError) and (error.retry_after or error.reason in ('unauthorized', 'consumer_conflict')):
                 self._finish_widget(query, result, reason)
                 raise
-        if result['status'] == 'saved':
+        if result['status'] in ('saved', 'started'):
             try:
-                if self.api.complete_checklist_widget(query.subject, query.message_id, result) is not True:
+                if self.api.complete_widget(query.subject, query.message_id, result) is not True:
                     raise ValueError('invalid_widget_edit')
             except (TelegramError, ValueError, OSError) as error:
                 reason = reason or 'widget_edit_unconfirmed'
@@ -206,5 +207,5 @@ class BotHandler:
         self._finish_widget(query, result, reason)
 
     def _finish_widget(self, query, result, reason):
-        state = {'saved': 'sent', 'stale': 'rejected', 'retry': 'uncertain'}[result['status']]
+        state = {'saved': 'sent', 'started': 'sent', 'stale': 'rejected', 'retry': 'uncertain'}[result['status']]
         self.journal.finish(query.update_id, state, reason, query.message_id)

@@ -8,7 +8,7 @@ from urllib.parse import urlsplit
 from urllib.request import Request, build_opener, HTTPSHandler, ProxyHandler
 
 from .bridge import _NoRedirect, _token
-from .bot_widget import HTML, checklist_widget, encode_state, widget_receipt
+from .bot_widget import encode_state, widget_content, widget_receipt
 from .notification_broadcast import MAX_FILE_BYTES, MAX_TOTAL_BYTES, valid_filename, valid_text
 from .notification_events import event_label
 
@@ -265,12 +265,15 @@ class TelegramClient:
             updates.append('widget_query')
         return self._call('getUpdates', {'offset': offset, 'limit': 50, 'timeout': 25, 'allowed_updates': updates})
 
-    def send_checklist_widget(self, subject, title, view, markup):
+    def send_widget(self, subject, title, view, markup):
         if type(subject) is not int or not 0 < subject < 2**52 or not isinstance(title, str) or not 0 < len(title) <= 120:
             raise ValueError('invalid_widget_view')
-        return self._call('sendWidget', {'chat_id': subject, 'html': HTML, 'chat_data': checklist_widget(view),
-            'caption': title + '\nЕсли виджет недоступен, откройте пошаговую форму.',
-            'allow_queries': True, 'protect_content': True,
+        html, state = widget_content(view)
+        markup_hint = ('Подробности и отчёт доступны под сообщением.' if view.get('kind') == 'task'
+                       else 'Если виджет недоступен, откройте пошаговую форму.')
+        return self._call('sendWidget', {'chat_id': subject, 'html': html, 'chat_data': state,
+            'caption': title + '\n' + markup_hint,
+            'allow_queries': bool(view['action']), 'protect_content': True,
             'reply_markup': markup})
 
     def answer_widget_query(self, query_id, result):
@@ -279,9 +282,9 @@ class TelegramClient:
         return self._call('answerWidgetQuery', {'widget_query_id': query_id,
             'data': encode_state(widget_receipt(result))})
 
-    def complete_checklist_widget(self, subject, message_id, result):
+    def complete_widget(self, subject, message_id, result):
         if (type(subject) is not int or not 0 < subject < 2**52 or type(message_id) is not int
-                or not 0 < message_id < 2**52 or widget_receipt(result)['status'] != 'saved'):
+                or not 0 < message_id < 2**52 or widget_receipt(result)['status'] not in ('saved', 'started')):
             raise ValueError('invalid_widget_receipt')
         return self._call('editMessageWidgetData', {'chat_id': subject, 'message_id': message_id,
             'chat_data': encode_state(result)})

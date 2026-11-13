@@ -5,6 +5,9 @@ const {chromium} = require(process.env.USTAR_PLAYWRIGHT_PATH || '../mobile/node_
 const html = execFileSync('python3', ['-c',
     "import sys;sys.path.insert(0,'connect-worker');from ustar_connect.bot_widget import HTML;print(HTML)"],
     {encoding: 'utf8'});
+const taskHtml = execFileSync('python3', ['-c',
+    "import sys;sys.path.insert(0,'connect-worker');from ustar_connect.bot_widget import TASK_HTML;print(TASK_HTML)"],
+    {encoding: 'utf8'});
 const action = 'cb4_' + 'A'.repeat(43);
 const items = [
     'Сотрудники отметились перед началом работы в торговом зале',
@@ -81,6 +84,44 @@ async function exercise(browser, width, dark, pages, fontSize = 15) {
     }
 }
 
+async function exerciseTask(browser, width, fontSize, dark) {
+    const page = await browser.newPage({viewport: {width, height: 800}});
+    try {
+        const errors = [];
+        page.on('pageerror', error => errors.push(String(error)));
+        const details = {description: '<img src=x> ' + 'Ш'.repeat(148), due: '14.11.2026 17:00 (UTC+03:00)'};
+        const initial = {kind: 'task', status: 'assigned', action, ...details};
+        const after = {status: 'started', ...details};
+        const shim = '<script>window.calls=[];window.handlers={};window.TelegramWidget={chatData:' +
+            JSON.stringify(JSON.stringify(initial)) + ',onEvent:(name,fn)=>handlers[name]=fn,ready(){},request(value){' +
+            'calls.push(value);return calls.length===1?Promise.reject(new Error("timeout")):' +
+            'Promise.resolve({result:' + JSON.stringify(JSON.stringify(after)) + '});}};</script>';
+        const theme = dark ? '--tg-theme-text-color:#eef4f8;--tg-theme-hint-color:#bbc9d2;background:#182535;' : '';
+        const content = taskHtml.replace('<script>', '<style>:root{--tg-text-font-size:' + fontSize + 'px;' +
+            theme + '}</style>' + shim + '<script>');
+        await page.setContent(content);
+        const start = page.getByRole('button', {name: 'Взять в работу'});
+        await assertFits(page, start, width);
+        assert.equal(await page.locator('img').count(), 0);
+        assert.equal(await page.locator('#status').textContent(), 'Назначена');
+        await start.click();
+        await page.getByText(/Подтверждение не получено/).waitFor();
+        assert.ok(await start.isEnabled());
+        await start.click();
+        await page.getByText('Сохранено в Академии.').waitFor();
+        assert.equal(await page.locator('#status').textContent(), 'В работе');
+        assert.equal(await page.locator('#due').textContent(), 'Срок: ' + details.due);
+        assert.ok(await start.isHidden());
+        assert.deepEqual(await page.evaluate(() => window.calls), [action + ':start', action + ':start']);
+        await page.setContent(content.replace(JSON.stringify(JSON.stringify(initial)), JSON.stringify(JSON.stringify(after))));
+        await page.getByText('Сохранено в Академии.').waitFor();
+        assert.ok(await start.isHidden());
+        assert.deepEqual(errors, []);
+    } finally {
+        await page.close();
+    }
+}
+
 (async () => {
     const browser = await chromium.launch({executablePath: process.env.USTAR_CHROMIUM_PATH});
     try {
@@ -88,6 +129,9 @@ async function exercise(browser, width, dark, pages, fontSize = 15) {
         await exercise(browser, 320, true, 2);
         await exercise(browser, 200, true, 3, 22);
         console.log('CONNECT_CHECKLIST_WIDGET_BROWSER=PASS');
+        await exerciseTask(browser, 200, 22, true);
+        await exerciseTask(browser, 320, 15, false);
+        console.log('CONNECT_TASK_WIDGET_BROWSER=PASS');
     } finally {
         await browser.close();
     }

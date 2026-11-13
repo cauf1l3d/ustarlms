@@ -1,6 +1,6 @@
-# Активная работа · 13.11.2026
+# Активная работа · 14.11.2026
 
-Пакет виджета `5607ab6f` прошёл проверки. Ожидает установки и живого пилота. [Команды](../../docs/CONNECT_CHECKLIST_WIDGET_RU.md), [проверки](../runtime/connect_checklist_widget_qualification_20261113.json).
+[Виджет задачи](../../docs/superpowers/plans/2026-11-14-telegram-task-widget.md) в проверке. [Чек-лист `5607ab6f`](../../docs/CONNECT_CHECKLIST_WIDGET_RU.md) ждёт живого пилота.
 
 ## Повторная привязка Telegram
 

@@ -117,6 +117,13 @@ final class bot_work {
             return bot_store::guarded($view,['tasks'=>[$t['id']]]);
         }
         if ($intent!=='work.task') { throw new \InvalidArgumentException('invalid_bot_action'); }
+        if (($data['list'] ?? '') === 'work.mine' && empty($data['plain'])) {
+            $widget = bot_task_widget::view($d, $t, ['offset' => (int)($data['offset'] ?? 0),
+                'filter' => (string)($data['filter'] ?? 'active')], $p['event']);
+            if ($widget !== null) {
+                return $widget;
+            }
+        }
         bot_store::state($d,'menu'); $buttons=[]; $target=['id'=>$t['id'],'version'=>$t['version']];
         if ($t['assigneeid']===$id && in_array($t['status'],['assigned','in_progress'],true)) {
             if ($t['status']==='assigned') { $buttons[]=bot_store::button($d,'▶ Взять в работу','work.start',$target); }

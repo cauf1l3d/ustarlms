@@ -48,9 +48,9 @@ class ChecklistWidgetTest(unittest.TestCase):
         api._opener = Mock()
         api._opener.open.side_effect = opened
         api.get_updates(1, acknowledgements_enabled=True, widgets_enabled=True)
-        api.send_checklist_widget(55, VIEW['title'], VIEW['widget'], {'inline_keyboard': []})
+        api.send_widget(55, VIEW['title'], VIEW['widget'], {'inline_keyboard': []})
         self.assertTrue(api.answer_widget_query('9876', {'status': 'saved', 'done': 1, 'total': 2}))
-        api.complete_checklist_widget(55, 22, {'status': 'saved', 'done': 1, 'total': 2})
+        api.complete_widget(55, 22, {'status': 'saved', 'done': 1, 'total': 2})
         self.assertEqual(['message', 'callback_query', 'widget_query'], requests[0][1]['allowed_updates'])
         self.assertEqual('sendWidget', requests[1][0])
         self.assertTrue(requests[1][1]['allow_queries'])
@@ -64,7 +64,7 @@ class ChecklistWidgetTest(unittest.TestCase):
 
     def test_only_private_data_queries_with_complete_transport_fields_are_parsed(self):
         from ustar_connect.bot_widget import parse_widget_query
-        self.assertEqual('10', parse_widget_query(QUERY).answers)
+        self.assertEqual('10', parse_widget_query(QUERY).command)
         for change in ({'chat': {'id': 56, 'type': 'private'}}, {'chat': {'id': 55, 'type': 'group'}},
                        {'from': {'id': 55, 'is_bot': True}}, {'type': {'type': 'sign_data'}},
                        {'type': {'type': 'data', 'wallet_card': {}}}, {'widget_id': '1'},
@@ -77,9 +77,9 @@ class ChecklistWidgetTest(unittest.TestCase):
 
     def test_role_bot_sends_widget_and_binds_actual_provider_message(self):
         self.bridge.request.side_effect = [{'ok': True, 'result': VIEW}, {'ok': True, 'result': {'status': 'bound'}}]
-        self.api.send_checklist_widget.return_value = MESSAGE
+        self.api.send_widget.return_value = MESSAGE
         self.handler.handle(self.event)
-        self.api.send_checklist_widget.assert_called_once()
+        self.api.send_widget.assert_called_once()
         operation, payload = self.bridge.request.call_args.args
         self.assertEqual('bot.update', operation)
         self.assertEqual(('bind', '22', TOKEN), (payload['widget'], payload['message'], payload['callback']))
@@ -91,7 +91,7 @@ class ChecklistWidgetTest(unittest.TestCase):
             self.bridge.reset_mock(side_effect=True)
             self.api.reset_mock(side_effect=True)
             self.bridge.request.return_value = {'ok': True, 'result': VIEW}
-            self.api.send_checklist_widget.side_effect = TelegramError(
+            self.api.send_widget.side_effect = TelegramError(
                 'transport_unavailable' if uncertain else 'api_rejected', uncertain=uncertain)
             self.api.send_bot_view.return_value = MESSAGE
             self.handler.handle(self.event)
@@ -114,7 +114,7 @@ class ChecklistWidgetTest(unittest.TestCase):
         query = parse_widget_query(QUERY)
         self.bridge.request.return_value = {'ok': True, 'result': {'status': 'saved', 'done': 1, 'total': 2}}
         self.api.answer_widget_query.return_value = True
-        self.api.complete_checklist_widget.return_value = True
+        self.api.complete_widget.return_value = True
         self.journal.begin.side_effect = [True, False]
         self.handler.handle_widget(query)
         self.handler.handle_widget(query)
@@ -122,7 +122,7 @@ class ChecklistWidgetTest(unittest.TestCase):
         self.assertEqual(('bot.update', '10', '22'), (operation, payload['widget'], payload['message']))
         self.assertEqual(5, self.bridge.request.call_args.kwargs['timeout'])
         self.bridge.request.assert_called_once()
-        self.assertEqual(['answer_widget_query', 'complete_checklist_widget'],
+        self.assertEqual(['answer_widget_query', 'complete_widget'],
                          [item[0] for item in self.api.method_calls])
         self.journal.finish.assert_called_once_with(12, 'sent', '', 22)
 
@@ -130,7 +130,55 @@ class ChecklistWidgetTest(unittest.TestCase):
         from ustar_connect.bot_widget import parse_widget_query
         self.bridge.request.return_value = {'ok': True, 'result': {'status': 'saved', 'done': 1, 'total': 2}}
         self.api.answer_widget_query.side_effect = TelegramError('api_rejected')
-        self.api.complete_checklist_widget.return_value = True
+        self.api.complete_widget.return_value = True
         self.handler.handle_widget(parse_widget_query(QUERY))
-        self.api.complete_checklist_widget.assert_called_once()
+        self.api.complete_widget.assert_called_once()
         self.journal.finish.assert_called_once_with(12, 'sent', 'widget_answer_unconfirmed', 22)
+
+    def test_task_start_uses_the_existing_widget_query_and_receipt(self):
+        from ustar_connect.bot_widget import parse_widget_query
+        update = deepcopy(QUERY)
+        update['widget_query']['data'] = TOKEN + ':start'
+        query = parse_widget_query(update)
+        self.assertIsNotNone(query)
+        receipt = {'status': 'started', 'description': 'Разложить товар', 'due': '14.11.2026 17:00 MSK'}
+        self.bridge.request.return_value = {'ok': True, 'result': receipt}
+        self.api.answer_widget_query.return_value = True
+        self.api.complete_widget.return_value = True
+        self.handler.handle_widget(query)
+        self.assertEqual('start', self.bridge.request.call_args.args[1]['widget'])
+        self.api.answer_widget_query.assert_called_once_with('9876', receipt)
+        self.api.complete_widget.assert_called_once_with(55, 22, receipt)
+
+    def test_task_api_sends_bounded_state_and_enables_queries_only_with_action(self):
+        from ustar_connect.bot_widget import TASK_HTML
+        api = TelegramClient('123456:' + 'x' * 30)
+        requests = []
+
+        def opened(request, timeout):
+            requests.append(json.loads(request.data))
+            return io.BytesIO(json.dumps({'ok': True, 'result': MESSAGE}).encode())
+
+        api._opener = Mock()
+        api._opener.open.side_effect = opened
+        state = {'kind': 'task', 'status': 'assigned', 'description': 'Проверить кассу',
+                 'due': '14.11.2026 17:00 MSK', 'action': TOKEN}
+        api.send_widget(55, VIEW['title'], state, {'inline_keyboard': []})
+        api.send_widget(55, VIEW['title'], {**state, 'status': 'in_progress', 'action': ''}, {'inline_keyboard': []})
+        self.assertEqual(state, json.loads(requests[0]['chat_data']))
+        self.assertEqual(TASK_HTML, requests[0]['html'])
+        self.assertLessEqual(len(zlib.compress(TASK_HTML.encode(), 9)), 4096)
+        self.assertEqual([True, False], [request['allow_queries'] for request in requests])
+        with self.assertRaises(ValueError):
+            api.send_widget(55, VIEW['title'], {**state, 'status': 'completed'}, {})
+
+    def test_task_in_progress_renders_without_issuing_a_binding(self):
+        state = {'kind': 'task', 'status': 'in_progress', 'description': 'Разложить товар',
+                 'due': '14.11.2026 17:00 MSK', 'action': ''}
+        self.bridge.request.return_value = {'ok': True, 'result': {**VIEW, 'widget': state}}
+        self.api.send_widget.return_value = MESSAGE
+        self.handler.handle(self.event)
+        self.api.send_widget.assert_called_once()
+        self.assertEqual(state, self.api.send_widget.call_args.args[2])
+        self.bridge.request.assert_called_once()
+        self.journal.finish.assert_called_once_with(11, 'sent', '', 22)

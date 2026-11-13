@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_delivery_repair
+  stage: connect_checklist_widget
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -26,7 +26,7 @@ state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_library_discovery0200_20261105.yaml
 next_stage: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: PR110_PR111_merged_no_server_mutation_management_gates_pending_Docker_deferred
-latest_connect_owner_receipt: context/runtime/connect_broadcast_owner_incident_20261113.json
+latest_connect_owner_receipt: context/runtime/connect_delivery_repair_owner_acceptance_20261113.json
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -35,13 +35,12 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: CONNECT-DELIVERY-REPAIR
-  related_task: CONNECT-BROADCAST-01
-  status: qualified_awaiting_owner_installation_and_pilot
-  qualification: context/runtime/connect_delivery_repair_qualification_20261113.json
-  previous_qualification: context/runtime/connect_broadcast_qualification_20261112.json
-  previous_owner_receipt: context/runtime/connect_broadcast_owner_incident_20261113.json
-  spec: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
+  task: CONNECT-CHECKLIST-WIDGET
+  related_task: CONNECT-DELIVERY-REPAIR
+  status: native_verification_pending
+  previous_qualification: context/runtime/connect_delivery_repair_qualification_20261113.json
+  previous_owner_receipt: context/runtime/connect_delivery_repair_owner_acceptance_20261113.json
+  spec: docs/superpowers/plans/2026-11-13-telegram-checklist-widget.md
   observation_tool: observe.py from frozen role-bot installer9a68246b
   observation_builder: scripts/infra/build_connect_role_bot_update.py
   observation_sha256: ee883caff5be0b391db583bb4deeb795c1dbd3c1bba0c4127faa02f9cd444f92

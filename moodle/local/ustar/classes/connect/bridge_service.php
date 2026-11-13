@@ -10,7 +10,7 @@ final class bridge_service {
         $op = $request['operation'];
         $payload = $request['payload'];
         $fields = match ($op) {
-            'bot.update' => bot_request::FIELDS,
+            'bot.update' => array_key_exists('widget', $payload) ? bot_request::WIDGET_FIELDS : bot_request::FIELDS,
             'bot.upload' => ['auth_date','chunk','event','file','part','provider','subject','tenant','upload'],
             'launch.create' => ['provider', 'subject', 'tenant'],
             'launch.exchange' => ['auth_date', 'browser', 'launch', 'proof', 'provider', 'subject', 'tenant'],

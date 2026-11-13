@@ -54,6 +54,9 @@ if [[ ${USTAR_STAGE_BROADCAST_WIRE:-} = 1 ]]; then
         set -Eeuo pipefail
         export USTAR_STAGE_BROADCAST_FIXTURE=1
         php /source/tests/stage/connect_broadcast_http_fixture.php
+        USTAR_STAGE_WIDGET_USERID=$(php /source/tests/stage/connect_broadcast_http_fixture.php seed-widget)
+        [[ "$USTAR_STAGE_WIDGET_USERID" =~ ^[1-9][0-9]*$ ]]
+        export USTAR_STAGE_WIDGET_USERID
         php -S 127.0.0.1:18087 /source/tests/stage/connect_broadcast_http_fixture.php \
             > /artifacts/reward-shop-broadcast-http.log 2>&1 &
         bridgepid=$!
@@ -63,6 +66,7 @@ if [[ ${USTAR_STAGE_BROADCAST_WIRE:-} = 1 ]]; then
             sleep 1
         done
         python3 /source/tests/stage/connect_broadcast_http.py
+        python3 /source/tests/stage/connect_checklist_widget_wire.py
     ) 2>&1 | tee /artifacts/reward-shop-broadcast-wire.log
 fi
 echo 'REWARD_SHOP_SCHEMA_AND_DB=PASS'

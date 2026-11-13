@@ -25,7 +25,7 @@ application_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
-  latest_connect_broadcast_owner_receipt: context/runtime/connect_broadcast_owner_incident_20261113.json
+  latest_connect_broadcast_owner_receipt: context/runtime/connect_delivery_repair_owner_acceptance_20261113.json
   latest_connect_team_owner_receipt: context/runtime/connect_team_owner_deploy_20261112.json
   latest_SCORM_tracking_evidence: context/runtime/scorm_tracking_owner_20261102.json
   latest_SCORM_functional_acceptance: context/runtime/scorm_tracking_owner_20261102.json
@@ -139,10 +139,9 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: The owner confirmed d1e54624 and reported uncertain delivery for publication
-    508. PR120 fixes the permit and queue handling and provides the 7fa3233f installer
-    for the owner pilot.
-  next_task: CONNECT-DELIVERY-REPAIR
+  activity: The owner confirmed live Telegram broadcasts and moved to the personal
+    checklist widget pilot.
+  next_task: CONNECT-CHECKLIST-WIDGET
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -151,7 +150,8 @@ current_work:
     B2B-01: planned
     B2B-02: planned
     CONNECT-BROADCAST-01: owner_installed_direct_delivery_incident
-    CONNECT-DELIVERY-REPAIR: qualified_awaiting_owner_installation_and_pilot
+    CONNECT-CHECKLIST-WIDGET: native_verification_pending
+    CONNECT-DELIVERY-REPAIR: owner_confirmed_live_broadcasts
     CONNECT-RELINK-01: qualified_awaiting_owner_installation
     CONNECT-TEAM-01: owner_installed_pilot_notice_delivered
     DOC-01: done

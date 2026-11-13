@@ -40,6 +40,12 @@ final class bot_work {
                 return bot_store::card('☑️ '.$c['title'],'Сохранено '.$c['today']['done'].'/'.$c['today']['total'].'. Исправление отправленного чек-листа — с причиной в Академии.',
                     [bot_store::button($d, '← К чек-листам', 'work.checklists'), bot_service::home($d)]);
             }
+            if (empty($data['plain'])) {
+                $widget = bot_checklist_widget::view($d, $c, $payload['date'], $p['event']);
+                if ($widget !== null) {
+                    return $widget;
+                }
+            }
             $fields=[];
             foreach (checklists::flat_items($c) as $key=>$item) {
                 $fields[]=['key'=>(string)$item['id'],'label'=>(string)$item['title'],'choices'=>['1'=>'✓ Выполнено','0'=>'Не выполнено'],'required'=>true];
@@ -53,7 +59,8 @@ final class bot_work {
             if ($c['date']!==checklist_service::date_key()) { throw new \InvalidArgumentException('expired_bot_action'); }
             $comment=$v['comment']??''; unset($v['comment']); $answers=[];
             foreach ($v as $key=>$value) { $answers[$key]=['done'=>$value==='1','comment'=>'']; }
-            $out=checklist_service::submit($id,(string)$c['id'],$answers,$comment,'final',(int)$c['revision'],'',(int)$c['definition']);
+            $out=checklist_service::submit($id,(string)$c['id'],$answers,$comment,'final',(int)$c['revision'],'',
+                (int)$c['definition'], $c['date']);
             bot_store::state($d,'menu'); return bot_store::card('✓ Чек-лист отправлен','Сохранено в Академии: '.$out['done'].'/'.$out['total'],
                 [bot_store::button($d, '← К чек-листам', 'work.checklists'), bot_service::home($d)]);
         }

@@ -45,6 +45,15 @@ if ($broadcastfixture) {
         'secret' => str_repeat('ab', 32), 'provider' => 'telegram', 'tenant' => '123456',
         'operations' => ['notification.lease', 'notification.begin_v3', 'notification.finish'],
     ]];
+    $pilot = getenv('USTAR_STAGE_WIDGET_USERID');
+    if ($pilot && preg_match('/\A[1-9][0-9]{0,10}\z/', $pilot)) {
+        $CFG->ustar_connect_bot_enabled = true;
+        $CFG->ustar_connect_checklist_widget_userids = [(int)$pilot];
+        $CFG->ustar_connect_bridge_keys['tg_widget_fixture'] = [
+            'secret' => str_repeat('cd', 32), 'provider' => 'telegram', 'tenant' => '123456',
+            'operations' => ['bot.update', 'bot.upload'],
+        ];
+    }
 }
 if ($httproot && (parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) === '/local/ustar/team_learning.php')) {
     set_exception_handler(static function (Throwable $error): void {

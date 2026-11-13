@@ -1,11 +1,11 @@
 schema_version: 2
 updated_at: '2026-11-13'
 project: USTAR Academy
-stage: connect_delivery_repair
-stage_label: Telegram delivery repair and Feed actions
-current_activity: The owner confirmed d1e54624 and reported uncertain delivery for publication 508. PR120 fixes the permit and queue handling and provides the 7fa3233f installer for the owner pilot.
+stage: connect_checklist_widget
+stage_label: Personal checklist widget in Telegram
+current_activity: The owner confirmed live Telegram broadcasts and moved to the personal checklist widget pilot.
 entrypoint: START_HERE.md
-next_task: CONNECT-DELIVERY-REPAIR
+next_task: CONNECT-CHECKLIST-WIDGET
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -23,7 +23,7 @@ code_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
-  latest_connect_broadcast_owner_receipt: context/runtime/connect_broadcast_owner_incident_20261113.json
+  latest_connect_broadcast_owner_receipt: context/runtime/connect_delivery_repair_owner_acceptance_20261113.json
   latest_connect_team_owner_receipt: context/runtime/connect_team_owner_deploy_20261112.json
   latest_SCORM_tracking_evidence: context/runtime/scorm_tracking_owner_20261102.json
   latest_SCORM_functional_acceptance: context/runtime/scorm_tracking_owner_20261102.json
@@ -396,19 +396,15 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: qualified_awaiting_owner_installation_and_pilot
-  qualification: context/runtime/connect_delivery_repair_qualification_20261113.json
-  pull_request: 120
-  previous_qualification: context/runtime/connect_broadcast_qualification_20261112.json
-  branch: fix/connect-broadcast-feed-20261113
+  status: native_verification_pending
+  previous_qualification: context/runtime/connect_delivery_repair_qualification_20261113.json
+  branch: feat/connect-checklist-widget-20261113
   deployed: false
-  local_ustar_version: 2026111300
+  local_ustar_version: 2026111301
   theme_ustar_version: 2026110200
   schema_changed: false
   worker_rollout: true
-  preserved_worker: d1e546240e9339dd5f3263ca567ed9def64cc478
-  deployment_baseline: d1e546240e9339dd5f3263ca567ed9def64cc478
-  previous_qualified_delivery: context/runtime/connect_broadcast_qualification_20261112.json
-  progress: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
+  deployment_baseline: 7fa3233f3016eb968b7fadd3ae410ec330186b93
+  progress: docs/superpowers/plans/2026-11-13-telegram-checklist-widget.md
   owner_receipt: null
   execution_authorized: true

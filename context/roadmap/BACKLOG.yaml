@@ -890,7 +890,8 @@ tasks:
   - Изменение редакции, файлов или доступа до отправки отменяет доставку
 - id: CONNECT-DELIVERY-REPAIR
   title: Надёжность прямой рассылки, удаление из Ленты и навигация бота
-  status: qualified_awaiting_owner_installation_and_pilot
+  status: owner_confirmed_live_broadcasts
+  owner_receipt: context/runtime/connect_delivery_repair_owner_acceptance_20261113.json
   qualification: context/runtime/connect_delivery_repair_qualification_20261113.json
   runbook: docs/CONNECT_ANNOUNCEMENTS_AND_TEAM_RU.md
   reference: context/reviews/20261113/CONNECT_DELIVERY_UX_RU.md
@@ -899,6 +900,15 @@ tasks:
   - Действующее разрешение переживает переход секунды, история показывает задержку и отказ
   - Автор удаляет публикацию с карточки, модератор скрывает с причиной, очереди пересчитываются безопасно
   - Сотрудник возвращается к задачам и чек-листам, руководитель видит свои действия в разделе команды
+- id: CONNECT-CHECKLIST-WIDGET
+  title: Личный чек-лист внутри сообщения Telegram
+  status: native_verification_pending
+  spec: docs/superpowers/plans/2026-11-13-telegram-checklist-widget.md
+  depends_on: [CONNECT-DELIVERY-REPAIR]
+  acceptance:
+  - Сотрудник из списка пилота отвечает на короткий чек-лист в личном чате
+  - Академия сохраняет явные ответы и возвращает одну квитанцию при повторе
+  - Пошаговая форма доступна для комментариев и при отсутствии поддержки виджетов
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

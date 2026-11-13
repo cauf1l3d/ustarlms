@@ -82,6 +82,99 @@ final class connect_bot_test extends \advanced_testcase {
         $this->assertSame($tasks['title'], $back['title']);
         $this->assertContains('Synthetic bot task', array_column($back['buttons'], 'label'));
     }
+
+    private function checklist_fixture(bool $pilot = true): identity {
+        global $CFG, $USER;
+        $sender = $this->linked();
+        $employee = clone $USER;
+        $this->setAdminUser();
+        checklists::save(['items' => [[
+            'id' => 'widget_fixture', 'title' => 'Контроль кассы', 'active' => true, 'positionIds' => [],
+            'sections' => [['title' => 'Проверка', 'items' => [
+                ['id' => 'cash', 'title' => 'Проверить кассу'],
+                ['id' => 'shelf', 'title' => 'Проверить полки'],
+            ]]],
+        ]]]);
+        $CFG->ustar_connect_checklist_widget_userids = $pilot ? [(int)$employee->id] : [];
+        $this->setUser($employee);
+        return $sender;
+    }
+
+    private function checklist_widget_update(identity $sender, string $action, int $event, string $command,
+            string $message = '22'): array {
+        return bot_service::update($sender, array_replace($this->request($event, '', $action),
+            ['widget' => $command, 'message' => $message]));
+    }
+
+    public function test_widget_saves_explicit_negative_answers_once_and_binds_provider_message(): void {
+        global $DB, $USER;
+        $sender = $this->checklist_fixture();
+        $userid = (int)$USER->id;
+        $list = bot_service::update($sender, $this->request(801, 'Чек-листы'));
+        $card = $this->click($sender, $list, 'Контроль кассы', 802);
+        $this->assertSame(['Проверить кассу', 'Проверить полки'], $card['widget']['items']);
+        $action = $card['widget']['action'];
+        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 803, '10'));
+        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 803, 'bind'));
+        $this->assertSame(['status' => 'bound'], $this->checklist_widget_update($sender, $action, 802, 'bind'));
+        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 804, '10', '23'));
+        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 804, '1'));
+        $this->assertFalse($DB->record_exists('local_ustar_check_runs', ['userid' => $userid]));
+        $saved = ['status' => 'saved', 'done' => 1, 'total' => 2];
+        $this->assertSame($saved, $this->checklist_widget_update($sender, $action, 805, '10'));
+        $this->assertSame($saved, $this->checklist_widget_update($sender, $action, 806, '10'));
+        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 807, '11'));
+        $run = $DB->get_record('local_ustar_check_runs', ['userid' => $userid, 'checklistkey' => 'widget_fixture'], '*', MUST_EXIST);
+        $this->assertSame('partial', $run->status);
+        $this->assertSame(1, (int)$run->revision);
+        $this->assertSame(0, (int)$DB->get_field('local_ustar_check_answers', 'checked',
+            ['runid' => $run->id, 'itemkey' => 'shelf'], MUST_EXIST));
+        $this->assertSame(1, $DB->count_records('local_ustar_check_submits',
+            ['userid' => $userid, 'checklistkey' => 'widget_fixture']));
+        $link = $DB->get_record('local_ustar_conn_links', ['identityhash' => $sender->key()], '*', MUST_EXIST);
+        identity_service::revoke((int)$link->id);
+        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 808, '10'));
+    }
+
+    public function test_widget_respects_pilot_scope_fallback_and_native_draft_revision(): void {
+        global $CFG, $DB, $USER;
+        $sender = $this->checklist_fixture(false);
+        $userid = (int)$USER->id;
+        $list = bot_service::update($sender, $this->request(811, 'Чек-листы'));
+        $normal = $this->click($sender, $list, 'Контроль кассы', 812);
+        $this->assertArrayNotHasKey('widget', $normal);
+        $CFG->ustar_connect_checklist_widget_userids = [$userid];
+        $list = bot_service::update($sender, $this->request(813, 'Чек-листы'));
+        $card = $this->click($sender, $list, 'Контроль кассы', 814);
+        $action = $card['widget']['action'];
+        $normal = $this->click($sender, $card, 'Пошаговая форма', 815);
+        $this->assertArrayNotHasKey('widget', $normal);
+        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 814, 'bind'));
+        $list = bot_service::update($sender, $this->request(816, 'Чек-листы'));
+        $card = $this->click($sender, $list, 'Контроль кассы', 817);
+        $action = $card['widget']['action'];
+        $this->assertSame(['status' => 'bound'], $this->checklist_widget_update($sender, $action, 817, 'bind'));
+        checklist_service::submit($userid, 'widget_fixture', ['cash' => ['done' => true]],
+            'Черновик с сайта', 'draft');
+        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 818, '10'));
+        $run = $DB->get_record('local_ustar_check_runs', ['userid' => $userid, 'checklistkey' => 'widget_fixture']);
+        $this->assertSame('Черновик с сайта', $run->comment);
+        $this->assertSame('draft', $run->status);
+        $list = bot_service::update($sender, $this->request(819, 'Чек-листы'));
+        $this->assertArrayNotHasKey('widget', $this->click($sender, $list, 'Контроль кассы', 820));
+    }
+
+    public function test_stale_expected_date_does_not_create_a_run_for_the_current_day(): void {
+        global $DB, $USER;
+        $this->checklist_fixture();
+        $userid = (int)$USER->id;
+        try {
+            checklist_service::submit($userid, 'widget_fixture', [], '', 'final', 0, '', 1, '2001-01-01');
+            $this->fail('An old widget date was accepted');
+        } catch (\invalid_parameter_exception $error) {
+            $this->assertFalse($DB->record_exists('local_ustar_check_runs', ['userid' => $userid]));
+        }
+    }
     public function test_task_report_button_twice_keeps_one_canonical_report_and_guest_context(): void {
         global $DB,$USER;
         $sender=$this->linked();$id=$this->work($sender);

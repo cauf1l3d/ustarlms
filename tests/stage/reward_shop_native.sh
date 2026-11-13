@@ -51,6 +51,7 @@ for feature in "${features[@]}"; do
 done
 if [[ ${USTAR_STAGE_BROADCAST_WIRE:-} = 1 ]]; then
     (
+        set -Eeuo pipefail
         export USTAR_STAGE_BROADCAST_FIXTURE=1
         php /source/tests/stage/connect_broadcast_http_fixture.php
         php -S 127.0.0.1:18087 /source/tests/stage/connect_broadcast_http_fixture.php \
@@ -61,8 +62,8 @@ if [[ ${USTAR_STAGE_BROADCAST_WIRE:-} = 1 ]]; then
             if curl --silent --max-time 2 http://127.0.0.1:18087/ -o /dev/null; then break; fi
             sleep 1
         done
-        python3 /source/tests/stage/connect_broadcast_http.py | tee /artifacts/reward-shop-broadcast-wire.log
-    )
+        python3 /source/tests/stage/connect_broadcast_http.py
+    ) 2>&1 | tee /artifacts/reward-shop-broadcast-wire.log
 fi
 echo 'REWARD_SHOP_SCHEMA_AND_DB=PASS'
 bash /source/tests/stage/authenticated_shell_smoke.sh studio-browser

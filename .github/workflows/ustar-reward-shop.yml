@@ -61,11 +61,14 @@ jobs:
           if test "$GITHUB_BASE_REF" = feat/connect-direct-broadcast-20261112 || test "$GITHUB_EVENT_NAME" = workflow_dispatch; then
             broadcast_wire=1
           fi
-          id=$(docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml run --rm -d --publish 127.0.0.1:8087:8087 -e "USTAR_STAGE_BROADCAST_WIRE=$broadcast_wire" --entrypoint bash runner /source/tests/stage/reward_shop_native.sh)
+          id=$(docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml run -d --publish 127.0.0.1:8087:8087 -e "USTAR_STAGE_BROADCAST_WIRE=$broadcast_wire" --entrypoint bash runner /source/tests/stage/reward_shop_native.sh)
           printf '%s\n' "$id" > artifacts/studio-browser-container-id
           for attempt in $(seq 1 180); do
             test ! -e artifacts/studio-browser-ready || exit 0
-            test "$(docker inspect -f '{{.State.Running}}' "$id")" = true
+            if test "$(docker inspect -f '{{.State.Running}}' "$id")" != true; then
+              docker logs --tail 75 "$id"
+              exit 1
+            fi
             sleep 2
           done
           exit 1

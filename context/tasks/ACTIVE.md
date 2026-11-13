@@ -1,6 +1,6 @@
 # Активная работа · 13.11.2026
 
-Владелец подтвердил работу рассылок. [Квитанция](../runtime/connect_delivery_repair_owner_acceptance_20261113.json). Текущая задача — [пилот виджета чек-листа](../../docs/superpowers/plans/2026-11-13-telegram-checklist-widget.md).
+Пакет виджета `5607ab6f` прошёл проверки. Ожидает установки и живого пилота. [Команды](../../docs/CONNECT_CHECKLIST_WIDGET_RU.md), [проверки](../runtime/connect_checklist_widget_qualification_20261113.json).
 
 ## Повторная привязка Telegram
 

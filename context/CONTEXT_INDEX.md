@@ -1,6 +1,6 @@
 # Навигация по контексту
 
-- [Личный чек-лист в Telegram](../docs/superpowers/plans/2026-11-13-telegram-checklist-widget.md), [приёмка рассылок владельцем](runtime/connect_delivery_repair_owner_acceptance_20261113.json).
+- [Пилот личного чек-листа в Telegram](../docs/CONNECT_CHECKLIST_WIDGET_RU.md), [проверки поставки](runtime/connect_checklist_widget_qualification_20261113.json), [приёмка рассылок владельцем](runtime/connect_delivery_repair_owner_acceptance_20261113.json).
 
 - [Telegram и Лента, ревью доставки и UX](reviews/20261113/CONNECT_DELIVERY_UX_RU.md), [проверки пакета исправления](runtime/connect_delivery_repair_qualification_20261113.json).
 

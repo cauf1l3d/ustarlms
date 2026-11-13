@@ -1,0 +1,76 @@
+{
+  "task": "CONNECT-CHECKLIST-WIDGET",
+  "date_msk": "2026-11-13",
+  "pull_request": 121,
+  "previous_owner_receipt": "context/runtime/connect_delivery_repair_owner_acceptance_20261113.json",
+  "application_and_worker_commit": "5607ab6fca13f744b1157db0c03b0adc27f30c7f",
+  "application_and_worker_baseline": "7fa3233f3016eb968b7fadd3ae410ec330186b93",
+  "local_ustar_version": 2026111301,
+  "theme_ustar_version": 2026110200,
+  "schema_changed": false,
+  "local_targeted_python": {
+    "tests": 136,
+    "passed": 136,
+    "skipped": 0
+  },
+  "native": {
+    "run_id": 43443043683,
+    "result": "success",
+    "fresh_upgrade_repeat_schema_equal": true,
+    "signed_widget_through_moodle_and_fake_telegram": "CONNECT_CHECKLIST_WIDGET_WIRE=PASS",
+    "signed_broadcast_through_moodle_and_fake_telegram": "CONNECT_BROADCAST_WIRE_RECEIPT=PASS",
+    "tests_per_profile": 71,
+    "assertions_per_profile": 308,
+    "bot_tests_per_profile": 17,
+    "bot_assertions_per_profile": 64,
+    "profiles": [
+      {
+        "moodle": "5.1.1",
+        "job_id": 131945468162,
+        "artifact_id": 14046707514,
+        "artifact_zip_sha256": "9bcc0be07a58f40b4f48ed898d5020feba277b13873ea00274043d4b49232f35"
+      },
+      {
+        "moodle": "5.1.8",
+        "job_id": 131945468086,
+        "artifact_id": 14047617198,
+        "artifact_zip_sha256": "826a72233e76d918c34b0fbfc9c854fde4a86084b5f4895a18b0f6d37d048fc3"
+      }
+    ]
+  },
+  "widget_browser": {
+    "run_id": 43443043683,
+    "job_id": 131945467552,
+    "result": "CONNECT_CHECKLIST_WIDGET_BROWSER=PASS",
+    "cases": [
+      {"width_px": 200, "scheme": "light", "font_px": 15},
+      {"width_px": 320, "scheme": "dark", "font_px": 15},
+      {"width_px": 200, "scheme": "dark", "font_px": 22}
+    ],
+    "tested": "Pagination, visible controls, explicit answers, retry after a dropped reply, local confirmation and text-only labels in Chromium with the Telegram widget bridge simulated."
+  },
+  "operator": "scripts/infra/connect_checklist_widget_release.py",
+  "builder": "scripts/infra/build_connect_checklist_widget_release.py",
+  "package_ci": {
+    "run_id": 43443043687,
+    "job_id": 131945309152,
+    "artifact_id": 14046920901,
+    "artifact_zip_sha256": "794ecdad6749000fcca43f7ed02a78e02ab1300594957b71d666c7615d30038b",
+    "archive": "ustar-connect-checklist-widget-5607ab6f.tar.gz",
+    "archive_sha256": "0153f18bb689938179779659d55c0c8a074a588bc8fa3492c4d23f9d79e73c82",
+    "archive_bytes": 455862,
+    "archive_members": 14,
+    "application_files": 10,
+    "worker_archive_regular_members": 7,
+    "archive_membership_and_crc": "verified",
+    "artifact_matches_local_and_retained_download": true,
+    "tampered_payload_rejected": true,
+    "result": "success"
+  },
+  "pilot_default": "disabled",
+  "pilot_config": "ustar_connect_checklist_widget_userids",
+  "server1": "awaiting_owner_installation",
+  "live_telegram_widget": "awaiting_owner_pilot",
+  "main_merge": "pending",
+  "guide": "docs/CONNECT_CHECKLIST_WIDGET_RU.md"
+}

@@ -139,8 +139,8 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: The owner confirmed live Telegram broadcasts and moved to the personal
-    checklist widget pilot.
+  activity: The personal Telegram checklist package passed isolated verification and
+    is ready for owner installation and live pilot.
   next_task: CONNECT-CHECKLIST-WIDGET
   ready_tasks: []
   task_statuses:
@@ -150,7 +150,7 @@ current_work:
     B2B-01: planned
     B2B-02: planned
     CONNECT-BROADCAST-01: owner_installed_direct_delivery_incident
-    CONNECT-CHECKLIST-WIDGET: native_verification_pending
+    CONNECT-CHECKLIST-WIDGET: qualified_awaiting_owner_pilot
     CONNECT-DELIVERY-REPAIR: owner_confirmed_live_broadcasts
     CONNECT-RELINK-01: qualified_awaiting_owner_installation
     CONNECT-TEAM-01: owner_installed_pilot_notice_delivered

@@ -17,6 +17,8 @@ jobs:
   package:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    env:
+      USTAR_WIDGET_SOURCE: 5607ab6fca13f744b1157db0c03b0adc27f30c7f
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -29,7 +31,8 @@ jobs:
       - name: Verify the guarded installer and repeat the package build
         run: |
           python3 -m unittest tests.r16.test_connect_checklist_widget_release tests.r16.test_connect_delivery_repair_release tests.r16.test_connect_broadcast_release tests.r16.test_connect_team_release
-          source=$(git rev-parse HEAD)
+          source=$USTAR_WIDGET_SOURCE
+          git diff --exit-code "$source" HEAD -- moodle connect-worker scripts/infra/build_connect_checklist_widget_release.py scripts/infra/connect_checklist_widget_release.py
           python3 scripts/infra/build_connect_checklist_widget_release.py --target "$source" --output artifacts
           python3 scripts/infra/build_connect_checklist_widget_release.py --target "$source" --output repeat
           archive="ustar-connect-checklist-widget-${source:0:8}.tar.gz"

@@ -3,7 +3,7 @@ updated_at: '2026-11-13'
 project: USTAR Academy
 stage: connect_checklist_widget
 stage_label: Personal checklist widget in Telegram
-current_activity: The owner confirmed live Telegram broadcasts and moved to the personal checklist widget pilot.
+current_activity: The personal Telegram checklist package passed isolated verification and is ready for owner installation and live pilot.
 entrypoint: START_HERE.md
 next_task: CONNECT-CHECKLIST-WIDGET
 ready_tasks: []
@@ -396,7 +396,11 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: native_verification_pending
+  status: qualified_awaiting_owner_pilot
+  application_commit: 5607ab6fca13f744b1157db0c03b0adc27f30c7f
+  worker_commit: 5607ab6fca13f744b1157db0c03b0adc27f30c7f
+  qualification: context/runtime/connect_checklist_widget_qualification_20261113.json
+  runbook: docs/CONNECT_CHECKLIST_WIDGET_RU.md
   previous_qualification: context/runtime/connect_delivery_repair_qualification_20261113.json
   branch: feat/connect-checklist-widget-20261113
   deployed: false

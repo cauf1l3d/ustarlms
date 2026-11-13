@@ -902,7 +902,9 @@ tasks:
   - Сотрудник возвращается к задачам и чек-листам, руководитель видит свои действия в разделе команды
 - id: CONNECT-CHECKLIST-WIDGET
   title: Личный чек-лист внутри сообщения Telegram
-  status: native_verification_pending
+  status: qualified_awaiting_owner_pilot
+  qualification: context/runtime/connect_checklist_widget_qualification_20261113.json
+  runbook: docs/CONNECT_CHECKLIST_WIDGET_RU.md
   spec: docs/superpowers/plans/2026-11-13-telegram-checklist-widget.md
   depends_on: [CONNECT-DELIVERY-REPAIR]
   acceptance:

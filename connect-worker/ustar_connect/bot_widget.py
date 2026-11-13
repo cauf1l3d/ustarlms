@@ -15,19 +15,22 @@ font-family:system-ui;font-size:var(--tg-text-font-size,15px);line-height:1.35}
 .label{display:block;margin-bottom:3px;overflow-wrap:anywhere}
 .options{display:flex;gap:6px}
 button{min-height:44px;font-family:inherit;font-size:inherit;border:0;border-radius:8px;padding:5px 8px}
-.options button{flex:1;background:var(--tg-theme-secondary-bg-color,#eef4f8);color:inherit}
+.options button,#nav button{flex:1;background:var(--tg-theme-secondary-bg-color,#eef4f8);color:inherit}
 .options .selected{background:var(--tg-theme-button-color,#266394);color:var(--tg-theme-button-text-color,#fff)}
 #save{width:100%;background:var(--tg-theme-button-color,#266394);color:var(--tg-theme-button-text-color,#fff)}
+#nav{display:flex;gap:6px;margin:3px 0 6px}#nav[hidden]{display:none}
 button:disabled{opacity:.55}
 #notice{margin:7px 0 0}
 </style>
 <body><p id="progress" aria-live="polite"></p><div id="items"></div>
+<div id="nav" hidden><button id="previous" type="button">Назад</button><button id="next" type="button">Далее</button></div>
 <button id="save" type="button">Отправить в Академию</button><p id="notice" role="status"></p>
 <script>
 const widget=TelegramWidget;
 const items=document.querySelector('#items'),progress=document.querySelector('#progress');
 const save=document.querySelector('#save'),notice=document.querySelector('#notice');
-let model={},answers=[],buttons=[],busy=false,finished=false;
+const nav=document.querySelector('#nav'),previous=document.querySelector('#previous'),next=document.querySelector('#next');
+let model={},answers=[],buttons=[],busy=false,finished=false,page=0,pageSize=5;
 function paint(pair,value){
   for(const button of pair){
     const selected=button.dataset.value===value;
@@ -37,14 +40,17 @@ function paint(pair,value){
 }
 function showProgress(){
   const marked=answers.filter(value=>value!=='').length;
-  progress.textContent='Отмечено '+marked+' из '+answers.length;
+  const pages=Math.ceil(answers.length/pageSize),last=page+1>=pages;
+  progress.textContent='Отмечено '+marked+' из '+answers.length+(pages>1?' · '+(page+1)+'/'+pages:'');
+  nav.hidden=pages<2;previous.disabled=busy||page===0;next.disabled=busy||last;
+  save.hidden=!last;
   save.disabled=busy||marked!==answers.length||!answers.length;
   for(const pair of buttons)for(const button of pair)button.disabled=busy;
 }
 function showResult(result){
   finished=true;busy=false;
   try{localStorage.removeItem('answers');}catch{}
-  items.textContent='';save.hidden=true;progress.textContent='';
+  items.textContent='';save.hidden=true;nav.hidden=true;progress.textContent='';
   notice.textContent=result.status==='saved'
     ?'Сохранено в Академии. Выполнено '+result.done+' из '+result.total+'.'
     :'Чек-лист изменился или устарел. Откройте его заново в меню бота.';
@@ -60,7 +66,17 @@ function load(){
   let draft='';
   try{draft=localStorage.getItem('answers')||'';}catch{}
   answers=model.items.map((_,index)=>/[01]/.test(draft[index]||'')?draft[index]:'');
-  for(const [index,label] of model.items.entries()){
+  page=0;render();
+}
+function render(){
+  const wide=matchMedia('(min-width: 300px)').matches;
+  const large=parseFloat(getComputedStyle(document.body).fontSize)>18;
+  pageSize=large?2:wide?5:3;
+  page=Math.min(page,Math.ceil(answers.length/pageSize)-1);
+  items.textContent='';buttons=[];
+  const start=page*pageSize,end=Math.min(start+pageSize,answers.length);
+  for(let index=start;index<end;index++){
+    const label=model.items[index];
     const row=document.createElement('div'), title=document.createElement('span');
     const options=document.createElement('div'),pair=[];
     row.className='row';title.className='label';title.textContent=label;options.className='options';
@@ -82,6 +98,8 @@ function load(){
   }
   showProgress();
 }
+previous.addEventListener('click',()=>{page--;render();});
+next.addEventListener('click',()=>{page++;render();});
 function retry(){
   busy=false;showProgress();
   notice.textContent='Подтверждение не получено. Нажмите «Отправить» ещё раз.';

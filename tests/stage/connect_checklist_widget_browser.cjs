@@ -14,7 +14,7 @@ const items = [
     '<img src="https://example.invalid/unsafe"> Проверить полки',
 ];
 
-async function exercise(browser, width, dark) {
+async function exercise(browser, width, dark, pages, fontSize = 15) {
     const page = await browser.newPage({viewport: {width, height: 800}});
     try {
         const errors = [];
@@ -27,21 +27,39 @@ async function exercise(browser, width, dark) {
         const style = dark ? '<style>:root{--tg-theme-bg-color:#182535;--tg-theme-text-color:#eef4f8;' +
             '--tg-theme-secondary-bg-color:#283b50;--tg-theme-button-color:#367eb8;' +
             '--tg-theme-button-text-color:#fff;--tg-theme-hint-color:#bbc9d2;background:#182535}</style>' : '';
-        await page.setContent(html.replace('<script>', style + shim + '<script>'));
+        await page.setContent(html.replace('<script>',
+            style + '<style>:root{--tg-text-font-size:' + fontSize + 'px}</style>' + shim + '<script>'));
         const save = page.getByRole('button', {name: 'Отправить в Академию'});
-        assert.ok(await save.isDisabled());
         assert.equal(await page.locator('img').count(), 0);
-        assert.equal(await page.locator('.label').last().textContent(), items[4]);
-        assert.ok(await page.locator('body').evaluate(el => el.scrollWidth <= el.clientWidth));
-        assert.ok((await save.boundingBox()).y + 44 < 590);
-        assert.ok((await save.boundingBox()).height >= 44);
+        const next = page.getByRole('button', {name: 'Далее', exact: true});
+        const previous = page.getByRole('button', {name: 'Назад', exact: true});
+        assert.equal(await next.isVisible(), pages > 1);
+        if (pages === 1) assert.ok(await save.isDisabled());
         await page.getByRole('group').first().getByRole('button', {name: 'Да', exact: true}).click();
         await page.getByRole('group').first().getByRole('button', {name: 'Нет', exact: true}).click();
         assert.equal(await page.getByRole('group').first().getByRole('button', {name: 'Нет'}).getAttribute('aria-pressed'), 'true');
+        let indexOnPage = 0;
         for (let index = 1; index < items.length; index++) {
-            await page.getByRole('group').nth(index).getByRole('button', {name: index === 2 ? 'Нет' : 'Да', exact: true}).click();
+            indexOnPage++;
+            if (indexOnPage === await page.getByRole('group').count()) {
+                await next.click();
+                indexOnPage = 0;
+            }
+            await page.getByRole('group').nth(indexOnPage)
+                .getByRole('button', {name: index === 2 ? 'Нет' : 'Да', exact: true}).click();
         }
-        assert.equal(await page.locator('#progress').textContent(), 'Отмечено 5 из 5');
+        assert.equal(await page.locator('.label').last().textContent(), items[4]);
+        assert.ok(await page.locator('body').evaluate(el => el.scrollWidth <= el.clientWidth));
+        const bounds = await save.boundingBox();
+        assert.ok(bounds.height >= 44 && bounds.y + bounds.height < 580, JSON.stringify({width, bounds}));
+        if (pages > 1) {
+            await previous.click();
+            assert.ok(await save.isHidden());
+            await next.click();
+            assert.ok(await save.isEnabled());
+        }
+        assert.equal(await page.locator('#progress').textContent(),
+            'Отмечено 5 из 5' + (pages > 1 ? ' · ' + pages + '/' + pages : ''));
         await save.click();
         await page.getByText(/Подтверждение не получено/).waitFor();
         assert.ok(await save.isEnabled());
@@ -59,8 +77,9 @@ async function exercise(browser, width, dark) {
 (async () => {
     const browser = await chromium.launch({executablePath: process.env.USTAR_CHROMIUM_PATH});
     try {
-        await exercise(browser, 200, false);
-        await exercise(browser, 320, true);
+        await exercise(browser, 200, false, 2);
+        await exercise(browser, 320, true, 1);
+        await exercise(browser, 200, true, 3, 22);
         console.log('CONNECT_CHECKLIST_WIDGET_BROWSER=PASS');
     } finally {
         await browser.close();

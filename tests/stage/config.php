@@ -25,8 +25,13 @@ $CFG->phpunit_dataroot = '/stage/phpunitdata';
 $CFG->noemailever = true;
 $CFG->disableupdatenotifications = true;
 $CFG->upgradekey = 'fixture-only';
-if (getenv('USTAR_STAGE_BROADCAST_FIXTURE') === '1' && $prefix === 'stage_') {
+$broadcastfixture = getenv('USTAR_STAGE_BROADCAST_FIXTURE') === '1' && $prefix === 'stage_';
+if ($broadcastfixture) {
     $CFG->wwwroot = 'https://127.0.0.1:18087';
+}
+require_once(__DIR__ . '/lib/setup.php');
+if ($broadcastfixture) {
+    // Core setup normalizes scalar config values to strings. The test uses typed Connect flags.
     $CFG->ustar_connect_channels = ['telegram' => ['tenant' => '123456', 'username' => 'ustarcorp_bot']];
     $CFG->ustar_connect_notifications_enabled = true;
     $CFG->ustar_connect_notify_since = 1;
@@ -41,7 +46,6 @@ if (getenv('USTAR_STAGE_BROADCAST_FIXTURE') === '1' && $prefix === 'stage_') {
         'operations' => ['notification.lease', 'notification.begin_v3', 'notification.finish'],
     ]];
 }
-require_once(__DIR__ . '/lib/setup.php');
 if ($httproot && (parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) === '/local/ustar/team_learning.php')) {
     set_exception_handler(static function (Throwable $error): void {
         error_log('Isolated team profile exception: ' . $error->getMessage() . ' in ' . $error->getFile() . ':' . $error->getLine());

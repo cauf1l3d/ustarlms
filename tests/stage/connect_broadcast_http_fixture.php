@@ -58,7 +58,7 @@ $challenge = \local_ustar\connect\identity_service::issue('telegram', '123456');
 $admin = get_admin();
 \core\session\manager::set_user($admin);
 $actor = (int)$admin->id;
-$post = \local_ustar\feed_service::create($actor, 'academy', 'academy', ['all'], 'Склад РЦ · сообщение',
+$post = \local_ustar\feed_service::create($actor, 'academy', 'academy', ['user:' . $userid], 'Склад РЦ · сообщение',
     true, 0, [], bin2hex(random_bytes(16)));
 get_file_storage()->create_file_from_string([
     'contextid' => $context->id, 'component' => 'local_ustar',

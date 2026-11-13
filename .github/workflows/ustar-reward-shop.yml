@@ -6,6 +6,8 @@ on:
     paths:
       - 'moodle/local/ustar/**'
       - 'tests/stage/reward_shop*'
+      - 'tests/stage/connect_broadcast_http*'
+      - 'tests/stage/config.php'
       - 'connect-worker/**'
       - 'tests/r16/test_reward_shop_ux_release.py'
       - 'scripts/infra/reward_shop_ux_release.py'

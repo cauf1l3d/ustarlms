@@ -45,6 +45,44 @@ sudo python3 -I -B /root/ustar-connect-checklist-widget-5607ab6f/update.py --che
 
 Ожидаемый результат — `phase: active`, `local_ustar: 2026111301`, приложение и worker `5607ab6f`, `announcements_enabled: true` при ранее включённых рассылках, обе службы Connect запущены. При `managed_operation_busy_retry_later` повторите проверку после завершения текущей операции. При `recovery_required` сохраните вывод и выполните `--recover --acknowledge-outage` из того же архива. [Проверки установки и состава пакета](../context/runtime/connect_checklist_widget_qualification_20261113.json).
 
+### Если отсутствует файл блокировки Connect
+
+При точном ответе `managed_lock_missing:/run/ustar-connect-install.lock` проверка останавливается до сверки версий. Этот файл хранится в служебном каталоге `/run`. Создайте отсутствующий файл и повторите проверку распакованного пакета.
+
+```bash
+sudo python3 -I -B - <<'PY'
+import os
+import stat
+
+path = "/run/ustar-connect-install.lock"
+parent = os.lstat("/run")
+if not (stat.S_ISDIR(parent.st_mode) and parent.st_uid == 0 and not parent.st_mode & 0o022):
+    raise SystemExit("unsafe_runtime_parent")
+
+os.umask(0o077)
+flags = os.O_NOFOLLOW | os.O_NONBLOCK
+try:
+    fd = os.open(path, flags | os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+except FileExistsError:
+    fd = os.open(path, flags | os.O_RDONLY)
+
+try:
+    info = os.fstat(fd)
+    live = os.lstat(path)
+    if not (stat.S_ISREG(info.st_mode) and info.st_uid == 0 and info.st_nlink == 1
+            and stat.S_IMODE(info.st_mode) == 0o600
+            and (info.st_dev, info.st_ino) == (live.st_dev, live.st_ino)):
+        raise SystemExit("unsafe_managed_lock")
+finally:
+    os.close(fd)
+print("connect_install_lock_ready")
+PY
+
+sudo python3 -I -B /root/ustar-connect-checklist-widget-5607ab6f/update.py --check
+```
+
+Команда сохраняет уже существующий корректный файл вместе с его inode и содержимым. Установку запускайте после `phase: ready`. При `application_source_drift`, `unexpected_worker` или другом отказе сохраните новый JSON для разбора.
+
 ## Настройка пилота
 
 Для первого прогона назначьте одному связанному сотруднику действующий список из 1–5 коротких пунктов, до 65 символов каждый. Назначение делается в Студии чек-листов Академии. Подойдёт и существующий короткий список, у которого ещё нет записи за сегодня. Выбирайте тестовый список без реальных операционных отметок.

@@ -3,7 +3,7 @@ updated_at: '2026-11-14'
 project: USTAR Academy
 stage: connect_invitations
 stage_label: Employee invitations and Moodle consent in Telegram
-current_activity: Draft PR 123 adds Telegram invitations and in-chat Moodle policy acceptance for existing employees. Native checks are pending. The production checklist package remains active.
+current_activity: Draft PR 123 adds Telegram invitations and in-chat Moodle policy acceptance. Native Moodle 5.1.1 and 5.1.8 checks passed. The owner pilot awaits installation and a check of the active policy handler.
 entrypoint: START_HERE.md
 next_task: CONNECT-INVITATIONS
 ready_tasks: []
@@ -397,7 +397,10 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: draft_native_qualification
+  status: native_qualified_owner_installation_pending
+  application_commit: 33a8436b79c7dce453f10bb54b30d1d1721aab57
+  worker_commit: 33a8436b79c7dce453f10bb54b30d1d1721aab57
+  qualification: context/runtime/connect_invitations_qualification_20261114.json
   previous_qualification: context/runtime/connect_checklist_widget_qualification_20261113.json
   runbook: docs/CONNECT_INVITATIONS_RU.md
   branch: feat/connect-telegram-invitations-20261114

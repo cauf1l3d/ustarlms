@@ -18,6 +18,8 @@ jobs:
   package:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    env:
+      USTAR_TASK_WIDGET_SOURCE: 04c8eff09bf44bc69c86084b7cb9c94a8beddce1
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -30,7 +32,8 @@ jobs:
       - name: Check the exact upgrade and reproduce the package
         run: |
           python3 -m unittest tests.r16.test_connect_task_widget_release tests.r16.test_connect_checklist_widget_release tests.r16.test_connect_delivery_repair_release tests.r16.test_connect_broadcast_release tests.r16.test_connect_team_release
-          source=$(git rev-parse HEAD)
+          source=$USTAR_TASK_WIDGET_SOURCE
+          git diff --exit-code "$source" HEAD -- moodle connect-worker scripts/infra/build_connect_task_widget_release.py scripts/infra/connect_task_widget_release.py
           python3 scripts/infra/build_connect_task_widget_release.py --target "$source" --output artifacts
           python3 scripts/infra/build_connect_task_widget_release.py --target "$source" --output repeat
           archive="ustar-connect-task-widget-${source:0:8}.tar.gz"

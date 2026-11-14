@@ -3,7 +3,7 @@ updated_at: '2026-11-14'
 project: USTAR Academy
 stage: connect_task_widget
 stage_label: Personal task widget in Telegram
-current_activity: The personal task widget is in isolated verification. Live checklist acceptance remains pending.
+current_activity: The personal task widget passed isolated verification and is ready for owner installation and live pilot.
 entrypoint: START_HERE.md
 next_task: CONNECT-TASK-WIDGET
 ready_tasks: []
@@ -396,7 +396,11 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: native_verification_pending
+  status: qualified_awaiting_owner_pilot
+  application_commit: 04c8eff09bf44bc69c86084b7cb9c94a8beddce1
+  worker_commit: 04c8eff09bf44bc69c86084b7cb9c94a8beddce1
+  qualification: context/runtime/connect_task_widget_qualification_20261114.json
+  runbook: docs/CONNECT_TASK_WIDGET_RU.md
   previous_qualification: context/runtime/connect_checklist_widget_qualification_20261113.json
   branch: feat/connect-task-widget-20261114
   deployed: false

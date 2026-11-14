@@ -1,6 +1,6 @@
 # Активная работа · 14.11.2026
 
-[Виджет задачи](../../docs/superpowers/plans/2026-11-14-telegram-task-widget.md) в проверке. [Чек-лист `5607ab6f`](../../docs/CONNECT_CHECKLIST_WIDGET_RU.md) ждёт живого пилота.
+[Виджет задачи `04c8eff0`](../../docs/CONNECT_TASK_WIDGET_RU.md) прошёл CI поверх `5607ab6f`. Установка и оба живых пилота ожидаются. [Проверки](../runtime/connect_task_widget_qualification_20261114.json).
 
 ## Повторная привязка Telegram
 

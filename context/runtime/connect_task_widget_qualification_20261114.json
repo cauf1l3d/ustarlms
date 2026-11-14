@@ -1,0 +1,76 @@
+{
+  "task": "CONNECT-TASK-WIDGET",
+  "date_msk": "2026-11-14",
+  "pull_request": 122,
+  "previous_qualification": "context/runtime/connect_checklist_widget_qualification_20261113.json",
+  "application_and_worker_commit": "04c8eff09bf44bc69c86084b7cb9c94a8beddce1",
+  "application_and_worker_baseline": "5607ab6fca13f744b1157db0c03b0adc27f30c7f",
+  "local_ustar_version": 2026111400,
+  "theme_ustar_version": 2026110200,
+  "schema_changed": false,
+  "local_targeted_python": {"tests": 140, "passed": 140, "skipped": 0},
+  "native": {
+    "run_id": 43521219441,
+    "result": "success",
+    "fresh_upgrade_repeat_schema_equal": true,
+    "checks": [
+      "CONNECT_TASK_WIDGET_WIRE=PASS",
+      "CONNECT_CHECKLIST_WIDGET_WIRE=PASS",
+      "CONNECT_BROADCAST_WIRE_RECEIPT=PASS"
+    ],
+    "tests_per_profile": 73,
+    "assertions_per_profile": 332,
+    "bot_tests_per_profile": 19,
+    "bot_assertions_per_profile": 88,
+    "profiles": [
+      {
+        "moodle": "5.1.1",
+        "job_id": 132215773727,
+        "artifact_id": 14083600555,
+        "artifact_zip_sha256": "22b2a4304f2920c53fe70aa824816894deb170bde0be8ebe40a7b5e6b6becffe"
+      },
+      {
+        "moodle": "5.1.8",
+        "job_id": 132215773210,
+        "artifact_id": 14082569517,
+        "artifact_zip_sha256": "04e6a6d64038b7831d577649b1ca35f9b7ffb093e21efe136040d760de657b81"
+      }
+    ]
+  },
+  "widget_browser": {
+    "run_id": 43521219441,
+    "job_id": 132215773553,
+    "result": "CONNECT_TASK_WIDGET_BROWSER=PASS",
+    "checklist_regression": "CONNECT_CHECKLIST_WIDGET_BROWSER=PASS",
+    "cases": [
+      {"width_px": 200, "scheme": "dark", "font_px": 22},
+      {"width_px": 320, "scheme": "light", "font_px": 15}
+    ],
+    "provider": "Simulated Telegram widget API in Chromium"
+  },
+  "operator": "scripts/infra/connect_task_widget_release.py",
+  "builder": "scripts/infra/build_connect_task_widget_release.py",
+  "package_ci": {
+    "run_id": 43521219304,
+    "job_id": 132215657047,
+    "artifact_id": 14082343908,
+    "artifact_zip_sha256": "8ec684853b9523ef96fa4a19aece734ee28996c03837ed4845b5330422926c97",
+    "archive": "ustar-connect-task-widget-04c8eff0.tar.gz",
+    "archive_sha256": "9c7c2b670babbf953da8c891e6810a55e02d85e6a12c356cd2915f4f041b28e1",
+    "archive_bytes": 454334,
+    "archive_members": 14,
+    "application_files": 10,
+    "worker_archive_regular_members": 8,
+    "archive_membership_and_crc": "verified",
+    "artifact_matches_local_and_retained_download": true,
+    "tampered_payload_rejected": true,
+    "result": "success"
+  },
+  "pilot_default": "disabled",
+  "pilot_config": "ustar_connect_task_widget_userids",
+  "server1": "awaiting_owner_installation",
+  "live_telegram_widget": "awaiting_owner_pilot",
+  "previous_checklist_live_acceptance": "unreported",
+  "main_merge": "pending",
+  "guide": "docs/CONNECT_TASK_WIDGET_RU.md"
+}

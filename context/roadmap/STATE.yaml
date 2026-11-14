@@ -1,11 +1,11 @@
 schema_version: 2
 updated_at: '2026-11-14'
 project: USTAR Academy
-stage: connect_checklist_widget
-stage_label: Personal checklist widget in Telegram
-current_activity: The owner verified the checklist package is active and completed the checklist through the bot. The HTML widget was prepared without a Telegram message binding. Telegram confirmed a hosting restriction for general bots.
+stage: connect_invitations
+stage_label: Employee invitations and Moodle consent in Telegram
+current_activity: Draft PR 123 adds Telegram invitations and in-chat Moodle policy acceptance for existing employees. Native checks are pending. The production checklist package remains active.
 entrypoint: START_HERE.md
-next_task: CONNECT-CHECKLIST-WIDGET
+next_task: CONNECT-INVITATIONS
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -397,19 +397,17 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: installed_html_pilot_pending_provider_availability
-  application_commit: 5607ab6fca13f744b1157db0c03b0adc27f30c7f
-  worker_commit: 5607ab6fca13f744b1157db0c03b0adc27f30c7f
-  qualification: context/runtime/connect_checklist_widget_qualification_20261113.json
-  runbook: docs/CONNECT_CHECKLIST_WIDGET_RU.md
-  previous_qualification: context/runtime/connect_delivery_repair_qualification_20261113.json
-  branch: feat/connect-checklist-widget-20261113
+  status: draft_native_qualification
+  previous_qualification: context/runtime/connect_checklist_widget_qualification_20261113.json
+  runbook: docs/CONNECT_INVITATIONS_RU.md
+  branch: feat/connect-telegram-invitations-20261114
+  source_pr: 123
   deployed: false
-  local_ustar_version: 2026111301
+  local_ustar_version: 2026111401
   theme_ustar_version: 2026110200
-  schema_changed: false
+  schema_changed: true
   worker_rollout: true
-  deployment_baseline: 7fa3233f3016eb968b7fadd3ae410ec330186b93
-  progress: docs/superpowers/plans/2026-11-13-telegram-checklist-widget.md
+  deployment_baseline: 5607ab6fca13f744b1157db0c03b0adc27f30c7f
+  progress: docs/superpowers/plans/2026-11-14-connect-invitations.md
   owner_receipt: null
-  execution_authorized: true
+  execution_authorized: false

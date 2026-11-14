@@ -78,7 +78,7 @@ jobs:
           git archive 5607ab6fca13f744b1157db0c03b0adc27f30c7f moodle | tar -x -C .stage-input/connect-invitation-baseline
           trap 'docker compose -f "$USTAR_STAGE_COMPOSE" down --volumes --remove-orphans' EXIT
           docker compose -f "$USTAR_STAGE_COMPOSE" build runner
-          docker compose -f "$USTAR_STAGE_COMPOSE" run --rm runner bash /source/tests/stage/connect_invitation_native.sh
+          docker compose -f "$USTAR_STAGE_COMPOSE" run --rm --entrypoint bash runner /source/tests/stage/connect_invitation_native.sh
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

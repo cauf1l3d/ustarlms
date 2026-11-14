@@ -1,6 +1,8 @@
 # Активная работа · 14.11.2026
 
-Пакет `5607ab6f` активен. Пошаговый чек-лист сохранён. Пилот HTML ждёт доступности Bot API. [Результат](../runtime/connect_checklist_widget_owner_pilot_20261114.json).
+Пакет `5607ab6f` активен. Работает пошаговый чек-лист. [Результат пилота](../runtime/connect_checklist_widget_owner_pilot_20261114.json).
+
+CONNECT-INVITATIONS. PR123, вход в бот по приглашению с принятием соглашения Moodle. [Настройка](../../docs/CONNECT_INVITATIONS_RU.md).
 
 ## Повторная привязка Telegram
 

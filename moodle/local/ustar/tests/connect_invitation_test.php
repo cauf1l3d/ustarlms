@@ -90,7 +90,8 @@ final class connect_invitation_test extends \advanced_testcase {
         $this->assertSame('Соглашение Академии', $view['title']);
         $this->assertTrue($view['plain']);
         $this->assertStringContainsString('Полный текст', $view['text']);
-        $this->assertSame('Соглашение Академии', $this->send('555', '/tasks')['title']);
+        $view = $this->send('555', '/tasks');
+        $this->assertSame('Соглашение Академии', $view['title']);
         try {
             entry_service::create_launch(new identity('telegram', '123456', '555'), 'fixture');
             $this->fail('A bot invitation must not open the Mini App');

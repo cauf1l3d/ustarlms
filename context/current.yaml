@@ -140,10 +140,10 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: The owner verified the checklist package is active and completed the checklist
-    through the bot. The HTML widget was prepared without a Telegram message binding.
-    Telegram confirmed a hosting restriction for general bots.
-  next_task: CONNECT-CHECKLIST-WIDGET
+  activity: Draft PR 123 adds Telegram invitations and in-chat Moodle policy acceptance
+    for existing employees. Native checks are pending. The production checklist package
+    remains active.
+  next_task: CONNECT-INVITATIONS
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -154,6 +154,7 @@ current_work:
     CONNECT-BROADCAST-01: owner_installed_direct_delivery_incident
     CONNECT-CHECKLIST-WIDGET: installed_html_pilot_pending_provider_availability
     CONNECT-DELIVERY-REPAIR: owner_confirmed_live_broadcasts
+    CONNECT-INVITATIONS: draft_native_qualification
     CONNECT-RELINK-01: qualified_awaiting_owner_installation
     CONNECT-TEAM-01: owner_installed_pilot_notice_delivered
     DOC-01: done

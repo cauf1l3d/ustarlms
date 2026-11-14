@@ -35,7 +35,9 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: CONNECT-CHECKLIST-WIDGET
+  task: CONNECT-INVITATIONS
+  invitation_runbook: docs/CONNECT_INVITATIONS_RU.md
+  invitation_draft_pr: 123
   related_task: CONNECT-DELIVERY-REPAIR
   status: installed_html_pilot_pending_provider_availability
   owner_receipt: context/runtime/connect_checklist_widget_owner_pilot_20261114.json

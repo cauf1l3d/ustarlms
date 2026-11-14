@@ -43,6 +43,7 @@ USTAR_STAGE_PREFIX=fresh_ snapshot fresh
 cmp /artifacts/connect-invitation-after.json /artifacts/connect-invitation-fresh.json
 if [[ ${USTAR_STAGE_OPERATOR_UPDATE:-} == 1 ]]; then
     bash /source/tests/stage/authenticated_shell_smoke.sh operator
+    bash /source/tests/stage/connect_operator_http.sh 2>&1 | tee /artifacts/connect-invitation-operator-http.log
 fi
 php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/connect-invitation-phpunit-init.log 2>&1
 for suite in connect_invitation connect_bot connect_identity connect_notification; do

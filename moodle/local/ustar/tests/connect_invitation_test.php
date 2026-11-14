@@ -191,16 +191,19 @@ final class connect_invitation_test extends \advanced_testcase {
         $url = array_values(array_filter($prepared['buttons'], static fn(array $b): bool => isset($b['url'])))[0]['url'];
         parse_str(parse_url($url, PHP_URL_QUERY), $params);
         $this->setUser($operator);
-        $result = bot_confirmation::confirm($params['action'], (int)$operator->id);
-        $this->assertStringStartsWith('ui1_', $result['issued']['token']);
-        $this->assertTrue($DB->record_exists('local_ustar_conn_challenges', $filter));
-        $again = bot_confirmation::confirm($params['action'], (int)$operator->id);
-        $this->assertArrayNotHasKey('issued', $again);
-        $this->assertSame(1, $DB->count_records('local_ustar_conn_challenges', $filter));
+        [$action] = bot_confirmation::lookup($params['action'], (int)$operator->id);
+        $this->assertSame('confirmation', $action->status);
+        try {
+            bot_confirmation::confirm($params['action'], (int)$operator->id);
+            $this->fail('Invitation issued without a browser session');
+        } catch (\InvalidArgumentException $error) {
+            $this->assertSame('native_auth_required', $error->getMessage());
+        }
+        $this->assertFalse($DB->record_exists('local_ustar_conn_challenges', $filter));
         role_unassign($role, $operator->id, \context_system::instance()->id);
         $this->assertNotContains('🎟 Приглашения Telegram', array_column($this->send('555', '/start')['buttons'], 'label'));
         $this->setUser($operator);
         $this->expectException(\InvalidArgumentException::class);
-        bot_confirmation::confirm($params['action'], (int)$operator->id);
+        bot_confirmation::lookup($params['action'], (int)$operator->id);
     }
 }

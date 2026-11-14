@@ -4,7 +4,7 @@
   "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "7978cbeadbbd0114138f3e5934a47d19be58de1f",
+    "moodle/local/ustar": "6fe9e8aa4d763aced29725a09613f6f4602c0094",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
@@ -2294,7 +2294,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/connect_invitation_test.php",
-      "sha256": "063082abd840a0d9102b60067f1eca9f9872ae84f358bdbd01cbbf4dda752dcf"
+      "sha256": "850f09436c48870fe4077bddfaa1826cad8c7a85f4c27029966ea01c17c06eab"
     },
     {
       "path": "moodle/local/ustar/tests/connect_link_management_test.php",

@@ -212,7 +212,8 @@ SOURCE_ONLY = SOURCE_ONLY | {'connect_relink_patch', 'build_connect_relink_patch
 SOURCE_ONLY = SOURCE_ONLY | {'reward_shop_ux_release', 'connect_team_release', 'build_connect_team_release',
     'connect_broadcast_release', 'build_connect_broadcast_release',
     'connect_delivery_repair_release', 'build_connect_delivery_repair_release',
-    'connect_checklist_widget_release', 'build_connect_checklist_widget_release'}
+    'connect_checklist_widget_release', 'build_connect_checklist_widget_release',
+    'connect_task_widget_release', 'build_connect_task_widget_release'}
 METADATA.update({'academy_https': ('Владелец HTTPS Академии',
                    'Исходники проверенных поставок',
                    'Справка об исходнике; конкретная версия и режим указаны в dated runtime-квитанции.',

@@ -55,6 +55,12 @@ if (($argv[1] ?? '') === 'seed-widget') {
             ['id' => 'shelf', 'title' => 'Проверить полки'],
         ]]],
     ]]]);
+    \local_ustar\task_workspace\service::create((int)get_admin()->id, $userid, [
+        'title' => 'Собрать заказ',
+        'description' => 'Проверить позиции по накладной',
+        'date' => gmdate('Y-m-d', time() + DAYSECS),
+        'clock' => '17:00',
+    ]);
     \core\session\manager::set_user(get_complete_user_data('id', $userid));
     $sender = new \local_ustar\connect\identity('telegram', '123456', '88888');
     $challenge = \local_ustar\connect\identity_service::issue('telegram', '123456');
@@ -75,6 +81,21 @@ if (($argv[1] ?? '') === 'verify-widget') {
         throw new RuntimeException('unexpected_widget_receipt');
     }
     echo "CONNECT_CHECKLIST_WIDGET_WIRE=PASS\n";
+    exit;
+}
+
+if (($argv[1] ?? '') === 'verify-task-widget') {
+    $userid = (int)getenv('USTAR_STAGE_WIDGET_USERID');
+    $task = $DB->get_record('local_ustar_learning_tasks', ['assigneeid' => $userid,
+        'title' => 'Собрать заказ'], '*', MUST_EXIST);
+    $events = $DB->count_records('local_ustar_learning_task_events', [
+        'taskid' => $task->id, 'eventtype' => 'task_started', 'actorid' => $userid,
+    ]);
+    if (!$userid || $task->status !== 'in_progress' || (int)$task->version !== 2 || $events !== 1
+            || $DB->record_exists('local_ustar_task_reports', ['taskid' => $task->id])) {
+        throw new RuntimeException('unexpected_task_widget_receipt');
+    }
+    echo "CONNECT_TASK_WIDGET_WIRE=PASS\n";
     exit;
 }
 

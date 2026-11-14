@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-13'
+updated_at: '2026-11-14'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -139,9 +139,9 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: The personal Telegram checklist package passed isolated verification and
-    is ready for owner installation and live pilot.
-  next_task: CONNECT-CHECKLIST-WIDGET
+  activity: The personal task widget passed isolated verification and is ready for
+    owner installation and live pilot.
+  next_task: CONNECT-TASK-WIDGET
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -153,6 +153,7 @@ current_work:
     CONNECT-CHECKLIST-WIDGET: qualified_awaiting_owner_pilot
     CONNECT-DELIVERY-REPAIR: owner_confirmed_live_broadcasts
     CONNECT-RELINK-01: qualified_awaiting_owner_installation
+    CONNECT-TASK-WIDGET: qualified_awaiting_owner_pilot
     CONNECT-TEAM-01: owner_installed_pilot_notice_delivered
     DOC-01: done
     DOC-02: done

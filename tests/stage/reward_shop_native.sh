@@ -67,6 +67,7 @@ if [[ ${USTAR_STAGE_BROADCAST_WIRE:-} = 1 ]]; then
         done
         python3 /source/tests/stage/connect_broadcast_http.py
         python3 /source/tests/stage/connect_checklist_widget_wire.py
+        python3 /source/tests/stage/connect_task_widget_wire.py
     ) 2>&1 | tee /artifacts/reward-shop-broadcast-wire.log
 fi
 echo 'REWARD_SHOP_SCHEMA_AND_DB=PASS'

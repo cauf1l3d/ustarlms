@@ -12,18 +12,9 @@ final class bot_checklist_widget {
     public const INTENT = 'work.checklist.widget';
     private const MAX_ITEMS = 5;
 
-    private static function in_pilot(int $userid): bool {
+    public static function in_pilot(int $userid): bool {
         global $CFG;
-        $ids = $CFG->ustar_connect_checklist_widget_userids ?? [];
-        if (!is_array($ids) || !array_is_list($ids) || count($ids) > 10) {
-            return false;
-        }
-        foreach ($ids as $id) {
-            if (!is_int($id) || $id <= 0) {
-                return false;
-            }
-        }
-        return in_array($userid, $ids, true);
+        return bot_widgets::in_pilot($userid, $CFG->ustar_connect_checklist_widget_userids ?? []);
     }
 
     public static function view(\stdClass $dialog, array $checklist, string $date, string $event): ?array {
@@ -77,51 +68,10 @@ final class bot_checklist_widget {
         }
     }
 
-    public static function update(identity $sender, array $input): array {
-        try {
-            return identity_service::locked(static function() use ($sender, $input): array {
-                global $DB;
-                $userid = bot_actor::active($sender);
-                if (!$userid || !self::in_pilot($userid)) {
-                    return ['status' => 'stale'];
-                }
-                $dialog = bot_store::dialog($sender, $userid, bot_actor::link($sender));
-                $action = bot_store::resolve($dialog, $input['callback']);
-                if ($action->intent !== self::INTENT || !in_array($action->status, ['issued', 'done'], true)) {
-                    return ['status' => 'stale'];
-                }
-                $target = json_decode($action->payload, true, 16, JSON_THROW_ON_ERROR);
-                if ($input['widget'] === 'bind') {
-                    if ($target['event'] !== $input['event']
-                            || ($target['message'] !== '' && $target['message'] !== $input['message'])) {
-                        return ['status' => 'stale'];
-                    }
-                    $target['message'] = $input['message'];
-                    $DB->set_field('local_ustar_conn_actions', 'payload', bot_store::json($target), ['id' => $action->id]);
-                    return ['status' => 'bound'];
-                }
-                if ($target['message'] !== $input['message'] || count($target['items']) !== strlen($input['widget'])) {
-                    return ['status' => 'stale'];
-                }
-                return bot_actor::run($userid, static function() use ($userid, $action, $target, $input): array {
-                    return self::submit($userid, $action, $target, $input['widget']);
-                });
-            });
-        } catch (\invalid_parameter_exception | \required_capability_exception $error) {
+    public static function submit(int $userid, \stdClass $action, array $target, string $selected): array {
+        if (count($target['items']) !== strlen($selected) || !preg_match('/\A[01]+\z/', $selected)) {
             return ['status' => 'stale'];
-        } catch (\InvalidArgumentException $error) {
-            if ($error->getMessage() === 'identity_busy') {
-                return ['status' => 'retry'];
-            }
-            if (in_array($error->getMessage(), ['expired_bot_action', 'actor_unavailable',
-                    'native_auth_required', 'inactive_actor'], true)) {
-                return ['status' => 'stale'];
-            }
-            throw $error;
         }
-    }
-
-    private static function submit(int $userid, \stdClass $action, array $target, string $selected): array {
         if ($target['date'] !== checklist_service::date_key()) {
             return ['status' => 'stale'];
         }

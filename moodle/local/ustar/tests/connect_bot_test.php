@@ -100,7 +100,7 @@ final class connect_bot_test extends \advanced_testcase {
         return $sender;
     }
 
-    private function checklist_widget_update(identity $sender, string $action, int $event, string $command,
+    private function widget_update(identity $sender, string $action, int $event, string $command,
             string $message = '22'): array {
         return bot_service::update($sender, array_replace($this->request($event, '', $action),
             ['widget' => $command, 'message' => $message]));
@@ -114,16 +114,16 @@ final class connect_bot_test extends \advanced_testcase {
         $card = $this->click($sender, $list, 'Контроль кассы', 802);
         $this->assertSame(['Проверить кассу', 'Проверить полки'], $card['widget']['items']);
         $action = $card['widget']['action'];
-        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 803, '10'));
-        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 803, 'bind'));
-        $this->assertSame(['status' => 'bound'], $this->checklist_widget_update($sender, $action, 802, 'bind'));
-        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 804, '10', '23'));
-        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 804, '1'));
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 803, '10'));
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 803, 'bind'));
+        $this->assertSame(['status' => 'bound'], $this->widget_update($sender, $action, 802, 'bind'));
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 804, '10', '23'));
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 804, '1'));
         $this->assertFalse($DB->record_exists('local_ustar_check_runs', ['userid' => $userid]));
         $saved = ['status' => 'saved', 'done' => 1, 'total' => 2];
-        $this->assertSame($saved, $this->checklist_widget_update($sender, $action, 805, '10'));
-        $this->assertSame($saved, $this->checklist_widget_update($sender, $action, 806, '10'));
-        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 807, '11'));
+        $this->assertSame($saved, $this->widget_update($sender, $action, 805, '10'));
+        $this->assertSame($saved, $this->widget_update($sender, $action, 806, '10'));
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 807, '11'));
         $run = $DB->get_record('local_ustar_check_runs', ['userid' => $userid, 'checklistkey' => 'widget_fixture'], '*', MUST_EXIST);
         $this->assertSame('partial', $run->status);
         $this->assertSame(1, (int)$run->revision);
@@ -133,7 +133,7 @@ final class connect_bot_test extends \advanced_testcase {
             ['userid' => $userid, 'checklistkey' => 'widget_fixture']));
         $link = $DB->get_record('local_ustar_conn_links', ['identityhash' => $sender->key()], '*', MUST_EXIST);
         identity_service::revoke((int)$link->id);
-        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 808, '10'));
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 808, '10'));
     }
 
     public function test_widget_respects_pilot_scope_fallback_and_native_draft_revision(): void {
@@ -149,14 +149,14 @@ final class connect_bot_test extends \advanced_testcase {
         $action = $card['widget']['action'];
         $normal = $this->click($sender, $card, 'Пошаговая форма', 815);
         $this->assertArrayNotHasKey('widget', $normal);
-        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 814, 'bind'));
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 814, 'bind'));
         $list = bot_service::update($sender, $this->request(816, 'Чек-листы'));
         $card = $this->click($sender, $list, 'Контроль кассы', 817);
         $action = $card['widget']['action'];
-        $this->assertSame(['status' => 'bound'], $this->checklist_widget_update($sender, $action, 817, 'bind'));
+        $this->assertSame(['status' => 'bound'], $this->widget_update($sender, $action, 817, 'bind'));
         checklist_service::submit($userid, 'widget_fixture', ['cash' => ['done' => true]],
             'Черновик с сайта', 'draft');
-        $this->assertSame(['status' => 'stale'], $this->checklist_widget_update($sender, $action, 818, '10'));
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 818, '10'));
         $run = $DB->get_record('local_ustar_check_runs', ['userid' => $userid, 'checklistkey' => 'widget_fixture']);
         $this->assertSame('Черновик с сайта', $run->comment);
         $this->assertSame('draft', $run->status);
@@ -206,6 +206,69 @@ final class connect_bot_test extends \advanced_testcase {
         try{$this->click($sender,$preview,'Подтвердить',24);$this->fail('Stale report accepted');}
         catch(\moodle_exception $e){$this->assertSame(2,(int)$DB->get_field('local_ustar_learning_tasks','version',['id'=>$id]));}
         $this->assertSame(1,$DB->count_records('local_ustar_task_reports',['taskid'=>$id]));
+    }
+
+    public function test_task_widget_binds_starts_once_and_opens_the_current_report(): void {
+        global $CFG, $DB, $USER;
+        $sender = $this->linked();
+        $CFG->ustar_connect_task_widget_userids = [(int)$USER->id];
+        $id = $this->work($sender);
+        $list = bot_service::update($sender, $this->request(851, 'Мои задачи'));
+        $card = $this->click($sender, $list, 'Synthetic', 852);
+        $this->assertSame('assigned', $card['widget']['status'] ?? '');
+        $action = $card['widget']['action'];
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 853, 'start'));
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 853, 'bind'));
+        $this->assertSame(['status' => 'bound'], $this->widget_update($sender, $action, 852, 'bind'));
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 854, 'start', '23'));
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 854, '1'));
+        $this->assertSame('assigned', $DB->get_field('local_ustar_learning_tasks', 'status', ['id' => $id]));
+        $receipt = $this->widget_update($sender, $action, 855, 'start');
+        $this->assertSame('started', $receipt['status']);
+        $this->assertSame($receipt, $this->widget_update($sender, $action, 856, 'start'));
+        $this->assertSame(1, $DB->count_records('local_ustar_learning_task_events',
+            ['taskid' => $id, 'eventtype' => 'task_started']));
+        $this->assertSame(2, (int)$DB->get_field('local_ustar_learning_tasks', 'version', ['id' => $id]));
+
+        $photo = $this->click($sender, $card, 'Заполнить отчёт', 857);
+        $this->click($sender, $photo, 'Пропустить', 858);
+        $preview = bot_service::update($sender, $this->request(859, 'Задача выполнена'));
+        $this->click($sender, $preview, 'Подтвердить', 860);
+        $this->assertSame('in_review', $DB->get_field('local_ustar_learning_tasks', 'status', ['id' => $id]));
+        $this->assertSame(1, $DB->count_records('local_ustar_task_reports', ['taskid' => $id, 'status' => 'final']));
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 861, 'start'));
+        $this->assertTrue(isguestuser($USER));
+    }
+
+    public function test_task_widget_respects_pilot_scope_assignment_and_revision(): void {
+        global $CFG, $DB, $USER;
+        $sender = $this->linked();
+        $employee = clone $USER;
+        $id = $this->work($sender);
+        $list = bot_service::update($sender, $this->request(870, 'Мои задачи'));
+        $this->assertArrayNotHasKey('widget', $this->click($sender, $list, 'Synthetic', 871));
+        $CFG->ustar_connect_task_widget_userids = [(int)$employee->id];
+        $list = bot_service::update($sender, $this->request(872, 'Мои задачи'));
+        $card = $this->click($sender, $list, 'Synthetic', 873);
+        $action = $card['widget']['action'] ?? '';
+        $this->assertNotEmpty($action);
+        $this->assertSame(['status' => 'bound'], $this->widget_update($sender, $action, 873, 'bind'));
+        $CFG->ustar_connect_task_widget_userids = [];
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 874, 'start'));
+        $CFG->ustar_connect_task_widget_userids = [(int)$employee->id];
+        $other = $this->getDataGenerator()->create_user();
+        $DB->set_field('local_ustar_learning_tasks', 'assigneeid', $other->id, ['id' => $id]);
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 875, 'start'));
+        $DB->set_field('local_ustar_learning_tasks', 'assigneeid', $employee->id, ['id' => $id]);
+        $this->setUser($employee);
+        learning_tasks::transition($id, (int)$employee->id, 'start', 1);
+        $this->setGuestUser();
+        $this->assertSame(['status' => 'stale'], $this->widget_update($sender, $action, 876, 'start'));
+        $list = bot_service::update($sender, $this->request(877, 'Мои задачи'));
+        $fresh = $this->click($sender, $list, 'Synthetic', 878);
+        $this->assertSame('in_progress', $fresh['widget']['status']);
+        $this->assertSame('', $fresh['widget']['action']);
+        $this->assertArrayNotHasKey('widget', $this->click($sender, $fresh, 'Подробности задачи', 879));
     }
     public function test_personal_photo_is_canonical_file_and_report_not_public_upload(): void {
         global $DB;

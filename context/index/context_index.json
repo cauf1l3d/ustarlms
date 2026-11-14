@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 2693,
-      "sha256": "27cd03a29e2b1d7c137f51695f84e0f6529001ee208b4c869c59406a96e2d3cc"
+      "size": 2866,
+      "sha256": "8a975aa8b26c0d96e33a7478e07af029de7082f63a0246c7b54826d7f326ba7d"
     },
     {
       "path": "context/agents/astra.md",
@@ -558,8 +558,8 @@
     {
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
-      "size": 108027,
-      "sha256": "300eae1ae3b06b7a2dca843e8068e3970795dd25b7bc209cb010767054ebd8b7"
+      "size": 108359,
+      "sha256": "96157be9a9637930dcb07ed3583def2e53a17d224eeedeb043c6bcddad60bac1"
     },
     {
       "path": "context/code_map/feed_media_development_source.json",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 12933,
-      "sha256": "031d2964de8e22b20252fc14f26b167ef621315e1e311f1e9100010e11f0111a"
+      "size": 12969,
+      "sha256": "437e878df93abfabc31eb1f8df300fa1b4096e7bb6a7f08da11ff10356aacdae"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -696,8 +696,8 @@
     {
       "path": "context/decisions/0015-ustar-connect.md",
       "domain": "decisions",
-      "size": 3574,
-      "sha256": "4251d4cac936934a925122fcf9f902478e4a849dd33ef2627c91b2f37d59f5ab"
+      "size": 4084,
+      "sha256": "3f7e41fd83717937909206c0d5f674dfb0ce4745d2435134998dbf3b5a49f309"
     },
     {
       "path": "context/decisions/0016-server-console.md",
@@ -894,8 +894,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 3605,
-      "sha256": "2013a2e62db4a235d0ac278e707fed809f45221a6859019a868953740aa5847c"
+      "size": 3582,
+      "sha256": "01e4ccffd526f22e2779fc25be98b5a075ff7be85c6008909f3b3b00ab9bc611"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1614,8 +1614,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 53501,
-      "sha256": "409c27913ff69ea1f7fe6cee083c4550a59f0fac02da32d237b3007b7e2fb1ab"
+      "size": 54233,
+      "sha256": "891dc0c3b896e64e1e51b3c507dff44dfe4c4956bef9894c54d4c9206252d094"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1668,8 +1668,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22271,
-      "sha256": "ed4efb73e2d3006f972ca2920b11fefdfaa6a6bc33eaeb6f75c471de32957fa2"
+      "size": 22222,
+      "sha256": "89cfd1f5e08d79572bb36e7d3a017084a5f39ca39ead68ad0b0ce9ec77f074c9"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1758,14 +1758,14 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 5578,
-      "sha256": "a8643c885de23c26f3bcc142324d44c568e9b01d12b2848748219bca8acc4cb4"
+      "size": 5967,
+      "sha256": "b36ee0731bd54b00978a617dbdc2e01bfe0accfcc69078f664330008d82521d1"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 104971,
-      "sha256": "dc92363d648c4884c2c6f672cf0d6ea8634e607b9c1fee6d315520b172c345c5"
+      "size": 105504,
+      "sha256": "def120d0206c586d8cd5a3060265e8923078076020f347dc9de578f221de4695"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -2270,6 +2270,12 @@
       "domain": "runtime",
       "size": 1468,
       "sha256": "4c12f95e8c5df99dc257654c54d39835bc3a9ce6330d3d984e74c2f08b049fed"
+    },
+    {
+      "path": "context/runtime/connect_task_widget_qualification_20261114.json",
+      "domain": "runtime",
+      "size": 2848,
+      "sha256": "1ff8742d8ebf97699e0d005e4de56b567774470855644ac4b5f6b33ea430a23c"
     },
     {
       "path": "context/runtime/connect_team_owner_deploy_20261112.json",
@@ -4098,8 +4104,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3956,
-      "sha256": "0a6f953c05fc69af93bbdbe5675c58d4c70304fbea59d9b84ad4e3ab53d8534a"
+      "size": 3949,
+      "sha256": "26c3398fa6f9c5d6f31234f72b2c53a332fc07c71787cb4081eb4a782aa5e502"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

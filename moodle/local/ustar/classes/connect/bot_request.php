@@ -25,7 +25,7 @@ final class bot_request {
             if ($value['text']!=='' || $value['media']!=='') { self::deny(); }
         }
         if (isset($value['widget']) && ($value['callback'] === ''
-                || !preg_match('/\A(?:bind|[01]{1,5})\z/', $value['widget']))) {
+                || !preg_match('/\A(?:bind|start|[01]{1,5})\z/', $value['widget']))) {
             self::deny();
         }
         return $value;

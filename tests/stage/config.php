@@ -49,6 +49,7 @@ if ($broadcastfixture) {
     if ($pilot && preg_match('/\A[1-9][0-9]{0,10}\z/', $pilot)) {
         $CFG->ustar_connect_bot_enabled = true;
         $CFG->ustar_connect_checklist_widget_userids = [(int)$pilot];
+        $CFG->ustar_connect_task_widget_userids = [(int)$pilot];
         $CFG->ustar_connect_bridge_keys['tg_widget_fixture'] = [
             'secret' => str_repeat('cd', 32), 'provider' => 'telegram', 'tenant' => '123456',
             'operations' => ['bot.update', 'bot.upload'],

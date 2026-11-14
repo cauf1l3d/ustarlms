@@ -1,0 +1,53 @@
+name: USTAR Connect task widget package
+
+on:
+  pull_request:
+    branches: [feat/connect-checklist-widget-20261113, main]
+    paths:
+      - 'moodle/local/ustar/**'
+      - 'connect-worker/**'
+      - 'scripts/infra/*task_widget_release.py'
+      - 'tests/r16/test_connect_task_widget_release.py'
+      - '.github/workflows/ustar-connect-task-widget-package.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      USTAR_TASK_WIDGET_SOURCE: 04c8eff09bf44bc69c86084b7cb9c94a8beddce1
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Check the exact upgrade and reproduce the package
+        run: |
+          python3 -m unittest tests.r16.test_connect_task_widget_release tests.r16.test_connect_checklist_widget_release tests.r16.test_connect_delivery_repair_release tests.r16.test_connect_broadcast_release tests.r16.test_connect_team_release
+          source=$USTAR_TASK_WIDGET_SOURCE
+          git diff --exit-code "$source" HEAD -- moodle connect-worker scripts/infra/build_connect_task_widget_release.py scripts/infra/connect_task_widget_release.py
+          python3 scripts/infra/build_connect_task_widget_release.py --target "$source" --output artifacts
+          python3 scripts/infra/build_connect_task_widget_release.py --target "$source" --output repeat
+          archive="ustar-connect-task-widget-${source:0:8}.tar.gz"
+          cmp "artifacts/$archive" "repeat/$archive"
+          gzip -t "artifacts/$archive"
+          mkdir verify
+          tar --no-same-owner -xzf "artifacts/$archive" -C verify
+          cd verify
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -B update.py --verify
+          printf '\n' >> payload/classes/connect/bot_task_widget.php
+          if python3 -I -B update.py --verify; then exit 1; fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ustar-connect-task-widget-update
+          path: artifacts/ustar-connect-task-widget-*.tar.gz
+          if-no-files-found: error

@@ -82,6 +82,12 @@ final class notification_action {
             $notice = $DB->get_record('local_ustar_notifications', ['id' => $row->notificationid, 'userid' => $row->userid]);
             $delivery = $DB->get_record('local_ustar_notify_delivery', ['id' => $row->deliveryid,
                 'notificationid' => $row->notificationid, 'channel' => 'telegram', 'connectversion' => 1]);
+            if (bot_actor::invited($link ?: null)
+                    && (!bot_actor::eligible((int)$row->userid, true)
+                        || bot_actor::requires_native_role((int)$row->userid)
+                        || bot_agreement::is_required(bot_agreement::pending((int)$row->userid, true)))) {
+                throw new \InvalidArgumentException('ack_unavailable');
+            }
             if (!$link || (int)$link->revision !== (int)$row->linkrevision || !$notice
                     || !in_array($notice->status, ['unread', 'read', 'acknowledged'], true) || !$delivery
                     || !in_array($delivery->status, ['sending', 'provider_accepted', 'uncertain'], true)

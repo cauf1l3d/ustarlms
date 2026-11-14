@@ -89,42 +89,53 @@ final class identity_service {
                 throw new \InvalidArgumentException('unclaimed_challenge');
             }
             $identity = new identity($challenge->provider, $challenge->tenant, $challenge->subject);
-            $key = $identity->key();
-            $userchannel = hash('sha256', $userid . ':' . $identity->provider);
-            $link = $DB->get_record('local_ustar_conn_links', ['identityhash' => $key]);
-            $slot = $DB->get_record('local_ustar_conn_links', ['userchannelhash' => $userchannel]);
-            if ($link && (int)$link->userid !== $userid) {
-                throw new \InvalidArgumentException('link_conflict');
-            }
-            if ($slot && $slot->identityhash !== $key) {
-                if ($slot->state !== 'revoked') {
-                    throw new \InvalidArgumentException('link_conflict');
-                }
-                // Keep the original identity and link ID for receipts and pending deliveries.
-                // Move the revoked row off the unique channel slot in the same transaction.
-                $DB->set_field('local_ustar_conn_links', 'userchannelhash',
-                    hash('sha256', "ustar-connect-revoked-slot-v1\0" . $slot->identityhash), ['id' => $slot->id]);
-            }
-            if (!$link) {
-                $link = (object)[
-                    'identityhash' => $key, 'userchannelhash' => $userchannel,
-                    'userid' => $userid, 'provider' => $identity->provider,
-                    'tenant' => $identity->tenant, 'subject' => $identity->subject,
-                    'state' => 'linked', 'revision' => 1, 'timecreated' => time(), 'timemodified' => time(),
-                ];
-                $link->id = $DB->insert_record('local_ustar_conn_links', $link);
-            } else if ($link->state !== 'linked') {
-                $link->userchannelhash = $userchannel;
-                $link->state = 'linked';
-                $link->revision = (int)$link->revision + 1;
-                $link->timemodified = time();
-                $DB->update_record('local_ustar_conn_links', $link);
-            }
+            $link = self::bind_in_transaction($userid, $identity);
             $challenge->confirmedlinkid = $link->id;
             $challenge->confirmedrevision = $link->revision;
             $DB->update_record('local_ustar_conn_challenges', $challenge);
             return self::receipt($link);
         });
+    }
+
+    /** Internal canonical writer. Call only after proof and authority checks under the identity lock. */
+    public static function bind_in_transaction(int $userid, identity $identity, bool $invited = false): \stdClass {
+        global $DB;
+        if (!$DB->is_transaction_started()) {
+            throw new \coding_exception('Owned transaction required');
+        }
+        $key = $identity->key();
+        $userchannel = hash('sha256', $userid . ':' . $identity->provider);
+        $link = $DB->get_record('local_ustar_conn_links', ['identityhash' => $key]);
+        $slot = $DB->get_record('local_ustar_conn_links', ['userchannelhash' => $userchannel]);
+        if ($link && (int)$link->userid !== $userid) {
+            throw new \InvalidArgumentException('link_conflict');
+        }
+        if ($slot && $slot->identityhash !== $key) {
+            if ($slot->state !== 'revoked') {
+                throw new \InvalidArgumentException('link_conflict');
+            }
+            // Keep the original identity and link ID for receipts and pending deliveries.
+            // Move the revoked row off the unique channel slot in the same transaction.
+            $DB->set_field('local_ustar_conn_links', 'userchannelhash',
+                hash('sha256', "ustar-connect-revoked-slot-v1\0" . $slot->identityhash), ['id' => $slot->id]);
+        }
+        if (!$link) {
+            $link = (object)[
+                'identityhash' => $key, 'userchannelhash' => $userchannel,
+                'userid' => $userid, 'provider' => $identity->provider,
+                'tenant' => $identity->tenant, 'subject' => $identity->subject,
+                'state' => 'linked', 'botinvited' => (int)$invited, 'revision' => 1, 'timecreated' => time(), 'timemodified' => time(),
+            ];
+            $link->id = $DB->insert_record('local_ustar_conn_links', $link);
+        } else if ($link->state !== 'linked') {
+            $link->userchannelhash = $userchannel;
+            $link->state = 'linked';
+            $link->botinvited = (int)$invited;
+            $link->revision = (int)$link->revision + 1;
+            $link->timemodified = time();
+            $DB->update_record('local_ustar_conn_links', $link);
+        }
+        return $link;
     }
 
     /** Owner-only preview for the explicit second confirmation; grants no access. */
@@ -153,6 +164,15 @@ final class identity_service {
         if (!$link) {
             throw new \InvalidArgumentException('unknown_link');
         }
+        self::revoke_link_in_transaction($link);
+    }
+
+    /** Shared revocation after the owner or administrator has authorized it. */
+    public static function revoke_link_in_transaction(\stdClass $link): void {
+        global $DB;
+        if (!$DB->is_transaction_started()) {
+            throw new \coding_exception('Owned transaction required');
+        }
         if ($link->state === 'revoked') {
             return;
         }
@@ -163,7 +183,7 @@ final class identity_service {
         // Invalidate all still-open codes for this channel. A new issue+claim
         // is needed: a pre-revocation code cannot resurrect the link.
         $DB->set_field('local_ustar_conn_challenges', 'expiresat', 0,
-            ['userid' => $userid, 'provider' => $link->provider, 'confirmedlinkid' => 0]);
+            ['userid' => $link->userid, 'provider' => $link->provider, 'confirmedlinkid' => 0]);
     }
 
     /** Resolution is read-only, not a replacement for per-command capability/scope checks. */

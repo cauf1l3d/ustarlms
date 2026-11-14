@@ -25,7 +25,7 @@ final class bot_confirmation {
                 || !str_starts_with($a->intent,'execute.')) { throw new \InvalidArgumentException('expired_bot_action'); }
         $d=$DB->get_record('local_ustar_conn_dialogs',['id'=>$a->dialogid], '*', MUST_EXIST);
         $link=$DB->get_record('local_ustar_conn_links',['id'=>$d->linkid,'userid'=>$userid,'state'=>'linked']);
-        if (!$link) { throw new \InvalidArgumentException('actor_unavailable'); }
+        if (!$link || bot_actor::invited($link)) { throw new \InvalidArgumentException('actor_unavailable'); }
         $sender=new identity($link->provider,$link->tenant,$link->subject);
         if (bot_actor::active($sender)!==$userid
                 || !hash_equals($a->authority,bot_actor::authority($sender,$userid,$link))) {

@@ -122,7 +122,11 @@ final class entry_service {
 
     private static function link(identity $sender) {
         global $DB;
-        return $DB->get_record('local_ustar_conn_links', ['identityhash' => $sender->key()]);
+        $link = $DB->get_record('local_ustar_conn_links', ['identityhash' => $sender->key()]);
+        if (!empty($link->botinvited) && $link->state === 'linked') {
+            throw new \InvalidArgumentException('native_auth_required');
+        }
+        return $link;
     }
     private static function keyid(string $keyid): void {
         if (!preg_match('/\A[A-Za-z0-9_-]{1,32}\z/', $keyid)) {

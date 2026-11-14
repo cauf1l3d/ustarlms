@@ -1,0 +1,87 @@
+name: USTAR Connect invitations
+
+on:
+  push:
+    branches: [feat/connect-telegram-invitations-20261114]
+  pull_request:
+    branches: [feat/connect-checklist-widget-20261113, main]
+    paths:
+      - '**/*invitation*'
+      - 'moodle/local/ustar/classes/connect/bot_agreement.php'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: connect-invitations-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Verify reproducibility and checksums
+        run: |
+          source=$(git rev-parse HEAD)
+          python3 scripts/infra/build_connect_invitation_release.py --target "$source" --output artifacts
+          python3 scripts/infra/build_connect_invitation_release.py --target "$source" --output repeat
+          archive="ustar-connect-invitations-${source:0:8}.tar.gz"
+          cmp "artifacts/$archive" "repeat/$archive"
+          mkdir verify
+          tar --no-same-owner -xzf "artifacts/$archive" -C verify
+          cd verify
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -B update.py --verify
+          printf '\n' >> payload/classes/connect/bot_invitation.php
+          if python3 -I -B update.py --verify; then exit 1; fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ustar-connect-invitations-candidate
+          path: artifacts/ustar-connect-invitations-*.tar.gz
+          if-no-files-found: error
+
+  native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - moodle: 5.1.1
+            compose: compose.yaml
+          - moodle: 5.1.8
+            compose: patch-compose.yaml
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify Telegram transport
+        env:
+          PYTHONPATH: tests/r16
+        run: python3 -m unittest tests.r16.test_connect_invitation tests.r16.test_connect_checklist_widget tests.r16.test_connect_receiver
+      - name: Compare migrated and fresh schemas and exercise the Moodle consent API
+        env:
+          USTAR_STAGE_COMPOSE: tests/stage/${{ matrix.compose }}
+        run: |
+          mkdir -p artifacts .stage-input/connect-invitation-baseline
+          git archive 5607ab6fca13f744b1157db0c03b0adc27f30c7f moodle | tar -x -C .stage-input/connect-invitation-baseline
+          trap 'docker compose -f "$USTAR_STAGE_COMPOSE" down --volumes --remove-orphans' EXIT
+          docker compose -f "$USTAR_STAGE_COMPOSE" build runner
+          docker compose -f "$USTAR_STAGE_COMPOSE" run --rm runner bash /source/tests/stage/connect_invitation_native.sh
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: connect-invitations-moodle-${{ matrix.moodle }}
+          path: artifacts/connect-invitation-*
+          if-no-files-found: warn

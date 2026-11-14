@@ -17,6 +17,8 @@ $PAGE->requires->css(new moodle_url('/local/ustar/styles/ux_tools.css'));
 
 $data = ['enabled' => false, 'links' => [], 'challenge' => null, 'confirmed' => false];
 $error = '';
+$administrativeaccount = is_siteadmin()
+    || \local_ustar\accounts::type_of((int)$USER->id) === \local_ustar\accounts::TYPE_SERVICE;
 try {
     if (($_SERVER['QUERY_STRING'] ?? '') !== '') { throw new InvalidArgumentException('invalid_request'); }
     $method = $_SERVER['REQUEST_METHOD'] ?? '';
@@ -53,6 +55,8 @@ try {
         'revoked_link' => 'Связь отозвана. Старое подтверждение больше не действует; создайте новую ссылку.',
         'rate_limited' => 'Создано слишком много ссылок. Дождитесь истечения предыдущих: срок каждой — 10 минут.',
         'invalid_challenge', 'invalid_sesskey' => 'Подтверждение недоступно в этой сессии. Вернитесь в тот браузер Академии, где создавали ссылку.',
+        'inactive_actor' => $administrativeaccount ? '' :
+            'Операция недоступна. Используйте свою действующую учётную запись сотрудника и текущую сессию Академии.',
         default => 'Операция недоступна. Используйте свою действующую учётную запись сотрудника и текущую сессию Академии.',
     };
 } catch (Throwable $failure) {
@@ -91,7 +95,8 @@ foreach ($data['deliveries'] ?? [] as $i => $delivery) {
     $data['deliveries'][$i]['time_label'] = userdate($delivery['timemodified']);
     $data['deliveries'][$i]['next_label'] = $delivery['nextattempt'] ? userdate($delivery['nextattempt']) : '';
 }
-$data += ['url' => $url->out(false), 'profileurl' => (new moodle_url('/local/ustar/profile.php'))->out(false),
+$data += ['url' => $url->out(false), 'administrativeaccount' => $administrativeaccount,
+    'profileurl' => (new moodle_url('/local/ustar/profile.php'))->out(false),
     'sesskey' => sesskey(), 'fullname' => fullname($USER), 'error' => $error, 'haslinks' => (bool)$data['links']];
 if (\local_ustar\connect\announcements::can_manage((int)$USER->id)) {
     $data['announcementsurl'] = (new moodle_url('/local/ustar/connect_announcements.php'))->out(false);

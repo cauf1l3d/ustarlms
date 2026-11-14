@@ -26,10 +26,20 @@ $CFG->noemailever = true;
 $CFG->disableupdatenotifications = true;
 $CFG->upgradekey = 'fixture-only';
 $broadcastfixture = getenv('USTAR_STAGE_BROADCAST_FIXTURE') === '1' && $prefix === 'stage_';
+$operatorfixture = getenv('USTAR_STAGE_OPERATOR_HTTP') === '1' && $prefix === 'stage_';
+if ($operatorfixture && PHP_SAPI === 'cli-server') {
+    $CFG->wwwroot = 'https://127.0.0.1:18088';
+    $CFG->sslproxy = true;
+}
 if ($broadcastfixture) {
     $CFG->wwwroot = 'https://127.0.0.1:18087';
 }
 require_once(__DIR__ . '/lib/setup.php');
+if ($operatorfixture) {
+    $CFG->ustar_connect_bot_enabled = true;
+    $CFG->ustar_connect_bot_invitations_enabled = true;
+    $CFG->ustar_connect_channels = ['telegram' => ['tenant' => '123456', 'username' => 'ustarcorp_bot']];
+}
 if ($broadcastfixture) {
     // Core setup normalizes scalar config values to strings. The test uses typed Connect flags.
     $CFG->ustar_connect_channels = ['telegram' => ['tenant' => '123456', 'username' => 'ustarcorp_bot']];

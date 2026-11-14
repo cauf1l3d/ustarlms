@@ -9,13 +9,14 @@ $PAGE->set_title('Подтверждение действия USTAR Connect');
 $PAGE->set_heading('USTAR Connect');
 header('Cache-Control: no-store');
 header('Referrer-Policy: no-referrer');
-$error='';$done=false;$summary='';
+$error='';$done=false;$summary='';$issued=null;
 try {
     [$action]=\local_ustar\connect\bot_confirmation::lookup($token,(int)$USER->id);
     $summary=(string)$action->summary;
     if (data_submitted()) {
         require_sesskey();
-        \local_ustar\connect\bot_confirmation::confirm($token,(int)$USER->id);
+        $result = \local_ustar\connect\bot_confirmation::confirm($token,(int)$USER->id);
+        $issued = $result['issued'] ?? null;
         $done=true;
     } else { $done=$action->status==='done'; }
 } catch(Throwable $e) {
@@ -27,7 +28,11 @@ if ($error) { echo $OUTPUT->notification($error,'notifyproblem'); }
 else {
     echo html_writer::tag('p','Вы подтверждаете действие своей текущей учётной записью: '.fullname($USER));
     echo html_writer::tag('pre',s($summary),['style'=>'white-space:pre-wrap']);
-    if ($done) { echo $OUTPUT->notification('Действие сохранено. Вернитесь в бот и нажмите «Проверить результат».','notifysuccess'); }
+    if ($issued !== null) {
+        echo $OUTPUT->notification('Приглашение создано. Передайте ссылку сотруднику через рабочий контакт. Она действует 10 минут.', 'notifysuccess');
+        echo html_writer::tag('p', 'Ссылка ' . html_writer::tag('code', s($issued['url'])));
+        echo html_writer::tag('p', 'Код для ручного ввода ' . html_writer::tag('code', s($issued['token'])));
+    } else if ($done) { echo $OUTPUT->notification('Действие сохранено. Вернитесь в бот и нажмите «Проверить результат».','notifysuccess'); }
     else {
         echo html_writer::start_tag('form',['method'=>'post','action'=>$PAGE->url->out(false)]);
         echo html_writer::empty_tag('input',['type'=>'hidden','name'=>'sesskey','value'=>sesskey()]);

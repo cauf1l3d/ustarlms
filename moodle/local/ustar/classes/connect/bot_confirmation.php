@@ -5,13 +5,22 @@ defined('MOODLE_INTERNAL') || die();
 /** Independent native-session confirmation for sensitive bot-prepared commands. */
 final class bot_confirmation {
     public static function prepare(\stdClass $d,string $intent,array $payload,string $summary): array {
-        bot_people::guard_command($intent,$payload,(int)$d->userid);
+        self::guard_command($intent, $payload, (int)$d->userid);
         $token=bot_store::action($d,$intent,$payload,$summary,true);
         $context=$payload['context']??[];$guard=[];
         if(in_array($intent,['execute.staffing','execute.adaptation.assign'],true)){$guard=['staffing'=>(int)$context['id']];}
         else if($intent==='execute.grade'){$guard=['attempt'=>(int)$context['attempt']];}
         else if(str_starts_with($intent,'execute.adaptation.')){$guard=['adaptation'=>(int)$context['id']];}
         return bot_store::guarded(self::pending($d,$token,$summary),$guard);
+    }
+    private static function guard_command(string $intent, array $data, int $userid): void {
+        if ($intent === 'execute.invitation.issue') {
+            if (!bot_invitation::enabled() || !bot_invitation::operator_allowed($userid)) {
+                throw new \InvalidArgumentException('forbidden_scope');
+            }
+            return;
+        }
+        bot_people::guard_command($intent, $data, $userid);
     }
     private static function pending(\stdClass $d,string $token,string $summary): array {
         return bot_store::card('🔐 Подтвердите решение',$summary."\n\nОткройте защищённую Академию из офисной сети. Проверьте карточку и подтвердите действие своей учёткой. Срок — 15 минут.",[
@@ -31,7 +40,7 @@ final class bot_confirmation {
                 || !hash_equals($a->authority,bot_actor::authority($sender,$userid,$link))) {
             throw new \InvalidArgumentException('actor_unavailable');
         }
-        bot_people::guard_command($a->intent,json_decode($a->payload,true,32,JSON_THROW_ON_ERROR),$userid);
+        self::guard_command($a->intent, json_decode($a->payload, true, 32, JSON_THROW_ON_ERROR), $userid);
         return [$a,$d];
     }
     public static function status(\stdClass $d,string $token): array {
@@ -51,11 +60,19 @@ final class bot_confirmation {
             if ($a->status==='done') { return json_decode($a->resultjson,true,32,JSON_THROW_ON_ERROR); }
             $tx=$DB->start_delegated_transaction();
             try {
-                bot_people::execute($a->intent,json_decode($a->payload,true,32,JSON_THROW_ON_ERROR),$userid);
+                $data = json_decode($a->payload, true, 32, JSON_THROW_ON_ERROR);
+                $issued = null;
+                if ($a->intent === 'execute.invitation.issue') {
+                    $issued = bot_invitation::issue_in_transaction($data['userid'], $data['subject']);
+                } else {
+                    bot_people::execute($a->intent, $data, $userid);
+                }
                 // A separately confirmed command must not discard a newer bot form.
                 if((int)$d->revision===(int)$a->revision){bot_store::state($d,'menu');}
                 $view=bot_store::card('✓ Решение сохранено','Действие выполнено в Академии. История и автор сохранены.',[bot_service::home($d)]);
-                bot_store::done($a,$view);$tx->allow_commit();return $view;
+                bot_store::done($a, $view);
+                $tx->allow_commit();
+                return $issued === null ? $view : $view + ['issued' => $issued];
             } catch(\Throwable $e) { $tx->rollback($e); }
         });
     }

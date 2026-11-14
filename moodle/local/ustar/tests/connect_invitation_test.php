@@ -7,6 +7,8 @@ use local_ustar\connect\bot_invitation;
 use local_ustar\connect\bot_service;
 use local_ustar\connect\entry_service;
 use local_ustar\connect\identity;
+use local_ustar\connect\identity_service;
+use local_ustar\connect\bot_confirmation;
 use local_ustar\connect\opaque_token;
 use tool_policy\api;
 use tool_policy\policy_version;
@@ -163,5 +165,42 @@ final class connect_invitation_test extends \advanced_testcase {
         $this->assertNull(api::is_user_version_accepted($this->person->id, $new));
         $this->assertSame('USTAR · Главное меню', $this->click($replacement, 'Принять соглашение')['title']);
         $this->assertTrue(api::is_user_version_accepted($this->person->id, $new));
+    }
+
+    public function test_operator_prepares_invitation_and_receives_secret_only_in_native_confirmation(): void {
+        global $DB;
+        $version = $this->publish('Соглашение Академии', '<p>Текст для сотрудника.</p>');
+        $operator = $this->getDataGenerator()->create_user(['auth' => 'manual']);
+        $role = $DB->get_field('role', 'id', ['shortname' => 'ustar_superadmin'], MUST_EXIST);
+        role_assign($role, $operator->id, \context_system::instance()->id);
+        $this->setUser($operator);
+        api::accept_policies($version);
+        $sender = new identity('telegram', '123456', '555');
+        $native = identity_service::issue('telegram', '123456');
+        identity_service::claim_verified($native['code'], $sender, hash('sha256', 'operator-proof'));
+        identity_service::confirm($native['code']);
+
+        $form = $this->click($this->send('555', '/start'), '🎟 Приглашения Telegram');
+        $this->assertStringContainsString('Логин', $form['text']);
+        $this->send('555', $this->person->username);
+        $preview = $this->send('555', '556');
+        $prepared = $this->click($preview, '✓ Подтвердить');
+        $this->assertStringNotContainsString('ui1_', json_encode($prepared, JSON_THROW_ON_ERROR));
+        $filter = ['userid' => $this->person->id, 'issuedby' => $operator->id];
+        $this->assertFalse($DB->record_exists('local_ustar_conn_challenges', $filter));
+        $url = array_values(array_filter($prepared['buttons'], static fn(array $b): bool => isset($b['url'])))[0]['url'];
+        parse_str(parse_url($url, PHP_URL_QUERY), $params);
+        $this->setUser($operator);
+        $result = bot_confirmation::confirm($params['action'], (int)$operator->id);
+        $this->assertStringStartsWith('ui1_', $result['issued']['token']);
+        $this->assertTrue($DB->record_exists('local_ustar_conn_challenges', $filter));
+        $again = bot_confirmation::confirm($params['action'], (int)$operator->id);
+        $this->assertArrayNotHasKey('issued', $again);
+        $this->assertSame(1, $DB->count_records('local_ustar_conn_challenges', $filter));
+        role_unassign($role, $operator->id, \context_system::instance()->id);
+        $this->assertNotContains('🎟 Приглашения Telegram', array_column($this->send('555', '/start')['buttons'], 'label'));
+        $this->setUser($operator);
+        $this->expectException(\InvalidArgumentException::class);
+        bot_confirmation::confirm($params['action'], (int)$operator->id);
     }
 }

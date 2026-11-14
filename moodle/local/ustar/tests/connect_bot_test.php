@@ -40,6 +40,40 @@ final class connect_bot_test extends \advanced_testcase {
         $this->assertSame($before,(int)$USER->id);
         $this->assertNotEmpty($a['buttons']);
     }
+
+    public function test_operator_publishes_one_text_announcement_and_can_select_recipients(): void {
+        global $CFG, $DB, $USER;
+        $sender = $this->linked();
+        $operator = (int)$USER->id;
+        $role = $DB->get_field('role', 'id', ['shortname' => 'ustar_superadmin'], MUST_EXIST);
+        role_assign($role, $operator, \context_system::instance()->id);
+        $CFG->ustar_connect_announcements_enabled = true;
+        $CFG->ustar_connect_notification_presentation_enabled = true;
+        $CFG->ustar_connect_ack_enabled = true;
+        $this->setGuestUser();
+        $menu = bot_service::update($sender, $this->request(160));
+        $posts = $this->click($sender, $menu, 'Рассылки Telegram', 161);
+        $form = $this->click($sender, $posts, 'Новое текстовое объявление', 162);
+        $department = competition::department_options()[0];
+        $this->click($sender, $form, $department['name'], 163);
+        $text = 'Проверка текста объявления перед публикацией.';
+        $preview = bot_service::update($sender, $this->request(164, $text));
+        $this->assertStringContainsString($text, $preview['text']);
+        $filter = ['actoruserid' => $operator, 'body' => $text];
+        $this->assertFalse($DB->record_exists('local_ustar_feed_posts', $filter));
+        $view = $this->click($sender, $preview, 'Опубликовать в Ленте', 165);
+        $this->assertSame('Получатели рассылки', $view['title']);
+        $post = $DB->get_record('local_ustar_feed_posts', $filter, '*', MUST_EXIST);
+        $this->assertSame('published', $post->status);
+        $this->assertTrue($DB->record_exists('local_ustar_feed_audience', [
+            'postid' => $post->id, 'scopekind' => 'department', 'scopeid' => $department['id'],
+        ]));
+        $this->assertSame($view, $this->click($sender, $preview, 'Опубликовать в Ленте', 165));
+        $this->assertSame(1, $DB->count_records('local_ustar_feed_posts', $filter));
+        role_unassign($role, $operator, \context_system::instance()->id);
+        $this->assertNotContains('📣 Рассылки Telegram', array_column(
+            bot_service::update($sender, $this->request(166))['buttons'], 'label'));
+    }
     public function test_changed_same_event_is_not_reinterpreted(): void {
         $sender=$this->linked(); bot_service::update($sender,$this->request(2));
         $this->expectException(\InvalidArgumentException::class);

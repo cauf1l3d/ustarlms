@@ -5062,5 +5062,8 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         }
         upgrade_plugin_savepoint(true, 2026111401, 'local', 'ustar');
     }
+    if ($oldversion < 2026111402) {
+        upgrade_plugin_savepoint(true, 2026111402, 'local', 'ustar');
+    }
 return true;
 }

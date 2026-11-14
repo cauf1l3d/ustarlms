@@ -17,16 +17,28 @@ final class bot_broadcast {
             bot_store::state($dialog, 'broadcast.posts');
             return self::posts($dialog, max(0, (int)($input['offset'] ?? 0)));
         }
-        if ($intent === 'broadcast.open') {
-            $preview = announcements::preview($actor, (int)$input['post']);
-            if (!$preview['sendable']) {
-                return bot_store::card('Проверьте объявление', $preview['broadcast_error'], [
-                    bot_store::button($dialog, 'К публикациям', 'broadcast.posts'), bot_service::home($dialog),
-                ]);
+        if ($intent === 'broadcast.compose') {
+            return bot_forms::start($dialog, 'Новое объявление', [
+                ['key' => 'department', 'label' => 'Подразделение для публикации', 'required' => true,
+                    'choices' => array_column(\local_ustar\competition::department_options(), 'name', 'id')],
+                ['key' => 'body', 'label' => 'Текст объявления', 'required' => true, 'maxlen' => 1000],
+            ], 'broadcast.publish', ['requestkey' => bin2hex(random_bytes(16))]);
+        }
+        if ($intent === 'broadcast.publish') {
+            if ($dialog->phase !== 'form.confirm') {
+                throw new \InvalidArgumentException('expired_bot_action');
             }
-            $draft = ['post' => $preview['id'], 'fingerprint' => $preview['fingerprint'], 'selected' => []];
-            bot_store::state($dialog, 'broadcast.select', $draft);
-            return self::select($dialog, $preview, [], 0);
+            $values = $input['values'];
+            if (!in_array($values['department'], array_column(\local_ustar\competition::department_options(), 'id'), true)) {
+                throw new \invalid_parameter_exception('Подразделение изменилось. Выберите его заново.');
+            }
+            broadcast_content::require_fit($values['body'], []);
+            $id = \local_ustar\feed_service::create($actor, 'academy', 'academy',
+                ['department:' . $values['department']], $values['body'], true, 0, [], $input['context']['requestkey']);
+            return self::open($dialog, $actor, $id);
+        }
+        if ($intent === 'broadcast.open') {
+            return self::open($dialog, $actor, (int)$input['post']);
         }
         if (!in_array($dialog->phase, ['broadcast.select', 'broadcast.review'], true)) {
             throw new \InvalidArgumentException('expired_bot_action');
@@ -73,6 +85,18 @@ final class bot_broadcast {
         return self::select($dialog, $preview, $draft['selected'], $offset);
     }
 
+    private static function open(\stdClass $dialog, int $actor, int $postid): array {
+        $preview = announcements::preview($actor, $postid);
+        if (!$preview['sendable']) {
+            return bot_store::card('Проверьте объявление', $preview['broadcast_error'], [
+                bot_store::button($dialog, 'К публикациям', 'broadcast.posts'), bot_service::home($dialog),
+            ]);
+        }
+        bot_store::state($dialog, 'broadcast.select',
+            ['post' => $preview['id'], 'fingerprint' => $preview['fingerprint'], 'selected' => []]);
+        return self::select($dialog, $preview, [], 0);
+    }
+
     private static function posts(\stdClass $dialog, int $offset): array {
         $posts = announcements::recent((int)$dialog->userid, $offset, self::PAGE + 1);
         $buttons = [];
@@ -81,9 +105,12 @@ final class bot_broadcast {
             $buttons[] = bot_store::button($dialog, $label, 'broadcast.open', ['post' => (int)$post->id]);
         }
         $buttons = array_merge($buttons, self::pages($dialog, 'broadcast.posts', $offset, count($posts) > self::PAGE));
+        if (\local_ustar\competition::department_options()) {
+            $buttons[] = bot_store::button($dialog, 'Новое текстовое объявление', 'broadcast.compose');
+        }
         $buttons[] = bot_service::home($dialog);
-        return bot_store::card('Рассылки Telegram', $posts ? 'Выберите опубликованное объявление.' :
-            'Опубликуйте объявление с файлами в Академии.', $buttons);
+        return bot_store::card('Рассылки Telegram', 'Выберите публикацию или создайте текстовое объявление. '
+            . 'Объявление с файлами создайте в Академии.', $buttons);
     }
 
     private static function pages(\stdClass $dialog, string $intent, int $offset, bool $more): array {

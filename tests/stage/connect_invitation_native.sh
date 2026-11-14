@@ -29,7 +29,9 @@ snapshot before
 install_sources /source/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/connect-invitation-upgrade.log 2>&1
 snapshot after
-if cmp -s /artifacts/connect-invitation-before.json /artifacts/connect-invitation-after.json; then
+if [[ ${USTAR_STAGE_OPERATOR_UPDATE:-} == 1 ]]; then
+    cmp /artifacts/connect-invitation-before.json /artifacts/connect-invitation-after.json
+elif cmp -s /artifacts/connect-invitation-before.json /artifacts/connect-invitation-after.json; then
     echo 'Expected invitation columns to be added'
     exit 1
 fi
@@ -39,6 +41,9 @@ cmp /artifacts/connect-invitation-after.json /artifacts/connect-invitation-repea
 USTAR_STAGE_PREFIX=fresh_ install_site > /artifacts/connect-invitation-fresh.log 2>&1
 USTAR_STAGE_PREFIX=fresh_ snapshot fresh
 cmp /artifacts/connect-invitation-after.json /artifacts/connect-invitation-fresh.json
+if [[ ${USTAR_STAGE_OPERATOR_UPDATE:-} == 1 ]]; then
+    bash /source/tests/stage/authenticated_shell_smoke.sh operator
+fi
 php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/connect-invitation-phpunit-init.log 2>&1
 for suite in connect_invitation connect_bot connect_identity connect_notification; do
     php vendor/bin/phpunit --display-notices --fail-on-notice --fail-on-empty-test-suite \

@@ -4,15 +4,15 @@
   "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "95cc3d3b25dda424e34eecac5528a712155831d4",
+    "moodle/local/ustar": "7978cbeadbbd0114138f3e5934a47d19be58de1f",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
-    "local_ustar": 2026111401,
+    "local_ustar": 2026111402,
     "theme_ustar": 2026110200
   },
   "counts": {
-    "files": 679,
+    "files": 680,
     "tables": 110
   },
   "files": [
@@ -274,7 +274,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/actor_service.php",
-      "sha256": "cfcfb80e12520c3ba5756fa63aef5ca3324be0c06b809bcd48139d27751fab10"
+      "sha256": "98a77811dc51bbe42953bf65a063ef41e60db15f813953890dcf568fa7d9821f"
     },
     {
       "path": "moodle/local/ustar/classes/connect/announcements.php",
@@ -294,7 +294,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_broadcast.php",
-      "sha256": "4b8e4af127d7477dcfbdabd31bc00f2cbcebb1675cc296133f7b90b08b9cf89b"
+      "sha256": "6dce0907c40b8b6566bb0473f6168ae7f7ec2c9cbaa6fb995639df11553eaa0f"
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_checklist_widget.php",
@@ -302,11 +302,11 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_confirmation.php",
-      "sha256": "3479054ba14e3626dfdeb2a7dd4f2cb76589dbcdf5b3b8378f2821854f75808e"
+      "sha256": "5261c7d69bb3f466bd5146aefa6cbf78fea439de9fde81461e3ce2962de141f5"
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_forms.php",
-      "sha256": "f81da9cdbcc804320d94b3982062b0ac032fa55f73cefc27e4d61878393d7acb"
+      "sha256": "292d3aa48498f635df4dcd698bd12889cddde18308ae455afbdd9e6d9980bc94"
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_guards.php",
@@ -314,7 +314,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_invitation.php",
-      "sha256": "7aa046ba0f0b065c21a56c90fe7760dfaa5d374db057d3e3adfd235581ac3408"
+      "sha256": "c25acc1e8cdacacd08b8d9d445cd9fc04f3a6453c479482e29800eb48a6c5b64"
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_learning.php",
@@ -334,7 +334,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_service.php",
-      "sha256": "eae31b2f4729641d19694a1b5a43ed45f0a9d013e80fb1116e93a80d94d685d5"
+      "sha256": "3aed96f261d4533121052104fbb4430c4712f530f2821338cc71e4fb35d60353"
     },
     {
       "path": "moodle/local/ustar/classes/connect/bot_store.php",
@@ -1266,7 +1266,7 @@
     },
     {
       "path": "moodle/local/ustar/connect.php",
-      "sha256": "b169310590375a20b6ac48db53ca5fca7ff5dc0114ad6be77bff41f0cbd11df7"
+      "sha256": "d762c6712a9b95f27fcad489c2309659bd65e808f012147929c875c03238baa6"
     },
     {
       "path": "moodle/local/ustar/connect_announcements.php",
@@ -1274,7 +1274,7 @@
     },
     {
       "path": "moodle/local/ustar/connect_bot_confirm.php",
-      "sha256": "e47eea4ff266a359d522126c354777bacb55c32c1b591a9036c5a2b2656db5f0"
+      "sha256": "d3d3518ffd49def472860671d795c22f8a33d48214f4154931b60dd67c85efca"
     },
     {
       "path": "moodle/local/ustar/connect_bridge.php",
@@ -1282,7 +1282,7 @@
     },
     {
       "path": "moodle/local/ustar/connect_invitations.php",
-      "sha256": "3ce8b9768ec8723cce1a2f4d1935b911628740a7d2b176c61d878a0cf422bd81"
+      "sha256": "c03f9b600405ed3a99a90c8e3721114444ec9eacbdea3b9e3ac6d7e4cd4f0316"
     },
     {
       "path": "moodle/local/ustar/content_view_2706.css",
@@ -1426,7 +1426,7 @@
     },
     {
       "path": "moodle/local/ustar/db/upgrade.php",
-      "sha256": "71b492144d35e4ff6b0747a25ce8688bbb6ed2ecd6dc585a89ec04a51e966dd2"
+      "sha256": "14417625872295e75609da8ec845eaa829543fde7c26f2b55e3ba1da03ece83d"
     },
     {
       "path": "moodle/local/ustar/development_assessment.php",
@@ -1710,7 +1710,7 @@
     },
     {
       "path": "moodle/local/ustar/profile.php",
-      "sha256": "0b378cb86a2aa955fb20a1e41adb16587df03bb5bacece0c633941df3496c27e"
+      "sha256": "d17da31e196e3687cba197fa1225556188d40fdca3ca863325d769dcf3535f98"
     },
     {
       "path": "moodle/local/ustar/profile_settings.php",
@@ -2006,7 +2006,7 @@
     },
     {
       "path": "moodle/local/ustar/templates/connect.mustache",
-      "sha256": "94a32dd6e65f606a913fe984380c1ea6c008c125b2ee39172c84f5a4b4acdae5"
+      "sha256": "023ed54a7bbfae5a99664def5ddfc5f4a7ccb5863571cf3fb5b11860a15088f3"
     },
     {
       "path": "moodle/local/ustar/templates/connect_announcements.mustache",
@@ -2165,6 +2165,10 @@
       "sha256": "f9cc9dd8a54f049bf8a4dbad2f72e9db2211988458158cf5ced0c7df9c70c504"
     },
     {
+      "path": "moodle/local/ustar/templates/profile_operator.mustache",
+      "sha256": "ad70bc35c1c7378b29348ff7aa52d8824f6b0ab662a0bf6410d56d338a70eeb1"
+    },
+    {
       "path": "moodle/local/ustar/templates/profile_reveal.mustache",
       "sha256": "1abdc8794384831899b0b14d04a0fc70194a36eee9a673c1d0624a1dcbe5c0a6"
     },
@@ -2274,7 +2278,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/connect_bot_test.php",
-      "sha256": "ad5089297067bd2fdaab179a4fa1ba9cd2eb866a95a19d872be6a79a80d458db"
+      "sha256": "b94167e1b3324ba8965416b613004628ac28c7a76836d3ee79a6502b46a2c53a"
     },
     {
       "path": "moodle/local/ustar/tests/connect_bridge_test.php",
@@ -2290,7 +2294,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/connect_invitation_test.php",
-      "sha256": "dfc56eac0399aa1f72735fd73d40a91d7023bb46eede44f84be368430a608e5f"
+      "sha256": "063082abd840a0d9102b60067f1eca9f9872ae84f358bdbd01cbbf4dda752dcf"
     },
     {
       "path": "moodle/local/ustar/tests/connect_link_management_test.php",
@@ -2486,7 +2490,7 @@
     },
     {
       "path": "moodle/local/ustar/version.php",
-      "sha256": "c66e125bc2c3625049b3fbfb2800232190ffad4a629b85d3e8a0d15b1dac6b0e"
+      "sha256": "20a8f27e6e91070ab78b87e22f4d32d4d646e9b6b1aba1f086a0702af9286338"
     },
     {
       "path": "moodle/local/ustar/view.php",

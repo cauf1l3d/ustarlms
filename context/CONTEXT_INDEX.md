@@ -1,5 +1,7 @@
 # Навигация по контексту
 
+- [Подключение к боту по приглашению](../docs/CONNECT_INVITATIONS_RU.md), [установка владельцем](runtime/connect_invitations_owner_install_20261114.json), [квалификация](runtime/connect_invitations_qualification_20261114.json).
+
 - [Результат пилота чек-листа и ограничение Telegram от 14.11](runtime/connect_checklist_widget_owner_pilot_20261114.json).
 
 - [Пилот личного чек-листа в Telegram](../docs/CONNECT_CHECKLIST_WIDGET_RU.md), [проверки поставки](runtime/connect_checklist_widget_qualification_20261113.json), [приёмка рассылок владельцем](runtime/connect_delivery_repair_owner_acceptance_20261113.json).

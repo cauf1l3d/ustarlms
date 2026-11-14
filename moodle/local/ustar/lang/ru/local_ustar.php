@@ -66,3 +66,5 @@ $string['rewardshop_order_pending'] = 'Ожидает выдачи';
 $string['rewardshop_order_issued'] = 'Выдана';
 $string['rewardshop_order_rejected'] = 'Отклонена';
 $string['privacy:metadata:rewardshop'] = 'Reward catalogue changes and employee reward orders paid with USCOIN.';
+
+$string['eventconnectinvitationchanged'] = 'Изменение приглашения Telegram';

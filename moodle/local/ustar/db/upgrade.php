@@ -5045,5 +5045,22 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
     if ($oldversion < 2026111301) {
         upgrade_plugin_savepoint(true, 2026111301, 'local', 'ustar');
     }
+    if ($oldversion < 2026111401) {
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) {
+            throw new coding_exception('Cannot load Connect invitation schema');
+        }
+        foreach (['local_ustar_conn_links' => ['botinvited'],
+                'local_ustar_conn_challenges' => ['issuedby', 'expectedsubject']] as $name => $fields) {
+            $table = new xmldb_table($name);
+            foreach ($fields as $fieldname) {
+                $field = $schema->getStructure()->getTable($name)->getField($fieldname);
+                if (!$dbman->field_exists($table, $field)) {
+                    $dbman->add_field($table, $field);
+                }
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026111401, 'local', 'ustar');
+    }
 return true;
 }

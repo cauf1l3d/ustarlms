@@ -79,6 +79,9 @@ final class bot_store {
     public static function guarded(array $view,array $guard): array { return $view+['_guard'=>$guard]; }
     public static function done(\stdClass $action, array $view): void {
         global $DB;
+        if (isset($view['_invitation_pending'])) {
+            $view = ['_invitation_pending' => true];
+        }
         $action->status='done'; $action->resultjson=self::json($view);
         $DB->update_record('local_ustar_conn_actions',$action);
     }

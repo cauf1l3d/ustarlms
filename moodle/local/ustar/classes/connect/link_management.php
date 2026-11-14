@@ -5,7 +5,7 @@ defined('MOODLE_INTERNAL') || die();
 /** Native owner-session adapter. Does not authenticate passwords or create a Moodle session. */
 final class link_management {
     /** Public metadata only. The bot ID must match the provider verifier's configured tenant. */
-    private static function channel(): ?array {
+    public static function channel(): ?array {
         global $CFG;
         $channels = $CFG->ustar_connect_channels ?? [];
         if (!in_array($CFG->ustar_connect_link_transport ?? 'miniapp', ['miniapp', 'chat'], true)) {

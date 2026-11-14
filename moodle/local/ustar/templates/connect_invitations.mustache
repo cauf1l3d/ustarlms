@@ -1,0 +1,69 @@
+<main class="u-product-page u-ux-tools">
+    <a href="{{messengers}}">← Мессенджеры</a>
+    <header class="u-product-head"><div><h1>Приглашения Telegram</h1>
+        <p>Подключайте действующих сотрудников к рабочему боту. Ссылка и код действуют 10 минут.</p></div></header>
+    {{#error}}<div class="alert alert-warning" role="alert">{{error}}</div>{{/error}}
+    {{^enabled}}<p class="alert alert-info">Выдача приглашений отключена. Действующие привязки можно отозвать ниже.</p>{{/enabled}}
+    {{#issued}}
+    <section class="u-panel" aria-label="Приглашение готово">
+        <h2>Приглашение готово</h2>
+        <p>Скопируйте ссылку или код и передайте сотруднику лично.</p>
+        <label class="u-field"><span>Ссылка для сотрудника</span><input type="text" value="{{url}}" readonly></label>
+        <label class="u-field"><span>Код для ручного ввода</span><input type="text" value="{{token}}" readonly></label>
+    </section>
+    {{/issued}}
+    {{#enabled}}
+    <section class="u-panel u-ux-form">
+        <h2>Новое приглашение</h2>
+        <form action="{{url}}" method="get">
+            <label class="u-field"><span>Имя или логин сотрудника</span><input type="search" name="q" value="{{q}}" minlength="2" required></label>
+            <button class="u-btn" type="submit">Найти</button>
+        </form>
+        {{#haspeople}}
+        <form action="{{url}}" method="post" autocomplete="off">
+            <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="issue">
+            <label class="u-field"><span>Сотрудник</span><select name="userid" required><option value="">Выберите сотрудника</option>
+                {{#people}}<option value="{{id}}">{{name}}</option>{{/people}}
+            </select></label>
+            <label class="u-field"><span>Проверенный Telegram ID, если известен</span><input type="text" name="telegramid" inputmode="numeric" maxlength="16"></label>
+            <p>Если ID пока неизвестен, сотрудник получит код заявки в боте. Сверьте его через рабочий контакт перед подтверждением.</p>
+            <button class="u-btn u-btn--primary" type="submit">Создать приглашение</button>
+        </form>
+        {{/haspeople}}
+        {{^haspeople}}{{#searched}}<p>Совпадений среди действующих учётных записей нет.</p>{{/searched}}{{/haspeople}}
+    </section>
+    {{/enabled}}
+    <section class="u-panel">
+        <h2>Открытые приглашения</h2>
+        {{^invites}}<p>Открытых приглашений нет.</p>{{/invites}}
+        {{#invites}}
+        <article class="u-ux-question">
+            <h3>{{name}}</h3><p>Действует до {{expires}}</p>
+            {{#claimed}}<form method="post" action="{{url}}" autocomplete="off">
+                <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="confirm">
+                <input type="hidden" name="inviteid" value="{{id}}">
+                <label class="u-field"><span>Код заявки от сотрудника</span><input type="text" name="verification" maxlength="10" required></label>
+                <button class="u-btn u-btn--primary" type="submit">Подтвердить подключение</button>
+            </form>{{/claimed}}
+            <form method="post" action="{{url}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="cancel">
+                <input type="hidden" name="inviteid" value="{{id}}">
+                <button class="u-btn" type="submit">Отменить приглашение</button>
+            </form>
+        </article>
+        {{/invites}}
+    </section>
+    <section class="u-panel">
+        <h2>Подключены по приглашению</h2>
+        {{^links}}<p>Привязок пока нет.</p>{{/links}}
+        {{#links}}
+        <details class="u-ux-question"><summary>{{name}} · {{date}}</summary>
+            <form method="post" action="{{url}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="revoke">
+                <input type="hidden" name="linkid" value="{{id}}">
+                <button class="u-btn" type="submit">Отозвать доступ сотрудника</button>
+            </form>
+        </details>
+        {{/links}}
+    </section>
+</main>

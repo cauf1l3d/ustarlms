@@ -1,0 +1,33 @@
+{
+  "task": "CONNECT-INVITATIONS",
+  "date_msk": "2026-11-14",
+  "pull_request": 123,
+  "application_and_worker_baseline": "5607ab6fca13f744b1157db0c03b0adc27f30c7f",
+  "application_and_worker_commit": "33a8436b79c7dce453f10bb54b30d1d1721aab57",
+  "versions": {"local_ustar": 2026111401, "theme_ustar": 2026110200},
+  "native": {
+    "run_id": 43603915913,
+    "result": "success",
+    "jobs": {"5.1.1": 132474328680, "5.1.8": 132474328935},
+    "fresh_upgrade_repeat_schema_equal": true,
+    "tests_per_profile": 64,
+    "assertions_per_profile": 278,
+    "invitation_tests_per_profile": 3,
+    "invitation_assertions_per_profile": 27
+  },
+  "package": {
+    "job_id": 132474329058,
+    "artifact_id": 14117034383,
+    "artifact_zip_sha256": "9c2f104097b8f368142c024714e78e8e39aade30bc887f13787a2d71b5597c67",
+    "archive": "ustar-connect-invitations-33a8436b.tar.gz",
+    "archive_sha256": "fcb0c7f06d7758fa70b057b5f02b457ba0b2d48862bde9d6ed41ddcb7134e334",
+    "members": 31,
+    "application_files": 27,
+    "reproducible_and_tamper_checked": true,
+    "artifact_matches_local_and_retained_download": true
+  },
+  "server1": "awaiting_owner_installation",
+  "production_moodle_policy_handler": "unverified",
+  "live_bot_acceptance": "pending",
+  "guide": "docs/CONNECT_INVITATIONS_RU.md"
+}

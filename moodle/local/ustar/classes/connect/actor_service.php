@@ -117,7 +117,7 @@ final class actor_service {
         global $DB;
         $sender = new identity($row->provider, $row->tenant, $row->subject);
         $link = $DB->get_record('local_ustar_conn_links', ['identityhash' => $sender->key(), 'state' => 'linked']);
-        if (!$link || !hash_equals($row->identityhash, $sender->key()) || (int)$link->id !== (int)$row->linkid
+        if (!$link || !empty($link->botinvited) || !hash_equals($row->identityhash, $sender->key()) || (int)$link->id !== (int)$row->linkid
                 || (int)$link->revision !== (int)$row->linkrevision || (int)$link->userid !== (int)$row->userid
                 || identity_service::resolve_active_user($sender) !== (int)$row->userid || (int)$row->userid <= 1) {
             return null;

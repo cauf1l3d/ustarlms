@@ -38,11 +38,18 @@ def parse_update(update, *, bot_id, username, now):
         sender=message.get('from');stamp=message.get('date');text=message.get('text','')
         if type(stamp) is not int or not now-120<=stamp<=now+30 or not isinstance(text,str) or len(text)>4000:return None
         if re.fullmatch(r'/start(?:@[A-Za-z0-9_]{5,32})? uc1_[A-Za-z0-9_-]{43}',text):return None
-        if text.startswith('/'):
+        invite = re.fullmatch(r'/start(?:@([A-Za-z0-9_]{5,32}))? (ui1_[A-Za-z0-9_-]{43})', text)
+        if invite:
+            if invite[1] and invite[1].lower() != username.lower():
+                return None
+            text = '/start ' + invite[2]
+        elif text.startswith('/'):
             match=re.fullmatch(r'/([a-z_]{1,32})(?:@([A-Za-z0-9_]{5,32}))?',text)
             if not match or (match[2] and match[2].lower()!=username.lower()):return None
             text='/'+match[1]
         if 'photo' in message:
+            if invite:
+                return None
             sizes=message['photo']
             if not isinstance(sizes,list) or not 1<=len(sizes)<=10:return None
             candidates=[s for s in sizes if isinstance(s,dict) and isinstance(s.get('file_id'),str)
@@ -109,7 +116,10 @@ class BotHandler:
             if widget is not None and self._send_widget(event, view, widget):
                 return
             view={k:v for k,v in view.items() if k!='widget'} if widget is not None else view
-            rendered=presentation(view,academy_origin=self.origin,now=self.clock())
+            if view.get('plain') is True:
+                rendered = render_view({k: v for k, v in view.items() if k != 'plain'}, academy_origin=self.origin)
+            else:
+                rendered = presentation(view, academy_origin=self.origin, now=self.clock())
             for photo in view.get('photos',[]):
                 self.api.send_bot_photo(event.subject,photo)
             result=(self.api.edit_bot_view(event.subject,event.message_id,rendered,media_message=event.media_message)

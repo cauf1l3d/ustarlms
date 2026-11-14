@@ -37,6 +37,7 @@ final class provider implements
             'userchannelhash' => 'privacy:metadata:connect:hash',
             'state' => 'privacy:metadata:connect:state',
             'revision' => 'privacy:metadata:connect:state',
+            'botinvited' => 'privacy:metadata:connect:state',
             'timecreated' => 'privacy:metadata:connect:time',
             'timemodified' => 'privacy:metadata:connect:time',
         ], 'privacy:metadata:connect');
@@ -45,6 +46,8 @@ final class provider implements
             'provider' => 'privacy:metadata:connect:provider',
             'tenant' => 'privacy:metadata:connect:provider',
             'subject' => 'privacy:metadata:connect:subject',
+            'expectedsubject' => 'privacy:metadata:connect:subject',
+            'issuedby' => 'privacy:metadata:connect:userid',
             'codehash' => 'privacy:metadata:connect:hash',
             'browserhash' => 'privacy:metadata:connect:hash',
             'proofhash' => 'privacy:metadata:connect:hash',
@@ -123,7 +126,7 @@ final class provider implements
             ['component'=>'local_ustar','area'=>'connectbotdraft','uid'=>$userid]);
         $contexts->add_from_sql('SELECT c.id FROM {context} c WHERE c.contextlevel = :level
             AND (EXISTS (SELECT l.id FROM {local_ustar_conn_links} l WHERE l.userid = :linkuser)
-              OR EXISTS (SELECT x.id FROM {local_ustar_conn_challenges} x WHERE x.userid = :challengeuser)
+              OR EXISTS (SELECT x.id FROM {local_ustar_conn_challenges} x WHERE x.userid = :challengeuser OR x.issuedby = :issuer)
               OR EXISTS (SELECT a.id FROM {local_ustar_conn_launches} a WHERE a.userid = :launchuser)
               OR EXISTS (SELECT s.id FROM {local_ustar_conn_sessions} s WHERE s.userid = :sessionuser)
               OR EXISTS (SELECT r.id FROM {local_ustar_conn_signups} r WHERE r.userid = :signupuser)
@@ -131,7 +134,7 @@ final class provider implements
               OR EXISTS (SELECT p.id FROM {user_preferences} p WHERE p.userid = :prefuser AND p.name = :prefname)
               OR EXISTS (SELECT d.id FROM {local_ustar_notify_delivery} d JOIN {local_ustar_notifications} n
                     ON n.id = d.notificationid WHERE d.connectversion = 1 AND n.userid = :deliveryuser))',
-            ['level' => CONTEXT_SYSTEM, 'linkuser' => $userid, 'challengeuser' => $userid,
+            ['level' => CONTEXT_SYSTEM, 'linkuser' => $userid, 'challengeuser' => $userid, 'issuer' => $userid,
                 'launchuser' => $userid, 'sessionuser' => $userid, 'signupuser' => $userid,
                 'actionuser' => $userid, 'prefuser' => $userid, 'prefname' => \local_ustar\connect\notification_preferences::NAME, 'deliveryuser' => $userid]);
         $contexts->add_from_sql('SELECT c.id FROM {context} c WHERE c.contextlevel=:level AND EXISTS
@@ -160,6 +163,7 @@ final class provider implements
                 'local_ustar_conn_dialogs','local_ustar_conn_actions','local_ustar_conn_updates','local_ustar_route_access'] as $table) {
             $userlist->add_from_sql('userid', 'SELECT DISTINCT userid FROM {' . $table . '} WHERE userid > 0', []);
         }
+        $userlist->add_from_sql('issuedby', 'SELECT DISTINCT issuedby FROM {local_ustar_conn_challenges} WHERE issuedby > 0', []);
         foreach (['local_ustar_library_grant','local_ustar_library_attempt'] as $table) {
             $userlist->add_from_sql('userid','SELECT DISTINCT userid FROM {'.$table.'} WHERE userid>0',[]);
         }
@@ -213,9 +217,10 @@ final class provider implements
                 'id,title,price,status,timemodified')),
         ]);
         $links = $DB->get_records('local_ustar_conn_links', ['userid' => $userid], 'id',
-            'id,provider,tenant,subject,state,revision,timecreated,timemodified');
+            'id,provider,tenant,subject,state,revision,botinvited,timecreated,timemodified');
         $challenges = $DB->get_records('local_ustar_conn_challenges', ['userid' => $userid], 'id',
-            'id,provider,tenant,subject,timecreated,expiresat,confirmedlinkid,confirmedrevision');
+            'id,provider,tenant,subject,expectedsubject,timecreated,expiresat,confirmedlinkid,confirmedrevision');
+        $issued = $DB->get_records('local_ustar_conn_challenges', ['issuedby' => $userid], 'id', 'id,timecreated,expiresat');
         $launches = $DB->get_records('local_ustar_conn_launches', ['userid' => $userid], 'id',
             'id,provider,tenant,subject,timecreated,expiresat,consumedat');
         $sessions = $DB->get_records('local_ustar_conn_sessions', ['userid' => $userid], 'id',
@@ -230,6 +235,7 @@ final class provider implements
         // Token/session hashes are security internals, not login credentials to export.
         writer::with_context(\context_system::instance())->export_data(['Connect'], (object)[
             'links' => array_values($links), 'confirmations' => array_values($challenges),
+            'issued_invitations' => array_values($issued),
             'launches' => array_values($launches), 'entries' => array_values($sessions),
             'registrations' => array_values($signups),
             'notification_deliveries' => array_values($deliveries),
@@ -335,6 +341,9 @@ final class provider implements
                     $DB->set_field_select('local_ustar_conn_proofs', 'challengeid', 0, 'challengeid IN
                         (SELECT id FROM {local_ustar_conn_challenges} WHERE userid ' . $insql . ')', $params);
                     $DB->delete_records_select('local_ustar_conn_challenges', 'userid ' . $insql, $params);
+                    $DB->set_field_select('local_ustar_conn_challenges', 'expiresat', 0, 'issuedby ' . $insql
+                        . ' AND confirmedlinkid = 0', $params);
+                    $DB->set_field_select('local_ustar_conn_challenges', 'issuedby', 0, 'issuedby ' . $insql, $params);
                     $DB->delete_records_select('local_ustar_conn_signups', 'userid ' . $insql, $params);
                     // Also erase pre-link temporary entries for this verified identity.
                     foreach (['local_ustar_conn_sessions', 'local_ustar_conn_launches'] as $table) {

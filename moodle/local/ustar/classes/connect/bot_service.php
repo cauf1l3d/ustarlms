@@ -25,20 +25,74 @@ final class bot_service {
             $hash=hash('sha256',bot_store::json(array_diff_key($p,['auth_date'=>true])));
             $old=$DB->get_record('local_ustar_conn_updates',['eventhash'=>$event]);
             if ($old) {
-                if (!hash_equals($old->authority,$d->authority)) { return self::menu($d,$link); }
+                if (!hash_equals($old->authority,$d->authority)) { return self::menu($d,$link,$sender); }
                 if (!hash_equals($old->payloadhash,$hash)) { throw new \InvalidArgumentException('idempotency_conflict'); }
-                return json_decode($old->responsejson,true,32,JSON_THROW_ON_ERROR);
+                $saved = json_decode($old->responsejson, true, 32, JSON_THROW_ON_ERROR);
+                return isset($saved['_invitation_pending']) ? self::menu($d, $link, $sender) : $saved;
             }
             if ((int)$d->ratewindow<time()-60) { $d->ratewindow=time(); $d->ratecount=0; }
             if (++$d->ratecount>40) { throw new \InvalidArgumentException('rate_limited'); }
             bot_store::save($d); // Count rejected inputs too, outside any business rollback.
-            $action=$p['callback']!==''?bot_store::resolve($d,$p['callback']):null;
+            $pending = $userid ? bot_agreement::pending($userid, bot_actor::invited($link)) : null;
+            $agreementrequired = $pending !== null && bot_agreement::is_required($pending);
+            try {
+                $action = $p['callback'] !== '' ? bot_store::resolve($d, $p['callback']) : null;
+            } catch (\InvalidArgumentException $error) {
+                if ($agreementrequired && $error->getMessage() === 'expired_bot_action') {
+                    return self::menu($d, $link, $sender);
+                }
+                if (bot_actor::invited($link) && $error->getMessage() === 'expired_bot_action') {
+                    return self::menu($d, $link, $sender);
+                }
+                throw $error;
+            }
             $intent=$action?$action->intent:self::command($p['text']);
             if ($intent === bot_checklist_widget::INTENT) {
                 throw new \InvalidArgumentException('invalid_bot_action');
             }
             $data=$action?json_decode($action->payload,true,32,JSON_THROW_ON_ERROR):[];
-            $operate=function() use($d,$link,$p,$action,$intent,$data):array {
+            $operate=function() use(&$d,&$link,$p,$sender,$action,$intent,$data):array {
+                $invitation = self::invitation_token($p['text']);
+                if ($invitation !== null && !$action) {
+                    if ((int)$d->userid || $link) {
+                        return self::menu($d, $link, $sender);
+                    }
+                    try {
+                        $redeemed = bot_invitation::redeem($sender, $invitation, $p['event']);
+                    } catch (\InvalidArgumentException $error) {
+                        return bot_store::card('Подключение Telegram',
+                            'Приглашение недействительно или связь уже занята. Обратитесь к администратору.',
+                            [self::home($d)]) + ['plain' => true];
+                    }
+                    if ($redeemed) {
+                        $link = $redeemed;
+                        $d = bot_store::dialog($sender, (int)$link->userid, $link);
+                    }
+                    return self::menu($d, $link, $sender);
+                }
+                if ((int)$d->userid && bot_agreement::is_required(
+                        $pending = bot_agreement::pending((int)$d->userid, bot_actor::invited($link)))) {
+                    if ($action && in_array($intent, ['agreement.page', 'agreement.accept', 'agreement.decline'], true)) {
+                        $view = bot_actor::run((int)$d->userid, static fn() => bot_agreement::route(
+                            $d, $pending, $intent, $data),
+                            $link, true);
+                        if (!$view) {
+                            // Consent changed the authorization stamp. Issue menu tokens for the new state.
+                            $d = bot_store::dialog($sender, (int)$d->userid, $link);
+                            return self::menu($d, $link);
+                        }
+                        return $view;
+                    }
+                    return self::menu($d, $link);
+                }
+                if ($action && str_starts_with($intent, 'agreement.')) {
+                    return self::menu($d, $link);
+                }
+                if ($action && ($action->status ?? '') === 'done'
+                        && isset(json_decode($action->resultjson, true, 32, JSON_THROW_ON_ERROR)['_invitation_pending'])) {
+                    return self::menu($d, $link, $sender);
+                }
+
                 if ($action && $action->status==='done' && !self::read_intent($intent)) {
                     // Repeated writes return their receipt. An old answered form never advances twice.
                     if(str_starts_with($intent,'form.')) {
@@ -47,24 +101,33 @@ final class bot_service {
                     return json_decode($action->resultjson,true,32,JSON_THROW_ON_ERROR);
                 }
                 if ($action && !in_array($action->status,['issued','done'],true)) { throw new \InvalidArgumentException('expired_bot_action'); }
-                if (in_array($intent,['menu','cancel','help'],true)) { return self::menu($d,$link); }
-                if (!(int)$d->userid) { return bot_registration::route($d,$link,$intent,$data,$p['text']); }
+                if (in_array($intent,['menu','cancel','help'],true)) { return self::menu($d,$link,$sender); }
+                if (!(int)$d->userid) {
+                    if ($intent === 'invitation.start' && bot_invitation::enabled()) {
+                        return bot_store::card('Подключение Telegram', 'Вставьте одноразовый код из приглашения.',
+                            [self::home($d)]) + ['plain' => true];
+                    }
+                    return bot_registration::route($d,$link,$intent,$data,$p['text']);
+                }
                 if ($intent==='input') { $intent=$d->phase; $data=bot_store::data($d); }
-                return bot_actor::run((int)$d->userid,function() use($d,$intent,$data,$p):array {
+                if (bot_actor::invited($link) && !self::invited_intent($intent, $d)) {
+                    return self::menu($d, $link);
+                }
+                return bot_actor::run((int)$d->userid,function() use($d,$intent,$data,$p,$link):array {
                     return match(true) {
                         str_starts_with($intent,'form.')=>bot_forms::route($d,$intent,$data,$p),
-                        str_starts_with($intent,'work.')=>bot_work::route($d,$intent,$data,$p),
+                        str_starts_with($intent,'work.')=>bot_work::route($d,$intent,$data,$p,bot_actor::invited($link)),
                         str_starts_with($intent,'people.')=>bot_people::route($d,$intent,$data,$p['text']),
-                        str_starts_with($intent,'learn.')=>bot_learning::route($d,$intent,$data,$p['text']),
+                        str_starts_with($intent,'learn.')=>bot_learning::route($d,$intent,$data,$p['text'],bot_actor::invited($link)),
                         str_starts_with($intent,'broadcast.')=>bot_broadcast::route($d,$intent,$data),
                         str_starts_with($intent,'settings')=>self::settings($d,$intent,$data),
                         $intent === 'team.menu' => self::team_menu($d),
                         default=>self::menu($d,bot_actor::link(new identity($p['provider'],$p['tenant'],$p['subject']))),
                     };
-                });
+                }, $link);
             };
             // Registration owns its email lock/real commit. Its callback stores the event receipt.
-            if ($intent==='registration.confirm') {
+            if ($intent==='registration.confirm' && !(int)$d->userid) {
                 return bot_registration::commit($d,$link,$sender,$data,$event,$hash,$action);
             }
             $tx=$DB->start_delegated_transaction();
@@ -86,6 +149,7 @@ final class bot_service {
         } catch(\dml_missing_record_exception $error) {
             throw new \InvalidArgumentException('expired_bot_action');
         }
+        unset($result['_invitation_pending']);
         if(isset($result['_guard'])) {
             bot_guards::verify($result['_guard'],bot_actor::active($sender));unset($result['_guard']);
         }
@@ -101,15 +165,37 @@ final class bot_service {
                 if(isset($view['_guard'])){bot_guards::verify($view['_guard'],(int)$d->userid);unset($view['_guard']);}
                 return $view;
             };
-            return $id?bot_actor::run($id,$make):$make();
+            if ($id && bot_agreement::is_required(bot_agreement::pending($id, bot_actor::invited($link)))) {
+                return self::menu($d, $link, $sender);
+            }
+            return $id ? bot_actor::run($id, $make, $link) : $make();
         });
     }
     public static function remember(\stdClass $d,string $event,string $hash,array $view): void {
         global $DB;
+        if (isset($view['_invitation_pending'])) {
+            $view = ['_invitation_pending' => true];
+        }
         $DB->insert_record('local_ustar_conn_updates',(object)['eventhash'=>$event,'identityhash'=>$d->identityhash,
             'userid'=>$d->userid,'linkrevision'=>$d->linkrevision,'authority'=>$d->authority,'payloadhash'=>$hash,
             'responsejson'=>bot_store::json($view),'timecreated'=>time()]);
     }
+    private static function invitation_token(string $text): ?string {
+        return preg_match('/\A(?:\/start )?(ui1_[A-Za-z0-9_-]{43})\z/', trim($text), $matches)
+            ? $matches[1] : null;
+    }
+
+    private static function invited_intent(string $intent, \stdClass $dialog): bool {
+        if (str_starts_with($intent, 'form.')) {
+            $commit = bot_store::data($dialog)['commit'] ?? '';
+            return in_array($commit, ['work.checklist.commit', 'work.report.commit', 'settings.commit'], true);
+        }
+        return in_array($intent, ['work.mine', 'work.task', 'work.start', 'work.report', 'work.report.commit',
+            'work.photos', 'work.checklists', 'work.checklist', 'work.checklist.commit', 'learn.mine',
+            'learn.results', 'learn.inbox', 'learn.read', 'settings', 'settings.toggle', 'settings.edit',
+            'settings.commit', 'settings.unlink', 'settings.unlink.confirm'], true);
+    }
+
     private static function command(string $text): string {
         return match(trim($text)) {
             '/start','/menu','Меню','Главная','Назад'=>'menu', '/cancel','Отмена'=>'cancel','/help','Помощь'=>'help',
@@ -128,9 +214,15 @@ final class bot_service {
             'people.retrain','people.adaptations','people.adaptation','people.adaptation.daily','people.adaptation.final',
             'people.adaptation.decision','people.adaptation.case','people.adaptation.control','people.adaptation.reset','people.confirmation.status'],true);
     }
-    public static function menu(\stdClass $d, ?\stdClass $link=null): array {
+    public static function menu(\stdClass $d, ?\stdClass $link=null, ?identity $sender=null): array {
         bot_store::state($d,'menu');
         if (!(int)$d->userid) {
+            if ($sender && ($verification = bot_invitation::pending_code($sender))) {
+                return bot_store::card('Подтверждение подключения',
+                    'Сообщите код ' . $verification . ' администратору через ваш рабочий контакт. '
+                    . 'После подтверждения нажмите кнопку ниже.',
+                    [bot_store::button($d, 'Проверить подключение', 'menu')]) + ['plain' => true, '_invitation_pending' => true];
+            }
             if ($link) {
                 $state=\local_ustar\registration_service::state((int)$link->userid);
                 $status=(string)($state['request']->status??'pending');
@@ -138,27 +230,38 @@ final class bot_service {
                     "\nПосле одобрения настройте первый пароль в Академии из офисной сети. Пароль в чат не отправляйте.",
                     [bot_store::button($d,'Обновить статус','menu')]);
             }
-            return bot_store::card('USTAR · Добро пожаловать','Свяжите существующую учётку через «Личный кабинет → Мессенджеры» в Академии. Новому сотруднику доступна заявка без пароля.',
-                [bot_store::button($d,'📝 Зарегистрироваться','registration.start'),bot_store::button($d,'🔗 Как привязать учётку','help')]);
+            $buttons = [];
+            if (bot_invitation::enabled()) {
+                $buttons[] = bot_store::button($d, 'Подключить рабочую учётку', 'invitation.start');
+            }
+            $buttons[] = bot_store::button($d,'📝 Зарегистрироваться','registration.start');
+            $buttons[] = bot_store::button($d,'🔗 Как привязать учётку','help');
+            return bot_store::card('USTAR · Добро пожаловать',
+                'Подключите существующую учётку или отправьте заявку на регистрацию.', $buttons);
         }
-        if(!bot_actor::eligible((int)$d->userid)) {
+        $id = (int)$d->userid;
+        $invited = bot_actor::invited($link);
+        if (!bot_actor::eligible($id, $invited) || ($invited && bot_actor::requires_native_role($id))) {
             return bot_store::card('🔐 Завершите вход в Академии',
                 'Рабочие действия требуют завершённой настройки учётной записи. Откройте Академию из офисной сети и выполните требование входа или смены первого пароля. Пароль в чат не отправляйте. Если для входа включён дополнительный фактор или внешний провайдер, используйте защищённую Академию.',
                 [bot_store::button($d,'Проверить доступ','menu')]);
         }
-        $id = (int)$d->userid;
+        $pending = bot_agreement::pending($id, $invited);
+        if (bot_agreement::is_required($pending)) {
+            return bot_actor::run($id, static fn() => bot_agreement::view($d, $pending), $link, true);
+        }
         $buttons = [
             bot_store::button($d, '📋 Мои задачи', 'work.mine'),
             bot_store::button($d, '☑️ Чек-листы', 'work.checklists'),
             bot_store::button($d, '🎓 Обучение', 'learn.mine'),
         ];
-        $team = self::team_actions($id);
+        $team = $invited ? [] : self::team_actions($id);
         if ($team) {
             $buttons[] = bot_store::button($d, '👥 Управление командой', 'team.menu');
         }
         $buttons[] = bot_store::button($d, '🔔 Уведомления', 'learn.inbox');
         $buttons[] = bot_store::button($d, '⚙️ Настройки', 'settings');
-        if (announcements::enabled() && announcements::operator_capability($id)) {
+        if (!$invited && announcements::enabled() && announcements::operator_capability($id)) {
             $buttons[] = bot_store::button($d, '📣 Рассылки Telegram', 'broadcast.posts');
         }
         return bot_store::card('USTAR · Главное меню', '', $buttons);

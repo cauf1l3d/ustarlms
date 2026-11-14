@@ -6,7 +6,7 @@ defined('MOODLE_INTERNAL') || die();
 
 /** Native task/checklist writers and ACL read models, shared with the Academy UI. */
 final class bot_work {
-    public static function route(\stdClass $d,string $intent,array $data,array $p): array {
+    public static function route(\stdClass $d,string $intent,array $data,array $p, bool $invited = false): array {
         $id=(int)$d->userid;
         if($intent==='work.company'){return self::company($d,$data);}
         if (in_array($intent,['work.mine','work.team','work.review'],true)) { return self::listing($d,$intent,$data); }
@@ -77,6 +77,9 @@ final class bot_work {
             bot_store::state($d,'menu'); return bot_store::card('↩ На доработку','Комментарий и история сохранены. Сотрудник получит уведомление.',[bot_service::home($d)]);
         }
         $t=service::detail((int)($data['id']??0),$id);
+        if ($invited && $t['assigneeid'] !== $id) {
+            throw new \InvalidArgumentException('forbidden_scope');
+        }
         if (isset($data['version']) && (int)$data['version']!==$t['version']) { throw new \InvalidArgumentException('stale_revision'); }
         if (in_array($intent,['work.start','work.approve'],true)) {
             learning_tasks::transition($t['id'],$id,$intent==='work.start'?'start':'approve',$t['version']);
@@ -122,7 +125,7 @@ final class bot_work {
             if ($t['status']==='assigned') { $buttons[]=bot_store::button($d,'▶ Взять в работу','work.start',$target); }
             if ($t['kind']!=='retraining') { $buttons[]=bot_store::button($d,'📤 Отправить отчёт','work.report',$target); }
         }
-        if ($t['canreview'] && $t['status']==='in_review') {
+        if (!$invited && $t['canreview'] && $t['status']==='in_review') {
             $buttons[]=bot_store::button($d,'✓ Принять результат','work.approve',$target);
             $buttons[]=bot_store::button($d,'↩ Вернуть с комментарием','work.return',$target);
         }

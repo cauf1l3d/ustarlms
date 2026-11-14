@@ -42,7 +42,8 @@ def build(repo, target, output):
     return build_successor(repo, target, output, release, OPERATOR, WORKER_CHANGES, 'ustar-connect-broadcast')
 
 
-def build_successor(repo, target, output, profile, operator_path, worker_changes, archive_prefix, **extra):
+def build_successor(repo, target, output, profile, operator_path, worker_changes, archive_prefix, *,
+                    schema_check=None, **extra):
     frozen = git_file(repo, release.FROZEN_COMMIT, 'scripts/infra/connect_team_release.py')
     engine = profile.successor(frozen, target, **{name.lower(): value for name, value in extra.items()})
     baseline = engine.WORKER_BEFORE
@@ -65,7 +66,10 @@ def build_successor(repo, target, output, profile, operator_path, worker_changes
         new = core.scan(after / core.APP_REL)
         theme = core.scan(after / core.THEME_REL)
         engine.require(core.scan(before / core.THEME_REL) == theme, 'theme_changed')
-        engine.require(old['db/install.xml'] == new['db/install.xml'], 'unexpected_schema_change')
+        if schema_check is None:
+            engine.require(old['db/install.xml'] == new['db/install.xml'], 'unexpected_schema_change')
+        else:
+            schema_check(before / core.APP_REL / 'db/install.xml', after / core.APP_REL / 'db/install.xml')
         delta = engine.changes(old, new)
         engine.require(all((before / core.APP_REL / name).parent.is_dir() for name in delta),
                        'new_source_directory_unsupported')

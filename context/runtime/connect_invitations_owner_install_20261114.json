@@ -1,0 +1,37 @@
+{
+  "date_msk": "2026-11-14",
+  "kind": "owner_install_exit_and_policy_read",
+  "host": "server1",
+  "pull_request": 123,
+  "qualification": "context/runtime/connect_invitations_qualification_20261114.json",
+  "requested_update": {
+    "archive": "ustar-connect-invitations-33a8436b.tar.gz",
+    "archive_sha256": "fcb0c7f06d7758fa70b057b5f02b457ba0b2d48862bde9d6ed41ddcb7134e334",
+    "archive_checksum_passed": true,
+    "payload_commit": "33a8436b79c7dce453f10bb54b30d1d1721aab57",
+    "expected_local_ustar": 2026111401,
+    "unit": "ustar-connect-invitations-20261114-01.service",
+    "systemd_result": "success",
+    "main_exit_status": 0,
+    "runtime_seconds": 27.062
+  },
+  "precheck": {
+    "phase": "ready",
+    "application_commit": "5607ab6fca13f744b1157db0c03b0adc27f30c7f",
+    "worker_commit": "5607ab6fca13f744b1157db0c03b0adc27f30c7f",
+    "local_ustar": 2026111301,
+    "theme_ustar": 2026110200,
+    "announcements_enabled": true,
+    "services_running": {
+      "ustar-connect-notify.service": true,
+      "ustar-connect-receiver.service": true
+    }
+  },
+  "moodle_policy_read": {
+    "handler": "tool_policy\\privacy\\local\\sitepolicy\\handler",
+    "published_employee_policies": 1
+  },
+  "postcheck": null,
+  "invitation_flag": "unverified",
+  "live_bot_acceptance": "pending"
+}

@@ -25,6 +25,7 @@ application_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
+  latest_connect_invitation_owner_receipt: context/runtime/connect_invitations_owner_install_20261114.json
   latest_connect_checklist_widget_owner_receipt: context/runtime/connect_checklist_widget_owner_pilot_20261114.json
   latest_connect_broadcast_owner_receipt: context/runtime/connect_delivery_repair_owner_acceptance_20261113.json
   latest_connect_team_owner_receipt: context/runtime/connect_team_owner_deploy_20261112.json
@@ -140,10 +141,10 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: The owner verified the checklist package is active and completed the checklist
-    through the bot. The HTML widget was prepared without a Telegram message binding.
-    Telegram confirmed a hosting restriction for general bots.
-  next_task: CONNECT-CHECKLIST-WIDGET
+  activity: The owner ran the 33a8436b invitation update successfully on server1 and
+    confirmed one published employee policy. The independent post-install check, invitation
+    flag and live bot pilot remain pending.
+  next_task: CONNECT-INVITATIONS
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -154,6 +155,7 @@ current_work:
     CONNECT-BROADCAST-01: owner_installed_direct_delivery_incident
     CONNECT-CHECKLIST-WIDGET: installed_html_pilot_pending_provider_availability
     CONNECT-DELIVERY-REPAIR: owner_confirmed_live_broadcasts
+    CONNECT-INVITATIONS: owner_install_exit_success_postcheck_pending
     CONNECT-RELINK-01: qualified_awaiting_owner_installation
     CONNECT-TEAM-01: owner_installed_pilot_notice_delivered
     DOC-01: done

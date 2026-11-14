@@ -1,6 +1,6 @@
 # Активная работа · 14.11.2026
 
-Пакет `5607ab6f` активен. Пошаговый чек-лист сохранён. Пилот HTML ждёт доступности Bot API. [Результат](../runtime/connect_checklist_widget_owner_pilot_20261114.json).
+CONNECT-INVITATIONS. PR123, установка `33a8436b` завершилась с кодом 0. Moodle видит одно соглашение. Ожидаются итоговая проверка и пилот. [Квитанция](../runtime/connect_invitations_owner_install_20261114.json), [настройка](../../docs/CONNECT_INVITATIONS_RU.md).
 
 ## Повторная привязка Telegram
 

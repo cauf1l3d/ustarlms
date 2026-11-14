@@ -96,6 +96,9 @@ $data += ['url' => $url->out(false), 'profileurl' => (new moodle_url('/local/ust
 if (\local_ustar\connect\announcements::can_manage((int)$USER->id)) {
     $data['announcementsurl'] = (new moodle_url('/local/ustar/connect_announcements.php'))->out(false);
 }
+if (\local_ustar\connect\bot_invitation::can_manage()) {
+    $data['invitationsurl'] = (new moodle_url('/local/ustar/connect_invitations.php'))->out(false);
+}
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_ustar/connect', $data);
 echo $OUTPUT->footer();

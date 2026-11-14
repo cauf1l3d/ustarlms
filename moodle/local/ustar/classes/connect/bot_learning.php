@@ -4,7 +4,7 @@ defined('MOODLE_INTERNAL') || die();
 
 /** Read-only personal learning snapshot and canonical inbox. Never marks a course complete. */
 final class bot_learning {
-    public static function route(\stdClass $d,string $intent,array $data,string $text): array {
+    public static function route(\stdClass $d,string $intent,array $data,string $text, bool $invited = false): array {
         $id=(int)$d->userid;
         if(in_array($intent,['learn.team','learn.person'],true)) {
             return self::team($d,$intent,$data);
@@ -47,7 +47,8 @@ final class bot_learning {
         if($offset+8<count($all)){$buttons[]=bot_store::button($d,'Далее →',$intent,['offset'=>$offset+8]);}
         if ($intent === 'learn.mine') {
             $buttons[] = bot_store::button($d, 'Мои результаты', 'learn.results');
-            if (!\local_ustar\adaptation_service::is_hrd_actor($id)) {
+            if (!$invited
+                    && !\local_ustar\adaptation_service::is_hrd_actor($id)) {
                 $buttons[] = bot_store::button($d, 'Моя адаптация', 'people.adaptations');
             }
         } else {

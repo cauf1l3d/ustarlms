@@ -37,6 +37,12 @@ final class notification_delivery {
         if (!$link || !preg_match('/\A[1-9][0-9]{0,15}\z/', $link->subject) || (int)$link->subject >= 2 ** 52
                 || ($delivery && ((int)$delivery->connlinkid !== (int)$link->id
                     || (int)$delivery->connrevision !== (int)$link->revision))) { return null; }
+        if (bot_actor::invited($link)
+                && (!bot_actor::eligible((int)$notice->userid, true)
+                    || bot_actor::requires_native_role((int)$notice->userid)
+                    || bot_agreement::is_required(bot_agreement::pending((int)$notice->userid, true)))) {
+            return null;
+        }
         return $link;
     }
     /** A configured pilot list is checked at enqueue, lease and again at begin. */

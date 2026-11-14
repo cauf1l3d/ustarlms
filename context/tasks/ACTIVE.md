@@ -1,6 +1,6 @@
-# Активная работа · 13.11.2026
+# Активная работа · 14.11.2026
 
-Пакет виджета `5607ab6f` прошёл проверки. Ожидает установки и живого пилота. [Команды](../../docs/CONNECT_CHECKLIST_WIDGET_RU.md), [проверки](../runtime/connect_checklist_widget_qualification_20261113.json).
+Пакет `5607ab6f` активен. Пошаговый чек-лист сохранён. Пилот HTML ждёт доступности Bot API. [Результат](../runtime/connect_checklist_widget_owner_pilot_20261114.json).
 
 ## Повторная привязка Telegram
 

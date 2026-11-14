@@ -1,0 +1,45 @@
+{
+  "date_msk": "2026-11-14",
+  "kind": "owner_postcheck_and_live_pilot",
+  "pull_request": 121,
+  "qualification": "context/runtime/connect_checklist_widget_qualification_20261113.json",
+  "application": {
+    "payload_commit": "5607ab6fca13f744b1157db0c03b0adc27f30c7f",
+    "local_ustar": 2026111301,
+    "theme_ustar": 2026110200,
+    "phase": "active"
+  },
+  "postcheck": {
+    "phase": "active",
+    "worker_commit": "5607ab6fca13f744b1157db0c03b0adc27f30c7f",
+    "receiver_running": true,
+    "notifier_running": true,
+    "announcements_enabled": true
+  },
+  "pilot": {
+    "pilot_enabled_for_test_user": true,
+    "telegram_linked": true,
+    "items": 3,
+    "run_status": "completed",
+    "blocker_now": "already_submitted",
+    "last_open_24h": "prepared",
+    "widget_action_expired": true,
+    "live_widget_binding_confirmed": false,
+    "step_by_step_observed": true,
+    "provider_response_description_available": false
+  },
+  "provider_update": {
+    "date_utc": "2026-11-13",
+    "source": "https://github.com/tdlib/telegram-bot-api/issues/947",
+    "scope": "A Telegram Bot API contributor confirmed general bots currently cannot send widgets even in private chats.",
+    "reported_error": "INPUT_MEDIA_WIDGET_NOT_ALLOWED",
+    "same_error_confirmed_for_this_bot": false
+  },
+  "isolated_reproduction": {
+    "api_response": "HTTP 400 INPUT_MEDIA_WIDGET_NOT_ALLOWED",
+    "fallback": "sendPhoto",
+    "receiver_state": "sent",
+    "receiver_reason": null,
+    "bind_requested": false
+  }
+}

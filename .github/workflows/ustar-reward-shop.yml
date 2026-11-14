@@ -2,11 +2,13 @@ name: USTAR reward shop
 
 on:
   pull_request:
-    branches: [fix/connect-relink-20261111, feat/reward-shop-20261111, feat/reward-shop-ux-20261112, feat/connect-team-overview-20261112, feat/connect-direct-broadcast-20261112, main]
+    branches: [fix/connect-relink-20261111, feat/reward-shop-20261111, feat/reward-shop-ux-20261112, feat/connect-team-overview-20261112, feat/connect-direct-broadcast-20261112, fix/connect-broadcast-feed-20261113, main]
     paths:
       - 'moodle/local/ustar/**'
       - 'tests/stage/reward_shop*'
       - 'tests/stage/connect_broadcast_http*'
+      - 'tests/stage/connect_checklist_widget*'
+      - 'tests/r16/test_connect_checklist_widget.py'
       - 'tests/stage/config.php'
       - 'connect-worker/**'
       - 'tests/r16/test_reward_shop_ux_release.py'
@@ -21,6 +23,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  widget-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: python3 -m unittest tests.r16.test_connect_checklist_widget
+      - run: npm ci --prefix tests/mobile
+      - run: cd tests/mobile && npx playwright install --with-deps chromium
+      - run: node tests/stage/connect_checklist_widget_browser.cjs
+
   native:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -55,12 +72,16 @@ jobs:
           if test "$GITHUB_BASE_REF" = feat/connect-direct-broadcast-20261112; then
             installed=d1e546240e9339dd5f3263ca567ed9def64cc478
           fi
+          if test "$GITHUB_BASE_REF" = fix/connect-broadcast-feed-20261113; then
+            installed=7fa3233f3016eb968b7fadd3ae410ec330186b93
+          fi
           git archive "$installed" moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/reward-shop-installed
           docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml build --pull
       - name: Verify fresh install, upgrade, repeat upgrade and reward transactions
         run: |
           broadcast_wire=0
-          if test "$GITHUB_BASE_REF" = feat/connect-direct-broadcast-20261112 || test "$GITHUB_EVENT_NAME" = workflow_dispatch; then
+          if [[ "$GITHUB_BASE_REF" = feat/connect-direct-broadcast-20261112 ||
+                "$GITHUB_BASE_REF" = fix/connect-broadcast-feed-20261113 || "$GITHUB_EVENT_NAME" = workflow_dispatch ]]; then
             broadcast_wire=1
           fi
           id=$(docker compose -f ${{ matrix.compose }} -f tests/stage/browser-compose.yaml run -d --publish 127.0.0.1:8087:8087 -e "USTAR_STAGE_BROADCAST_WIRE=$broadcast_wire" --entrypoint bash runner /source/tests/stage/reward_shop_native.sh)

@@ -8,6 +8,8 @@ from .identity import ProviderIdentity
 from .notification_callback import ORIGINS
 from .telegram_api import TelegramError
 from .bot_graphics import presentation
+from .bot_cards import render_view
+from .bot_widget import widget_receipt
 
 
 @dataclass(frozen=True,repr=False)
@@ -19,6 +21,7 @@ class BotUpdate:
     payload:dict
     photo:tuple=()
     media_message:bool=False
+    widget_message:bool=False
 
 
 def _positive(value):
@@ -76,7 +79,8 @@ def parse_update(update, *, bot_id, username, now):
             or chat['id']!=sender['id'] or not _positive(message.get('message_id'))):return None
     payload={'auth_date':stamp,'callback':callback,'event':str(update['update_id']),'media':'',
         'message':str(message['message_id']),'provider':'telegram','subject':str(sender['id']),'tenant':bot_id,'text':text}
-    return BotUpdate(update['update_id'],sender['id'],message['message_id'],query_id,payload,photo,bool(query_id and message.get('photo')))
+    return BotUpdate(update['update_id'],sender['id'],message['message_id'],query_id,payload,photo,
+                     bool(query_id and message.get('photo')), bool(query_id and 'widget' in message))
 
 
 class BotHandler:
@@ -99,16 +103,19 @@ class BotHandler:
             value=self.bridge.request('bot.update',payload)
             if not isinstance(value,dict) or set(value)!={'ok','result'} or value['ok'] is not True:
                 raise ValueError('invalid_bot_response')
-            rendered=presentation(value['result'],academy_origin=self.origin,now=self.clock())
+            view=value['result']
             self.journal.phase(event.update_id,'sending')
-            for photo in value['result'].get('photos',[]):
+            widget=view.get('widget') if isinstance(view,dict) else None
+            if widget is not None and self._send_widget(event, view, widget):
+                return
+            view={k:v for k,v in view.items() if k!='widget'} if widget is not None else view
+            rendered=presentation(view,academy_origin=self.origin,now=self.clock())
+            for photo in view.get('photos',[]):
                 self.api.send_bot_photo(event.subject,photo)
-            result=(self.api.edit_bot_view(event.subject,event.message_id,rendered,media_message=event.media_message) if event.query_id
+            result=(self.api.edit_bot_view(event.subject,event.message_id,rendered,media_message=event.media_message)
+                    if event.query_id and not event.widget_message
                     else self.api.send_bot_view(event.subject,rendered))
-            chat=result.get('chat') if isinstance(result,dict) else None
-            mid=result.get('message_id') if isinstance(result,dict) else None
-            if not isinstance(chat,dict) or chat.get('type')!='private' or chat.get('id')!=event.subject or not _positive(mid):
-                raise TelegramError('invalid_response',uncertain=True)
+            mid=self._message_id(result, event.subject)
             self.journal.finish(event.update_id,'sent',message_id=mid)
         except BridgeRejected as error:
             self.journal.finish(event.update_id,'rejected','bot_action_rejected')
@@ -119,3 +126,85 @@ class BotHandler:
         except (ValueError,OSError):
             self.journal.finish(event.update_id,'uncertain','bot_result_unconfirmed')
             self.api.send_bot_hint(event.subject,'uncertain')
+
+    @staticmethod
+    def _message_id(result, subject):
+        chat = result.get('chat') if isinstance(result, dict) else None
+        mid = result.get('message_id') if isinstance(result, dict) else None
+        if (not isinstance(chat, dict) or chat.get('type') != 'private' or not _positive(chat.get('id'))
+                or chat['id'] != subject or not _positive(mid)):
+            raise TelegramError('invalid_response', uncertain=True)
+        return mid
+
+    def _send_widget(self, event, view, widget):
+        markup = render_view({k: v for k, v in view.items() if k != 'widget'},
+                             academy_origin=self.origin)['reply_markup']
+        try:
+            result = self.api.send_checklist_widget(event.subject, view['title'], widget, markup)
+        except TelegramError as error:
+            if not error.uncertain and error.reason == 'api_rejected':
+                return False
+            raise
+        mid = self._message_id(result, event.subject)
+        if not isinstance(result.get('widget'), dict):
+            raise TelegramError('invalid_response', uncertain=True)
+        reason = ''
+        try:
+            bound = self._widget_request(event.update_id, event.subject, mid, widget['action'], 'bind')
+            if bound != {'status': 'bound'}:
+                raise ValueError('invalid_widget_binding')
+        except (ValueError, OSError):
+            # The message is already visible and its ordinary form remains usable.
+            reason = 'widget_binding_unconfirmed'
+        self.journal.finish(event.update_id, 'sent', reason, mid)
+        return True
+
+    def _widget_request(self, event, subject, message, action, command):
+        envelope = self.bridge.request('bot.update', {
+            'auth_date': int(self.clock()), 'callback': action, 'event': str(event),
+            'media': '', 'message': str(message), 'provider': 'telegram', 'subject': str(subject),
+            'tenant': self.tenant, 'text': '', 'widget': command,
+        }, timeout=5)
+        if not isinstance(envelope, dict) or set(envelope) != {'ok', 'result'} or envelope['ok'] is not True:
+            raise ValueError('invalid_widget_response')
+        return envelope['result']
+
+    def handle_widget(self, query):
+        key = ProviderIdentity('telegram', self.tenant, str(query.subject)).key()
+        if not self.journal.begin(query.update_id, key, 'bot'):
+            return
+        if not self.journal.allowed(key, 'bot'):
+            self.journal.finish(query.update_id, 'ignored', 'identity_rate_limit')
+            return
+        self.journal.phase(query.update_id, 'creating')
+        try:
+            result = widget_receipt(self._widget_request(query.update_id, query.subject, query.message_id,
+                                                        query.action, query.answers))
+        except BridgeRejected as error:
+            result = {'status': 'retry' if error.reason == 'rate_limited' else 'stale'}
+        except (ValueError, OSError):
+            result = {'status': 'retry'}
+        self.journal.phase(query.update_id, 'sending')
+        reason = ''
+        try:
+            if self.api.answer_widget_query(query.query_id, result) is not True:
+                raise ValueError('invalid_widget_answer')
+        except (TelegramError, ValueError, OSError) as error:
+            reason = 'widget_answer_unconfirmed'
+            if isinstance(error, TelegramError) and (error.retry_after or error.reason in ('unauthorized', 'consumer_conflict')):
+                self._finish_widget(query, result, reason)
+                raise
+        if result['status'] == 'saved':
+            try:
+                if self.api.complete_checklist_widget(query.subject, query.message_id, result) is not True:
+                    raise ValueError('invalid_widget_edit')
+            except (TelegramError, ValueError, OSError) as error:
+                reason = reason or 'widget_edit_unconfirmed'
+                if isinstance(error, TelegramError) and (error.retry_after or error.reason in ('unauthorized', 'consumer_conflict')):
+                    self._finish_widget(query, result, reason)
+                    raise
+        self._finish_widget(query, result, reason)
+
+    def _finish_widget(self, query, result, reason):
+        state = {'saved': 'sent', 'stale': 'rejected', 'retry': 'uncertain'}[result['status']]
+        self.journal.finish(query.update_id, state, reason, query.message_id)

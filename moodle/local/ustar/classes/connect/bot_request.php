@@ -5,9 +5,10 @@ defined('MOODLE_INTERNAL') || die();
 /** Pure v4 bot envelope. Transport authentication is a separate mandatory boundary. */
 final class bot_request {
     public const FIELDS = ['auth_date','callback','event','media','message','provider','subject','tenant','text'];
+    public const WIDGET_FIELDS = [...self::FIELDS, 'widget'];
     public static function validate(array $value, int $now): array {
         $keys=array_keys($value); sort($keys);
-        if ($keys!==self::FIELDS || !is_int($value['auth_date'])
+        if (!in_array($keys, [self::FIELDS, self::WIDGET_FIELDS], true) || !is_int($value['auth_date'])
                 || $value['auth_date']<$now-120 || $value['auth_date']>$now+30) { self::deny(); }
         foreach ($value as $key=>$item) {
             if ($key!=='auth_date' && !is_string($item)) { self::deny(); }
@@ -22,6 +23,10 @@ final class bot_request {
         if ($value['callback']!=='') {
             try { self::digest($value['callback']); } catch (\InvalidArgumentException $e) { self::deny(); }
             if ($value['text']!=='' || $value['media']!=='') { self::deny(); }
+        }
+        if (isset($value['widget']) && ($value['callback'] === ''
+                || !preg_match('/\A(?:bind|[01]{1,5})\z/', $value['widget']))) {
+            self::deny();
         }
         return $value;
     }

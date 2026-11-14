@@ -8,6 +8,7 @@ from urllib.parse import urlsplit
 from urllib.request import Request, build_opener, HTTPSHandler, ProxyHandler
 
 from .bridge import _NoRedirect, _token
+from .bot_widget import HTML, checklist_widget, encode_state, widget_receipt
 from .notification_broadcast import MAX_FILE_BYTES, MAX_TOTAL_BYTES, valid_filename, valid_text
 from .notification_events import event_label
 
@@ -124,10 +125,11 @@ class TelegramClient:
     def _call(self, method, payload, *, files=()):
         if method not in ('getMe', 'getWebhookInfo', 'getUpdates', 'sendMessage',
                           'answerCallbackQuery', 'editMessageReplyMarkup', 'editMessageText', 'getFile', 'sendPhoto',
-                          'editMessageMedia', 'sendDocument', 'sendMediaGroup'):
+                          'editMessageMedia', 'sendDocument', 'sendMediaGroup', 'sendWidget',
+                          'answerWidgetQuery', 'editMessageWidgetData'):
             raise ValueError('invalid_api_method')
         sending = method in ('sendMessage', 'editMessageText', 'sendPhoto', 'editMessageMedia',
-                             'sendDocument', 'sendMediaGroup')
+                             'sendDocument', 'sendMediaGroup', 'sendWidget')
         if method in ('sendDocument', 'sendMediaGroup'):
             body, headers = _document_multipart(payload, files)
         elif method in ('sendPhoto','editMessageMedia') and isinstance(payload.get('photo'),bytes):
@@ -140,7 +142,8 @@ class TelegramClient:
         request = Request('https://api.telegram.org/bot'+self._token+'/'+method, data=body,
                           headers=headers, method='POST')
         try:
-            timeout = 35 if method == 'getUpdates' else (3 if method in ('answerCallbackQuery', 'editMessageReplyMarkup') else 10)
+            timeout = 35 if method == 'getUpdates' else (3 if method in (
+                'answerCallbackQuery', 'editMessageReplyMarkup', 'answerWidgetQuery', 'editMessageWidgetData') else 10)
             with self._opener.open(request, timeout=timeout) as response:
                 raw = response.read(2097153)
         except HTTPError as error:
@@ -169,7 +172,7 @@ class TelegramClient:
                     raise ValueError('invalid_response')
                 raise _error(code, value.get('parameters'), sending)
             result = value.get('result')
-            valid = result is True if method == 'answerCallbackQuery' else isinstance(
+            valid = result is True if method in ('answerCallbackQuery', 'answerWidgetQuery', 'editMessageWidgetData') else isinstance(
                 result, list if method in ('getUpdates', 'sendMediaGroup') else dict)
             if not valid:
                 raise ValueError('invalid_result')
@@ -253,11 +256,35 @@ class TelegramClient:
             raise ValueError('invalid_bot_photo')
         return data
 
-    def get_updates(self, offset, *, acknowledgements_enabled=False):
-        if type(offset) is not int or not 0 <= offset < 2**63 or type(acknowledgements_enabled) is not bool:
+    def get_updates(self, offset, *, acknowledgements_enabled=False, widgets_enabled=False):
+        if (type(offset) is not int or not 0 <= offset < 2**63
+                or type(acknowledgements_enabled) is not bool or type(widgets_enabled) is not bool):
             raise ValueError('invalid_offset')
         updates = ['message', 'callback_query'] if acknowledgements_enabled else ['message']
+        if widgets_enabled:
+            updates.append('widget_query')
         return self._call('getUpdates', {'offset': offset, 'limit': 50, 'timeout': 25, 'allowed_updates': updates})
+
+    def send_checklist_widget(self, subject, title, view, markup):
+        if type(subject) is not int or not 0 < subject < 2**52 or not isinstance(title, str) or not 0 < len(title) <= 120:
+            raise ValueError('invalid_widget_view')
+        return self._call('sendWidget', {'chat_id': subject, 'html': HTML, 'chat_data': checklist_widget(view),
+            'caption': title + '\nЕсли виджет недоступен, откройте пошаговую форму.',
+            'allow_queries': True, 'protect_content': True,
+            'reply_markup': markup})
+
+    def answer_widget_query(self, query_id, result):
+        if not isinstance(query_id, str) or not re.fullmatch(r'[!-~]{1,256}', query_id):
+            raise ValueError('invalid_widget_query')
+        return self._call('answerWidgetQuery', {'widget_query_id': query_id,
+            'data': encode_state(widget_receipt(result))})
+
+    def complete_checklist_widget(self, subject, message_id, result):
+        if (type(subject) is not int or not 0 < subject < 2**52 or type(message_id) is not int
+                or not 0 < message_id < 2**52 or widget_receipt(result)['status'] != 'saved'):
+            raise ValueError('invalid_widget_receipt')
+        return self._call('editMessageWidgetData', {'chat_id': subject, 'message_id': message_id,
+            'chat_data': encode_state(result)})
 
     def _send(self, subject, payload):
         if type(subject) is not int or not 0 < subject < 2**52:

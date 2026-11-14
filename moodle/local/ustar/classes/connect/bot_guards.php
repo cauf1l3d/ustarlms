@@ -8,6 +8,9 @@ final class bot_guards {
         global $DB;
         if(!$guard){return;}
         receipt_actor::require_active($userid);
+        if (isset($guard['checklist_widget'])) {
+            bot_checklist_widget::verify($userid, $guard['checklist_widget']);
+        }
         foreach($guard['tasks']??[] as $id) {
             $task=$DB->get_record('local_ustar_learning_tasks',['id'=>(int)$id]);
             if(!$task || !\local_ustar\task_workspace\service::can_view_record($task,$userid)){

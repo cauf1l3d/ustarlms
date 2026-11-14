@@ -37,6 +37,47 @@ if (($argv[1] ?? '') === 'verify') {
     exit;
 }
 
+if (($argv[1] ?? '') === 'seed-widget') {
+    $userid = user_create_user((object)[
+        'username' => 'widgetfixture', 'auth' => 'manual', 'confirmed' => 1,
+        'mnethostid' => $CFG->mnet_localhost_id, 'firstname' => 'Synthetic',
+        'lastname' => 'Checklist', 'email' => 'widgetfixture@example.invalid',
+    ], false, false);
+    $role = create_role('Widget fixture', 'widgetwire', '');
+    $context = context_system::instance();
+    assign_capability('local/ustar:use', CAP_ALLOW, $role, $context->id);
+    role_assign($role, $userid, $context->id);
+    \core\session\manager::set_user(get_admin());
+    \local_ustar\checklists::save(['items' => [[
+        'id' => 'widget_fixture', 'title' => 'Контроль зала', 'active' => true, 'positionIds' => [],
+        'sections' => [['title' => 'Проверка', 'items' => [
+            ['id' => 'cash', 'title' => 'Проверить кассу'],
+            ['id' => 'shelf', 'title' => 'Проверить полки'],
+        ]]],
+    ]]]);
+    \core\session\manager::set_user(get_complete_user_data('id', $userid));
+    $sender = new \local_ustar\connect\identity('telegram', '123456', '88888');
+    $challenge = \local_ustar\connect\identity_service::issue('telegram', '123456');
+    \local_ustar\connect\identity_service::claim_verified($challenge['code'], $sender, hash('sha256', $challenge['code']));
+    \local_ustar\connect\identity_service::confirm($challenge['code']);
+    echo $userid;
+    exit;
+}
+
+if (($argv[1] ?? '') === 'verify-widget') {
+    $userid = (int)getenv('USTAR_STAGE_WIDGET_USERID');
+    $where = ['userid' => $userid, 'checklistkey' => 'widget_fixture'];
+    $run = $DB->get_record('local_ustar_check_runs', $where, '*', MUST_EXIST);
+    $answer = $DB->get_field('local_ustar_check_answers', 'checked',
+        ['runid' => $run->id, 'itemkey' => 'shelf'], MUST_EXIST);
+    if (!$userid || $run->status !== 'partial' || (int)$run->revision !== 1 || (int)$answer !== 0
+            || $DB->count_records('local_ustar_check_submits', $where) !== 1) {
+        throw new RuntimeException('unexpected_widget_receipt');
+    }
+    echo "CONNECT_CHECKLIST_WIDGET_WIRE=PASS\n";
+    exit;
+}
+
 $userid = user_create_user((object)[
     'username' => 'broadcastfixture', 'auth' => 'manual', 'password' => 'Fixture-Only-Password1!',
     'confirmed' => 1, 'mnethostid' => $CFG->mnet_localhost_id, 'firstname' => 'Лента',

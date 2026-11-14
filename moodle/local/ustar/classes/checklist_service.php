@@ -159,9 +159,10 @@ final class checklist_service {
         ];
     }
 
+    /** Internal callers can persist a receipt in the same transaction via $complete. */
     public static function submit(int $userid, string $id, array $answers, string $comment = '',
             string $mode = 'final', int $expectedrevision = -1, string $correctionreason = '',
-            int $expecteddefinitionversion = -1): array {
+            int $expecteddefinitionversion = -1, ?string $expecteddate = null, ?callable $complete = null): array {
         global $DB;
         self::assert_actor($userid);
         view_as::assert_writable();
@@ -174,6 +175,9 @@ final class checklist_service {
             throw new \required_capability_exception(\context_system::instance(), 'local/ustar:use', 'nopermissions', '');
         }
         $today = self::date_key();
+        if ($expecteddate !== null && $expecteddate !== $today) {
+            throw new \invalid_parameter_exception('День чек-листа изменился. Откройте список заново.');
+        }
         $now = time();
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
             ->get_lock('check-run-' . $userid . '-' . $id . '-' . $today, 10);
@@ -181,6 +185,9 @@ final class checklist_service {
             throw new \moodle_exception('Чек-лист сейчас сохраняется. Повторите попытку.');
         }
         try {
+            if ($expecteddate !== null && $expecteddate !== self::date_key()) {
+                throw new \invalid_parameter_exception('День чек-листа изменился. Откройте список заново.');
+            }
             $transaction = $DB->start_delegated_transaction();
             try {
             $run = $DB->get_record('local_ustar_check_runs',
@@ -227,10 +234,12 @@ final class checklist_service {
                 $oldanswers = json_decode((string)$lastsubmission->answersjson, true);
                 $oldissues = json_decode((string)$lastsubmission->issuesjson, true);
                 if ($oldanswers == $normalized && (string)($oldissues['items']['comment'] ?? '') === $comment) {
-                    $transaction->allow_commit();
-                    return ['ok' => true, 'status' => (string)$run->status, 'done' => (int)$run->doneitems,
+                    $result = ['ok' => true, 'status' => (string)$run->status, 'done' => (int)$run->doneitems,
                         'total' => (int)$run->totalitems, 'score' => (int)$run->score,
                         'revision' => (int)$run->revision, 'submissionid' => (int)$run->lastsubmissionid];
+                    if ($complete !== null) { $complete($result); }
+                    $transaction->allow_commit();
+                    return $result;
                 }
                 if (trim($correctionreason) === '') {
                     throw new \invalid_parameter_exception('Укажите причину исправления отправленного чек-листа.');
@@ -277,16 +286,18 @@ final class checklist_service {
                     ['checklistid' => $id, 'score' => $score, 'date' => $today]);
             }
             $DB->update_record('local_ustar_check_runs', $run);
+            $result = ['ok' => true, 'status' => $run->status, 'done' => $done,
+                'total' => $total, 'score' => $score, 'revision' => (int)$run->revision,
+                'submissionid' => (int)$run->lastsubmissionid];
+            if ($complete !== null) { $complete($result); }
             $transaction->allow_commit();
+            return $result;
             } catch (\Throwable $e) {
                 $transaction->rollback($e);
             }
         } finally {
             $lock->release();
         }
-        return ['ok' => true, 'status' => $run->status, 'done' => $done,
-            'total' => $total, 'score' => $score, 'revision' => (int)$run->revision,
-            'submissionid' => (int)$run->lastsubmissionid];
     }
 
     public static function posted_answers(array $definition): array {

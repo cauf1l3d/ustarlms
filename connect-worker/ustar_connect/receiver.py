@@ -9,6 +9,7 @@ from .identity import ProviderIdentity
 from .telegram_api import TelegramError
 from .notification_callback import AcknowledgementHandler, parse_callback
 from .bot_handler import BotHandler,parse_update
+from .bot_widget import parse_widget_query
 
 
 class ReceiverStopped(Exception):
@@ -112,6 +113,8 @@ class TelegramReceiver:
                 return {'status':'stopping'}
             health = self._journal.prepare_poll()
             kwargs = {'acknowledgements_enabled': True} if self._ack is not None or self._bot is not None else {}
+            if self._bot is not None:
+                kwargs['widgets_enabled'] = True
             updates = self._api.get_updates(health['next_offset'], **kwargs)
             if not isinstance(updates,list) or len(updates)>50:
                 raise TelegramError('invalid_response')
@@ -142,6 +145,10 @@ class TelegramReceiver:
                 self._ack.handle(query)
                 return
         if self._bot is not None:
+            widget = parse_widget_query(update)
+            if widget is not None:
+                self._bot.handle_widget(widget)
+                return
             event=parse_update(update,bot_id=self._bot_id,username=self._username,now=now)
             if event is not None:
                 self._bot.handle(event)

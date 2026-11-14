@@ -1,0 +1,12 @@
+{
+  "date_msk": "2026-11-13",
+  "kind": "owner_functional_acceptance",
+  "pull_request": 120,
+  "qualification": "context/runtime/connect_delivery_repair_qualification_20261113.json",
+  "supersedes_incident_status": "context/runtime/connect_broadcast_owner_incident_20261113.json",
+  "owner_statement": "рассылки работают, давай к виджетам",
+  "live_telegram_delivery": "confirmed_by_owner",
+  "expected_application_and_worker_commit": "7fa3233f3016eb968b7fadd3ae410ec330186b93",
+  "exact_postcheck_reported": false,
+  "next_task": "CONNECT-CHECKLIST-WIDGET"
+}

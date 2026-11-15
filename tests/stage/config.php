@@ -28,8 +28,10 @@ $CFG->upgradekey = 'fixture-only';
 $broadcastfixture = getenv('USTAR_STAGE_BROADCAST_FIXTURE') === '1' && $prefix === 'stage_';
 $operatorfixture = getenv('USTAR_STAGE_OPERATOR_HTTP') === '1' && $prefix === 'stage_';
 if ($operatorfixture && PHP_SAPI === 'cli-server') {
+    // Restore the external request coordinates after the loopback TLS proxy.
+    $_SERVER['SERVER_PORT'] = '18088';
+    $_SERVER['HTTPS'] = 'on';
     $CFG->wwwroot = 'https://127.0.0.1:18088';
-    $CFG->sslproxy = true;
 }
 if ($broadcastfixture) {
     $CFG->wwwroot = 'https://127.0.0.1:18087';

@@ -24,7 +24,7 @@ final class bot_invitation {
             && self::operator_allowed((int)$USER->id);
     }
 
-    private static function operator_allowed(int $userid): bool {
+    public static function operator_allowed(int $userid): bool {
         return has_capability('local/ustar:admin', \context_system::instance(), $userid)
             && (is_siteadmin($userid) || \local_ustar\team_access::active_actor($userid));
     }
@@ -42,6 +42,42 @@ final class bot_invitation {
         }
     }
 
+    /** Resolve the exact recipient before showing the operator the confirmation. */
+    public static function preview_issue(string $username, string $subject): array {
+        global $DB, $CFG;
+        self::require_manager();
+        if (!self::enabled()) {
+            throw new \InvalidArgumentException('invalid_invitation');
+        }
+        self::check_subject($subject);
+        $user = $DB->get_record('user', ['username' => \core_text::strtolower(trim($username)),
+            'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 0],
+            'id, username, firstname, lastname, middlename, firstnamephonetic, lastnamephonetic, alternatename');
+        if (!$user) {
+            throw new \invalid_parameter_exception('Проверьте точный логин сотрудника.');
+        }
+        self::check_recipient((int)$user->id);
+        return ['userid' => (int)$user->id, 'subject' => $subject,
+            'label' => fullname($user) . ' · ' . $user->username];
+    }
+
+    private static function check_subject(string $subject): void {
+        if ($subject !== '' && (!preg_match('/\A[1-9][0-9]{0,15}\z/', $subject) || (int)$subject >= 2 ** 52)) {
+            throw new \invalid_parameter_exception('Укажите проверенный числовой Telegram ID или оставьте поле пустым.');
+        }
+    }
+
+    private static function check_recipient(int $userid): void {
+        global $DB;
+        self::assert_target($userid);
+        if (bot_agreement::pending($userid, true)['blocked']) {
+            throw new \InvalidArgumentException('agreement_unavailable');
+        }
+        if ($DB->record_exists(self::LINKS, ['userid' => $userid, 'provider' => 'telegram', 'state' => 'linked'])) {
+            throw new \InvalidArgumentException('link_conflict');
+        }
+    }
+
     private static function check_tenant(string $tenant): void {
         if (!self::enabled() || link_management::channel()['tenant'] !== $tenant) {
             throw new \InvalidArgumentException('invalid_invitation');
@@ -49,35 +85,31 @@ final class bot_invitation {
     }
 
     public static function issue(int $userid, string $verifiedsubject): array {
-        global $USER;
+        return identity_service::atomic(static fn(): array => self::issue_in_transaction($userid, $verifiedsubject));
+    }
+
+    /** Called by the native confirmation that already owns the Connect transaction. */
+    public static function issue_in_transaction(int $userid, string $verifiedsubject): array {
+        global $DB, $USER;
         self::require_manager();
-        if ($verifiedsubject !== '' && (!preg_match('/\A[1-9][0-9]{0,15}\z/', $verifiedsubject)
-                || (int)$verifiedsubject >= 2 ** 52)) {
-            throw new \InvalidArgumentException('invalid_invitation');
+        if (!$DB->is_transaction_started()) {
+            throw new \coding_exception('Owned invitation transaction required');
         }
-        return identity_service::atomic(static function() use ($userid, $verifiedsubject, $USER): array {
-            global $DB;
-            $channel = link_management::channel();
-            self::check_tenant($channel['tenant'] ?? '');
-            self::assert_target($userid);
-            if (bot_agreement::pending($userid, true)['blocked']) {
-                throw new \InvalidArgumentException('agreement_unavailable');
-            }
-            if ($DB->record_exists(self::LINKS, ['userid' => $userid, 'provider' => 'telegram', 'state' => 'linked'])) {
-                throw new \InvalidArgumentException('link_conflict');
-            }
-            self::expire($userid);
-            $token = opaque_token::issue('ui1');
-            $now = time();
-            $id = $DB->insert_record(self::CHALLENGES, (object)[
-                'codehash' => opaque_token::digest($token, 'ui1'), 'userid' => $userid, 'provider' => 'telegram',
-                'tenant' => $channel['tenant'], 'browserhash' => '', 'issuedby' => (int)$USER->id,
-                'expectedsubject' => $verifiedsubject !== '' ? $verifiedsubject : null, 'subject' => '', 'proofhash' => '', 'timecreated' => $now,
-                'expiresat' => $now + self::TTL, 'confirmedlinkid' => 0, 'confirmedrevision' => 0,
-            ]);
-            \local_ustar\event\connect_invitation_changed::record($userid, (int)$id, 'issued');
-            return ['token' => $token, 'url' => 'https://t.me/' . $channel['username'] . '?start=' . $token];
-        });
+        self::check_subject($verifiedsubject);
+        $channel = link_management::channel();
+        self::check_tenant($channel['tenant'] ?? '');
+        self::check_recipient($userid);
+        self::expire($userid);
+        $token = opaque_token::issue('ui1');
+        $now = time();
+        $id = $DB->insert_record(self::CHALLENGES, (object)[
+            'codehash' => opaque_token::digest($token, 'ui1'), 'userid' => $userid, 'provider' => 'telegram',
+            'tenant' => $channel['tenant'], 'browserhash' => '', 'issuedby' => (int)$USER->id,
+            'expectedsubject' => $verifiedsubject !== '' ? $verifiedsubject : null, 'subject' => '', 'proofhash' => '',
+            'timecreated' => $now, 'expiresat' => $now + self::TTL, 'confirmedlinkid' => 0, 'confirmedrevision' => 0,
+        ]);
+        \local_ustar\event\connect_invitation_changed::record($userid, (int)$id, 'issued');
+        return ['token' => $token, 'url' => 'https://t.me/' . $channel['username'] . '?start=' . $token];
     }
 
     /** Called by the verified private bot router inside its transaction and identity lock. */

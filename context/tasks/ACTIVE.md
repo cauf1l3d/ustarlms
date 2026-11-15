@@ -1,6 +1,6 @@
-# Активная работа · 14.11.2026
+# Активная работа · 15.11.2026
 
-CONNECT-INVITATIONS. PR123, установка `33a8436b` завершилась с кодом 0. Moodle видит одно соглашение. Ожидаются итоговая проверка и пилот. [Квитанция](../runtime/connect_invitations_owner_install_20261114.json), [настройка](../../docs/CONNECT_INVITATIONS_RU.md).
+CONNECT-OPERATOR. PR124, профиль служебной учётки и управление приглашениями и рассылками. [Инструкция](../../docs/CONNECT_OPERATOR_RU.md). Установка базы `33a8436b` завершилась с кодом 0. [Квитанция](../runtime/connect_invitations_owner_install_20261114.json).
 
 ## Повторная привязка Telegram
 

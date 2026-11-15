@@ -65,8 +65,14 @@ final class bot_forms {
         }
         if($offset){$buttons[]=bot_store::button($d,'← Предыдущие ответы','form.preview',['offset'=>max(0,$offset-8)]);}
         if($offset+8<count($f['fields'])){$buttons[]=bot_store::button($d,'Следующие ответы →','form.preview',['offset'=>$offset+8]);}
-        $buttons[]=bot_store::button($d,'✓ Подтвердить',$f['commit'],['values'=>$f['values'],'context'=>$f['context']]);
+        $label = $f['commit'] === 'broadcast.publish' ? 'Опубликовать в Ленте' : '✓ Подтвердить';
+        $buttons[]=bot_store::button($d,$label,$f['commit'],['values'=>$f['values'],'context'=>$f['context']]);
         $buttons[]=bot_store::button($d,'Изменить ответы','form.restart');$buttons[]=bot_service::cancel($d);
+        if ($f['commit'] === 'broadcast.publish') {
+            return bot_store::card('Проверьте публикацию',
+                "Отдел: {$rows[0][1]}\n\n{$f['values']['body']}\n\nПосле публикации выберите получателей Telegram.",
+                $buttons) + ['plain' => true];
+        }
         return bot_store::guarded(bot_store::card('Проверьте перед отправкой',$f['title']."\nПоля ".($offset+1).'–'.min(count($f['fields']),$offset+8).' из '.count($f['fields']),$buttons,[],$rows),bot_guards::form_guard($f));
     }
     private static function field(array $form): array {

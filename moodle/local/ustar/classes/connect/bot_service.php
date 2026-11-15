@@ -120,6 +120,7 @@ final class bot_service {
                         str_starts_with($intent,'people.')=>bot_people::route($d,$intent,$data,$p['text']),
                         str_starts_with($intent,'learn.')=>bot_learning::route($d,$intent,$data,$p['text'],bot_actor::invited($link)),
                         str_starts_with($intent,'broadcast.')=>bot_broadcast::route($d,$intent,$data),
+                        str_starts_with($intent,'invitation.')=>self::invitation_operator($d,$intent,$data),
                         str_starts_with($intent,'settings')=>self::settings($d,$intent,$data),
                         $intent === 'team.menu' => self::team_menu($d),
                         default=>self::menu($d,bot_actor::link(new identity($p['provider'],$p['tenant'],$p['subject']))),
@@ -143,7 +144,7 @@ final class bot_service {
             $fields=['email'=>'email','username'=>'логин','firstname'=>'имя','lastname'=>'фамилию','departmentid'=>'подразделение'];
             return self::input_problem($sender,'Проверьте '.($fields[$error->field]??'поля анкеты').'. Формат или занятые данные не позволяют отправить заявку.');
         } catch(\invalid_parameter_exception $error) {
-            return self::input_problem($sender,'Проверьте ответы, обязательные поля и дату. Запись не принята; измените ответы и отправьте заново.');
+            return self::input_problem($sender,'Проверьте ответы и обязательные поля. Запись не принята. Измените ответы и отправьте заново.');
         } catch(\required_capability_exception $error) {
             throw new \InvalidArgumentException('forbidden_scope');
         } catch(\dml_missing_record_exception $error) {
@@ -161,7 +162,8 @@ final class bot_service {
             $make=static function()use($d,$link,$text):array {
                 $view=$d->phase==='form.confirm'?bot_forms::preview($d):self::menu($d,$link);
                 $view['title']='⚠️ Проверьте данные';$view['text']=$text;
-                $view['buttons']=array_values(array_filter($view['buttons'],static fn($b)=>$b['label']!=='✓ Подтвердить'));
+                $view['buttons']=array_values(array_filter($view['buttons'],
+                    static fn($b) => !in_array($b['label'], ['✓ Подтвердить', 'Опубликовать в Ленте'], true)));
                 if(isset($view['_guard'])){bot_guards::verify($view['_guard'],(int)$d->userid);unset($view['_guard']);}
                 return $view;
             };
@@ -194,6 +196,28 @@ final class bot_service {
             'work.photos', 'work.checklists', 'work.checklist', 'work.checklist.commit', 'learn.mine',
             'learn.results', 'learn.inbox', 'learn.read', 'settings', 'settings.toggle', 'settings.edit',
             'settings.commit', 'settings.unlink', 'settings.unlink.confirm'], true);
+    }
+
+    private static function invitation_operator(\stdClass $dialog, string $intent, array $data): array {
+        if (!bot_invitation::enabled() || !bot_invitation::can_manage()) {
+            throw new \InvalidArgumentException('forbidden_scope');
+        }
+        if ($intent === 'invitation.operator') {
+            return bot_forms::start($dialog, 'Приглашение сотрудника', [
+                ['key' => 'username', 'label' => 'Логин сотрудника в Академии', 'required' => true, 'maxlen' => 100],
+                ['key' => 'subject', 'label' => 'Проверенный числовой Telegram ID',
+                    'hint' => 'Если ID неизвестен, нажмите «Пропустить».', 'maxlen' => 16],
+            ], 'invitation.prepare');
+        }
+        if ($intent !== 'invitation.prepare' || $dialog->phase !== 'form.confirm') {
+            throw new \InvalidArgumentException('expired_bot_action');
+        }
+        $target = bot_invitation::preview_issue($data['values']['username'], $data['values']['subject']);
+        $verification = $target['subject'] === '' ? 'Сотрудник сообщит код для проверки по рабочему контакту.'
+            : 'Привязка к Telegram ID ' . $target['subject'] . '.';
+        return bot_confirmation::prepare($dialog, 'execute.invitation.issue',
+            ['userid' => $target['userid'], 'subject' => $target['subject']],
+            "Приглашение для сотрудника {$target['label']}.\n{$verification}\nСсылка появится в Академии после подтверждения.");
     }
 
     private static function command(string $text): string {
@@ -263,6 +287,9 @@ final class bot_service {
         $buttons[] = bot_store::button($d, '⚙️ Настройки', 'settings');
         if (!$invited && announcements::enabled() && announcements::operator_capability($id)) {
             $buttons[] = bot_store::button($d, '📣 Рассылки Telegram', 'broadcast.posts');
+        }
+        if (!$invited && bot_invitation::enabled() && bot_invitation::operator_allowed($id)) {
+            $buttons[] = bot_store::button($d, '🎟 Приглашения Telegram', 'invitation.operator');
         }
         return bot_store::card('USTAR · Главное меню', '', $buttons);
     }

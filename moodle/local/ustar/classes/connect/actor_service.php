@@ -153,7 +153,7 @@ final class actor_service {
         accesslib_clear_all_caches(true);
         $caps = [];
         foreach (['use', 'viewteam', 'hr', 'hrmanage', 'approveregistration', 'manageadaptation',
-                'gradeassessments', 'executive', 'admin', 'managecatalog'] as $name) {
+                'gradeassessments', 'executive', 'admin', 'managecatalog', 'feedmanage'] as $name) {
             $caps[$name] = has_capability('local/ustar:' . $name, \context_system::instance(), $userid);
         }
         $roles = array_values($DB->get_records('role_assignments', ['userid' => $userid], 'id',

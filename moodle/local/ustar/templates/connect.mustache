@@ -4,6 +4,13 @@
   {{#announcementsurl}}<a class="u-btn" href="{{announcementsurl}}">Рассылки Telegram</a>{{/announcementsurl}}
   {{#invitationsurl}}<a class="u-btn" href="{{invitationsurl}}">Приглашения Telegram</a>{{/invitationsurl}}
   {{#error}}<div class="alert alert-warning" role="alert">{{error}}</div>{{/error}}
+  {{#administrativeaccount}}
+  <section class="u-panel">
+    <h2>Личная привязка Telegram</h2>
+    <p>Для работы в боте войдите в Академию под своей активной учётной записью сотрудника и создайте персональную ссылку.</p>
+  </section>
+  {{/administrativeaccount}}
+  {{^administrativeaccount}}
   {{#confirmed}}<div class="alert alert-success" role="status">Связь подтверждена. Отправьте боту новый /start. Права определяет ваша учётная запись Академии.</div>{{/confirmed}}
   <section class="u-panel u-ux-form">
     <h2>Подключить Telegram</h2>
@@ -74,4 +81,5 @@
     {{#deliveries}}<article class="u-ux-question"><h3>{{eventlabel}}</h3><p>{{categorylabel}} · {{statuslabel}}</p><p>{{time_label}} · Попыток: {{attempts}}</p>{{#acknowledged}}<p role="status">✓ Принято · {{ack_label}}</p>{{/acknowledged}}{{^acknowledged}}<p>Личное подтверждение ещё не получено.</p>{{/acknowledged}}{{#next_label}}<p>Следующая проверка: {{next_label}}</p>{{/next_label}}</article>{{/deliveries}}
     {{^deliveries}}<p>Доставок пока нет. Нужны подтверждённая связь, ваше согласие и включённый канал; событие должно оставаться актуальным.</p>{{/deliveries}}
   </section>
+  {{/administrativeaccount}}
 </main>

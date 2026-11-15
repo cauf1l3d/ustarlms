@@ -7,6 +7,25 @@ global $USER, $DB;
 
 $context = context_system::instance();
 require_capability('local/ustar:use', $context);
+$PAGE->set_context($context);
+$PAGE->set_url(new moodle_url('/local/ustar/profile.php'));
+$PAGE->set_pagelayout('ustar');
+$PAGE->set_title('Личный кабинет | USTAR Academy');
+$PAGE->set_heading('USTAR Academy');
+
+if (is_siteadmin() || \local_ustar\accounts::type_of((int)$USER->id) === \local_ustar\accounts::TYPE_SERVICE) {
+    $PAGE->requires->css(new moodle_url('/local/ustar/styles/ux_tools.css'));
+    $output = $PAGE->get_renderer('local_ustar');
+    echo $output->header();
+    echo $output->render_from_template('local_ustar/profile_operator', [
+        'fullname' => fullname($USER),
+        'accounttypelabel' => is_siteadmin() ? 'Администратор сайта' : 'Сервисная учётная запись',
+        'settingsurl' => (new moodle_url('/local/ustar/profile_settings.php'))->out(false),
+        'connecturl' => (new moodle_url('/local/ustar/connect.php'))->out(false),
+    ]);
+    echo $output->footer();
+    return;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && optional_param('action', '', PARAM_ALPHANUMEXT) === 'registrationrequest') {
     require_sesskey();
@@ -22,8 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && optional_param('action', '', PARAM_
         \core\notification::error($e->getMessage());
     }
 }
-
-$PAGE->set_context($context);
 
 $registration = \local_ustar\registration_service::state((int)$USER->id);
 $registrationrequest = $registration['request'];
@@ -124,11 +141,6 @@ $data = ['kpipoints'=>$kpipoints, 'cancontrolrewards'=>\local_ustar\reward_contr
     'messageicon' => \local_ustar\ui::icon('message', 'u-feature-icon'),
     'settingsicon' => \local_ustar\ui::icon('settings', 'u-feature-icon'),
 ];
-
-$PAGE->set_url(new moodle_url('/local/ustar/profile.php'));
-$PAGE->set_pagelayout('ustar');
-$PAGE->set_title('Личный кабинет | USTAR Academy');
-$PAGE->set_heading('USTAR Academy');
 
 $PAGE->requires->css(
     new moodle_url('/local/ustar/styles/team_hierarchy.css')

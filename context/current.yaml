@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-14'
+updated_at: '2026-11-15'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -141,10 +141,10 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: The owner ran the 33a8436b invitation update successfully on server1 and
-    confirmed one published employee policy. The independent post-install check, invitation
-    flag and live bot pilot remain pending.
-  next_task: CONNECT-INVITATIONS
+  activity: PR 124 passed Moodle 5.1.1 and 5.1.8 checks for Telegram operator workflows
+    and the site administrator profile. Archive 422fbfb3 awaits owner installation
+    and a live Telegram pilot.
+  next_task: CONNECT-OPERATOR
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -156,6 +156,7 @@ current_work:
     CONNECT-CHECKLIST-WIDGET: installed_html_pilot_pending_provider_availability
     CONNECT-DELIVERY-REPAIR: owner_confirmed_live_broadcasts
     CONNECT-INVITATIONS: owner_install_exit_success_postcheck_pending
+    CONNECT-OPERATOR: native_qualified_owner_installation_pending
     CONNECT-RELINK-01: qualified_awaiting_owner_installation
     CONNECT-TEAM-01: owner_installed_pilot_notice_delivered
     DOC-01: done

@@ -41,6 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             throw new InvalidArgumentException('invalid_invitation');
         }
+    } catch (invalid_parameter_exception $exception) {
+        $error = $exception->debuginfo;
     } catch (InvalidArgumentException $exception) {
         $error = match ($exception->getMessage()) {
             'link_conflict' => 'У сотрудника уже есть привязка Telegram. Сначала отзовите её.',

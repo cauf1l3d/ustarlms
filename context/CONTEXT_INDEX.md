@@ -1,5 +1,7 @@
 # Навигация по контексту
 
+- [Оператор Академии в Telegram](../docs/CONNECT_OPERATOR_RU.md), [проверки](runtime/connect_operator_qualification_20261115.json).
+
 - [Подключение к боту по приглашению](../docs/CONNECT_INVITATIONS_RU.md), [установка владельцем](runtime/connect_invitations_owner_install_20261114.json), [квалификация](runtime/connect_invitations_qualification_20261114.json).
 
 - [Результат пилота чек-листа и ограничение Telegram от 14.11](runtime/connect_checklist_widget_owner_pilot_20261114.json).

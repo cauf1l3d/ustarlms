@@ -5,7 +5,7 @@ test "$PWD" = /stage/moodle
 test "${USTAR_STAGE_PREFIX:-}" = stage_
 WEBROOT=http://127.0.0.1:8087
 MODE=${1:-candidate}
-[[ $MODE = candidate || $MODE = broken-baseline || $MODE = route-editor || $MODE = studio-browser ]]
+[[ $MODE = candidate || $MODE = broken-baseline || $MODE = route-editor || $MODE = studio-browser || $MODE = operator ]]
 COOKIE=/artifacts/shell-cookies.txt
 SERVER_PID=
 cleanup() { if [[ -n $SERVER_PID ]]; then kill "$SERVER_PID" 2>/dev/null || true; wait "$SERVER_PID" 2>/dev/null || true; fi; rm -f "$COOKIE"; }
@@ -28,6 +28,20 @@ curl -fsS --max-time 30 -b "$COOKIE" -c "$COOKIE" \
     --data-urlencode "logintoken=$token" "$WEBROOT/login/index.php" -o /artifacts/shell-login-result.html
 if [[ $MODE = route-editor ]]; then
     bash /source/tests/stage/route_editor_http_smoke.sh
+    exit 0
+fi
+if [[ $MODE = operator ]]; then
+    for page in profile connect; do
+        code=$(curl -sS --max-time 30 -b "$COOKIE" -o "/artifacts/connect-invitation-$page.html" \
+            -w '%{http_code}' "$WEBROOT/local/ustar/$page.php")
+        # The local HTTP fixture deliberately fails the personal-connect HTTPS check.
+        [[ $page == profile && $code == 200 || $page == connect && $code == 403 ]]
+    done
+    grep -Fq 'Администратор сайта' /artifacts/connect-invitation-profile.html
+    grep -Fq 'Настройки профиля' /artifacts/connect-invitation-profile.html
+    grep -Fq 'Личная привязка Telegram' /artifacts/connect-invitation-connect.html
+    if grep -Fq 'Создать персональную ссылку' /artifacts/connect-invitation-connect.html; then exit 1; fi
+    echo 'CONNECT_OPERATOR_PROFILE_HTTP=PASS'
     exit 0
 fi
 if [[ $MODE = studio-browser ]]; then

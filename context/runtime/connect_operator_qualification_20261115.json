@@ -1,0 +1,31 @@
+{
+  "date_msk": "2026-11-15",
+  "task": "CONNECT-OPERATOR",
+  "pull_request": 124,
+  "deployment_baseline": "33a8436b79c7dce453f10bb54b30d1d1721aab57",
+  "application_and_worker_commit": "422fbfb324db3b18447b61bc1c86a8a5481fe3e0",
+  "local_ustar": 2026111402,
+  "theme_ustar": 2026110200,
+  "schema_changed": false,
+  "workflow_run": 43707120894,
+  "native": {
+    "moodle_5_1_1_job": 132790486987,
+    "moodle_5_1_8_job": 132790487122,
+    "result": "success",
+    "tests_per_profile": 66,
+    "assertions_per_profile": 295,
+    "fresh_upgrade_repeat_schema_equal": true,
+    "administrator_profile_http": "pass",
+    "invitation_https_cookie_csrf_and_replay": "pass"
+  },
+  "package": {
+    "job": 132790487241,
+    "artifact": 14158599599,
+    "archive": "ustar-connect-operator-422fbfb3.tar.gz",
+    "sha256": "5c1e2da282fedfef72486c7d73159cebb66116b9a3610ae8e26d705d9acf5b82",
+    "artifact_zip_sha256": "421c0297baab007e8ccf6ba4599f28881f64c076d99b60a0137b233f51297690",
+    "artifact_matches_local_and_retained_download": true
+  },
+  "server1": "awaiting_owner_installation",
+  "live_telegram_acceptance": "pending"
+}

@@ -1,6 +1,6 @@
 # Оператор USTAR в Telegram
 
-14 ноября 2026 г.
+15 ноября 2026 г.
 
 Личный кабинет администратора сайта и сервисной учётки показывает собственный профиль
 Moodle и ссылки на настройки. Связь с Telegram оформляется для персональной учётки
@@ -52,3 +52,47 @@ Moodle и ссылки на настройки. Связь с Telegram офор�
 
 Кадровые решения проходят существующее подтверждение в Академии. Полный состав меню
 зависит от текущих ролей. [Рабочие разделы бота](CONNECT_BOT_RU.md).
+
+## Установка
+
+Пакет `422fbfb3` применяется поверх `33a8436b` с версией `2026111401`.
+Версия после установки `2026111402`. Установщик проверяет обе версии кода и сохраняет
+штатный журнал обновления. [Проверки Moodle](https://github.com/cauf1l3d/ustarlms/actions/runs/43707120894).
+
+Положите `ustar-connect-operator-422fbfb3.tar.gz` в `/home/aduk` и выполните проверку.
+
+```bash
+sudo bash <<'ROOT'
+set -euo pipefail
+umask 077
+archive=ustar-connect-operator-422fbfb3.tar.gz
+dir=/root/ustar-connect-operator-422fbfb3
+test ! -L "$dir"
+install -d -m 700 "$dir"
+cd "$dir"
+install -m 600 "/home/aduk/$archive" "$archive"
+printf '%s  %s\n' \
+  5c1e2da282fedfef72486c7d73159cebb66116b9a3610ae8e26d705d9acf5b82 \
+  "$archive" | sha256sum --check --strict -
+tar --no-same-owner -xzf "$archive"
+sha256sum --check --strict --quiet SHA256SUMS
+python3 -I -B update.py --check
+ROOT
+```
+
+После `phase: ready` установите обновление в окно обслуживания.
+
+```bash
+sudo systemd-run --wait --collect \
+  --unit=ustar-connect-operator-20261115-01 \
+  --property=Type=oneshot --property=TimeoutStartSec=30min \
+  /usr/bin/python3 -I -B /root/ustar-connect-operator-422fbfb3/update.py \
+  --upgrade --acknowledge-outage
+```
+
+```bash
+sudo python3 -I -B /root/ustar-connect-operator-422fbfb3/update.py --check
+```
+
+Ожидаются `phase: active`, `local_ustar: 2026111402`, приложение и worker
+`422fbfb3` и обе запущенные службы Connect.

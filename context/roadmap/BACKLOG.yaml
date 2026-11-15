@@ -924,6 +924,18 @@ tasks:
   - Администратор выдаёт одноразовое приглашение существующему сотруднику и может отозвать связь
   - Сотрудник принимает действующую редакцию Moodle и сразу получает рабочее меню в боте
   - Смена первого пароля сохраняется для входа на сайт
+- id: CONNECT-OPERATOR
+  title: Оператор Академии в Telegram
+  status: native_qualified_owner_installation_pending
+  qualification: context/runtime/connect_operator_qualification_20261115.json
+  runbook: docs/CONNECT_OPERATOR_RU.md
+  spec: docs/superpowers/plans/2026-11-14-connect-operator.md
+  depends_on: [CONNECT-INVITATIONS]
+  acceptance:
+  - Личный веб-профиль сервисной учётки доступен без кадрового профиля
+  - Персональная рабочая учётка оператора видит приглашения и рассылки после обычной привязки
+  - Бот готовит приглашение, а текущая сессия Академии подтверждает и выдаёт одноразовую ссылку
+  - Оператор публикует текст для выбранного отдела, затем отдельно подтверждает получателей Telegram
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

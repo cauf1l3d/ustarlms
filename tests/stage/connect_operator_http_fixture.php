@@ -8,6 +8,11 @@ if (getenv('USTAR_STAGE_OPERATOR_HTTP') !== '1' || getenv('USTAR_STAGE_PREFIX') 
 require_once($CFG->dirroot . '/user/lib.php');
 use local_ustar\connect\{bot_confirmation, bot_store, identity, identity_service};
 
+set_exception_handler(static function (Throwable $error): void {
+    fwrite(STDERR, get_class($error) . ': ' . $error->getMessage() . "\n" . $error->getTraceAsString() . "\n");
+    exit(1);
+});
+
 if (($argv[1] ?? '') === 'status') {
     echo $DB->count_records_select('local_ustar_conn_challenges', 'issuedby > 0');
     exit;
@@ -39,7 +44,7 @@ $code = identity_service::issue('telegram', '123456')['code'];
 identity_service::claim_verified($code, $identity, hash('sha256', 'operator-http'));
 $link = identity_service::confirm($code);
 $dialog = bot_store::dialog($identity, $operator, $DB->get_record('local_ustar_conn_links', ['id' => $link['id']], '*', MUST_EXIST));
-$view = bot_confirmation::prepare($dialog, 'execute.invitation.issue', ['userid' => $userid, 'subject' => '998878'],
+$view = bot_confirmation::prepare($dialog, 'execute.invitation.issue', ['userid' => (int)$userid, 'subject' => '998878'],
     'Приглашение для synthetic operatorinvitee');
 foreach ($view['buttons'] as $button) {
     if (isset($button['url'])) {

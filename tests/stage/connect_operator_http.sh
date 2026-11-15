@@ -8,15 +8,22 @@ work=$(mktemp -d /stage/operator-http.XXXXXXXX)
 backend=
 proxy=
 cleanup() {
+    local status=$?
     if [[ -n $proxy ]]; then kill "$proxy" 2>/dev/null || true; wait "$proxy" 2>/dev/null || true; fi
     if [[ -n $backend ]]; then kill "$backend" 2>/dev/null || true; wait "$backend" 2>/dev/null || true; fi
+    if (( status )); then
+        for file in "$work/php.log" "$work/tls.log"; do
+            if [[ -f $file ]]; then sed -E 's/(cb4|ui1)_[A-Za-z0-9_-]{43}/[redacted]/g' "$file" >&2; fi
+        done
+    fi
     rm -rf -- "$work"
 }
 trap cleanup EXIT
 openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj '/CN=127.0.0.1' \
     -addext 'subjectAltName=IP:127.0.0.1' -keyout "$work/tls.key" -out "$work/tls.crt" >/dev/null 2>&1
 fixture=/source/tests/stage/connect_operator_http_fixture.php
-action=$(php "$fixture" seed)
+echo 'CONNECT_OPERATOR_INVITATION_FIXTURE=STARTED'
+action=$(php -d display_errors=stderr "$fixture" seed)
 [[ $action =~ ^cb4_[A-Za-z0-9_-]{43}$ ]]
 php -S 127.0.0.1:18089 -t /stage/moodle/public >"$work/php.log" 2>&1 &
 backend=$!
@@ -28,14 +35,14 @@ for attempt in $(seq 1 25); do
     if "${get[@]}" -c "$work/cookie" "$web/login/index.php" -o "$work/login.html" 2>/dev/null; then break; fi
     sleep 1
 done
-token=$(php -r '$p=file_get_contents($argv[1]);if(!preg_match("/name="logintoken"[^>]*value="([^"]+)"/",$p,$m))exit(1);echo html_entity_decode($m[1]);' "$work/login.html")
+token=$(php -r '$p=file_get_contents($argv[1]);if(!preg_match("/name=\x22logintoken\x22[^>]*value=\x22([^\x22]+)\x22/",$p,$m)){fwrite(STDERR,"LOGIN_TOKEN_MISSING\n");exit(1);}echo html_entity_decode($m[1]);' "$work/login.html")
 "${get[@]}" -b "$work/cookie" -c "$work/cookie" --data 'username=operatorhttp' \
     --data-urlencode 'password=Fixture-Only-Password1!' --data-urlencode "logintoken=$token" \
     "$web/login/index.php" -o "$work/login-result.html"
 url="$web/local/ustar/connect_bot_confirm.php?action=$action"
 "${get[@]}" -b "$work/cookie" "$url" -o "$work/preview.html"
 grep -Fq 'Приглашение для synthetic operatorinvitee' "$work/preview.html"
-key=$(php -r '$p=file_get_contents($argv[1]);if(!preg_match("/name="sesskey" value="([^"]+)"/",$p,$m))exit(1);echo html_entity_decode($m[1]);' "$work/preview.html")
+key=$(php -r '$p=file_get_contents($argv[1]);if(!preg_match("/name=\x22sesskey\x22 value=\x22([^\x22]+)\x22/",$p,$m)){fwrite(STDERR,"CONFIRMATION_SESSKEY_MISSING\n");exit(1);}echo html_entity_decode($m[1]);' "$work/preview.html")
 test "$(php "$fixture" status)" = 0
 if grep -Eq 'ui1_[A-Za-z0-9_-]{43}' "$work/preview.html"; then exit 1; fi
 "${get[@]}" -b "$work/cookie" --data-urlencode "action=$action" --data 'sesskey=invalid' \

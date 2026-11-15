@@ -59,11 +59,12 @@ final class connect_bot_test extends \advanced_testcase {
         $text = 'Проверка текста объявления перед публикацией.';
         $preview = bot_service::update($sender, $this->request(164, $text));
         $this->assertStringContainsString($text, $preview['text']);
-        $filter = ['actoruserid' => $operator, 'body' => $text];
+        $filter = ['actoruserid' => $operator];
         $this->assertFalse($DB->record_exists('local_ustar_feed_posts', $filter));
         $view = $this->click($sender, $preview, 'Опубликовать в Ленте', 165);
         $this->assertSame('Получатели рассылки', $view['title']);
         $post = $DB->get_record('local_ustar_feed_posts', $filter, '*', MUST_EXIST);
+        $this->assertSame($text, $post->body);
         $this->assertSame('published', $post->status);
         $this->assertTrue($DB->record_exists('local_ustar_feed_audience', [
             'postid' => $post->id, 'scopekind' => 'department', 'scopeid' => $department['id'],

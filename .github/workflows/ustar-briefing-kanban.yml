@@ -1,0 +1,95 @@
+name: USTAR briefing Kanban production candidate
+
+on:
+  push:
+    branches: [feat/task-briefing-kanban-20261117]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: briefing-release-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    name: Reproducible, guarded operator archive
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Build twice from Git and verify byte-for-byte output
+        run: |
+          set -euo pipefail
+          source="$(git rev-parse HEAD)"
+          python3 -m py_compile scripts/infra/briefing_release.py scripts/infra/build_briefing_release.py scripts/infra/build_connect_broadcast_release.py
+          python3 scripts/infra/build_briefing_release.py --target "$source" --output artifacts | tee artifacts-build.json
+          python3 scripts/infra/build_briefing_release.py --target "$source" --output repeat > repeat-build.json
+          name="ustar-briefing-kanban-${source:0:8}.tar.gz"
+          cmp "artifacts/$name" "repeat/$name"
+          mkdir -p verify
+          tar -xzf "artifacts/$name" -C verify
+          (cd verify && sha256sum --check --strict SHA256SUMS && python3 -I -B update.py --verify)
+          printf '\n' >> verify/payload/classes/briefing/service.php
+          if (cd verify && python3 -I -B update.py --verify); then
+            echo 'Tamper rejection failed' >&2
+            exit 1
+          fi
+          sha256sum "artifacts/$name" | tee artifacts/SHA256SUMS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ustar-briefing-kanban-release
+          path: artifacts/
+          if-no-files-found: error
+
+  native:
+    name: Moodle fixture / ${{ matrix.moodle }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - moodle: '5.1.1 / PostgreSQL 16'
+            compose: compose.yaml
+          - moodle: '5.1.8 / PostgreSQL 16.15'
+            compose: patch-compose.yaml
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Python Connect regression and PHP syntax
+        run: |
+          set -euo pipefail
+          python3 -m unittest tests.r16.test_connect_role_bot tests.r16.test_connect_notifications tests.r16.test_connect_notification_callback
+          git diff --name-only 33a8436b79c7dce453f10bb54b30d1d1721aab57 HEAD -- 'moodle/local/ustar/**/*.php' | while read -r file; do
+            if [[ -f "$file" ]]; then php -l "$file"; fi
+          done
+      - name: Isolated installation, upgrade/repeat parity and briefing smoke
+        env:
+          USTAR_STAGE_COMPOSE: tests/stage/${{ matrix.compose }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts .stage-input/connect-invitation-baseline
+          git archive 33a8436b79c7dce453f10bb54b30d1d1721aab57 moodle | tar -x -C .stage-input/connect-invitation-baseline
+          trap 'docker compose -f "$USTAR_STAGE_COMPOSE" down --volumes --remove-orphans' EXIT
+          docker compose -f "$USTAR_STAGE_COMPOSE" build runner
+          docker compose -f "$USTAR_STAGE_COMPOSE" run --rm --entrypoint bash runner -c '
+            set -euo pipefail
+            bash /source/tests/stage/connect_invitation_native.sh
+            cd /stage/moodle
+            USTAR_DISPOSABLE_FIXTURE=briefing php /source/tests/stage/briefing_smoke.php /stage/moodle
+          '
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: ustar-briefing-native-${{ matrix.compose }}
+          path: artifacts/connect-invitation-*
+          if-no-files-found: warn

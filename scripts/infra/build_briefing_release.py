@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Build an exact, reproducible briefing/meeting/Kanban release from Git.
 
-Delivers the operator improvements of PR124 and the briefing changes of PR125
-directly from the owner's installed invitations baseline, without a second DB.
+Delivers PR125 briefing/meetings/Kanban over the owner's qualified and installed
+PR124 Connect operator source/worker baseline, without a second DB.
 """
 import argparse
 import json

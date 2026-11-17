@@ -43,7 +43,7 @@ def build(repo, target, output):
 
 
 def build_successor(repo, target, output, profile, operator_path, worker_changes, archive_prefix, *,
-                    schema_check=None, **extra):
+                    schema_check=None, new_subdirs=(), **extra):
     frozen = git_file(repo, release.FROZEN_COMMIT, 'scripts/infra/connect_team_release.py')
     engine = profile.successor(frozen, target, **{name.lower(): value for name, value in extra.items()})
     baseline = engine.WORKER_BEFORE
@@ -71,8 +71,12 @@ def build_successor(repo, target, output, profile, operator_path, worker_changes
         else:
             schema_check(before / core.APP_REL / 'db/install.xml', after / core.APP_REL / 'db/install.xml')
         delta = engine.changes(old, new)
-        engine.require(all((before / core.APP_REL / name).parent.is_dir() for name in delta),
+        allowed_dirs = tuple(item.rstrip('/') + '/' for item in new_subdirs)
+        engine.require(all((before / core.APP_REL / name).parent.is_dir() or
+                           any(name.startswith(prefix) for prefix in allowed_dirs) for name in delta),
                        'new_source_directory_unsupported')
+        engine.require(all(not (before / core.APP_REL / item.rstrip('/')).exists() for item in new_subdirs),
+                       'new_source_directory_already_exists')
         for root, version in ((before, engine.BEFORE), (after, engine.AFTER)):
             source = (root / core.APP_REL / 'version.php').read_text()
             match = re.search(r'\$plugin->version\s*=\s*(\d+)', source)

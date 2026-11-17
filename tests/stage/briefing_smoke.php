@@ -59,6 +59,7 @@ $system = context_system::instance();
 assign_capability('local/ustar:viewteam', CAP_ALLOW, $role, $system->id);
 assign_capability('local/ustar:use', CAP_ALLOW, $role, $system->id);
 role_assign($role, $manager, $system->id);
+role_assign($role, $outsider, $system->id);
 role_assign($role, $invitee, $system->id);
 role_unassign($role, $invitee, $system->id);
 $head = $DB->insert_record('local_ustar_staff_places', (object)[

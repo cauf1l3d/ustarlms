@@ -52,15 +52,16 @@ def validate_previous_attempt(engine):
     """Never bypass an unfinished transaction when rotating the journal path."""
     if not os.path.lexists(PREVIOUS_STATE):
         return
+    owner = os.geteuid()
     directory = PREVIOUS_STATE.lstat()
-    engine.require(stat.S_ISDIR(directory.st_mode) and directory.st_uid == 0
+    engine.require(stat.S_ISDIR(directory.st_mode) and directory.st_uid == owner
                    and stat.S_IMODE(directory.st_mode) == 0o700,
                    'previous_attempt_journal_directory_unsafe')
     path = PREVIOUS_STATE / 'state.json'
     if not os.path.lexists(path):
         engine.require(False, 'previous_attempt_journal_missing')
     status = path.lstat()
-    engine.require(stat.S_ISREG(status.st_mode) and status.st_uid == 0 and status.st_nlink == 1
+    engine.require(stat.S_ISREG(status.st_mode) and status.st_uid == owner and status.st_nlink == 1
                    and stat.S_IMODE(status.st_mode) == 0o600 and status.st_size < 65536,
                    'previous_attempt_journal_file_unsafe')
     try:

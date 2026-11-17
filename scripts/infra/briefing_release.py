@@ -19,6 +19,7 @@ WORKER_INSTALLER = None
 TARGET = None
 
 BASELINE = '422fbfb324db3b18447b61bc1c86a8a5481fe3e0'
+OPERATOR_BASELINE = '33a8436b79c7dce453f10bb54b30d1d1721aab57'
 OPERATOR_COMMIT = 'c13da3fb383650994c7d20268d72854c70d7767f'
 OPERATOR_SHA256 = 'cb543470f1210e2dfdc6d4b16d4a2e9efaf3572c0880ea9a9204350b903cdf96'
 BROADCAST_COMMIT = 'eff21cae9e932bc7649827cdda62910de8a40e4a'
@@ -37,7 +38,7 @@ def successor(source, target, core_source=None, worker_installer=None,
     exec(compile(raw, '<verified-operator-installer>', 'exec'), operator.__dict__)
     engine = operator.successor(source, target, core_source, worker_installer,
                                 predecessor_source=broadcast)
-    engine.require(engine.BASES == (BASELINE,) and engine.BEFORE == 2026111401
+    engine.require(engine.BASES == (OPERATOR_BASELINE,) and engine.BEFORE == 2026111401
                    and engine.AFTER == 2026111402, 'unexpected_briefing_baseline')
     # The operator installation is already active on server1. Retain its exact
     # application and worker commit as the verified rollback/source baseline.

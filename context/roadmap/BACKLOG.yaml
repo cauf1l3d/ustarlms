@@ -926,8 +926,9 @@ tasks:
   - Смена первого пароля сохраняется для входа на сайт
 - id: CONNECT-OPERATOR
   title: Оператор Академии в Telegram
-  status: native_qualified_owner_installation_pending
+  status: owner_reported_installed
   qualification: context/runtime/connect_operator_qualification_20261115.json
+  owner_observation: context/runtime/briefing_qualification_20261118.json
   runbook: docs/CONNECT_OPERATOR_RU.md
   spec: docs/superpowers/plans/2026-11-14-connect-operator.md
   depends_on: [CONNECT-INVITATIONS]
@@ -938,8 +939,9 @@ tasks:
   - Оператор публикует текст для выбранного отдела, затем отдельно подтверждает получателей Telegram
 - id: TASK-BRIEFING
   title: Отчёты руководителей, переговорные и канбан в Задачах
-  status: candidate_local_stage
-  runbook: docs/BRIEFING_AND_KANBAN_RU.md
+  status: native_qualified_owner_installation_pending
+  qualification: context/runtime/briefing_qualification_20261118.json
+  runbook: docs/BRIEFING_INSTALL_RU.md
   depends_on: [CONNECT-OPERATOR]
   acceptance:
   - Руководитель отправляет отчёт своего отдела к понедельнику 10:00 МСК

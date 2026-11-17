@@ -4,6 +4,6 @@ Entry point and reading order: [START_HERE](../../START_HERE.md).
 Canonical state: [STATE](../../context/roadmap/STATE.yaml).
 Machine view: [current.yaml](../../context/current.yaml).
 
-Updated: 2026-11-17. Next task: TASK-BRIEFING.
+Updated: 2026-11-18. Next task: TASK-BRIEFING.
 Application baseline: 5cc02944e1059ba015afcc7c5e8068ca56c34a92.
 This is not a deployment receipt. Do not edit this generated file.

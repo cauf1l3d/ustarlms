@@ -1,10 +1,10 @@
 schema_version: 2
-updated_at: '2026-11-15'
+updated_at: '2026-11-18'
 project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_operator
+  stage: task_briefing
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -35,7 +35,12 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: CONNECT-OPERATOR
+  task: TASK-BRIEFING
+  briefing_runbook: docs/BRIEFING_INSTALL_RU.md
+  briefing_qualification: context/runtime/briefing_qualification_20261118.json
+  briefing_source_commit: b1df4f2b234b6b79260eb3bbd2423fc0daf7ef79
+  briefing_owner_installation: pending
+  predecessor_task: CONNECT-OPERATOR
   operator_runbook: docs/CONNECT_OPERATOR_RU.md
   operator_draft_pr: 124
   invitation_runbook: docs/CONNECT_INVITATIONS_RU.md
@@ -53,8 +58,8 @@ current_work:
   observation_sha256: ee883caff5be0b391db583bb4deeb795c1dbd3c1bba0c4127faa02f9cd444f92
   expected_server_observer: /root/ustar-connect-role-bot-install-9a68246b/observe.py
   observer_path_check_on_server: pending
-  expected_application_version: 2026111402
-  expected_worker_commit: 422fbfb324db3b18447b61bc1c86a8a5481fe3e0
+  expected_application_version: 2026111700
+  expected_worker_commit: b1df4f2b234b6b79260eb3bbd2423fc0daf7ef79
   integrated_PRs:
   - 110
   - 111

@@ -1,0 +1,69 @@
+{
+  "verified_at_msk": "2026-11-18",
+  "pull_request": 125,
+  "application_and_worker_commit": "b1df4f2b234b6b79260eb3bbd2423fc0daf7ef79",
+  "required_application_and_worker_baseline": "422fbfb324db3b18447b61bc1c86a8a5481fe3e0",
+  "local_ustar_before": 2026111402,
+  "local_ustar_after": 2026111700,
+  "theme_ustar": 2026110200,
+  "workflow_run": 44127104864,
+  "jobs": [
+    {
+      "id": 134193782571,
+      "scope": "reproducible_archive_permissions_prior_journal_and_php_lint",
+      "result": "success"
+    },
+    {
+      "id": 134193783056,
+      "scope": "Moodle 5.1.1 / PostgreSQL 16",
+      "result": "success",
+      "native_tests": 66,
+      "assertions": 295,
+      "briefing_smoke": "BRIEFING_SMOKE=OK",
+      "fresh_upgrade_repeat_schema_equal": true
+    },
+    {
+      "id": 134193783122,
+      "scope": "Moodle 5.1.8 / PostgreSQL 16.15",
+      "result": "success",
+      "native_tests": 66,
+      "assertions": 295,
+      "briefing_smoke": "BRIEFING_SMOKE=OK",
+      "fresh_upgrade_repeat_schema_equal": true
+    }
+  ],
+  "python_connect_tests": 56,
+  "schema_delta": {
+    "new_tables": 6,
+    "existing_table_additions": {
+      "local_ustar_task_meta": [
+        "briefkey unique request identity"
+      ]
+    }
+  },
+  "package": {
+    "archive": "ustar-briefing-kanban-b1df4f2b.tar.gz",
+    "sha256": "1cd5bf68325739912fdb3a23709610026b5e992621763b3482971125da3100e7",
+    "artifact_id": 14348241414,
+    "artifact_zip_sha256": "035ebf52f9b06303fec051909f729cea8afaf01b11ad1a5df6bd9855ababf472",
+    "zip_crc_verified": true,
+    "saved_archive_matches_ci_bytes": true,
+    "package_verify": "package_verified",
+    "permission_and_previous_journal_regression": "pass",
+    "local_rebuild_matches_ci_bytes": true
+  },
+  "owner_history": {
+    "operator_observation": "https://github.com/cauf1l3d/ustarlms/pull/125#issuecomment-6952547830",
+    "operator_application_version": 2026111402,
+    "rolled_back_attempt": "https://github.com/cauf1l3d/ustarlms/pull/125#issuecomment-6954210265",
+    "attempt_commit": "b264aeb4b184cffa695f3b2a1633213898147f4a",
+    "result": "rolled_back",
+    "reported_worker_commit": "422fbfb324db3b18447b61bc1c86a8a5481fe3e0",
+    "evidence_scope": "PR comments recording owner shell output; no independent server connection",
+    "previous_journal": "/var/lib/ustar-task-briefing-20261117/state.json",
+    "retry_journal": "/var/lib/ustar-task-briefing-20261117-v2/state.json"
+  },
+  "production_installation": "awaiting_owner_preflight_and_installation",
+  "live_browser_and_telegram_acceptance": "pending",
+  "runbook": "docs/BRIEFING_INSTALL_RU.md"
+}

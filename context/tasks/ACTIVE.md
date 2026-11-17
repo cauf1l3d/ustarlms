@@ -1,16 +1,14 @@
-# Активная работа · 17.11.2026
+# Активная работа · 18.11.2026
 
-TASK-BRIEFING. Формы отделов, сводка, встречи и канбан. Кандидат 2026111700.
-[Инструкция и проверка](../../docs/BRIEFING_AND_KANBAN_RU.md).
-
-PR124 Connect Operator ожидает установки. [Инструкция](../../docs/CONNECT_OPERATOR_RU.md).
-База 33a8436b установлена. [Квитанция](../runtime/connect_invitations_owner_install_20261114.json).
+TASK-BRIEFING. Пакет b1df4f2b, local1700. Два native Moodle профиля и архив прошли проверку.
+[Установка](../../docs/BRIEFING_INSTALL_RU.md), [результаты](../runtime/briefing_qualification_20261118.json).
+Owner сообщил базу local1402/worker422fbfb3 и откат предыдущей установки.
+Повторная установка и живая приёмка брифинга ожидаются.
 
 ## Повторная привязка Telegram
 
 CONNECT-RELINK-01. Отзыв освобождает возможность подключить другой Telegram после
 новой ссылки и подтверждения. История связей и прежний контроль владельца сохранены.
-Два воспроизведённых отказа проходят после исправления в PHP/SQLite. Moodle 5.1.1 и 5.1.8 прошли по 432 теста. Установщик dc3a3c54 ожидает запуска владельцем.
 [Разбор](../reviews/20261111/CONNECT_RELINK.md), [проверки](../runtime/connect_relink_qualification_20261111.json),
 [установка](../../docs/CONNECT_RELINK_INSTALL_RU.md).
 

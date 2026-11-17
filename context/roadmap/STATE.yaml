@@ -1,9 +1,9 @@
 schema_version: 2
-updated_at: '2026-11-17'
+updated_at: '2026-11-18'
 project: USTAR Academy
 stage: task_briefing
 stage_label: Briefing, meeting rooms and task Kanban
-current_activity: Candidate includes department forms, a briefing presentation, room booking, calendars, Telegram menu entries and Kanban task transitions. The Connect Operator owner rollout is still unverified.
+current_activity: Briefing package b1df4f2b passed both Moodle native profiles and archive verification. Operator baseline 422fbfb3 was observed by the owner. The previous briefing attempt rolled back. The qualified retry awaits owner preflight, installation and live acceptance.
 entrypoint: START_HERE.md
 next_task: TASK-BRIEFING
 ready_tasks: []
@@ -23,6 +23,7 @@ code_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
+  latest_operator_and_briefing_owner_observation: context/runtime/briefing_qualification_20261118.json
   latest_connect_invitation_owner_receipt: context/runtime/connect_invitations_owner_install_20261114.json
   latest_connect_checklist_widget_owner_receipt: context/runtime/connect_checklist_widget_owner_pilot_20261114.json
   latest_connect_broadcast_owner_receipt: context/runtime/connect_delivery_repair_owner_acceptance_20261113.json
@@ -398,8 +399,13 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: candidate_local_stage
-  runbook: docs/BRIEFING_AND_KANBAN_RU.md
+  status: native_qualified_owner_installation_pending
+  qualification: context/runtime/briefing_qualification_20261118.json
+  application_commit: b1df4f2b234b6b79260eb3bbd2423fc0daf7ef79
+  worker_commit: b1df4f2b234b6b79260eb3bbd2423fc0daf7ef79
+  deployment_baseline: 422fbfb324db3b18447b61bc1c86a8a5481fe3e0
+  source_pr: 125
+  runbook: docs/BRIEFING_INSTALL_RU.md
   branch: feat/task-briefing-kanban-20261117
   deployed: false
   local_ustar_version: 2026111700

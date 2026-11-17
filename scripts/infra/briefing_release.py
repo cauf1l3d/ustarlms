@@ -63,6 +63,12 @@ def successor(source, target, core_source=None, worker_installer=None,
                 folder.mkdir(mode=0o755)
                 engine.require(folder.is_dir() and not folder.is_symlink(),
                                'briefing_directory_creation_failed')
+                # The release runs with umask 077; mkdir(mode=0755) therefore
+                # creates 0700. Moodle's www-data PHP CLI must traverse this
+                # new namespace before it can lint any candidate PHP file.
+                os.chmod(folder, 0o755, follow_symlinks=False)
+                engine.require(stat.S_IMODE(folder.lstat().st_mode) == 0o755,
+                               'briefing_directory_permissions_invalid')
                 engine.sync_directory(folder.parent)
             else:
                 engine.require(folder.is_dir() and not folder.is_symlink(),

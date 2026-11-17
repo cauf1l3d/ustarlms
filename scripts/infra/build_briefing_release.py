@@ -22,6 +22,8 @@ NEW_TABLES = frozenset({
 def verify_schema(before: Path, after: Path):
     original = ET.parse(before).getroot()
     candidate = ET.parse(after).getroot()
+    # XMLDB VERSION is a release marker, not a table/column mutation.
+    candidate.set('VERSION', original.get('VERSION'))
     oldtables = {row.get('NAME') for row in original.findall('./TABLES/TABLE')}
     newtables = {row.get('NAME') for row in candidate.findall('./TABLES/TABLE')}
     if newtables - oldtables != NEW_TABLES or oldtables - newtables:

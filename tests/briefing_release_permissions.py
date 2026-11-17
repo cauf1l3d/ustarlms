@@ -43,3 +43,34 @@ finally:
     os.umask(old_umask)
 
 print('BRIEFING_DIRECTORY_MODE=OK')
+
+# The previous production attempt is reusable only after a verified rollback.
+with tempfile.TemporaryDirectory(prefix='ustar-briefing-journal-') as tmp:
+    journal = Path(tmp) / 'previous'
+    journal.mkdir(mode=0o700)
+    state_path = journal / 'state.json'
+    state_path.write_text(__import__('json').dumps({
+        'package': briefing_release.PREVIOUS_PACKAGE,
+        'baseline': briefing_release.BASELINE,
+        'step': 'rolled_back',
+    }))
+    state_path.chmod(0o600)
+    previous = briefing_release.PREVIOUS_STATE
+    try:
+        briefing_release.PREVIOUS_STATE = journal
+        briefing_release.validate_previous_attempt(Engine)
+        state_path.write_text(__import__('json').dumps({
+            'package': briefing_release.PREVIOUS_PACKAGE,
+            'baseline': briefing_release.BASELINE,
+            'step': 'prepared',
+        }))
+        state_path.chmod(0o600)
+        try:
+            briefing_release.validate_previous_attempt(Engine)
+        except AssertionError as error:
+            if str(error) != 'previous_attempt_not_rolled_back':
+                raise
+        else:
+            raise AssertionError('unfinished previous transaction was accepted')
+    finally:
+        briefing_release.PREVIOUS_STATE = previous

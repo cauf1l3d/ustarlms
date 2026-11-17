@@ -27,6 +27,25 @@ STATE = Path('/var/lib/ustar-task-briefing-20261117')
 NEW_DIRECTORY = 'classes/briefing'
 
 
+def ensure_briefing_directory(folder, engine):
+    """Create the new Moodle namespace with explicit traverse/read permissions."""
+    engine.require(not folder.is_symlink(), 'unsafe_briefing_directory')
+    if not folder.exists():
+        folder.mkdir(mode=0o755)
+        engine.require(folder.is_dir() and not folder.is_symlink(),
+                       'briefing_directory_creation_failed')
+        # main() sets umask(077), which masks mkdir(0755) to 0700.
+        # www-data must traverse this directory to lint/load the new classes.
+        os.chmod(folder, 0o755, follow_symlinks=False)
+        engine.require(stat.S_IMODE(folder.lstat().st_mode) == 0o755,
+                       'briefing_directory_permissions_invalid')
+        engine.sync_directory(folder.parent)
+    else:
+        engine.require(folder.is_dir() and not folder.is_symlink(),
+                       'unexpected_briefing_directory')
+    return folder
+
+
 def successor(source, target, core_source=None, worker_installer=None,
               *, operator_source=None, broadcast_source=None):
     raw = OPERATOR_SOURCE if operator_source is None else operator_source
@@ -54,8 +73,7 @@ def successor(source, target, core_source=None, worker_installer=None,
             engine.require(classes.is_dir() and not classes.is_symlink(),
                            'unexpected_classes_directory')
             folder = self.core.safe_path(self.app, NEW_DIRECTORY)
-            engine.require(not folder.is_symlink(), 'unsafe_briefing_directory')
-            return folder
+            return ensure_briefing_directory(folder, engine)
 
         def install_source(self, state):
             folder = self._briefing_directory()

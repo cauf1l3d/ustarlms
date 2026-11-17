@@ -10,8 +10,8 @@ require_once($CFG->dirroot . '/user/lib.php');
 use local_ustar\briefing\{conflict, meetings, page, service as briefing};
 use local_ustar\task_workspace\{calendar, service as tasks};
 
-if (parse_url($CFG->wwwroot, PHP_URL_HOST) !== 'localhost') {
-    throw new RuntimeException('Expected localhost fixture Moodle.');
+if ($CFG->wwwroot !== 'http://ustar-stage1.invalid' || realpath($argv[1]) !== '/stage/moodle') {
+    throw new RuntimeException('Expected the dedicated, isolated Moodle stage fixture.');
 }
 
 function check(bool $ok, string $test): void {

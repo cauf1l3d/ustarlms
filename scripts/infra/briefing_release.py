@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Install the combined Telegram operator, briefing and Kanban successor.
 
-The only accepted starting point is the owner's invitations installation 33a8436b.
+The accepted starting point is the qualified Connect operator release 422fbfb3.
 All writes use the already-qualified source/worker/cron transaction engine.
 """
 import hashlib
@@ -18,7 +18,7 @@ CORE_SOURCE = None
 WORKER_INSTALLER = None
 TARGET = None
 
-BASELINE = '33a8436b79c7dce453f10bb54b30d1d1721aab57'
+BASELINE = '422fbfb324db3b18447b61bc1c86a8a5481fe3e0'
 OPERATOR_COMMIT = 'c13da3fb383650994c7d20268d72854c70d7767f'
 OPERATOR_SHA256 = 'cb543470f1210e2dfdc6d4b16d4a2e9efaf3572c0880ea9a9204350b903cdf96'
 BROADCAST_COMMIT = 'eff21cae9e932bc7649827cdda62910de8a40e4a'
@@ -39,7 +39,11 @@ def successor(source, target, core_source=None, worker_installer=None,
                                 predecessor_source=broadcast)
     engine.require(engine.BASES == (BASELINE,) and engine.BEFORE == 2026111401
                    and engine.AFTER == 2026111402, 'unexpected_briefing_baseline')
-    engine.AFTER = 2026111700
+    # The operator installation is already active on server1. Retain its exact
+    # application and worker commit as the verified rollback/source baseline.
+    engine.BASES = (BASELINE,)
+    engine.WORKER_BEFORE = BASELINE
+    engine.BEFORE, engine.AFTER = 2026111402, 2026111700
     engine.STATE = STATE
 
     class Host(engine.Host):

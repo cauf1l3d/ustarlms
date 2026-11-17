@@ -67,6 +67,11 @@ $staff = $DB->insert_record('local_ustar_staff_places', (object)[
     'placecode' => 'brief-' . random_string(10), 'departmentid' => 'retail', 'positionid' => 'retail_seller', 'managerplaceid' => $head]);
 $DB->insert_record('local_ustar_assignments', (object)['userid' => $manager, 'staffplaceid' => $head, 'assignmenttype' => 'primary']);
 $DB->insert_record('local_ustar_assignments', (object)['userid' => $invitee, 'staffplaceid' => $staff, 'assignmenttype' => 'primary']);
+$otherplace = $DB->insert_record('local_ustar_staff_places', (object)[
+    'placecode' => 'brief-' . random_string(10), 'departmentid' => 'warehouse', 'positionid' => 'warehouse_worker']);
+$DB->insert_record('local_ustar_assignments', (object)[
+    'userid' => $outsider, 'staffplaceid' => $otherplace, 'assignmenttype' => 'primary']);
+
 $fields = [['label' => 'Weekly revenue', 'type' => 'number', 'required' => true]];
 briefing::save_template($admin, 'retail', 0, 'Retail original', 10, true, $fields);
 briefing::save_minutes($admin, $week, 0, 'Fixture minute');

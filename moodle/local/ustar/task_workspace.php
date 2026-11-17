@@ -3,12 +3,17 @@
 defined('MOODLE_INTERNAL') || die();
 use local_ustar\task_workspace\{service, policy, calendar, page};
 use local_ustar\{learning_tasks, task_files};
+use local_ustar\briefing\commands;
 
 $actorid = (int)$USER->id;
 $view = optional_param('view', 'overview', PARAM_ALPHA);
-if (!in_array($view, ['overview', 'calendar', 'checklists', 'control', 'analytics', 'rules'], true)) { $view = 'overview'; }
+if (!in_array($view, ['overview', 'kanban', 'calendar', 'briefing', 'meetings', 'checklists', 'control', 'analytics', 'rules'], true)) { $view = 'overview'; }
 $scope = optional_param('scope', service::can_manage($actorid) ? 'team' : 'mine', PARAM_ALPHA);
 if (!in_array($scope, ['mine', 'team', 'outgoing'], true)) { $scope = 'mine'; }
+if ($scope !== 'mine' && !service::can_manage($actorid)
+        && in_array($view, ['meetings', 'briefing'], true)) {
+    $scope = 'mine';
+}
 service::scope_sql($actorid, $scope);
 $state = ['view' => $view, 'scope' => $scope, 'page' => max(0, optional_param('pageno', 0, PARAM_INT)),
     'filter' => optional_param('filter', 'all', PARAM_ALPHA), 'q' => optional_param('q', '', PARAM_TEXT),
@@ -18,13 +23,32 @@ $state = ['view' => $view, 'scope' => $scope, 'page' => max(0, optional_param('p
     'positionid' => optional_param('positionid', '', PARAM_ALPHANUMEXT),
     'lookup' => optional_param('lookup', '', PARAM_TEXT), 'assigneeid' => optional_param('assigneeid', 0, PARAM_INT),
     'templateid' => optional_param('templateid', 0, PARAM_INT), 'parentid' => optional_param('parentid', 0, PARAM_INT)];
+$state += [
+    'briefweek' => optional_param('briefweek', '', PARAM_RAW_TRIMMED),
+    'briefsection' => optional_param('briefsection', '', PARAM_ALPHA),
+    'briefdept' => optional_param('briefdept', '', PARAM_ALPHANUMEXT),
+    'briefreport' => optional_param('briefreport', 0, PARAM_INT),
+    'meetingsection' => optional_param('meetingsection', '', PARAM_ALPHA),
+    'meetingdate' => optional_param('meetingdate', '', PARAM_RAW_TRIMMED),
+    'meetingid' => optional_param('meetingid', 0, PARAM_INT),
+    'slotstart' => optional_param('slotstart', 0, PARAM_INT),
+    'slotend' => optional_param('slotend', 0, PARAM_INT),
+    'slotroom' => optional_param('slotroom', 0, PARAM_INT),
+    'boardstatus' => optional_param('boardstatus', '', PARAM_ALPHANUMEXT),
+];
+if ($view === 'briefing' && optional_param('briefexport', 0, PARAM_BOOL)) {
+    \local_ustar\briefing\service::download($actorid, $state['briefweek']);
+}
 $notice = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
     service::actor($actorid);
     try {
         $action = required_param('action', PARAM_ALPHANUMEXT);
-        if ($action === 'create') {
+        if (($view === 'briefing' && str_starts_with($action, 'brief_'))
+                || ($view === 'meetings' && str_starts_with($action, 'meeting_'))) {
+            redirect(new moodle_url('/local/ustar/tasks.php', commands::run($action, $actorid, $state)));
+        } else if ($action === 'create') {
             \local_ustar\task_workspace\recipients::validate($actorid, required_param('assigneeid', PARAM_INT),
                 required_param('departmentid', PARAM_ALPHANUMEXT), required_param('positionid', PARAM_ALPHANUMEXT));
             $p = service::policy_for($actorid);
@@ -41,9 +65,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'templateid' => optional_param('templateid', 0, PARAM_INT), 'policyid' => optional_param('policyid', 0, PARAM_INT),
                 'parentid' => optional_param('parentid', 0, PARAM_INT), 'kpiweight' => optional_param('kpiweight', 10, PARAM_INT),
                 'requirephoto' => optional_param('requirephoto', 0, PARAM_BOOL), 'policy' => $p,
+                'briefreport' => $state['briefreport'], 'briefkey' => optional_param('briefkey', '', PARAM_ALPHANUM),
                 'repeat' => optional_param('repeat', 0, PARAM_BOOL), 'enddate' => optional_param('enddate', '', PARAM_RAW_TRIMMED),
             ], task_files::uploaded());
-            redirect(new moodle_url('/local/ustar/tasks.php', ['taskid' => $taskid, 'scope' => $scope, 'saved' => 1]));
+            redirect(new moodle_url('/local/ustar/tasks.php', ['taskid' => $taskid, 'scope' => $scope, 'saved' => 1,
+                'view' => $view, 'briefweek' => $state['briefweek']]));
+        } else if ($view === 'kanban' && $action === 'kanban_move') {
+            $taskid = required_param('movetaskid', PARAM_INT);
+            $task = service::detail($taskid, $actorid);
+            $target = required_param('target', PARAM_ALPHANUMEXT);
+            $move = service::kanban_moves($task, $actorid)[$target] ?? '';
+            if (in_array($move, ['report', 'return'], true)) {
+                redirect(new moodle_url('/local/ustar/tasks.php', ['view' => 'kanban', 'scope' => $scope, 'taskid' => $taskid]));
+            }
+            if (!in_array($move, ['start', 'approve'], true)) {
+                throw new invalid_parameter_exception('Переход между этими колонками недоступен.');
+            }
+            learning_tasks::transition($taskid, $actorid, $move, required_param('version', PARAM_INT));
+            redirect(new moodle_url('/local/ustar/tasks.php', ['view' => 'kanban', 'scope' => $scope,
+                'q' => $state['q'], 'saved' => 1]));
         } else if ($action === 'report') {
             $answers = [];
             foreach (service::fields(service::meta(required_param('taskid', PARAM_INT))) as $field) {
@@ -98,13 +138,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         redirect(new moodle_url('/local/ustar/tasks.php', ['view' => $view, 'scope' => $scope,
             'taskid' => $state['taskid'], 'saved' => 1]));
     } catch (Throwable $e) {
-        $notice = $e->getMessage();
+        $notice = $e instanceof dml_missing_record_exception ? 'Запись больше не доступна.' : $e->getMessage();
         if (!empty($_FILES['attachments']['name'])) { $notice .= ' Файлы для новой отправки приложите повторно.'; }
         $state['form'] = ['create' => 'create', 'template' => 'template'][$action ?? ''] ?? $state['form'];
         // Keep rejected form text in this response only; never persist it or expose uploads.
         $state['input'] = [];
         foreach ($_POST as $key => $value) {
-            if (in_array($key, ['sesskey', 'action', 'version', 'revision'], true)) { continue; }
+            if ($e instanceof \local_ustar\briefing\conflict
+                    || in_array($key, ['sesskey', 'action', 'version', 'revision'], true)) { continue; }
             if (is_string($value)) { $state['input'][$key] = \core_text::substr($value, 0, 10000); }
             else if (is_array($value)) {
                 $state['input'][$key] = array_map(static fn($v) => is_scalar($v) ? \core_text::substr((string)$v, 0, 10000) : '', array_slice($value, 0, 100));
@@ -117,8 +158,8 @@ $PAGE->set_url(new moodle_url('/local/ustar/tasks.php', ['view' => $view, 'scope
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Задачи и контроль | USTAR Academy');
 $PAGE->set_heading('USTAR Academy');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20260930-rc4']));
-$PAGE->requires->js(new moodle_url('/local/ustar/task_workspace.js'));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20261117-briefing']));
+$PAGE->requires->js(new moodle_url('/local/ustar/task_workspace.js', ['v' => '20261117-briefing']));
 echo $OUTPUT->header();
 if ($notice !== '') { echo $OUTPUT->notification(s($notice), 'notifyproblem'); }
 if (optional_param('saved', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Изменения сохранены.', 'notifysuccess'); }

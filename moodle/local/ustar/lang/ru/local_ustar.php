@@ -68,3 +68,6 @@ $string['rewardshop_order_rejected'] = 'Отклонена';
 $string['privacy:metadata:rewardshop'] = 'Reward catalogue changes and employee reward orders paid with USCOIN.';
 
 $string['eventconnectinvitationchanged'] = 'Изменение приглашения Telegram';
+
+$string['taskremindbriefing'] = 'Напоминания о брифинге';
+$string['privacy:metadata:briefing'] = 'Отчёты, протоколы, организаторы и приглашения на встречи.';

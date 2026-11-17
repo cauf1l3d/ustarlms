@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-11-06'
+updated_at: '2026-11-17'
 canonical_branch: main
 source_baseline: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -936,6 +936,17 @@ tasks:
   - Персональная рабочая учётка оператора видит приглашения и рассылки после обычной привязки
   - Бот готовит приглашение, а текущая сессия Академии подтверждает и выдаёт одноразовую ссылку
   - Оператор публикует текст для выбранного отдела, затем отдельно подтверждает получателей Telegram
+- id: TASK-BRIEFING
+  title: Отчёты руководителей, переговорные и канбан в Задачах
+  status: candidate_local_stage
+  runbook: docs/BRIEFING_AND_KANBAN_RU.md
+  depends_on: [CONNECT-OPERATOR]
+  acceptance:
+  - Руководитель отправляет отчёт своего отдела к понедельнику 10:00 МСК
+  - Администратор редактирует формы и порядок показа отделов и ведёт общий протокол
+  - Поручения из отчётов работают на доске существующих задач
+  - Приглашённые видят встречи в календаре, комнаты защищены от двойного бронирования
+  - Связанный Telegram показывает статусы и открывает авторизованные страницы Академии
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

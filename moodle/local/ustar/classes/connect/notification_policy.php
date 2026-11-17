@@ -11,6 +11,7 @@ final class notification_policy {
         'task_started' => 'tasks', 'task_sent_for_review' => 'tasks', 'task_completed' => 'tasks',
         'task_approved' => 'tasks', 'task_returned' => 'tasks', 'task_cancelled' => 'tasks',
         'task_reminder' => 'tasks', 'task_escalation' => 'tasks',
+        'briefing_reminder' => 'tasks', 'meeting_invited' => 'tasks', 'meeting_updated' => 'tasks', 'meeting_cancelled' => 'tasks',
         'feed_comment' => 'feed', 'feed_reply' => 'feed', 'feed_announcement' => 'feed', 'feed_broadcast' => 'feed',
         'grade_request' => 'grades', 'grade_approved' => 'grades', 'grade_returned' => 'grades',
     ];
@@ -27,6 +28,9 @@ final class notification_policy {
             'task_approved' => 'Результат задачи принят', 'task_returned' => 'Задача возвращена на доработку',
             'task_cancelled' => 'Задача отменена', 'task_reminder' => 'Напоминание о задаче',
             'task_escalation' => 'Требуется внимание к задаче',
+            'briefing_reminder' => 'Пора сдать отчёт к брифингу',
+            'meeting_invited' => 'Приглашение на встречу', 'meeting_updated' => 'Встреча изменена',
+            'meeting_cancelled' => 'Встреча отменена',
             'feed_comment' => 'Новый комментарий', 'feed_reply' => 'Новый ответ на комментарий',
             'feed_announcement', 'feed_broadcast' => 'Новое объявление в Академии',
             'grade_request' => 'Новая заявка на грейд', 'grade_approved' => 'Грейд подтверждён',
@@ -34,7 +38,7 @@ final class notification_policy {
         };
     }
     public static function ttl(string $event): int {
-        return in_array($event, ['task_reminder', 'feed_comment', 'feed_reply'], true) ? HOURSECS : DAYSECS;
+        return in_array($event, ['task_reminder', 'briefing_reminder', 'feed_comment', 'feed_reply'], true) ? HOURSECS : DAYSECS;
     }
     public static function permitted(\stdClass $notice): bool {
         global $DB;
@@ -83,6 +87,18 @@ final class notification_policy {
             if (!preg_match('/\A'.preg_quote($event, '/').':([1-9][0-9]*):'.$uid.':[0-9]+\z/', $key, $m)) { return false; }
             try { \local_ustar\feed_access::readable((int)$m[1], $uid); return true; }
             catch (\required_capability_exception $error) { return false; }
+        }
+        if ($event === 'briefing_reminder') {
+            return \local_ustar\briefing\reminders::permitted($uid, $key);
+        }
+        if (in_array($event, ['meeting_invited', 'meeting_updated', 'meeting_cancelled'], true)) {
+            if (!preg_match('/\Ameeting:([1-9][0-9]*):([1-9][0-9]*):' . $uid . '\z/', $key, $matches)) {
+                return false;
+            }
+            $record = $DB->get_record('local_ustar_meetings', ['id' => (int)$matches[1], 'revision' => (int)$matches[2]]);
+            return $record && (bool)$record->cancelled === ($event === 'meeting_cancelled')
+                && $record->startat > time() && $DB->record_exists('local_ustar_meeting_members',
+                    ['meetingid' => $record->id, 'userid' => $uid]);
         }
         $taskid = 0;
         if (preg_match('/\Atask-(?:assigned|revised|reassigned-old|event|review):([1-9][0-9]*)(?::[A-Za-z0-9_]+)*\z/', $key, $m)) {

@@ -26,6 +26,13 @@ def _academy_url(value, origin):
             or actual.fragment):
         raise ValueError('invalid_bot_url')
     values = parse_qsl(actual.query, keep_blank_values=True, strict_parsing=True)
+    if actual.path == '/local/ustar/tasks.php':
+        if values in ([('view', 'briefing')], [('view', 'meetings')]):
+            return value
+        if (len(values) == 2 and values[0] == ('view', 'meetings') and values[1][0] == 'meetingid'
+                and re.fullmatch('[1-9][0-9]{0,18}', values[1][1]) and int(values[1][1]) < 2**63):
+            return value
+        raise ValueError('invalid_bot_url')
     if len(values) != 1:
         raise ValueError('invalid_bot_url')
     key, argument = values[0]

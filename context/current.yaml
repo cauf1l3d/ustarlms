@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-15'
+updated_at: '2026-11-17'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -141,10 +141,10 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: PR 124 passed Moodle 5.1.1 and 5.1.8 checks for Telegram operator workflows
-    and the site administrator profile. Archive 422fbfb3 awaits owner installation
-    and a live Telegram pilot.
-  next_task: CONNECT-OPERATOR
+  activity: Candidate includes department forms, a briefing presentation, room booking,
+    calendars, Telegram menu entries and Kanban task transitions. The Connect Operator
+    owner rollout is still unverified.
+  next_task: TASK-BRIEFING
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -201,6 +201,7 @@ current_work:
     STUDIO-CSP-01: awaiting_owner_deployment
     STUDIO-PREVIEW-01: awaiting_owner_deployment
     STUDIO-SCORM-01: in_progress
+    TASK-BRIEFING: candidate_local_stage
     TECH-01: planned
 server_facts:
   status: partial

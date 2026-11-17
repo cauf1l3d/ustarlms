@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026111100" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026111700" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -1793,6 +1793,7 @@
         <FIELD NAME="lastcheckedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
       <FIELD NAME="reviewedat" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
         <FIELD NAME="policyjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="briefkey" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -1803,6 +1804,7 @@
         <INDEX NAME="reviewdue" UNIQUE="false" FIELDS="reviewdueat" />
         <INDEX NAME="checked" UNIQUE="false" FIELDS="lastcheckedat" />
       <INDEX NAME="parent" UNIQUE="false" FIELDS="parentid" />
+        <INDEX NAME="briefrequest" UNIQUE="true" FIELDS="briefkey" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_task_templates" COMMENT="Versioned task workspace extension; existing tasks remain canonical">
@@ -2294,6 +2296,109 @@
         <INDEX NAME="requestkey_uix" UNIQUE="true" FIELDS="requestkey"/>
         <INDEX NAME="userid_id_idx" UNIQUE="false" FIELDS="userid,id"/>
         <INDEX NAME="status_id_idx" UNIQUE="false" FIELDS="status,id"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_brief_templates" COMMENT="Department briefing form">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="departmentid" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="100"/>
+        <FIELD NAME="title" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="200"/>
+        <FIELD NAME="schemajson" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="sortorder" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="100"/>
+        <FIELD NAME="revision" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="1"/>
+        <FIELD NAME="active" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="1"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="departmentuniq" UNIQUE="true" FIELDS="departmentid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_brief_reports" COMMENT="Weekly briefing reports with form snapshots">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="weekkey" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="10"/>
+        <FIELD NAME="departmentid" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="100"/>
+        <FIELD NAME="userid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="schemajson" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="answersjson" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="revision" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="1"/>
+        <FIELD NAME="submittedat" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="weekdeptuniq" UNIQUE="true" FIELDS="weekkey, departmentid"/>
+        <INDEX NAME="authoridx" UNIQUE="false" FIELDS="userid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_brief_minutes" COMMENT="Weekly meeting minutes">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="weekkey" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="10"/>
+        <FIELD NAME="userid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="content" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="revision" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="1"/>
+        <FIELD NAME="timemodified" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="weekuniq" UNIQUE="true" FIELDS="weekkey"/>
+        <INDEX NAME="authoridx" UNIQUE="false" FIELDS="userid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_meeting_rooms" COMMENT="Bookable meeting rooms">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="150"/>
+        <FIELD NAME="capacity" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="active" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="1"/>
+        <FIELD NAME="revision" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="1"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_ustar_meetings" COMMENT="Scheduled meetings and room reservations">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="ownerid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="roomid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="title" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="200"/>
+        <FIELD NAME="agenda" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="startat" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="endat" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="cancelled" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="revision" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="1"/>
+        <FIELD NAME="requestkey" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="64"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="requestuniq" UNIQUE="true" FIELDS="requestkey"/>
+        <INDEX NAME="roomslotidx" UNIQUE="false" FIELDS="roomid, cancelled, startat"/>
+        <INDEX NAME="ownerslotidx" UNIQUE="false" FIELDS="ownerid, cancelled, startat"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_meeting_members" COMMENT="Invited Academy users and their meeting responses">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="meetingid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="userid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0"/>
+        <FIELD NAME="rsvp" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="12"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="meetinguseruniq" UNIQUE="true" FIELDS="meetingid, userid"/>
+        <INDEX NAME="memberidx" UNIQUE="false" FIELDS="userid, meetingid"/>
       </INDEXES>
     </TABLE>
 </TABLES>

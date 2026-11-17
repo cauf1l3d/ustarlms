@@ -1,6 +1,10 @@
-# Активная работа · 15.11.2026
+# Активная работа · 17.11.2026
 
-CONNECT-OPERATOR. PR124, профиль служебной учётки и управление приглашениями и рассылками. [Инструкция](../../docs/CONNECT_OPERATOR_RU.md). Установка базы `33a8436b` завершилась с кодом 0. [Квитанция](../runtime/connect_invitations_owner_install_20261114.json).
+TASK-BRIEFING. Формы отделов, сводка, встречи и канбан. Кандидат 2026111700.
+[Инструкция и проверка](../../docs/BRIEFING_AND_KANBAN_RU.md).
+
+PR124 Connect Operator ожидает установки. [Инструкция](../../docs/CONNECT_OPERATOR_RU.md).
+База 33a8436b установлена. [Квитанция](../runtime/connect_invitations_owner_install_20261114.json).
 
 ## Повторная привязка Telegram
 
@@ -22,7 +26,6 @@ Owner5Nov: discovery app719bf47c/toolaa61d595 — SHA OK, ready→active,exit0,
 конечный readonly active. [Квитанция](../runtime/library_discovery_owner_deploy_20261105.json).
 Повторная установка/recovery не нужны. Local/theme0200,649fixed files/108tables;
 не whole-host census. CI4/FullRC8 PASS, native426/1975 в обоихruntime.
-Подробная employee browser-приёмка Library не перечислена.
 SCORM app5e61/tool4aee принят3Nov; marketplace471/tool59f принят «Отлично работает».
 Default hidden/exact department allowlist/source files editor-only сохранены.
 Main2900 отдельно,PR112/113/114 не объединены.

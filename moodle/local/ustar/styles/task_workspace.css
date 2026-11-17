@@ -10,3 +10,68 @@
 .uw-home-flows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin:24px 0}.uw-home-card{padding:20px;border-top:1px solid var(--uw-line)}.uw-home-card summary{cursor:pointer;display:inline-flex}.uw-home-card .uw-form{margin-top:16px}.uw-home-card .uw-field input[type=checkbox]{width:20px;height:20px}.uw-home-flows .uw-panel{margin:0}@media(max-width:800px){.uw-home-flows{grid-template-columns:1fr}}
 
 html[data-ustar-theme="dark"] .u-workspace{--u-success-fg:#83d7a6;--u-danger-fg:#ffa298;--u-warning-fg:#f2bd78;color-scheme:dark}.uw-day.is-today .uw-daynum{background:var(--u-brand,#ebc500);color:var(--u-text-on-brand,#282727)}.uw-chip.is-active{background:var(--u-brand-soft,#fff6cf)}
+
+.uw-board {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(216px, 1fr));
+    align-items: start;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 4px 3px 16px;
+    scroll-snap-type: x proximity;
+}
+.uw-board-column {
+    min-height: 190px;
+    padding: 10px;
+    border: 1px solid var(--uw-line);
+    border-top: 3px solid var(--uw-muted);
+    border-radius: 12px;
+    background: var(--uw-soft);
+    scroll-snap-align: start;
+}
+.uw-board-column[data-board-column="in_progress"] { border-top-color: var(--u-brand, #ebc500); }
+.uw-board-column[data-board-column="in_review"] { border-top-color: var(--u-warning-fg, #a8540c); }
+.uw-board-column[data-board-column="completed"] { border-top-color: var(--u-success-fg, #277c4f); }
+.uw-board-column.is-drop-target { outline: 2px solid var(--u-brand, #ebc500); outline-offset: -2px; }
+.uw-board-column > header { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 5px 4px 13px; }
+.uw-board-column h3 { margin: 0; font-size: 14px; }
+.uw-board-empty { padding: 12px 4px; }
+.uw-board-card { background: var(--uw-surface); border: 1px solid var(--uw-line); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+.uw-board-card[draggable="true"] { cursor: grab; }
+.uw-board-card.is-dragging { opacity: .55; cursor: grabbing; }
+.uw-board-card .uw-badge { margin-top: 8px; }
+.uw-board-card .uw-form { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+.uw-board-card .uw-btn { min-height: 34px; padding: 4px 9px; font-size: 12px; text-align: left; }
+.uw-board-title { display: block; color: var(--uw-ink); font-weight: 650; overflow-wrap: anywhere; }
+
+.uw-brief-section > .uw-panel { padding: 18px 22px; }
+.uw-brief-section > .uw-panel > .uw-panel-head { padding: 0; }
+.uw-brief-section .uw-filters { padding: 12px 0 0; }
+.uw-brief-department { border-top: 1px solid var(--uw-line); margin-top: 18px; padding: 16px 0; scroll-margin-top: 30px; }
+.uw-brief-department h3 { margin: 0; }
+.uw-brief-answers { margin: 12px 0; }
+.uw-brief-answers dt { color: var(--uw-muted); padding-bottom: 3px; }
+.uw-brief-answers dd { margin: 0 0 14px; min-height: 1.5em; }
+.uw-brief-answers dd, .uw-brief-copy { white-space: pre-wrap; overflow-wrap: anywhere; }
+.uw-brief-summary.is-presentation .uw-brief-answers { font-size: clamp(16px, 1.8vw, 25px); }
+.uw-brief-summary.is-presentation .uw-brief-department { padding: 24px 0; }
+.uw-brief-summary.is-presentation .uw-brief-department h3 { font-size: 24px; }
+.uw-brief-field > button { align-self: end; }
+.uw-brief-room { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px; padding: 11px 0; border-top: 1px solid var(--uw-line); }
+.uw-brief-room > :last-child { margin-left: auto; }
+.uw-event-meeting { border-left-color: var(--u-info-fg, #26718a); }
+.uw-meeting-people { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0 12px; max-height: 320px; overflow: auto; }
+.uw-meeting-people .uw-check { min-height: 35px; margin: 0; padding: 4px; }
+.uw-brief-section [data-meeting-person-filter] { max-width: 420px; }
+@media (max-width: 600px) {
+    .uw-board { grid-template-columns: repeat(5, minmax(240px, 83vw)); }
+    .uw-brief-section > .uw-panel { padding: 14px; }
+}
+@media print {
+    .u-workspace:has(.is-presentation) > :not(.uw-brief-section),
+    .u-workspace:has(.is-presentation) .uw-brief-controls { display: none !important; }
+    .u-workspace .is-presentation { box-shadow: none; border: 0; overflow: visible; }
+    .u-workspace .is-presentation h3, .u-workspace .is-presentation dt { break-after: avoid; }
+}
+.uw-slot-list { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 12px; }
+.uw-slot-list .uw-chip { color: var(--u-success-fg, #277c4f); }

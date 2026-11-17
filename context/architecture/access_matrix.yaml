@@ -50,6 +50,7 @@ capabilities:
   - moodle/local/ustar/classes/academy_guide.php
   - moodle/local/ustar/classes/assessment_authoring.php
   - moodle/local/ustar/classes/branding.php
+  - moodle/local/ustar/classes/briefing/service.php
   - moodle/local/ustar/classes/capabilities.php
   - moodle/local/ustar/classes/checklist_service.php
   - moodle/local/ustar/classes/connect/announcements.php
@@ -108,6 +109,7 @@ capabilities:
   - moodle/local/ustar/classes/academy_guide.php
   - moodle/local/ustar/classes/assessment_authoring.php
   - moodle/local/ustar/classes/branding.php
+  - moodle/local/ustar/classes/briefing/service.php
   - moodle/local/ustar/classes/checklist_service.php
   - moodle/local/ustar/classes/connect/announcements.php
   - moodle/local/ustar/classes/connect/bot_invitation.php
@@ -161,6 +163,7 @@ capabilities:
   - moodle/local/ustar/classes/academy_guide.php
   - moodle/local/ustar/classes/adaptation_service.php
   - moodle/local/ustar/classes/assessment_summary.php
+  - moodle/local/ustar/classes/briefing/service.php
   - moodle/local/ustar/classes/capabilities.php
   - moodle/local/ustar/classes/connect/notification_policy.php
   - moodle/local/ustar/classes/department_learning.php
@@ -464,6 +467,7 @@ capabilities:
   declared_archetypes: {}
   literal_reference_paths:
   - moodle/local/ustar/classes/academy_guide.php
+  - moodle/local/ustar/classes/briefing/service.php
   - moodle/local/ustar/classes/capabilities.php
   - moodle/local/ustar/classes/external/executive_get_dashboard.php
   - moodle/local/ustar/classes/external/get_workspace.php
@@ -481,6 +485,7 @@ capabilities:
   - moodle/local/ustar/tests/organization_identity_test.php
   direct_check_paths:
   - moodle/local/ustar/classes/academy_guide.php
+  - moodle/local/ustar/classes/briefing/service.php
   - moodle/local/ustar/classes/external/executive_get_dashboard.php
   - moodle/local/ustar/classes/external/get_workspace.php
   - moodle/local/ustar/classes/position_access.php

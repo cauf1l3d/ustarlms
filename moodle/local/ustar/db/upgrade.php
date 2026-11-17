@@ -5065,5 +5065,28 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
     if ($oldversion < 2026111402) {
         upgrade_plugin_savepoint(true, 2026111402, 'local', 'ustar');
     }
+    if ($oldversion < 2026111700) {
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) {
+            throw new coding_exception('Cannot load briefing schema');
+        }
+        foreach (['local_ustar_brief_templates', 'local_ustar_brief_reports', 'local_ustar_brief_minutes',
+                'local_ustar_meeting_rooms', 'local_ustar_meetings', 'local_ustar_meeting_members'] as $tablename) {
+            $table = $schema->getStructure()->getTable($tablename);
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        $taskmeta = $schema->getStructure()->getTable('local_ustar_task_meta');
+        $requestfield = $taskmeta->getField('briefkey');
+        if (!$dbman->field_exists($taskmeta, $requestfield)) {
+            $dbman->add_field($taskmeta, $requestfield);
+        }
+        $requestindex = $taskmeta->getIndex('briefrequest');
+        if (!$dbman->index_exists($taskmeta, $requestindex)) {
+            $dbman->add_index($taskmeta, $requestindex);
+        }
+        upgrade_plugin_savepoint(true, 2026111700, 'local', 'ustar');
+    }
 return true;
 }

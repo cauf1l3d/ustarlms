@@ -79,7 +79,7 @@ final class service {
     }
 
     public static function rows(int $actorid, string $scope, string $filter = 'all', int $page = 0,
-            int $from = 0, int $to = 0, string $query = '', string $kind = ''): array {
+            int $from = 0, int $to = 0, string $query = '', string $kind = '', string $status = ''): array {
         global $DB;
         [$where, $params] = self::scope_sql($actorid, $scope);
         $now = time();
@@ -98,6 +98,10 @@ final class service {
         }
         if ($kind === 'other') { $where .= " AND (m.kind IS NULL OR m.kind <> 'checklist')"; }
         else if ($kind !== '') { $where .= ' AND m.kind = :kind'; $params['kind'] = $kind; }
+        if ($status !== '') {
+            $where .= ' AND t.status = :kanbanstatus';
+            $params['kanbanstatus'] = $status;
+        }
         $sql = ' FROM {local_ustar_learning_tasks} t LEFT JOIN {local_ustar_task_meta} m ON m.taskid=t.id WHERE ' . $where;
         $total = $DB->count_records_sql('SELECT COUNT(t.id)' . $sql, $params);
         $tasks = $DB->get_records_sql('SELECT t.*' . $sql . ' ORDER BY CASE WHEN t.dueat IS NULL THEN 1 ELSE 0 END,
@@ -110,8 +114,30 @@ final class service {
             foreach ($tasks as $task) { $ids[] = (int)$task->assigneeid; $ids[] = (int)$task->assignerid; }
             $names = self::names($ids);
         }
-        foreach ($tasks as $task) { $out[] = self::present($task, $metas[$task->id] ?? null, true, $names); }
+        foreach ($tasks as $task) {
+            $meta = $metas[$task->id] ?? null;
+            $item = self::present($task, $meta, true, $names);
+            if ($status !== '') {
+                $item['canreview'] = $task->status === 'in_review' && ($meta
+                    ? self::can_review_record($task, $actorid) : (int)$task->assignerid === $actorid);
+            }
+            $out[] = $item;
+        }
         return ['items' => $out, 'total' => $total, 'page' => $page, 'hasmore' => ($page + 1) * 50 < $total];
+    }
+
+    /** Moves that can start directly or open the normal report/review form. */
+    public static function kanban_moves(array $task, int $actor): array {
+        if ($task['status'] === 'in_review' && !empty($task['canreview'])) {
+            return ['completed' => 'approve', 'in_progress' => 'return'];
+        }
+        if ($task['assigneeid'] !== $actor) {
+            return [];
+        }
+        if ($task['status'] === 'assigned') {
+            return ['in_progress' => 'start', 'in_review' => 'report'];
+        }
+        return $task['status'] === 'in_progress' ? ['in_review' => 'report'] : [];
     }
 
     public static function summary(int $actorid, string $scope, int $from = 0, int $to = 0): array {
@@ -272,14 +298,37 @@ final class service {
 
     /** Validate one assignment, with current org/learning scope checked before any write. */
     public static function create(int $actorid, int $assigneeid, array $input, array $uploads = []): int {
+        global $DB;
         self::actor($actorid);
+        $reportid = (int)($input['briefreport'] ?? 0);
         $parent = (int)($input['parentid'] ?? 0);
-        $lock = $parent ? self::lock('learning-task:' . $parent) : null;
-        try { return self::create_locked($actorid, $assigneeid, $input, $uploads); }
-        finally { if ($lock) { $lock->release(); } }
+        $key = null;
+        if ($reportid) {
+            $nonce = (string)($input['briefkey'] ?? '');
+            if ($parent || ($input['kind'] ?? 'task') !== 'task' || !empty($input['repeat'])
+                    || !preg_match('/\A[A-Za-z0-9]{20,64}\z/', $nonce)) {
+                throw new \invalid_parameter_exception('Из брифинга создаётся разовое поручение. Повторно откройте форму.');
+            }
+            \local_ustar\briefing\service::linked_report($actorid, $reportid);
+            $key = hash('sha256', implode(':', [$actorid, $reportid, $nonce]));
+        }
+        $lock = $key ? self::lock('briefing-task:' . $key) : ($parent ? self::lock('learning-task:' . $parent) : null);
+        try {
+            if ($key) {
+                $existing = (int)$DB->get_field('local_ustar_task_meta', 'taskid', ['briefkey' => $key]);
+                if ($existing) {
+                    self::detail($existing, $actorid);
+                    return $existing;
+                }
+            }
+            return self::create_locked($actorid, $assigneeid, $input, $uploads, $key);
+        } finally {
+            if ($lock) { $lock->release(); }
+        }
     }
 
-    private static function create_locked(int $actorid, int $assigneeid, array $input, array $uploads): int {
+    private static function create_locked(int $actorid, int $assigneeid, array $input, array $uploads,
+            ?string $briefkey): int {
         global $DB;
         self::actor($actorid);
         if (!learning_tasks::can_assign($actorid, $assigneeid)) { self::deny(); }
@@ -309,7 +358,8 @@ final class service {
         }
         self::weight($weight);
         $tx = $DB->start_delegated_transaction();
-        $relatedid = 0;
+        $relatedid = (int)($input['briefreport'] ?? 0);
+        $relatedtype = $relatedid ? 'briefing' : '';
         if ($kind === 'retraining') {
             if (!empty($input['repeat'])) { throw new \invalid_parameter_exception('Переобучение назначается отдельной задачей, без автоматической серии.'); }
             $policyid = (int)($input['policyid'] ?? 0);
@@ -318,15 +368,15 @@ final class service {
                 throw new \invalid_parameter_exception('Выберите ранее пройденный материал, доступный для переобучения сотрудника.');
             }
             $ids = forced_retraining::assign($actorid, $assigneeid, [$policyid], $title);
-            $relatedid = (int)$ids[0]; $photo = false;
+            $relatedid = (int)$ids[0]; $relatedtype = 'forced_retraining'; $photo = false;
         }
         $task = learning_tasks::assign($actorid, $assigneeid, ['title' => $title,
             'description' => (string)($input['description'] ?? ''), 'requirereview' => $kind === 'retraining' ? 0 : 1,
-            'dueat' => $dueat, 'relatedtype' => $relatedid ? 'forced_retraining' : '', 'relatedid' => $relatedid], $uploads);
+            'dueat' => $dueat, 'relatedtype' => $relatedtype, 'relatedid' => $relatedid], $uploads);
         $DB->insert_record('local_ustar_task_meta', (object)['taskid' => $task['id'], 'kind' => $kind,
             'parentid' => $parentid, 'templateversionid' => $templateversionid, 'seriesid' => 0, 'occurdate' => '',
             'timezone' => $p['timezone'], 'kpiweight' => $weight, 'requirephoto' => $photo ? 1 : 0,
-            'submittedat' => 0, 'reviewdueat' => 0, 'reviewedat' => 0, 'policyjson' => self::json($p)]);
+            'submittedat' => 0, 'reviewdueat' => 0, 'reviewedat' => 0, 'policyjson' => self::json($p), 'briefkey' => $briefkey]);
         if (!empty($input['repeat'])) {
             $enddate = (string)($input['enddate'] ?? '');
             calendar::timestamp($enddate, '00:00', $p['timezone']);

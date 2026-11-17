@@ -8,6 +8,9 @@ defined('MOODLE_INTERNAL') || die();
 final class bot_work {
     public static function route(\stdClass $d,string $intent,array $data,array $p, bool $invited = false): array {
         $id=(int)$d->userid;
+        if (in_array($intent, ['work.briefing', 'work.meetings'], true)) {
+            return bot_briefing::view($d, $intent);
+        }
         if($intent==='work.company'){return self::company($d,$data);}
         if (in_array($intent,['work.mine','work.team','work.review'],true)) { return self::listing($d,$intent,$data); }
         if ($intent==='work.assign') {

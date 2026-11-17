@@ -5,6 +5,7 @@ The accepted starting point is the qualified Connect operator release 422fbfb3.
 All writes use the already-qualified source/worker/cron transaction engine.
 """
 import hashlib
+import json
 import os
 from pathlib import Path
 import stat

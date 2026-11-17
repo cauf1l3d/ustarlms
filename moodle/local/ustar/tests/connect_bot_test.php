@@ -109,7 +109,7 @@ final class connect_bot_test extends \advanced_testcase {
         $sender = $this->linked();
         $this->work($sender);
         $menu = bot_service::update($sender, $this->request(70));
-        $this->assertSame(['📋 Мои задачи', '☑️ Чек-листы', '🎓 Обучение', '🔔 Уведомления', '⚙️ Настройки'],
+        $this->assertSame(['📋 Мои задачи', '☑️ Чек-листы', '🎓 Обучение', '🤝 Мои встречи', '🔔 Уведомления', '⚙️ Настройки'],
             array_column($menu['buttons'], 'label'));
         $tasks = $this->click($sender, $menu, 'Мои задачи', 71);
         $task = $this->click($sender, $tasks, 'Synthetic', 72);

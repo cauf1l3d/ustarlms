@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   archive:
-    name: Reproducible, guarded operator archive
+    name: Reproducible, guarded briefing successor archive
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -69,7 +69,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m unittest tests.r16.test_connect_role_bot tests.r16.test_connect_notifications tests.r16.test_connect_notification_callback
-          git diff --name-only 33a8436b79c7dce453f10bb54b30d1d1721aab57 HEAD -- 'moodle/local/ustar/**/*.php' | while read -r file; do
+          git diff --name-only 422fbfb324db3b18447b61bc1c86a8a5481fe3e0 HEAD -- 'moodle/local/ustar/**/*.php' | while read -r file; do
             if [[ -f "$file" ]]; then php -l "$file"; fi
           done
       - name: Isolated installation, upgrade/repeat parity and briefing smoke
@@ -78,7 +78,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p artifacts .stage-input/connect-invitation-baseline
-          git archive 33a8436b79c7dce453f10bb54b30d1d1721aab57 moodle | tar -x -C .stage-input/connect-invitation-baseline
+          git archive 422fbfb324db3b18447b61bc1c86a8a5481fe3e0 moodle | tar -x -C .stage-input/connect-invitation-baseline
           trap 'docker compose -f "$USTAR_STAGE_COMPOSE" down --volumes --remove-orphans' EXIT
           docker compose -f "$USTAR_STAGE_COMPOSE" build runner
           docker compose -f "$USTAR_STAGE_COMPOSE" run --rm --entrypoint bash runner -c '

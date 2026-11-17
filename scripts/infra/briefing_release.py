@@ -23,7 +23,9 @@ OPERATOR_BASELINE = '33a8436b79c7dce453f10bb54b30d1d1721aab57'
 OPERATOR_COMMIT = 'c13da3fb383650994c7d20268d72854c70d7767f'
 OPERATOR_SHA256 = 'cb543470f1210e2dfdc6d4b16d4a2e9efaf3572c0880ea9a9204350b903cdf96'
 BROADCAST_COMMIT = 'eff21cae9e932bc7649827cdda62910de8a40e4a'
-STATE = Path('/var/lib/ustar-task-briefing-20261117')
+PREVIOUS_STATE = Path('/var/lib/ustar-task-briefing-20261117')
+PREVIOUS_PACKAGE = 'eb438c8b00270e3db8df36a4efb43529053401936f0da8ae9c661d73a3038bb4'
+STATE = Path('/var/lib/ustar-task-briefing-20261117-v2')
 NEW_DIRECTORY = 'classes/briefing'
 
 
@@ -46,6 +48,31 @@ def ensure_briefing_directory(folder, engine):
     return folder
 
 
+def validate_previous_attempt(engine):
+    """Never bypass an unfinished transaction when rotating the journal path."""
+    if not os.path.lexists(PREVIOUS_STATE):
+        return
+    directory = PREVIOUS_STATE.lstat()
+    engine.require(stat.S_ISDIR(directory.st_mode) and directory.st_uid == 0
+                   and stat.S_IMODE(directory.st_mode) == 0o700,
+                   'previous_attempt_journal_directory_unsafe')
+    path = PREVIOUS_STATE / 'state.json'
+    if not os.path.lexists(path):
+        engine.require(False, 'previous_attempt_journal_missing')
+    status = path.lstat()
+    engine.require(stat.S_ISREG(status.st_mode) and status.st_uid == 0 and status.st_nlink == 1
+                   and stat.S_IMODE(status.st_mode) == 0o600 and status.st_size < 65536,
+                   'previous_attempt_journal_file_unsafe')
+    try:
+        state = json.loads(path.read_bytes())
+    except (OSError, ValueError):
+        engine.require(False, 'previous_attempt_journal_invalid')
+    engine.require(state.get('package') == PREVIOUS_PACKAGE
+                   and state.get('baseline') == BASELINE
+                   and state.get('step') == 'rolled_back',
+                   'previous_attempt_not_rolled_back')
+
+
 def successor(source, target, core_source=None, worker_installer=None,
               *, operator_source=None, broadcast_source=None):
     raw = OPERATOR_SOURCE if operator_source is None else operator_source
@@ -57,6 +84,7 @@ def successor(source, target, core_source=None, worker_installer=None,
     exec(compile(raw, '<verified-operator-installer>', 'exec'), operator.__dict__)
     engine = operator.successor(source, target, core_source, worker_installer,
                                 predecessor_source=broadcast)
+    validate_previous_attempt(engine)
     engine.require(engine.BASES == (OPERATOR_BASELINE,) and engine.BEFORE == 2026111401
                    and engine.AFTER == 2026111402, 'unexpected_briefing_baseline')
     # The operator installation is already active on server1. Retain its exact

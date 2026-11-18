@@ -1,5 +1,7 @@
 # Навигация по контексту
 
+- [Брифинг и канбан, установка b1df4f2b](../docs/BRIEFING_INSTALL_RU.md), [проверки](runtime/briefing_qualification_20261118.json).
+
 - [Оператор Академии в Telegram](../docs/CONNECT_OPERATOR_RU.md), [проверки](runtime/connect_operator_qualification_20261115.json).
 
 - [Подключение к боту по приглашению](../docs/CONNECT_INVITATIONS_RU.md), [установка владельцем](runtime/connect_invitations_owner_install_20261114.json), [квалификация](runtime/connect_invitations_qualification_20261114.json).

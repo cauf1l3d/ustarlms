@@ -3,13 +3,23 @@ require_once(__DIR__ . '/../../config.php');
 require_login();
 use local_ustar\{notebook_board, learning_tasks, task_files};
 $actor = (int)$USER->id;
+$briefweek = optional_param('briefweek', '', PARAM_RAW_TRIMMED);
+$brieftitle = '';
+if ($briefweek && \local_ustar\briefing\service::allowed($actor)) {
+    try {
+        \local_ustar\briefing\service::week_start($briefweek);
+        $brieftitle = 'Брифинг ' . $briefweek;
+    } catch (invalid_parameter_exception $error) {
+        // The regular notebook is still available when the date is malformed.
+    }
+}
 $context = context_system::instance();
 notebook_board::actor($actor);
 require_capability('local/ustar:use', $context);
 $notice = '';
 $input = [];
 $page = max(0, min(100000, optional_param('pageno', 0, PARAM_INT)));
-$query = optional_param('q', '', PARAM_TEXT);
+$query = optional_param('q', $brieftitle, PARAM_TEXT);
 $filter = optional_param('filter', 'all', PARAM_ALPHA);
 if (!in_array($filter, ['all', 'active', 'done'], true)) { $filter = 'all'; }
 $url = new moodle_url('/local/ustar/notebook.php', ['pageno' => $page, 'q' => $query, 'filter' => $filter]);
@@ -85,9 +95,9 @@ $data = ['notes' => $notes, 'hasnotes' => !empty($notes), 'total' => $total, 're
     'previous' => $page ? (new moodle_url($url, ['pageno' => $page - 1]))->out(false) : '',
     'next' => ($page + 1) * 25 < $total ? (new moodle_url($url, ['pageno' => $page + 1]))->out(false) : '',
     'page' => $page + 1, 'tasksurl' => (new moodle_url('/local/ustar/tasks.php'))->out(false),
-    'notice' => $notice, 'createtitle' => ($input['action'] ?? '') === 'create' ? $input['title'] : '',
+    'notice' => $notice, 'createtitle' => ($input['action'] ?? '') === 'create' ? $input['title'] : $brieftitle,
     'createbody' => ($input['action'] ?? '') === 'create' ? $input['description'] : '',
-    'createopen' => ($input['action'] ?? '') === 'create'];
+    'createopen' => ($input['action'] ?? '') === 'create' || ($brieftitle !== '' && !$notes)];
 $PAGE->set_context($context);
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('ustar');

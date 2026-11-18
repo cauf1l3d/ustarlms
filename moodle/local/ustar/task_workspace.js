@@ -1,9 +1,58 @@
 /* Progressive enhancement only: permissions, versions and persistence stay server-side. */
 (function () {
     'use strict';
+    function enableBoard(board) {
+        let card = null;
+        const active = () => board.querySelector('.is-drop-target');
+        const clear = () => {
+            active()?.classList.remove('is-drop-target');
+            card?.classList.remove('is-dragging');
+            card = null;
+        };
+        const moveButton = column => {
+            return column && card?.querySelector('button[name="target"][value="' + column.dataset.boardColumn + '"]');
+        };
+        board.addEventListener('dragstart', event => {
+            const target = event.target.closest('.uw-board-card[draggable="true"]');
+            if (!target) { return; }
+            card = target;
+            card.classList.add('is-dragging');
+            event.dataTransfer.setData('text/plain', 'ustar-task');
+            event.dataTransfer.effectAllowed = 'move';
+        });
+        board.addEventListener('dragover', event => {
+            const column = event.target.closest('[data-board-column]');
+            active()?.classList.remove('is-drop-target');
+            if (moveButton(column)) {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'move';
+                column.classList.add('is-drop-target');
+            }
+        });
+        board.addEventListener('drop', event => {
+            const button = moveButton(event.target.closest('[data-board-column]'));
+            if (button) {
+                event.preventDefault();
+                clear();
+                button.form.requestSubmit(button);
+            }
+        });
+        board.addEventListener('dragend', clear);
+    }
     function init() {
         const root = document.querySelector('.u-workspace');
         if (!root) { return; }
+        const board = root.querySelector('[data-task-board]');
+        if (board) { enableBoard(board); }
+        const people = root.querySelector('[data-meeting-person-filter]');
+        if (people) {
+            people.addEventListener('input', () => {
+                const term = people.value.trim().toLocaleLowerCase('ru');
+                root.querySelectorAll('[data-meeting-person]').forEach(person => {
+                    person.hidden = !person.textContent.toLocaleLowerCase('ru').includes(term);
+                });
+            });
+        }
         const picker = root.querySelector('[data-recipient-filter]');
         if (picker) { picker.addEventListener('change', event => {
             if (event.target.name === 'departmentid') { picker.elements.positionid.value = ''; picker.elements.assigneeid.value = '0'; }
@@ -26,6 +75,18 @@
         root.addEventListener('click', event => {
             const button = event.target.closest('button');
             if (!button) { return; }
+            if (button.hasAttribute('data-add-brief-field')) {
+                const container = root.querySelector('[data-brief-fields]');
+                if (container.children.length < 24) {
+                    const template = root.querySelector('[data-brief-field]');
+                    container.appendChild(template.content.cloneNode(true));
+                    container.lastElementChild.querySelector('input').focus();
+                }
+            }
+            if (button.hasAttribute('data-remove-brief-field')) {
+                const row = button.closest('.uw-brief-field');
+                if (row.parentElement.children.length > 1) { row.remove(); }
+            }
             if (button.hasAttribute('data-add-field') || button.hasAttribute('data-add-level')) {
                 const isField = button.hasAttribute('data-add-field');
                 const container = root.querySelector(isField ? '[data-builder]' : '[data-rule-levels]');

@@ -16,7 +16,7 @@ def _text(value, limit):
     return value[:limit]+('… [текст сокращён]' if clipped else '')
 
 
-def _academy_url(value, origin):
+def _academy_url(value, origin, *, workspace_only=False):
     if not isinstance(value,str) or not isinstance(origin,str):
         raise ValueError('invalid_bot_url')
     actual,base=urlsplit(value),urlsplit(origin)
@@ -26,7 +26,14 @@ def _academy_url(value, origin):
             or actual.fragment):
         raise ValueError('invalid_bot_url')
     values = parse_qsl(actual.query, keep_blank_values=True, strict_parsing=True)
-    if len(values) != 1:
+    if actual.path == '/local/ustar/tasks.php':
+        if values in ([('view', 'briefing')], [('view', 'meetings')]):
+            return value
+        if (len(values) == 2 and values[0] == ('view', 'meetings') and values[1][0] == 'meetingid'
+                and re.fullmatch('[1-9][0-9]{0,18}', values[1][1]) and int(values[1][1]) < 2**63):
+            return value
+        raise ValueError('invalid_bot_url')
+    if workspace_only or len(values) != 1:
         raise ValueError('invalid_bot_url')
     key, argument = values[0]
     if actual.path == '/local/ustar/connect_bot_confirm.php' and key == 'action':
@@ -81,13 +88,21 @@ def render_view(view, *, academy_origin=None):
         if len(view['rows'])>12:parts.append('Показана часть списка.')
     keyboard=[]
     for button in view['buttons']:
-        if not isinstance(button,dict) or set(button) not in ({'label','callback'},{'label','url'}):
+        if not isinstance(button,dict) or set(button) not in ({'label','callback'},{'label','url'},{'label','workurl'}):
             raise ValueError('invalid_bot_button')
         item={'text':_text(button['label'],52)}
         style=button_style(button['label'])
         if style:item['style']=style
-        if 'callback' in button:item['callback_data']=_token(button['callback'],'cb4')
-        else:item['url']=_academy_url(button['url'],academy_origin)
+        if 'callback' in button:
+            item['callback_data']=_token(button['callback'],'cb4')
+        elif 'workurl' in button:
+            try:
+                item['url']=_academy_url(button['workurl'],academy_origin,workspace_only=True)
+            except ValueError:
+                # The read-only card still works on internal installations without an HTTPS origin.
+                continue
+        else:
+            item['url']=_academy_url(button['url'],academy_origin)
         # One short action per row also accommodates long Russian labels on narrow phones.
         keyboard.append([item])
     value={'text':'\n\n'.join(parts),'parse_mode':'HTML','link_preview_options':{'is_disabled':True},

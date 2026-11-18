@@ -78,3 +78,7 @@ $string['rewardshop_order_rejected'] = 'Rejected';
 $string['privacy:metadata:rewardshop'] = 'Reward catalogue changes and employee reward orders paid with USCOIN.';
 
 $string['eventconnectinvitationchanged'] = 'Telegram invitation changed';
+
+$string['taskremindbriefing'] = 'Briefing reminders';
+$string['kanbantransitionunavailable'] = 'This move is unavailable. Open the task to see its available actions.';
+$string['privacy:metadata:briefing'] = 'Reports, meeting minutes, organizers and meeting invitations.';

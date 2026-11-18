@@ -91,6 +91,38 @@ class TelegramBotInterface(unittest.TestCase):
         value['buttons']=[{'label':'Confirm','url':'https://ustar.local/local/ustar/connect_bot_confirm.php?action=cb4_'+'A'*43}]
         self.assertIn('url',render_view(value,academy_origin='https://ustar.local')['reply_markup']['inline_keyboard'][0][0])
 
+    def test_briefing_links_use_fixed_authenticated_academy_routes(self):
+        from ustar_connect.bot_cards import render_view
+        origin = 'https://ustar.local'
+        route = origin + '/local/ustar/tasks.php?'
+        for query in ('view=briefing', 'view=meetings', 'view=meetings&meetingid=42'):
+            view = self.view()
+            view['buttons'] = [{'label': 'Открыть', 'url': route + query}]
+            button = render_view(view, academy_origin=origin)['reply_markup']['inline_keyboard'][0][0]
+            self.assertEqual(route + query, button['url'])
+        for query in ('view=meetings&meetingid=0', 'view=meetings&meetingid=42&redirect=elsewhere',
+                      'view=briefing&sesskey=secret', 'view=kanban&form=create', 'view=overview'):
+            with self.subTest(query=query), self.assertRaises(ValueError):
+                view = self.view()
+                view['buttons'] = [{'label': 'Открыть', 'url': route + query}]
+                render_view(view, academy_origin=origin)
+
+    def test_internal_work_links_are_optional_and_never_broaden_url_permissions(self):
+        from ustar_connect.bot_cards import render_view
+        origin = 'https://academy.example.test'
+        view = self.view()
+        url = origin + '/local/ustar/tasks.php?view=meetings&meetingid=42'
+        view['buttons'].insert(0, {'label': 'Открыть', 'workurl': url})
+        self.assertEqual(url, render_view(view, academy_origin=origin)['reply_markup']['inline_keyboard'][0][0]['url'])
+        for configured in ('http://academy.example.test', 'https://other.example.test', None):
+            with self.subTest(configured=configured):
+                safe = render_view(view, academy_origin=configured)
+                self.assertIn('Сотрудник', safe['text'])
+                self.assertEqual(len(safe['reply_markup']['inline_keyboard']), 1)
+                self.assertIn('callback_data', safe['reply_markup']['inline_keyboard'][0][0])
+        view['buttons'][0]['workurl'] = origin + '/local/ustar/feed.php?postid=42'
+        self.assertEqual(len(render_view(view, academy_origin=origin)['reply_markup']['inline_keyboard']), 1)
+
     def test_long_multilingual_card_fits_telegram_and_transport_limits(self):
         from ustar_connect.bot_cards import render_view
         value=self.view();value['text']='Длинный <ответ> 👨‍👩‍👧‍👦 '*1000

@@ -1,12 +1,14 @@
-# Активная работа · 15.11.2026
+# Активная работа · 18.11.2026
 
-CONNECT-OPERATOR. PR124, профиль служебной учётки и управление приглашениями и рассылками. [Инструкция](../../docs/CONNECT_OPERATOR_RU.md). Установка базы `33a8436b` завершилась с кодом 0. [Квитанция](../runtime/connect_invitations_owner_install_20261114.json).
+TASK-BRIEFING. Пакет 17b61410, local1800. Обе базы и оба профиля Moodle проверены.
+[Ревью](../reviews/20261118/BRIEFING_KANBAN_RU.md), [установка](../../docs/BRIEFING_REVIEW_INSTALL_RU.md),
+[проверки](../runtime/briefing_review_qualification_20261118.json). Базы 422fbfb3 и b1df4f2b.
+Последняя подтверждённая владельцем база local1402/worker422fbfb3. Живая приёмка ожидается.
 
 ## Повторная привязка Telegram
 
 CONNECT-RELINK-01. Отзыв освобождает возможность подключить другой Telegram после
 новой ссылки и подтверждения. История связей и прежний контроль владельца сохранены.
-Два воспроизведённых отказа проходят после исправления в PHP/SQLite. Moodle 5.1.1 и 5.1.8 прошли по 432 теста. Установщик dc3a3c54 ожидает запуска владельцем.
 [Разбор](../reviews/20261111/CONNECT_RELINK.md), [проверки](../runtime/connect_relink_qualification_20261111.json),
 [установка](../../docs/CONNECT_RELINK_INSTALL_RU.md).
 
@@ -22,7 +24,6 @@ Owner5Nov: discovery app719bf47c/toolaa61d595 — SHA OK, ready→active,exit0,
 конечный readonly active. [Квитанция](../runtime/library_discovery_owner_deploy_20261105.json).
 Повторная установка/recovery не нужны. Local/theme0200,649fixed files/108tables;
 не whole-host census. CI4/FullRC8 PASS, native426/1975 в обоихruntime.
-Подробная employee browser-приёмка Library не перечислена.
 SCORM app5e61/tool4aee принят3Nov; marketplace471/tool59f принят «Отлично работает».
 Default hidden/exact department allowlist/source files editor-only сохранены.
 Main2900 отдельно,PR112/113/114 не объединены.

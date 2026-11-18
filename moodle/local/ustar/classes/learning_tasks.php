@@ -161,7 +161,7 @@ final class learning_tasks {
         }
         $relatedtype = clean_param((string)($input['relatedtype'] ?? ''), PARAM_ALPHANUMEXT);
         $relatedid = (int)($input['relatedid'] ?? 0);
-        $allowedlinks = ['checklist', 'grade_request', 'forced_retraining', 'route'];
+        $allowedlinks = ['checklist', 'grade_request', 'forced_retraining', 'route', 'briefing'];
         if ($relatedtype !== '' && !in_array($relatedtype, $allowedlinks, true)) {
             throw new \invalid_parameter_exception('Недопустимая связь задачи.');
         }

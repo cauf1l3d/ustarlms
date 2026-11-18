@@ -1,6 +1,7 @@
 <?php
 namespace local_ustar\task_workspace;
 use local_ustar\{learning_tasks, forced_retraining};
+use local_ustar\briefing\{meetings, page as briefing_page, service as briefing};
 defined('MOODLE_INTERNAL') || die();
 
 /** Presentation only. Every mutation is a POST to the domain commands. */
@@ -19,25 +20,34 @@ final class page {
         if ($manage) { $out .= self::link('Создать задачу', ['form' => 'create', 'taskid' => 0], 'uw-btn uw-primary'); }
         $out .= '<a class="uw-btn" href="'.(new \moodle_url('/local/ustar/notebook.php'))->out().'">Личный блокнот</a></div>';
         $out .= '</header><nav class="uw-tabs" aria-label="Разделы задач">';
-        $tabs = ['overview' => $manage ? 'Обзор' : 'Мой день', 'calendar' => 'Календарь', 'checklists' => 'Чек-листы'];
+        $tabs = ['overview' => $manage ? 'Обзор' : 'Мой день', 'kanban' => 'Канбан', 'calendar' => 'Календарь'];
+        if (briefing::allowed($actor)) { $tabs['briefing'] = 'Брифинг'; }
+        if (meetings::allowed($actor)) { $tabs['meetings'] = 'Встречи'; }
+        $tabs['checklists'] = 'Чек-листы';
         if ($manage) { $tabs['control'] = 'Контроль'; }
         $tabs['analytics'] = $manage ? 'Аналитика' : 'Мои результаты';
         if ($manage) { $tabs['rules'] = 'Правила'; }
         foreach ($tabs as $key => $label) {
-            $out .= self::link($label, ['view' => $key, 'form' => '', 'taskid' => 0, 'pageno' => 0],
+            $out .= self::link($label, ['view' => $key, 'form' => '', 'taskid' => 0, 'pageno' => 0, 'boardstatus' => null, 'briefreport' => null],
                 'uw-tab' . ($state['view'] === $key ? ' is-active' : ''));
         }
         $out .= '</nav><div class="uw-scope">';
-        if ($manage) {
+        if ($manage && !in_array($state['view'], ['briefing', 'meetings'], true)) {
             foreach (['mine' => 'Назначено мне', 'team' => 'Область управления', 'outgoing' => 'Мои поручения'] as $key => $label) {
                 $out .= self::link($label, ['scope' => $key, 'pageno' => 0], 'uw-chip' . ($state['scope'] === $key ? ' is-active' : ''));
             }
-        } else { $out .= '<span>Мои задачи</span>'; }
+        } else if (!in_array($state['view'], ['briefing', 'meetings'], true)) { $out .= '<span>Мои задачи</span>'; }
         $out .= '<span class="uw-scope-links"><a href="' . (new \moodle_url('/local/ustar/notebook.php'))->out() . '">Личный блокнот</a>
             <a href="' . (new \moodle_url('/local/ustar/tasks.php', ['tab' => 'checklists']))->out() . '">Адаптационные листы</a></span></div>';
         if (!isset($tabs[$state['view']])) { $out .= '<div class="uw-panel">Раздел недоступен для вашей роли.</div>'; }
         else {
             switch ($state['view']) {
+                case 'kanban': $out .= self::kanban(); break;
+                case 'briefing': $out .= '<div class="uw-brief-section">' . (new briefing_page($actor, $state))->briefing() . '</div>'; break;
+                case 'meetings':
+                    try { $out .= '<div class="uw-brief-section">' . (new briefing_page($actor, $state))->meetings() . '</div>'; }
+                    catch (\required_capability_exception $error) { $out .= '<div class="uw-notice">Встреча недоступна.</div>'; }
+                    break;
                 case 'calendar': $out .= self::calendar(); break;
                 case 'checklists': $out .= self::checklists(); break;
                 case 'control': $out .= self::control(); break;
@@ -58,8 +68,11 @@ final class page {
     private static function url(array $changes = []): \moodle_url {
         $s = self::$state;
         $params = ['view' => $s['view'], 'scope' => $s['scope'], 'filter' => $s['filter'], 'month' => $s['month'],
-            'q' => $s['q'], 'pageno' => $s['page']];
-        return new \moodle_url('/local/ustar/tasks.php', array_merge($params, $changes));
+            'q' => $s['q'], 'pageno' => $s['page'],
+            'boardstatus' => $s['boardstatus'] ?: null, 'briefreport' => $s['briefreport'] ?: null,
+            'briefweek' => $s['briefweek'] ?: null, 'briefsection' => $s['briefsection'] ?: null,
+            'briefdept' => $s['briefdept'] ?: null];
+        return new \moodle_url('/local/ustar/tasks.php', array_filter(array_merge($params, $changes), static fn($v) => $v !== null));
     }
     private static function link(string $label, array $params, string $class = 'uw-btn'): string {
         return \html_writer::link(self::url($params), s($label), ['class' => $class]);
@@ -125,6 +138,45 @@ final class page {
         if (!$rows['items']) { $out .= '<div class="uw-empty">Задач по выбранному фильтру пока нет.</div>'; }
         return $out . '</section>' . self::pagination($rows);
     }
+    private static function kanban(): string {
+        $state = self::$state;
+        $labels = ['start' => 'Взять в работу', 'report' => 'Подготовить отчёт',
+            'approve' => 'Принять результат', 'return' => 'Вернуть с комментарием'];
+        $out = '<section class="uw-panel"><div class="uw-panel-head"><div><h2>Канбан задач</h2>'
+            . '<p>Перетащите карточку или выберите действие на ней.</p></div></div>'
+            . '<form method="get" class="uw-search">' . self::hidden('view', 'kanban') . self::hidden('scope', $state['scope'])
+            . self::field('Поиск по задачам', 'q', $state['q'], 'search') . '<button class="uw-btn">Найти</button></form></section>';
+        $out .= '<div class="uw-board" data-task-board>';
+        foreach (self::$status as $status => $label) {
+            $number = $state['boardstatus'] === $status ? $state['page'] : 0;
+            $rows = service::rows(self::$actor, $state['scope'], 'all', $number, 0, 0, $state['q'], '', $status);
+            $out .= '<section class="uw-board-column" data-board-column="' . s($status) . '" aria-label="' . s($label)
+                . '"><header><h3>' . s($label) . '</h3><span class="uw-badge">' . $rows['total'] . '</span></header>';
+            foreach ($rows['items'] as $item) {
+                $moves = service::kanban_moves($item, self::$actor);
+                $out .= '<article class="uw-board-card"' . ($moves ? ' draggable="true"' : '') . '>'
+                    . '<a class="uw-board-title" href="' . self::url(['taskid' => $item['id']])->out() . '#uw-detail">'
+                    . s($item['title']) . '</a><span class="uw-task-meta">' . s($item['assignee']) . ' · ' . s(self::due($item))
+                    . '</span>' . self::badge($item);
+                if ($moves) {
+                    $out .= self::form('kanban_move')
+                        . self::hidden('movetaskid', $item['id']) . self::hidden('version', $item['version']);
+                    foreach ($moves as $target => $move) {
+                        $out .= '<button type="submit" class="uw-btn" name="target" value="' . s($target) . '">'
+                            . s($labels[$move]) . '</button>';
+                    }
+                    $out .= '</form>';
+                }
+                $out .= '</article>';
+            }
+            if (!$rows['items']) { $out .= '<p class="uw-muted uw-board-empty">Пока пусто</p>'; }
+            if ($rows['page']) { $out .= self::link('← Назад', ['boardstatus' => $status, 'pageno' => $rows['page'] - 1]); }
+            if ($rows['hasmore']) { $out .= self::link('Ещё задачи →', ['boardstatus' => $status, 'pageno' => $rows['page'] + 1]); }
+            $out .= '</section>';
+        }
+        return $out . '</div>';
+    }
+
     private static function month(): array {
         $value = self::$state['month'];
         if (!preg_match('/^\d{4}-\d{2}$/', $value)) { $value = date('Y-m'); }
@@ -139,6 +191,11 @@ final class page {
         $rows = service::rows(self::$actor, $s['scope'], 'all', $s['page'], $first->getTimestamp(), $end);
         $events = [];
         foreach ($rows['items'] as $task) { $day = calendar::date($task['dueat'], $first->getTimezone()->getName()); $events[$day][] = $task; }
+        $meetings = [];
+        foreach (array_merge(meetings::calendar_items(self::$actor, $first->getTimestamp(), $end, $first->getTimezone()->getName()),
+                briefing::calendar_items(self::$actor, $first->getTimestamp(), $end)) as $meeting) {
+            $meetings[calendar::date($meeting['startat'], $first->getTimezone()->getName())][] = $meeting;
+        }
         $out = '<section class="uw-panel"><div class="uw-panel-head"><div><h2>' . s(userdate($first->getTimestamp(), '%B %Y', $first->getTimezone()->getName())) . '</h2>
             <small>Сроки в часовом поясе ' . s($first->getTimezone()->getName()) . '</small></div><div class="uw-actions">'
             . self::link('‹', ['month' => $first->modify('-1 month')->format('Y-m'), 'pageno' => 0])
@@ -150,6 +207,12 @@ final class page {
             $date = $first->modify(($i - $offset) . ' days'); $key = $date->format('Y-m-d');
             $out .= '<div class="uw-day' . ($key === calendar::date(time(), $first->getTimezone()->getName()) ? ' is-today' : '')
                 . ($date->format('m') !== $first->format('m') ? ' is-outside' : '') . '"><span class="uw-daynum">' . $date->format('j') . '</span>';
+            foreach ($meetings[$key] ?? [] as $meeting) {
+                $out .= '<a class="uw-event uw-event-meeting" href="' . self::url($meeting['params'])->out() . '">'
+                    . (!empty($meeting['continued']) ? 'Продолжается'
+                        : s(userdate($meeting['startat'], '%H:%M', $first->getTimezone()->getName())))
+                    . ' · ' . s($meeting['title']) . '</a>';
+            }
             foreach ($events[$key] ?? [] as $task) {
                 $out .= '<a class="uw-event ' . ($task['late'] ? 'is-late' : '') . '" href="' . self::url(['taskid' => $task['id']])->out() . '">'
                     . s(userdate($task['dueat'], '%H:%M', $first->getTimezone()->getName())) . ' · ' . s($task['title']) . '</a>';
@@ -262,9 +325,19 @@ final class page {
         $assignee = (int)$s['assigneeid'];
         $department = $s['departmentid'] ?? ''; $position = $s['positionid'] ?? '';
         $options = recipients::options(self::$actor, $department, $position);
-        $out = '<section class="uw-editor uw-panel" id="uw-editor"><div class="uw-panel-head"><h2>Новая задача</h2>'
+        $report = null;
+        if ($s['briefreport']) {
+            try { $report = briefing::linked_report(self::$actor, $s['briefreport']); }
+            catch (\required_capability_exception | \dml_missing_record_exception $error) {
+                return '<div class="uw-notice">Отчёт для поручения недоступен.</div>';
+            }
+        }
+        $out = '<section class="uw-editor uw-panel" id="uw-editor"><div class="uw-panel-head"><h2>'
+            . ($report ? 'Поручение по брифингу' : 'Новая задача') . '</h2>'
             . self::link('Закрыть', ['form'=>'']) . '</div><form method="get" class="uw-form" data-recipient-filter>'
-            . self::hidden('form','create') . self::hidden('scope',$s['scope'])
+            . self::hidden('form','create') . self::hidden('scope',$s['scope']) . self::hidden('view',$s['view'])
+            . self::hidden('briefreport', $s['briefreport']) . self::hidden('briefweek', $s['briefweek'])
+            . self::hidden('briefsection', $s['briefsection']) . self::hidden('briefdept', $s['briefdept'])
             . self::hidden('parentid',$s['parentid']) . self::hidden('templateid',$s['templateid'])
             . '<div class="uw-form-grid">'
             . self::select('1. Отдел', 'departmentid', [''=>'Выберите отдел'] + $options['departments'], $department)
@@ -282,19 +355,21 @@ final class page {
         foreach (service::templates(self::$actor) as $t) { $templates[$t->id] = $t->title . ' · v' . $t->revision; }
         $out .= self::form('create') . self::hidden('departmentid',$department) . self::hidden('positionid',$position) . self::hidden('assigneeid',$assignee) . self::hidden('parentid',$s['parentid'])
             . '<div class="uw-notice">Исполнитель: ' . s(service::name($assignee)) . ($s['parentid']?' · связанное поручение #'.$s['parentid']:'') . '</div>'
-            . self::select('Тип задачи','kind',['task'=>'Поручение','checklist'=>'Чек-лист','retraining'=>'Повторное обучение'],$s['templateid']?'checklist':'task')
+            . ($report ? self::hidden('briefkey', $s['input']['briefkey'] ?? random_string(32)) : '')
+            . ($report ? self::hidden('kind', 'task') : self::select('Тип задачи','kind',
+                ['task'=>'Поручение','checklist'=>'Чек-лист','retraining'=>'Повторное обучение'],$s['templateid']?'checklist':'task'))
             . self::field('Название','title','', 'text','required maxlength="255"')
-            . '<div data-kind="checklist">' . self::select('Шаблон','templateid',[0=>'Выберите шаблон']+$templates,$s['templateid']) . '</div>'
+            . ($report ? '' : '<div data-kind="checklist">' . self::select('Шаблон','templateid',[0=>'Выберите шаблон']+$templates,$s['templateid']) . '</div>'
             . '<div data-kind="retraining">' . self::select('Пройденный материал и его аттестация','policyid',[0=>'Выберите тему']+$topics,0)
-            . '<small>Доступны только подтверждённые ранее прохождения выбранного сотрудника. Если список пуст, назначение недоступно.</small></div>'
+            . '<small>Доступны только подтверждённые ранее прохождения выбранного сотрудника. Если список пуст, назначение недоступно.</small></div>')
             . self::textarea('Описание и критерий результата','description')
             . '<div class="uw-form-grid">' . self::field('Дата исполнения','duedate',calendar::date(time()+DAYSECS,$p['timezone']),'date','required')
             . self::field('Время исполнения','dueclock','17:00','time','required') . self::field('Часовой пояс','timezone',$p['timezone'])
             . self::field('KPI: баллы за принятие','kpiweight',10,'number','min="0" max="10000"') . '</div>'
             . '<label class="uw-check"><input type="checkbox" name="requirephoto" value="1" ' . (!empty(self::$state['input']['requirephoto'])?'checked':'') . '> Фотоотчёт обязателен</label>'
-            . '<div data-repeat-section><label class="uw-check"><input type="checkbox" name="repeat" value="1" ' . (!empty(self::$state['input']['repeat'])?'checked':'') . '> Создать повторяемую серию</label>'
+            . ($report ? '' : '<div data-repeat-section><label class="uw-check"><input type="checkbox" name="repeat" value="1" ' . (!empty(self::$state['input']['repeat'])?'checked':'') . '> Создать повторяемую серию</label>'
             . self::field('Завершить серию','enddate',calendar::date(time()+30*DAYSECS,$p['timezone']),'date') . self::weekdays($p['weekdays'])
-            . self::textarea('Исключённые даты серии · по одной на строке','excludedates',implode("\n",$p['excludedates'])) . '</div>'
+            . self::textarea('Исключённые даты серии · по одной на строке','excludedates',implode("\n",$p['excludedates'])) . '</div>')
             . self::field('Вложения к поручению','attachments[]','','file','multiple')
             . '<div class="uw-notice">Результат проверяет действующий прямой руководитель. Повторения используют выбранные дни и исключения; график смен сотрудника автоматически не подставляется.</div>'
             . self::buttons('Назначить задачу') . '</form></section>';

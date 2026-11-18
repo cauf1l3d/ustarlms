@@ -28,7 +28,11 @@ final class bot_service {
                 if (!hash_equals($old->authority,$d->authority)) { return self::menu($d,$link,$sender); }
                 if (!hash_equals($old->payloadhash,$hash)) { throw new \InvalidArgumentException('idempotency_conflict'); }
                 $saved = json_decode($old->responsejson, true, 32, JSON_THROW_ON_ERROR);
-                return isset($saved['_invitation_pending']) ? self::menu($d, $link, $sender) : $saved;
+                // Older briefing receipts did not carry object-level authorization.
+                if (isset($saved['_invitation_pending']) || (!isset($saved['_guard']) && bot_briefing::is_work_card($saved))) {
+                    return self::menu($d, $link, $sender);
+                }
+                return $saved;
             }
             if ((int)$d->ratewindow<time()-60) { $d->ratewindow=time(); $d->ratecount=0; }
             if (++$d->ratecount>40) { throw new \InvalidArgumentException('rate_limited'); }
@@ -192,7 +196,7 @@ final class bot_service {
             $commit = bot_store::data($dialog)['commit'] ?? '';
             return in_array($commit, ['work.checklist.commit', 'work.report.commit', 'settings.commit'], true);
         }
-        return in_array($intent, ['work.mine', 'work.task', 'work.start', 'work.report', 'work.report.commit',
+        return in_array($intent, ['work.mine', 'work.briefing', 'work.meetings', 'work.task', 'work.start', 'work.report', 'work.report.commit',
             'work.photos', 'work.checklists', 'work.checklist', 'work.checklist.commit', 'learn.mine',
             'learn.results', 'learn.inbox', 'learn.read', 'settings', 'settings.toggle', 'settings.edit',
             'settings.commit', 'settings.unlink', 'settings.unlink.confirm'], true);
@@ -224,6 +228,7 @@ final class bot_service {
         return match(trim($text)) {
             '/start','/menu','Меню','Главная','Назад'=>'menu', '/cancel','Отмена'=>'cancel','/help','Помощь'=>'help',
             '/tasks','Мои задачи'=>'work.mine','/checklists','Чек-листы'=>'work.checklists',
+            '/briefing' => 'work.briefing', '/meetings' => 'work.meetings',
             '/team','Моя команда'=>'team.menu','/review','Проверить отчёты'=>'work.review',
             '/assign','Назначить задачу'=>'work.assign','/learn','Обучение'=>'learn.mine',
             '/results','Мои результаты'=>'learn.results','/settings','Настройки'=>'settings',
@@ -231,7 +236,7 @@ final class bot_service {
         };
     }
     private static function read_intent(string $intent): bool {
-        return in_array($intent,['menu','cancel','help','form.preview','team.menu','work.mine','work.team','work.review','work.company','work.task','work.photos',
+        return in_array($intent,['menu','cancel','help','form.preview','team.menu','work.mine','work.briefing','work.meetings','work.team','work.review','work.company','work.task','work.photos',
             'work.checklists','work.checklist','work.report','work.return','work.assign','learn.mine','learn.results','learn.inbox',
             'learn.team','learn.person','settings','settings.edit','settings.unlink','people.requests','people.request',
             'people.request.approve','people.request.reject','people.request.adapt','people.hire','people.terminate','people.grades','people.grade',
@@ -279,6 +284,12 @@ final class bot_service {
             bot_store::button($d, '☑️ Чек-листы', 'work.checklists'),
             bot_store::button($d, '🎓 Обучение', 'learn.mine'),
         ];
+        if (\local_ustar\briefing\service::allowed($id)) {
+            $buttons[] = bot_store::button($d, '🗓 Брифинг', 'work.briefing');
+        }
+        if (\local_ustar\briefing\meetings::allowed($id)) {
+            $buttons[] = bot_store::button($d, '🤝 Мои встречи', 'work.meetings');
+        }
         $team = $invited ? [] : self::team_actions($id);
         if ($team) {
             $buttons[] = bot_store::button($d, '👥 Управление командой', 'team.menu');

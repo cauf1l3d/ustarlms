@@ -18,7 +18,17 @@ final class provider implements
     \core_privacy\local\request\core_userlist_provider,
     \core_privacy\local\request\user_preference_provider {
 
+    private const BRIEFING_FIELDS = [
+        'local_ustar_brief_reports' => ['userid', 'departmentid', 'weekkey', 'schemajson', 'answersjson', 'submittedat', 'timemodified'],
+        'local_ustar_brief_minutes' => ['userid', 'weekkey', 'content', 'timemodified'],
+        'local_ustar_meetings' => ['ownerid', 'title', 'agenda', 'roomid', 'startat', 'endat', 'cancelled'],
+        'local_ustar_meeting_members' => ['userid', 'meetingid', 'rsvp'],
+    ];
+
     public static function get_metadata(collection $collection): collection {
+        foreach (self::BRIEFING_FIELDS as $table => $fields) {
+            $collection->add_database_table($table, array_fill_keys($fields, 'privacy:metadata:briefing'), 'privacy:metadata:briefing');
+        }
         $collection->add_database_table('local_ustar_route_access', array_fill_keys(
             ['userid','pointid','versionid','studyat','openedat','deadline','closedat','closereason'],
             'privacy:metadata:route_access'), 'privacy:metadata:route_access');
@@ -148,6 +158,11 @@ final class provider implements
             (EXISTS (SELECT o.id FROM {'.reward_shop::ORDER.'} o WHERE o.userid=:owner OR o.resolvedby=:manager)
              OR EXISTS (SELECT a.id FROM {'.reward_shop::OFFER.'} a WHERE a.usermodified=:author))',
             ['level'=>CONTEXT_SYSTEM,'owner'=>$userid,'manager'=>$userid,'author'=>$userid]);
+        foreach (self::BRIEFING_FIELDS as $table => $fields) {
+            $column = $fields[0];
+            $contexts->add_from_sql("SELECT id FROM {context} WHERE contextlevel = :level AND
+                EXISTS (SELECT id FROM {{$table}} WHERE $column = :userid)", ['level' => CONTEXT_SYSTEM, 'userid' => $userid]);
+        }
         return $contexts;
     }
 
@@ -162,6 +177,10 @@ final class provider implements
                 'local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups', 'local_ustar_conn_acktokens',
                 'local_ustar_conn_dialogs','local_ustar_conn_actions','local_ustar_conn_updates','local_ustar_route_access'] as $table) {
             $userlist->add_from_sql('userid', 'SELECT DISTINCT userid FROM {' . $table . '} WHERE userid > 0', []);
+        }
+        foreach (self::BRIEFING_FIELDS as $table => $fields) {
+            $column = $fields[0];
+            $userlist->add_from_sql($column, "SELECT DISTINCT $column FROM {{$table}} WHERE $column > 0", []);
         }
         $userlist->add_from_sql('issuedby', 'SELECT DISTINCT issuedby FROM {local_ustar_conn_challenges} WHERE issuedby > 0', []);
         foreach (['local_ustar_library_grant','local_ustar_library_attempt'] as $table) {
@@ -202,6 +221,12 @@ final class provider implements
         }
         if (!in_array(\context_system::instance()->id, $contextlist->get_contextids())) { return; }
         $userid = (int)$contextlist->get_user()->id;
+        foreach (self::BRIEFING_FIELDS as $table => $fields) {
+            $rows = $DB->get_records($table, [$fields[0] => $userid], '', 'id,' . implode(',', $fields));
+            if ($rows) {
+                writer::with_context(\context_system::instance())->export_data(['Briefing', $table], (object)['rows' => array_values($rows)]);
+            }
+        }
         writer::with_context(\context_system::instance())->export_data(['Route review access'], (object)[
             'windows'=>array_values($DB->get_records('local_ustar_route_access',['userid'=>$userid]))]);
         writer::with_context(\context_system::instance())->export_data(['Library'],(object)[
@@ -293,6 +318,23 @@ final class provider implements
         }
     }
 
+    private static function erase_briefing(?array $userids): void {
+        global $DB;
+        if ($userids === null) {
+            $DB->delete_records('local_ustar_meeting_members');
+            $DB->delete_records('local_ustar_meetings');
+            $DB->delete_records('local_ustar_brief_reports');
+            $DB->delete_records('local_ustar_brief_minutes');
+            return;
+        }
+        [$sql, $params] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'briefuserid');
+        $DB->delete_records_select('local_ustar_meeting_members', "meetingid IN
+            (SELECT id FROM {local_ustar_meetings} WHERE ownerid $sql)", $params);
+        foreach (self::BRIEFING_FIELDS as $table => $fields) {
+            $DB->delete_records_select($table, $fields[0] . ' ' . $sql, $params);
+        }
+    }
+
     /** Privacy lifecycle is a deliberate erase, never a transfer to another userid. */
     private static function erase(?array $userids): void {
         global $DB;
@@ -308,6 +350,7 @@ final class provider implements
             try {
                 reward_shop::erase_in_transaction($userids);
                 self::erase_library($userids);
+                self::erase_briefing($userids);
                 self::erase_bot($userids);
                 if ($userids === null) {
                     $DB->delete_records('local_ustar_workflow_events',['entitytype'=>'route_review_access']);

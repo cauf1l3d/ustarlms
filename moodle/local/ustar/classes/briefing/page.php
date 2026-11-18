@@ -60,15 +60,6 @@ final class page {
     }
 
     public function briefing(): string {
-        $week = $this->state['briefweek'] ?: service::current_week();
-        try {
-            $meeting = service::week_start($week);
-        } catch (\invalid_parameter_exception $error) {
-            $week = service::current_week();
-            $meeting = service::week_start($week);
-        }
-        $params = ['briefweek' => $week];
-        $deadline = $meeting - service::due_minutes() * MINSECS;
         $section = $this->state['briefsection'];
         $admin = service::admin($this->actor);
         $overview = service::overview_allowed($this->actor);
@@ -76,19 +67,31 @@ final class page {
         if (!$overview && !$managed) {
             service::deny();
         }
+        $reportsection = $section === 'report' || (!$overview && $section !== 'minutes');
+        $current = $reportsection ? service::report_week() : service::current_week();
+        $week = $this->state['briefweek'] ?: $current;
+        try {
+            $meeting = service::week_start($week);
+        } catch (\invalid_parameter_exception $error) {
+            $week = $current;
+            $meeting = service::week_start($week);
+        }
+        $params = ['briefweek' => $week];
+        $deadline = $meeting - service::due_minutes() * MINSECS;
 
         $room = meetings::rooms($this->actor)[(int)get_config('local_ustar', 'briefing_room')] ?? null;
         $out = '<section class="uw-panel"><div class="uw-panel-head"><div><h2>Брифинг руководителей</h2>'
             . '<p>' . self::date($meeting, '%A, %d.%m · %H:%M') . ' МСК'
             . ($room ? ' · ' . s($room->name) : '') . '</p>'
-            . '<p>Сдача отчётов до ' . self::date($deadline) . ' МСК</p></div>'
+            . ($meeting > time() ? '<p>Сдача отчётов до ' . self::date($deadline) . ' МСК</p>' : '') . '</div>'
             . '<div class="uw-actions uw-brief-controls">'
             . $this->link('← Неделя', ['briefweek' => calendar::date($meeting - WEEKSECS, service::ZONE), 'briefsection' => $section])
-            . $this->link('Текущая', ['briefweek' => service::current_week(), 'briefsection' => $section])
+            . $this->link('Текущая', ['briefweek' => $current, 'briefsection' => $section])
             . $this->link('Неделя →', ['briefweek' => calendar::date($meeting + WEEKSECS, service::ZONE), 'briefsection' => $section])
             . '</div></div><nav class="uw-filters uw-brief-controls" aria-label="Разделы брифинга">';
         if ($managed) {
-            $out .= $this->link('Отчёт отдела', $params + ['briefsection' => 'report'], 'uw-chip');
+            $reportweek = !$reportsection && $week === service::current_week() ? service::report_week() : $week;
+            $out .= $this->link('Отчёт отдела', ['briefweek' => $reportweek, 'briefsection' => 'report'], 'uw-chip');
         }
         if ($overview) {
             $out .= $this->link('Сводка', $params + ['briefsection' => 'summary'], 'uw-chip');
@@ -107,7 +110,7 @@ final class page {
             return $out . $this->settings($week);
         }
         if ($overview && (!$managed || $section !== 'report')) {
-            return $out . $this->summary($week, $deadline, $section === 'present');
+            return $out . $this->summary($week, $section === 'present');
         }
         return $out . $this->report($week, $managed);
     }
@@ -140,7 +143,8 @@ final class page {
             }
             $out .= '<div class="uw-actions">'
                 . ($form['submittedat'] ? '' : '<button name="submitreport" value="0" class="uw-btn">Сохранить черновик</button>')
-                . '<button name="submitreport" value="1" class="uw-btn uw-primary">Отправить отчёт</button></div></form>';
+                . '<button name="submitreport" value="1" class="uw-btn uw-primary">'
+                . ($form['submittedat'] ? 'Сохранить изменения' : 'Отправить отчёт') . '</button></div></form>';
         } else {
             $out .= self::answer_list($form['fields'], $form['answers']);
         }
@@ -166,18 +170,20 @@ final class page {
         return $out;
     }
 
-    private function summary(string $week, int $deadline, bool $present): string {
+    private function summary(string $week, bool $present): string {
         $departments = service::departments();
         $rows = service::summary($this->actor, $week);
         $submitted = count(array_filter($rows, static fn($row) => $row['submittedat']));
+        $archived = service::week_start($week) + service::MEETING_DURATION <= time();
         $out = '<section class="uw-panel uw-brief-summary' . ($present ? ' is-presentation' : '') . '"><div class="uw-panel-head">'
-            . '<div><h2>Отчёты отделов</h2><p>Сдано ' . $submitted . ' из ' . count($rows) . '</p></div>'
+            . '<div><h2>Отчёты отделов</h2><p>Сдано ' . $submitted . ($archived ? '' : ' из ' . count($rows)) . '</p></div>'
             . '<div class="uw-brief-controls">'
             . $this->link($present ? 'К сводке' : 'Режим показа', ['briefweek' => $week, 'briefsection' => $present ? 'summary' : 'present'])
             . ($present ? '' : $this->link('Скачать CSV', ['briefweek' => $week, 'briefexport' => 1]))
             . '</div></div>';
         if (!$rows) {
-            $out .= '<div class="uw-empty">Сводка появится после включения форм для отделов.</div>';
+            $out .= '<div class="uw-empty">' . ($archived ? 'На эту неделю отчётов нет.'
+                : 'Сводка появится после включения форм для отделов.') . '</div>';
         }
         $out .= '<nav class="uw-filters uw-brief-controls" aria-label="Отделы">';
         foreach ($rows as $department => $row) {
@@ -187,8 +193,7 @@ final class page {
         $out .= '</nav>';
         foreach ($rows as $department => $row) {
             $label = $departments[$department]['name'] ?? $department;
-            $status = $row['submittedat'] ? ($row['submittedat'] > $deadline ? 'Сдан после срока' : 'Сдан')
-                : ($row['draft'] ? 'Черновик' : 'Не сдан');
+            $status = service::report_status($row);
             $out .= '<article class="uw-brief-department" id="brief-' . $row['template']->id . '"><div class="uw-panel-head">'
                 . '<h3>' . s($label) . '</h3><span class="uw-badge' . ($row['submittedat'] ? ' uw-success' : '') . '">'
                 . s($status) . '</span></div>';
@@ -440,6 +445,7 @@ final class page {
                     . self::button('Отменить встречу', false) . '</form></div>';
             } else if ($detail['member']) {
                 $out .= $this->post('meeting_rsvp', $params) . self::hidden('briefrevision', $row->revision)
+                    . self::hidden('expectedrsvp', $detail['member']->rsvp)
                     . '<p>' . s(meetings::RESPONSES[$detail['member']->rsvp]) . '</p>'
                     . '<div class="uw-actions"><button class="uw-btn uw-primary" name="rsvp" value="accepted">Приму участие</button>'
                     . '<button class="uw-btn" name="rsvp" value="declined">Не смогу</button></div></form>';

@@ -3,7 +3,7 @@ updated_at: '2026-11-18'
 project: USTAR Academy
 stage: task_briefing
 stage_label: Briefing, meeting rooms and task Kanban
-current_activity: Briefing package b1df4f2b passed both Moodle native profiles and archive verification. Operator baseline 422fbfb3 was observed by the owner. The previous briefing attempt rolled back. The qualified retry awaits owner preflight, installation and live acceptance.
+current_activity: Briefing and Kanban review targets local_ustar 2026111800 over exact operator 422fbfb3 or briefing b1df4f2b baselines. The previous attempt rolled back. This update remains separate from the last owner-confirmed runtime.
 entrypoint: START_HERE.md
 next_task: TASK-BRIEFING
 ready_tasks: []
@@ -399,16 +399,16 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: native_qualified_owner_installation_pending
-  qualification: context/runtime/briefing_qualification_20261118.json
-  application_commit: b1df4f2b234b6b79260eb3bbd2423fc0daf7ef79
-  worker_commit: b1df4f2b234b6b79260eb3bbd2423fc0daf7ef79
+  status: source_review_qualification_in_progress
+  review: context/reviews/20261118/BRIEFING_KANBAN_RU.md
+  previous_qualification: context/runtime/briefing_qualification_20261118.json
   deployment_baseline: 422fbfb324db3b18447b61bc1c86a8a5481fe3e0
+  compatible_deployment_baseline: b1df4f2b234b6b79260eb3bbd2423fc0daf7ef79
   source_pr: 125
-  runbook: docs/BRIEFING_INSTALL_RU.md
+  runbook: docs/BRIEFING_REVIEW_INSTALL_RU.md
   branch: feat/task-briefing-kanban-20261117
   deployed: false
-  local_ustar_version: 2026111700
+  local_ustar_version: 2026111800
   theme_ustar_version: 2026110200
   schema_changed: true
   worker_rollout: true

@@ -558,8 +558,8 @@
     {
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
-      "size": 110496,
-      "sha256": "1be9d28110491dad7f766333810b7fa3e4c438ced97aaf6d1bff169551507670"
+      "size": 110661,
+      "sha256": "6588bd96dcdfb80c55bfa74da1fe648ea4f3fc03d93afc691b884d7a4f57879f"
     },
     {
       "path": "context/code_map/feed_media_development_source.json",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 13601,
-      "sha256": "04b5260a0e742297e3a695c3aa5d82135761068eaa259020da8c895862ed2add"
+      "size": 13552,
+      "sha256": "37a093f8897234944d9f3c78d78d7cafcfac52f9db807db54a1766537e1f5223"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -1588,6 +1588,12 @@
       "sha256": "f5a03a1222da5ff5db15b2207d4e6ed07f1340464f37406d4485cbcf44e29ae3"
     },
     {
+      "path": "context/reviews/20261118/BRIEFING_KANBAN_RU.md",
+      "domain": "reviews",
+      "size": 5897,
+      "sha256": "02fe7f2e17b0f47fa97a620746d905eaa526e999b1029310b14efa5b29426179"
+    },
+    {
       "path": "context/roadmap/ACCEPTED_RISKS.yaml",
       "domain": "roadmap",
       "size": 983,
@@ -1614,8 +1620,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 56665,
-      "sha256": "e40117fcf540a51a3530f7b66910ca54d0629852e53564fb4be293bcca801c22"
+      "size": 56814,
+      "sha256": "c78041fd369843bde1d9d49914e2523e7bb485587015300e4e822852dfa186c1"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1668,8 +1674,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22564,
-      "sha256": "928b46b683ed0e1e9e4c2601e1905259f43765012db911cf492cd000df9c6372"
+      "size": 22546,
+      "sha256": "0cd9af393b054913f6e2fd9f53e4d15dce74f8e62c1f5b682ecb979e078daa28"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -4128,8 +4134,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3805,
-      "sha256": "1b8d512ddf9ea35706f3e5c395865e4ef719aed4877c06bc136263fa9e7acd82"
+      "size": 3814,
+      "sha256": "796df98f98915b9a2a0e08f93b3da9d91a6818280ee9bf0af0206cd666bce2fa"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

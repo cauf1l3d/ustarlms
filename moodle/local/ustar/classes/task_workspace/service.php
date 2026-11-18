@@ -81,6 +81,7 @@ final class service {
     public static function rows(int $actorid, string $scope, string $filter = 'all', int $page = 0,
             int $from = 0, int $to = 0, string $query = '', string $kind = '', string $status = ''): array {
         global $DB;
+        $pagesize = $status === '' ? 50 : 20;
         [$where, $params] = self::scope_sql($actorid, $scope);
         $now = time();
         if ($filter === 'active') { $where .= " AND t.status IN ('assigned','in_progress')"; }
@@ -104,8 +105,9 @@ final class service {
         }
         $sql = ' FROM {local_ustar_learning_tasks} t LEFT JOIN {local_ustar_task_meta} m ON m.taskid=t.id WHERE ' . $where;
         $total = $DB->count_records_sql('SELECT COUNT(t.id)' . $sql, $params);
+        $page = min(max(0, $page), intdiv(max(0, $total - 1), $pagesize));
         $tasks = $DB->get_records_sql('SELECT t.*' . $sql . ' ORDER BY CASE WHEN t.dueat IS NULL THEN 1 ELSE 0 END,
-            t.dueat ASC, t.id ASC', $params, max(0, $page) * 50, 50);
+            t.dueat ASC, t.id ASC', $params, $page * $pagesize, $pagesize);
         $out = []; $metas = []; $names = [];
         if ($tasks) {
             $metas = $DB->get_records_list('local_ustar_task_meta', 'taskid', array_keys($tasks));
@@ -123,21 +125,25 @@ final class service {
             }
             $out[] = $item;
         }
-        return ['items' => $out, 'total' => $total, 'page' => $page, 'hasmore' => ($page + 1) * 50 < $total];
+        return ['items' => $out, 'total' => $total, 'page' => $page, 'hasmore' => ($page + 1) * $pagesize < $total];
     }
 
     /** Moves that can start directly or open the normal report/review form. */
     public static function kanban_moves(array $task, int $actor): array {
+        if (view_as::active()) {
+            return [];
+        }
         if ($task['status'] === 'in_review' && !empty($task['canreview'])) {
             return ['completed' => 'approve', 'in_progress' => 'return'];
         }
         if ($task['assigneeid'] !== $actor) {
             return [];
         }
-        if ($task['status'] === 'assigned') {
-            return ['in_progress' => 'start', 'in_review' => 'report'];
+        $moves = $task['status'] === 'assigned' ? ['in_progress' => 'start'] : [];
+        if ($task['kind'] !== 'retraining' && in_array($task['status'], ['assigned', 'in_progress'], true)) {
+            $moves[$task['requirereview'] ? 'in_review' : 'completed'] = 'report';
         }
-        return $task['status'] === 'in_progress' ? ['in_review' => 'report'] : [];
+        return $moves;
     }
 
     public static function summary(int $actorid, string $scope, int $from = 0, int $to = 0): array {
@@ -193,6 +199,7 @@ final class service {
             'assignerid' => (int)$task->assignerid, 'assigner' => $names[$task->assignerid] ?? self::name((int)$task->assignerid),
             'description' => (string)$task->description, 'dueat' => (int)$task->dueat, 'version' => (int)$task->version,
             'kind' => $m ? $m->kind : 'task', 'photo' => $m && !empty($m->requirephoto),
+            'requirereview' => !empty($task->requirereview),
             'parentid' => $m ? (int)$m->parentid : 0, 'seriesid' => $m ? (int)$m->seriesid : 0,
             'submittedat' => $m ? (int)$m->submittedat : 0, 'reviewdueat' => $m ? (int)$m->reviewdueat : 0,
             'timezone' => $m ? $m->timezone : 'Europe/Moscow', 'kpiweight' => $m ? (int)$m->kpiweight : 0,

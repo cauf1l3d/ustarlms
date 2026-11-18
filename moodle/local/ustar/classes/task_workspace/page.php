@@ -155,7 +155,7 @@ final class page {
             foreach ($rows['items'] as $item) {
                 $moves = service::kanban_moves($item, self::$actor);
                 $out .= '<article class="uw-board-card"' . ($moves ? ' draggable="true"' : '') . '>'
-                    . '<a class="uw-board-title" href="' . self::url(['taskid' => $item['id']])->out() . '">'
+                    . '<a class="uw-board-title" href="' . self::url(['taskid' => $item['id']])->out() . '#uw-detail">'
                     . s($item['title']) . '</a><span class="uw-task-meta">' . s($item['assignee']) . ' · ' . s(self::due($item))
                     . '</span>' . self::badge($item);
                 if ($moves) {
@@ -170,8 +170,8 @@ final class page {
                 $out .= '</article>';
             }
             if (!$rows['items']) { $out .= '<p class="uw-muted uw-board-empty">Пока пусто</p>'; }
-            if ($number) { $out .= self::link('← Назад', ['boardstatus' => $status, 'pageno' => $number - 1]); }
-            if ($rows['hasmore']) { $out .= self::link('Ещё задачи →', ['boardstatus' => $status, 'pageno' => $number + 1]); }
+            if ($rows['page']) { $out .= self::link('← Назад', ['boardstatus' => $status, 'pageno' => $rows['page'] - 1]); }
+            if ($rows['hasmore']) { $out .= self::link('Ещё задачи →', ['boardstatus' => $status, 'pageno' => $rows['page'] + 1]); }
             $out .= '</section>';
         }
         return $out . '</div>';
@@ -192,7 +192,7 @@ final class page {
         $events = [];
         foreach ($rows['items'] as $task) { $day = calendar::date($task['dueat'], $first->getTimezone()->getName()); $events[$day][] = $task; }
         $meetings = [];
-        foreach (array_merge(meetings::calendar_items(self::$actor, $first->getTimestamp(), $end),
+        foreach (array_merge(meetings::calendar_items(self::$actor, $first->getTimestamp(), $end, $first->getTimezone()->getName()),
                 briefing::calendar_items(self::$actor, $first->getTimestamp(), $end)) as $meeting) {
             $meetings[calendar::date($meeting['startat'], $first->getTimezone()->getName())][] = $meeting;
         }
@@ -209,7 +209,9 @@ final class page {
                 . ($date->format('m') !== $first->format('m') ? ' is-outside' : '') . '"><span class="uw-daynum">' . $date->format('j') . '</span>';
             foreach ($meetings[$key] ?? [] as $meeting) {
                 $out .= '<a class="uw-event uw-event-meeting" href="' . self::url($meeting['params'])->out() . '">'
-                    . s(userdate($meeting['startat'], '%H:%M', $first->getTimezone()->getName())) . ' · ' . s($meeting['title']) . '</a>';
+                    . (!empty($meeting['continued']) ? 'Продолжается'
+                        : s(userdate($meeting['startat'], '%H:%M', $first->getTimezone()->getName())))
+                    . ' · ' . s($meeting['title']) . '</a>';
             }
             foreach ($events[$key] ?? [] as $task) {
                 $out .= '<a class="uw-event ' . ($task['late'] ? 'is-late' : '') . '" href="' . self::url(['taskid' => $task['id']])->out() . '">'

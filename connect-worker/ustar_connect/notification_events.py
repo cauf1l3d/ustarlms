@@ -19,6 +19,7 @@ EVENTS = {
     'meeting_invited': ('tasks', 'Приглашение на встречу'),
     'meeting_updated': ('tasks', 'Встреча изменена'),
     'meeting_cancelled': ('tasks', 'Встреча отменена'),
+    'meeting_removed': ('tasks', 'Приглашение на встречу отозвано'),
     'feed_comment': ('feed', 'Новый комментарий'),
     'feed_reply': ('feed', 'Новый ответ на комментарий'),
     'feed_announcement': ('feed', 'Новое объявление в Академии'),

@@ -43,46 +43,55 @@ def build(repo, target, output):
 
 
 def build_successor(repo, target, output, profile, operator_path, worker_changes, archive_prefix, *,
-                    schema_check=None, new_subdirs=(), **extra):
+                    schema_check=None, new_subdirs=(), compatible_baselines=None, **extra):
     frozen = git_file(repo, release.FROZEN_COMMIT, 'scripts/infra/connect_team_release.py')
     engine = profile.successor(frozen, target, **{name.lower(): value for name, value in extra.items()})
     baseline = engine.WORKER_BEFORE
-    engine.require(engine.BASES == (baseline,), 'unexpected_application_baselines')
+    compatible_baselines = compatible_baselines or {}
+    versions = {baseline: engine.BEFORE, **compatible_baselines}
+    engine.require(engine.BASES == tuple(versions), 'unexpected_application_baselines')
     core_source = git_file(repo, engine.CORE_COMMIT, 'scripts/infra/reward_shop_release.py')
     worker_source = git_file(repo, target, 'connect-worker/deploy/install.py')
     core = engine.embedded(core_source, engine.CORE_SHA256, '_ustar_reward_shop_v3')
     worker = engine.embedded(worker_source, engine.WORKER_INSTALLER_SHA256, '_ustar_connect_worker_installer')
     engine.require(core.git(repo, 'rev-parse', target + '^{commit}') == target
-                   and core.git(repo, 'merge-base', baseline, target) == baseline, 'wrong_application_ancestry')
+                   and all(core.git(repo, 'merge-base', commit, target) == commit for commit in versions),
+                   'wrong_application_ancestry')
     operator = Path(profile.__file__).read_bytes()
     engine.require(operator == git_file(repo, 'HEAD', operator_path), 'operator_not_committed')
 
     with tempfile.TemporaryDirectory(prefix='ustar-connect-broadcast-build-') as work:
         work = Path(work)
-        before, after = work / 'before', work / 'after'
-        core.archive(repo, baseline, before)
+        after = work / 'after'
         core.archive(repo, target, after)
-        old = core.scan(before / core.APP_REL)
         new = core.scan(after / core.APP_REL)
         theme = core.scan(after / core.THEME_REL)
-        engine.require(core.scan(before / core.THEME_REL) == theme, 'theme_changed')
-        if schema_check is None:
-            engine.require(old['db/install.xml'] == new['db/install.xml'], 'unexpected_schema_change')
-        else:
-            schema_check(before / core.APP_REL / 'db/install.xml', after / core.APP_REL / 'db/install.xml')
-        delta = engine.changes(old, new)
         allowed_dirs = tuple(item.rstrip('/') + '/' for item in new_subdirs)
-        engine.require(all((before / core.APP_REL / name).parent.is_dir() or
-                           any(name.startswith(prefix) for prefix in allowed_dirs) for name in delta),
-                       'new_source_directory_unsupported')
-        engine.require(all(not (before / core.APP_REL / item.rstrip('/')).exists() for item in new_subdirs),
-                       'new_source_directory_already_exists')
-        for root, version in ((before, engine.BEFORE), (after, engine.AFTER)):
+        sources = {}
+        delta = set()
+        for root, version in [(work / commit, version) for commit, version in versions.items()] + [(after, engine.AFTER)]:
+            if root != after:
+                core.archive(repo, root.name, root)
+                old = core.scan(root / core.APP_REL)
+                sources[root.name] = old
+                engine.require(core.scan(root / core.THEME_REL) == theme, 'theme_changed')
+                if root.name == baseline:
+                    if schema_check is None:
+                        engine.require(old['db/install.xml'] == new['db/install.xml'], 'unexpected_schema_change')
+                    else:
+                        schema_check(root / core.APP_REL / 'db/install.xml', after / core.APP_REL / 'db/install.xml')
+                    engine.require(all(not (root / core.APP_REL / item.rstrip('/')).exists() for item in new_subdirs),
+                                   'new_source_directory_already_exists')
+                changes = engine.changes(old, new)
+                engine.require(all((root / core.APP_REL / name).parent.is_dir() or
+                                   any(name.startswith(prefix) for prefix in allowed_dirs) for name in changes),
+                               'new_source_directory_unsupported')
+                delta.update(changes)
             source = (root / core.APP_REL / 'version.php').read_text()
             match = re.search(r'\$plugin->version\s*=\s*(\d+)', source)
             engine.require(match and int(match[1]) == version, 'application_version_mismatch')
         payload = {}
-        for name in delta:
+        for name in sorted(delta):
             path = after / core.APP_REL / name
             if name.endswith('.php'):
                 core.run(['php', '-l', str(path)], timeout=20)
@@ -95,7 +104,7 @@ def build_successor(repo, target, output, profile, operator_path, worker_changes
         engine.require(builder.read_bytes() == git_file(repo, target, 'connect-worker/deploy/build_release.py'),
                        'worker_builder_changed')
         workers = {}
-        for commit in (baseline, target):
+        for commit in (*versions, target):
             core.run(['python3', '-I', '-B', str(builder), '--commit', commit, '--output-dir', str(work)], timeout=120)
             path = work / f'ustar-connect-receiver-{commit[:8]}.tar.gz'
             recorded, values = worker.validate_archive(path, core.digest(path))
@@ -104,9 +113,14 @@ def build_successor(repo, target, output, profile, operator_path, worker_changes
         worker_archive = path.read_bytes()
         engine.worker_identity(workers[target])
 
-    manifest = {'schema': 1, 'target': target, 'before': {baseline: old}, 'after': new, 'theme': theme,
+    manifest = {'schema': 1, 'target': target, 'before': sources, 'after': new, 'theme': theme,
                 'worker_before': baseline, 'worker_identity': engine.worker_identity(workers[baseline]),
                 'local_ustar': engine.AFTER, 'theme_ustar': engine.THEME}
+    if compatible_baselines:
+        manifest['compatibility'] = {
+            commit: {'local_ustar': version, 'worker_identity': engine.worker_identity(workers[commit])}
+            for commit, version in compatible_baselines.items()
+        }
     bootstrap = {'FROZEN_SOURCE': frozen, 'CORE_SOURCE': core_source,
                  'WORKER_INSTALLER': worker_source, 'TARGET': target, **extra}
     for name, value in bootstrap.items():

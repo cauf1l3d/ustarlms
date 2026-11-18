@@ -12,7 +12,7 @@ final class reminders {
             return false;
         }
         [, $week, $departmentkey] = $matches;
-        if ($week !== service::current_week() || time() >= service::week_start($week)) {
+        if ($week !== service::report_week()) {
             return false;
         }
         foreach (service::manager_departments($actor) as $department => $row) {
@@ -36,10 +36,10 @@ final class reminders {
         if (!service::available()) {
             return;
         }
-        $week = service::current_week();
+        $now = time();
+        $week = service::report_week($now);
         $meeting = service::week_start($week);
         $deadline = $meeting - service::due_minutes() * MINSECS;
-        $now = time();
         if ($now < $deadline - HOURSECS || $now >= $meeting) {
             return;
         }
@@ -54,7 +54,8 @@ final class reminders {
                 if (self::pending($department, $week)) {
                     workflow_notifications::enqueue($actor, 'briefing_reminder', 'Пора сдать отчёт к брифингу',
                         userdate($deadline, '%d.%m %H:%M', service::ZONE) . ' МСК',
-                        '/local/ustar/tasks.php?view=briefing&briefsection=report&briefdept=' . rawurlencode($department), $key);
+                        '/local/ustar/tasks.php?view=briefing&briefsection=report&briefweek=' . $week
+                            . '&briefdept=' . rawurlencode($department), $key);
                 }
             }
         }

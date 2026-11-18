@@ -41,6 +41,20 @@ cmp /artifacts/connect-invitation-after.json /artifacts/connect-invitation-repea
 USTAR_STAGE_PREFIX=fresh_ install_site > /artifacts/connect-invitation-fresh.log 2>&1
 USTAR_STAGE_PREFIX=fresh_ snapshot fresh
 cmp /artifacts/connect-invitation-after.json /artifacts/connect-invitation-fresh.json
+if [[ -d /source/.stage-input/briefing-review-baseline/moodle ]]; then
+    mkdir -p /stage/data/botold_
+    install_sources /source/.stage-input/briefing-review-baseline/moodle
+    USTAR_STAGE_PREFIX=botold_ install_site > /artifacts/connect-invitation-briefing-existing.log 2>&1
+    USTAR_STAGE_PREFIX=botold_ php /source/tests/stage/briefing_upgrade_fixture.php seed
+    USTAR_STAGE_PREFIX=botold_ snapshot briefing-before
+    install_sources /source/moodle
+    USTAR_STAGE_PREFIX=botold_ php admin/cli/upgrade.php --non-interactive > /artifacts/connect-invitation-briefing-upgrade.log 2>&1
+    USTAR_STAGE_PREFIX=botold_ snapshot briefing-after
+    USTAR_STAGE_PREFIX=botold_ php /source/tests/stage/briefing_upgrade_fixture.php verify \
+        | tee /artifacts/connect-invitation-briefing-preserved.log
+    cmp /artifacts/connect-invitation-briefing-before.json /artifacts/connect-invitation-briefing-after.json
+    cmp /artifacts/connect-invitation-after.json /artifacts/connect-invitation-briefing-after.json
+fi
 if [[ ${USTAR_STAGE_OPERATOR_UPDATE:-} == 1 ]]; then
     bash /source/tests/stage/authenticated_shell_smoke.sh operator
     bash /source/tests/stage/connect_operator_http.sh 2>&1 | tee /artifacts/connect-invitation-operator-http.log

@@ -3,6 +3,12 @@ name: USTAR briefing Kanban production candidate
 on:
   push:
     branches: [feat/task-briefing-kanban-20261117]
+    paths:
+      - '.github/workflows/ustar-briefing-kanban.yml'
+      - 'moodle/**'
+      - 'connect-worker/**'
+      - 'scripts/infra/**'
+      - 'tests/**'
   workflow_dispatch:
 
 permissions:
@@ -29,10 +35,10 @@ jobs:
         run: |
           set -euo pipefail
           source="$(git rev-parse HEAD)"
-          python3 -m py_compile scripts/infra/briefing_release.py scripts/infra/build_briefing_release.py scripts/infra/build_connect_broadcast_release.py
-          python3 scripts/infra/build_briefing_release.py --target "$source" --output artifacts | tee artifacts-build.json
-          python3 scripts/infra/build_briefing_release.py --target "$source" --output repeat > repeat-build.json
-          name="ustar-briefing-kanban-${source:0:8}.tar.gz"
+          python3 -m py_compile scripts/infra/briefing_review_release.py scripts/infra/build_briefing_review_release.py scripts/infra/build_connect_broadcast_release.py
+          python3 scripts/infra/build_briefing_review_release.py --target "$source" --output artifacts | tee artifacts-build.json
+          python3 scripts/infra/build_briefing_review_release.py --target "$source" --output repeat > repeat-build.json
+          name="ustar-briefing-review-${source:0:8}.tar.gz"
           cmp "artifacts/$name" "repeat/$name"
           mkdir -p verify
           tar -xzf "artifacts/$name" -C verify
@@ -79,15 +85,17 @@ jobs:
           USTAR_STAGE_COMPOSE: tests/stage/${{ matrix.compose }}
         run: |
           set -euo pipefail
-          mkdir -p artifacts .stage-input/connect-invitation-baseline
+          mkdir -p artifacts .stage-input/connect-invitation-baseline .stage-input/briefing-review-baseline
           git archive 422fbfb324db3b18447b61bc1c86a8a5481fe3e0 moodle | tar -x -C .stage-input/connect-invitation-baseline
+          git archive b1df4f2b234b6b79260eb3bbd2423fc0daf7ef79 moodle | tar -x -C .stage-input/briefing-review-baseline
           trap 'docker compose -f "$USTAR_STAGE_COMPOSE" down --volumes --remove-orphans' EXIT
           docker compose -f "$USTAR_STAGE_COMPOSE" build runner
           docker compose -f "$USTAR_STAGE_COMPOSE" run --rm --entrypoint bash runner -c '
             set -euo pipefail
             bash /source/tests/stage/connect_invitation_native.sh
             cd /stage/moodle
-            USTAR_DISPOSABLE_FIXTURE=briefing php /source/tests/stage/briefing_smoke.php /stage/moodle
+            USTAR_DISPOSABLE_FIXTURE=briefing php /source/tests/stage/briefing_smoke.php /stage/moodle \
+              | tee /artifacts/connect-invitation-briefing-smoke.log
           '
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()

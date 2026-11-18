@@ -1,9 +1,9 @@
 # Активная работа · 18.11.2026
 
-TASK-BRIEFING. Пакет b1df4f2b, local1700. Два native Moodle профиля и архив прошли проверку.
-[Установка](../../docs/BRIEFING_INSTALL_RU.md), [результаты](../runtime/briefing_qualification_20261118.json).
-Owner сообщил базу local1402/worker422fbfb3 и откат предыдущей установки.
-Повторная установка и живая приёмка брифинга ожидаются.
+TASK-BRIEFING. Ревью local1800 охватывает сроки отчётов, календарь, канбан и Telegram.
+[Ревью](../reviews/20261118/BRIEFING_KANBAN_RU.md), [установка](../../docs/BRIEFING_REVIEW_INSTALL_RU.md).
+Кандидат обновляет точные базы 422fbfb3 и b1df4f2b. Последняя подтверждённая владельцем
+база local1402/worker422fbfb3. Живая приёмка ожидается.
 
 ## Повторная привязка Telegram
 

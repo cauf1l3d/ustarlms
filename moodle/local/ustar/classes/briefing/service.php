@@ -57,10 +57,17 @@ final class service {
         return ((int)$date->format('N') === 1 ? $date : $date->modify('next monday'))->format('Y-m-d');
     }
 
+    /** Keep Monday's agenda available while opening the next report at the meeting start. */
+    public static function report_week(?int $now = null): string {
+        $now ??= time();
+        $week = self::current_week($now);
+        return $now < self::week_start($week) ? $week : self::current_week($now + WEEKSECS);
+    }
+
     public static function week_start(string $week): int {
         $timestamp = calendar::timestamp($week, self::MEETING_TIME, self::ZONE);
         if ((int)(new \DateTimeImmutable($week, new \DateTimeZone(self::ZONE)))->format('N') !== 1) {
-            throw new \invalid_parameter_exception('Выберите дату понедельника.');
+            throw new input_error('Выберите дату понедельника.');
         }
         return $timestamp;
     }
@@ -98,7 +105,7 @@ final class service {
         global $DB;
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('briefing:' . $key, 10);
         if (!$lock) {
-            throw new \invalid_parameter_exception('Данные меняются в другой сессии. Повторите действие.');
+            throw new input_error('Данные меняются в другой сессии. Повторите действие.');
         }
         try {
             $transaction = $DB->start_delegated_transaction();
@@ -130,12 +137,12 @@ final class service {
         $title = trim($title);
         if (!$fields || count($fields) > self::MAX_FIELDS || $title === '' || \core_text::strlen($title) > 200
                 || $order < 0 || $order > 9999) {
-            throw new \invalid_parameter_exception('Укажите заголовок, порядок и от 1 до 24 полей.');
+            throw new input_error('Укажите заголовок, порядок и от 1 до 24 полей.');
         }
         foreach ($fields as $field) {
             if (!isset(self::FIELD_TYPES[$field['type']]) || trim($field['label']) === ''
                     || \core_text::strlen($field['label']) > 150) {
-                throw new \invalid_parameter_exception('Проверьте название и тип каждого поля.');
+                throw new input_error('Проверьте название и тип каждого поля.');
             }
         }
         self::write('department:' . $department, static function() use ($DB, $department, $revision, $title, $order, $active, $fields) {
@@ -161,7 +168,7 @@ final class service {
         if (!isset(self::manager_departments($actor)[$department])) {
             self::deny();
         }
-        $meeting = self::week_start($week);
+        self::week_start($week);
         $template = self::template($department);
         $report = self::report($department, $week);
         $snapshot = $report ? self::decode($report->schemajson) : [
@@ -171,8 +178,8 @@ final class service {
             'answers' => $report ? self::decode($report->answersjson) : [],
             'revision' => (int)($report->revision ?? 0), 'template' => (int)($template->revision ?? 0),
             'submittedat' => (int)($report->submittedat ?? 0), 'id' => (int)($report->id ?? 0),
-            'editable' => $week === self::current_week() && time() < $meeting
-                && ($report || !empty($template->active)),
+            'authorid' => (int)($report->userid ?? 0),
+            'editable' => $week === self::report_week() && ($report || !empty($template->active)),
         ];
     }
 
@@ -182,10 +189,10 @@ final class service {
             $value = trim((string)($input[$key] ?? ''));
             $limit = $field['type'] === 'long' ? 12000 : 500;
             if (\core_text::strlen($value) > $limit || ($submit && $value === '' && $field['required'])) {
-                throw new \invalid_parameter_exception('Проверьте длину и заполнение поля «' . $field['label'] . '».');
+                throw new input_error('Проверьте длину и заполнение поля «' . $field['label'] . '».');
             }
             if ($submit && $value !== '' && $field['type'] === 'number' && !preg_match('/^-?\d+(?:[,.]\d+)?$/D', $value)) {
-                throw new \invalid_parameter_exception('В поле «' . $field['label'] . '» требуется число.');
+                throw new input_error('В поле «' . $field['label'] . '» требуется число.');
             }
             $answers[$key] = $value;
         }
@@ -199,20 +206,37 @@ final class service {
         return self::write('department:' . $department, static function() use ($DB, $actor, $department, $week,
                 $revision, $template, $input, $submit) {
             $form = self::form($actor, $department, $week);
+            if ($form['revision'] === $revision + 1 && $form['authorid'] === $actor
+                    && ($revision || ($form['templateversion'] ?? null) === $template)
+                    && (bool)$form['submittedat'] === $submit
+                    && self::validate_answers($form['fields'], $input, $submit) === $form['answers']) {
+                return $form['id'];
+            }
             if (!$form['editable']) {
-                throw new \invalid_parameter_exception('Форма не открыта для редактирования этой недели.');
+                throw new input_error('Форма не открыта для редактирования этой недели.');
             }
             if ($form['revision'] !== $revision || (!$revision && $form['template'] !== $template)) {
                 throw new conflict();
             }
             if ($form['submittedat'] && !$submit) {
-                throw new \invalid_parameter_exception('Для исправления отправленного отчёта нажмите «Отправить отчёт».');
+                throw new input_error('Для исправления отправленного отчёта нажмите «Сохранить изменения».');
             }
             $answers = self::validate_answers($form['fields'], $input, $submit);
+            $now = time();
+            $snapshot = ['title' => $form['title'], 'fields' => $form['fields']];
+            // Keep snapshots from old releases readable without guessing their original template or deadline.
+            if (isset($form['templateversion']) || !$form['id']) {
+                $snapshot['templateversion'] = $form['templateversion'] ?? $template;
+            }
+            if ($submit && !$form['submittedat']) {
+                $snapshot['deadlineat'] = self::week_start($week) - self::due_minutes() * MINSECS;
+            } else if (isset($form['deadlineat'])) {
+                $snapshot['deadlineat'] = $form['deadlineat'];
+            }
             $record = (object)['departmentid' => $department, 'weekkey' => $week, 'userid' => $actor,
-                'schemajson' => self::encode(['title' => $form['title'], 'fields' => $form['fields']]),
+                'schemajson' => self::encode($snapshot),
                 'answersjson' => self::encode($answers), 'revision' => $revision + 1,
-                'submittedat' => $submit ? time() : 0, 'timemodified' => time()];
+                'submittedat' => $submit ? ($form['submittedat'] ?: $now) : 0, 'timemodified' => $now];
             if ($form['id']) {
                 $record->id = $form['id'];
                 $DB->update_record('local_ustar_brief_reports', $record);
@@ -227,18 +251,26 @@ final class service {
         if (!self::overview_allowed($actor)) {
             self::deny();
         }
-        self::week_start($week);
+        $archived = self::week_start($week) + self::MEETING_DURATION <= time();
         $templates = $DB->get_records('local_ustar_brief_templates', [], 'sortorder ASC, title ASC, id ASC');
         $records = array_column($DB->get_records('local_ustar_brief_reports', ['weekkey' => $week]), null, 'departmentid');
         $out = [];
         foreach ($templates as $template) {
             $record = $records[$template->departmentid] ?? null;
-            if ($template->active || $record) {
+            if ($record || ($template->active && !$archived)) {
                 $out[$template->departmentid] = ['template' => $template, 'submittedat' => (int)($record->submittedat ?? 0),
                     'draft' => $record && !$record->submittedat, 'report' => !empty($record->submittedat) ? $record : null];
             }
         }
         return $out;
+    }
+
+    public static function report_status(array $row): string {
+        if (!$row['report']) {
+            return $row['draft'] ? 'Черновик' : 'Не сдан';
+        }
+        $deadline = (int)(self::decode($row['report']->schemajson)['deadlineat'] ?? 0);
+        return $deadline && $row['submittedat'] > $deadline ? 'Сдан после срока' : 'Сдан';
     }
 
     public static function download(int $actor, string $week): never {
@@ -252,14 +284,15 @@ final class service {
         $csv->add_data(['Понедельник', 'Отдел', 'Статус', 'Вопрос', 'Ответ']);
         foreach ($rows as $department => $row) {
             $name = $departments[$department]['name'] ?? $department;
+            $status = self::report_status($row);
             if (!$row['report']) {
-                $csv->add_data([$week, $name, $row['draft'] ? 'Черновик' : 'Не сдан', '', '']);
+                $csv->add_data([$week, $name, $status, '', '']);
                 continue;
             }
             $schema = self::decode($row['report']->schemajson);
             $answers = self::decode($row['report']->answersjson);
             foreach ($schema['fields'] as $key => $field) {
-                $csv->add_data([$week, $name, 'Сдан', $field['label'], $answers[$key] ?? '']);
+                $csv->add_data([$week, $name, $status, $field['label'], $answers[$key] ?? '']);
             }
         }
         $csv->download_file();
@@ -282,7 +315,7 @@ final class service {
         }
         self::week_start($week);
         if (\core_text::strlen($content) > 24000) {
-            throw new \invalid_parameter_exception('Протокол превышает 24 000 символов.');
+            throw new input_error('Протокол превышает 24 000 символов.');
         }
         self::write('minutes:' . $week, static function() use ($DB, $actor, $week, $revision, $content) {
             $old = self::minutes($actor, $week);

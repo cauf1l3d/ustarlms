@@ -65,18 +65,23 @@ final class commands {
                 return $params + ['meetingid' => $id];
 
             case 'meeting_rsvp':
-                meetings::respond($actor, $id, required_param('briefrevision', PARAM_INT), required_param('rsvp', PARAM_ALPHA));
+                meetings::respond($actor, $id, required_param('briefrevision', PARAM_INT), required_param('rsvp', PARAM_ALPHA),
+                    optional_param('expectedrsvp', null, PARAM_ALPHA));
                 return $params + ['meetingid' => $id];
 
             default:
-                throw new \invalid_parameter_exception('Неизвестное действие брифинга.');
+                throw new input_error('Неизвестное действие брифинга.');
         }
     }
 
     private static function timestamp(string $value): int {
         if (!preg_match('/\A(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})\z/', $value, $match)) {
-            throw new \invalid_parameter_exception('Укажите дату и время встречи.');
+            throw new input_error('Укажите дату и время встречи.');
         }
-        return calendar::timestamp($match[1], $match[2], service::ZONE);
+        try {
+            return calendar::timestamp($match[1], $match[2], service::ZONE);
+        } catch (\invalid_parameter_exception $error) {
+            throw new input_error('Проверьте дату и время встречи.');
+        }
     }
 }

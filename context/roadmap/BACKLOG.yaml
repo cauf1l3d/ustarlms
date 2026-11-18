@@ -939,15 +939,16 @@ tasks:
   - Оператор публикует текст для выбранного отдела, затем отдельно подтверждает получателей Telegram
 - id: TASK-BRIEFING
   title: Отчёты руководителей, переговорные и канбан в Задачах
-  status: native_qualified_owner_installation_pending
-  qualification: context/runtime/briefing_qualification_20261118.json
-  runbook: docs/BRIEFING_INSTALL_RU.md
+  status: source_review_qualification_in_progress
+  previous_qualification: context/runtime/briefing_qualification_20261118.json
+  reference: context/reviews/20261118/BRIEFING_KANBAN_RU.md
+  runbook: docs/BRIEFING_REVIEW_INSTALL_RU.md
   depends_on: [CONNECT-OPERATOR]
   acceptance:
   - Руководитель отправляет отчёт своего отдела к понедельнику 10:00 МСК
   - Администратор редактирует формы и порядок показа отделов и ведёт общий протокол
   - Поручения из отчётов работают на доске существующих задач
-  - Приглашённые видят встречи в календаре, комнаты защищены от двойного бронирования
+  - Приглашённые видят встречи в календаре. Слоты переговорной, организатора и принятых приглашений проверяются на пересечения
   - Связанный Telegram показывает статусы и открывает авторизованные страницы Академии
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade

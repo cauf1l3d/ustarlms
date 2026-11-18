@@ -40,6 +40,10 @@ if ($view === 'briefing' && optional_param('briefexport', 0, PARAM_BOOL)) {
     \local_ustar\briefing\service::download($actorid, $state['briefweek']);
 }
 $notice = '';
+$returnparams = ['view' => $view, 'scope' => $scope];
+if ($view === 'kanban') {
+    $returnparams += ['q' => $state['q'], 'boardstatus' => $state['boardstatus'], 'pageno' => $state['page']];
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
     service::actor($actorid);
@@ -76,14 +80,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $target = required_param('target', PARAM_ALPHANUMEXT);
             $move = service::kanban_moves($task, $actorid)[$target] ?? '';
             if (in_array($move, ['report', 'return'], true)) {
-                redirect(new moodle_url('/local/ustar/tasks.php', ['view' => 'kanban', 'scope' => $scope, 'taskid' => $taskid]));
+                $url = new moodle_url('/local/ustar/tasks.php', $returnparams + ['taskid' => $taskid]);
+                $url->set_anchor('uw-detail');
+                redirect($url);
             }
             if (!in_array($move, ['start', 'approve'], true)) {
-                throw new invalid_parameter_exception('Переход между этими колонками недоступен.');
+                throw new moodle_exception('kanbantransitionunavailable', 'local_ustar');
             }
             learning_tasks::transition($taskid, $actorid, $move, required_param('version', PARAM_INT));
-            redirect(new moodle_url('/local/ustar/tasks.php', ['view' => 'kanban', 'scope' => $scope,
-                'q' => $state['q'], 'saved' => 1]));
+            redirect(new moodle_url('/local/ustar/tasks.php', $returnparams + ['saved' => 1]));
         } else if ($action === 'report') {
             $answers = [];
             foreach (service::fields(service::meta(required_param('taskid', PARAM_INT))) as $field) {
@@ -135,10 +140,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (optional_param('returnhome', 0, PARAM_BOOL) && in_array($action, ['report','transition'], true)) {
             redirect(new moodle_url('/local/ustar/home.php'), 'Отчёт сохранён и отправлен на проверку.');
         }
-        redirect(new moodle_url('/local/ustar/tasks.php', ['view' => $view, 'scope' => $scope,
-            'taskid' => $state['taskid'], 'saved' => 1]));
+        $url = new moodle_url('/local/ustar/tasks.php', $returnparams + ['taskid' => $state['taskid'], 'saved' => 1]);
+        if ($view === 'kanban' && $state['taskid']) {
+            $url->set_anchor('uw-detail');
+        }
+        redirect($url);
     } catch (Throwable $e) {
         $notice = $e instanceof dml_missing_record_exception ? 'Запись больше не доступна.' : $e->getMessage();
+        if ($e instanceof \local_ustar\briefing\input_error) {
+            $notice = $e->user_message();
+        }
         if (!empty($_FILES['attachments']['name'])) { $notice .= ' Файлы для новой отправки приложите повторно.'; }
         $state['form'] = ['create' => 'create', 'template' => 'template'][$action ?? ''] ?? $state['form'];
         // Keep rejected form text in this response only; never persist it or expose uploads.
@@ -146,7 +157,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($_POST as $key => $value) {
             if ($e instanceof \local_ustar\briefing\conflict
                     || in_array($key, ['sesskey', 'action', 'version', 'revision'], true)) { continue; }
-            if (is_string($value)) { $state['input'][$key] = \core_text::substr($value, 0, 10000); }
+            if (is_string($value)) {
+                $limit = match (true) {
+                    $key === 'briefminutes' => 24000,
+                    str_starts_with($key, 'briefanswer_') => 12000,
+                    default => 10000,
+                };
+                $state['input'][$key] = \core_text::substr($value, 0, $limit);
+            }
             else if (is_array($value)) {
                 $state['input'][$key] = array_map(static fn($v) => is_scalar($v) ? \core_text::substr((string)$v, 0, 10000) : '', array_slice($value, 0, 100));
             }

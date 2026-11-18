@@ -5088,5 +5088,9 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         }
         upgrade_plugin_savepoint(true, 2026111700, 'local', 'ustar');
     }
+    if ($oldversion < 2026111800) {
+        // Existing reports and meetings stay in place. New report metadata is stored in their JSON snapshots.
+        upgrade_plugin_savepoint(true, 2026111800, 'local', 'ustar');
+    }
 return true;
 }

@@ -12,6 +12,7 @@ final class notification_policy {
         'task_approved' => 'tasks', 'task_returned' => 'tasks', 'task_cancelled' => 'tasks',
         'task_reminder' => 'tasks', 'task_escalation' => 'tasks',
         'briefing_reminder' => 'tasks', 'meeting_invited' => 'tasks', 'meeting_updated' => 'tasks', 'meeting_cancelled' => 'tasks',
+        'meeting_removed' => 'tasks',
         'feed_comment' => 'feed', 'feed_reply' => 'feed', 'feed_announcement' => 'feed', 'feed_broadcast' => 'feed',
         'grade_request' => 'grades', 'grade_approved' => 'grades', 'grade_returned' => 'grades',
     ];
@@ -30,7 +31,7 @@ final class notification_policy {
             'task_escalation' => 'Требуется внимание к задаче',
             'briefing_reminder' => 'Пора сдать отчёт к брифингу',
             'meeting_invited' => 'Приглашение на встречу', 'meeting_updated' => 'Встреча изменена',
-            'meeting_cancelled' => 'Встреча отменена',
+            'meeting_cancelled' => 'Встреча отменена', 'meeting_removed' => 'Приглашение на встречу отозвано',
             'feed_comment' => 'Новый комментарий', 'feed_reply' => 'Новый ответ на комментарий',
             'feed_announcement', 'feed_broadcast' => 'Новое объявление в Академии',
             'grade_request' => 'Новая заявка на грейд', 'grade_approved' => 'Грейд подтверждён',
@@ -91,14 +92,21 @@ final class notification_policy {
         if ($event === 'briefing_reminder') {
             return \local_ustar\briefing\reminders::permitted($uid, $key);
         }
-        if (in_array($event, ['meeting_invited', 'meeting_updated', 'meeting_cancelled'], true)) {
-            if (!preg_match('/\Ameeting:([1-9][0-9]*):([1-9][0-9]*):' . $uid . '\z/', $key, $matches)) {
+        if (str_starts_with($event, 'meeting_')) {
+            if (!\local_ustar\briefing\meetings::allowed($uid)
+                    || !preg_match('/\Ameeting:([1-9][0-9]*):([1-9][0-9]*):' . $uid . '\z/', $key, $matches)) {
                 return false;
             }
-            $record = $DB->get_record('local_ustar_meetings', ['id' => (int)$matches[1], 'revision' => (int)$matches[2]]);
-            return $record && (bool)$record->cancelled === ($event === 'meeting_cancelled')
-                && $record->startat > time() && $DB->record_exists('local_ustar_meeting_members',
-                    ['meetingid' => $record->id, 'userid' => $uid]);
+            $record = $DB->get_record('local_ustar_meetings', ['id' => (int)$matches[1]]);
+            if (!$record) {
+                return false;
+            }
+            $rsvp = $DB->get_field('local_ustar_meeting_members', 'rsvp', ['meetingid' => $record->id, 'userid' => $uid]);
+            if ($event === 'meeting_removed') {
+                return $rsvp === 'removed' && (int)$matches[2] <= (int)$record->revision;
+            }
+            return (int)$record->revision === (int)$matches[2] && (bool)$record->cancelled === ($event === 'meeting_cancelled')
+                && $record->startat > time() && $rsvp !== false && $rsvp !== 'removed';
         }
         $taskid = 0;
         if (preg_match('/\Atask-(?:assigned|revised|reassigned-old|event|review):([1-9][0-9]*)(?::[A-Za-z0-9_]+)*\z/', $key, $m)) {

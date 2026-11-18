@@ -34,7 +34,7 @@ final class meetings {
         }
         $name = trim($name);
         if ($name === '' || \core_text::strlen($name) > 150 || $capacity < 0 || $capacity > 1000) {
-            throw new \invalid_parameter_exception('Укажите название и вместимость переговорной.');
+            throw new input_error('Укажите название и вместимость переговорной.');
         }
         service::write('bookings', static function() use ($DB, $id, $revision, $name, $capacity, $active) {
             $old = $id ? $DB->get_record('local_ustar_meeting_rooms', ['id' => $id], '*', MUST_EXIST) : null;
@@ -42,7 +42,7 @@ final class meetings {
             if (!$active && $id && ((int)get_config('local_ustar', 'briefing_room') === $id
                     || $DB->record_exists_select('local_ustar_meetings', 'roomid = :room AND cancelled = 0 AND endat > :now',
                         ['room' => $id, 'now' => time()]))) {
-                throw new \invalid_parameter_exception('Сначала перенесите предстоящие бронирования этой переговорной.');
+                throw new input_error('Сначала перенесите предстоящие бронирования этой переговорной.');
             }
             $row = (object)['name' => $name, 'capacity' => $capacity, 'active' => (int)$active, 'revision' => $revision + 1];
             if ($old) {
@@ -61,7 +61,7 @@ final class meetings {
             service::deny();
         }
         if ($deadline < 0 || $deadline > 6 * 24 * 60) {
-            throw new \invalid_parameter_exception('Укажите срок сдачи в минутах до брифинга, от 0 до 8 640.');
+            throw new input_error('Укажите срок сдачи в минутах до брифинга, от 0 до 8 640.');
         }
         service::write('bookings', static function() use ($DB, $deadline, $roomid) {
             if ($roomid) {
@@ -71,7 +71,7 @@ final class meetings {
                 try {
                     foreach ($bookings as $booking) {
                         if (self::overlaps_briefing($booking->startat, $booking->endat)) {
-                            throw new \invalid_parameter_exception('В переговорной уже есть бронирование на время брифинга.');
+                            throw new input_error('В переговорной уже есть бронирование на время брифинга.');
                         }
                     }
                 } finally {
@@ -113,6 +113,11 @@ final class meetings {
         return $DB->get_record('local_ustar_meeting_members', ['meetingid' => $meetingid, 'userid' => $actor]) ?: null;
     }
 
+    private static function participants(int $id): array {
+        global $DB;
+        return $DB->get_records_select('local_ustar_meeting_members', "meetingid = :id AND rsvp <> 'removed'", ['id' => $id], 'id ASC');
+    }
+
     public static function detail(int $actor, int $id): array {
         global $DB;
         if (!self::allowed($actor)) {
@@ -120,12 +125,33 @@ final class meetings {
         }
         $row = $DB->get_record('local_ustar_meetings', ['id' => $id]);
         $member = $row ? self::member($id, $actor) : null;
-        if (!$row || ((int)$row->ownerid !== $actor && !$member)) {
+        if (!$row || ((int)$row->ownerid !== $actor && (!$member || $member->rsvp === 'removed'))) {
             service::deny();
         }
         $owner = (int)$row->ownerid === $actor;
         return ['meeting' => $row, 'member' => $member, 'owner' => $owner,
-            'participants' => $DB->get_records('local_ustar_meeting_members', ['meetingid' => $id], 'id ASC')];
+            'participants' => self::participants($id)];
+    }
+
+    private static function same_details(\stdClass $row, array $proposed, array $participants): bool {
+        $saved = array_map('intval', array_column(self::participants((int)$row->id), 'userid'));
+        sort($saved, SORT_NUMERIC);
+        return (string)$row->title === $proposed['title'] && (string)$row->agenda === $proposed['agenda']
+            && (int)$row->roomid === $proposed['roomid'] && (int)$row->startat === $proposed['startat']
+            && (int)$row->endat === $proposed['endat'] && $saved === $participants;
+    }
+
+    private static function assert_free(int $actor, int $start, int $end, int $exclude): void {
+        global $DB;
+        $busy = $DB->record_exists_sql("SELECT 1
+             FROM {local_ustar_meetings} m
+        LEFT JOIN {local_ustar_meeting_members} p ON p.meetingid = m.id AND p.userid = :participant
+            WHERE (m.ownerid = :owner OR p.rsvp = 'accepted') AND m.cancelled = 0
+                  AND m.startat < :endtime AND m.endat > :starttime AND m.id <> :exclude",
+            ['participant' => $actor, 'owner' => $actor, 'starttime' => $start, 'endtime' => $end, 'exclude' => $exclude]);
+        if ($busy) {
+            throw new input_error('В вашем календаре на это время уже есть встреча.');
+        }
     }
 
     public static function save(int $actor, int $id, int $revision, string $requestkey, string $title, string $agenda,
@@ -136,54 +162,69 @@ final class meetings {
             service::deny();
         }
         $title = trim($title);
+        $agenda = trim($agenda);
         if ($title === '' || \core_text::strlen($title) > 200 || \core_text::strlen($agenda) > 12000
                 || !preg_match('/\A[A-Za-z0-9]{20,64}\z/', $requestkey)) {
-            throw new \invalid_parameter_exception('Проверьте название и повестку встречи.');
-        }
-        if ($start <= time() || $start > time() + YEARSECS || $end <= $start || $end - $start > DAYSECS) {
-            throw new \invalid_parameter_exception('Выберите будущий интервал до 24 часов в пределах года.');
+            throw new input_error('Проверьте название и повестку встречи.');
         }
         $participants = array_values(array_unique(array_filter(array_map('intval', $participants), static fn($id) => $id !== $actor)));
+        sort($participants, SORT_NUMERIC);
         if (count($participants) > 100) {
-            throw new \invalid_parameter_exception('Добавьте до 100 участников.');
+            throw new input_error('Добавьте до 100 участников.');
         }
         return service::write('bookings', static function() use ($DB, $actor, $id, $revision, $requestkey, $title,
                 $agenda, $roomid, $start, $end, $participants) {
+            $proposed = ['title' => $title, 'agenda' => $agenda, 'roomid' => $roomid, 'startat' => $start, 'endat' => $end];
             if (!$id && $revision !== 0) {
                 throw new conflict();
             }
             if ($id) {
                 $previous = self::detail($actor, $id);
-                if (!$previous['owner'] || $previous['meeting']->cancelled || $previous['meeting']->startat <= time()) {
+                if (!$previous['owner'] || $previous['meeting']->cancelled) {
                     service::deny();
                 }
+                $stored = (int)$previous['meeting']->revision;
+                if (($stored === $revision || $stored === $revision + 1)
+                        && self::same_details($previous['meeting'], $proposed, $participants)) {
+                    return $id;
+                }
                 service::assert_revision($previous['meeting'], $revision);
+                if ($previous['meeting']->startat <= time()) {
+                    service::deny();
+                }
             } else {
                 $existing = $DB->get_record('local_ustar_meetings', ['requestkey' => $requestkey, 'ownerid' => $actor]);
                 if ($existing) {
-                    return (int)$existing->id;
+                    if (!$existing->cancelled && self::same_details($existing, $proposed, $participants)) {
+                        return (int)$existing->id;
+                    }
+                    throw new conflict();
                 }
                 $previous = null;
             }
+            $now = time();
+            if ($start <= $now || $start > $now + YEARSECS || $end <= $start || $end - $start > DAYSECS) {
+                throw new input_error('Выберите будущий интервал до 24 часов в пределах года.');
+            }
             foreach ($participants as $participant) {
                 if (!accounts::participates($participant) || !team_access::active_actor($participant)) {
-                    throw new \invalid_parameter_exception('Один из участников больше не работает в Академии.');
+                    throw new input_error('Один из участников больше не работает в Академии.');
                 }
             }
             if ($roomid) {
                 $room = $DB->get_record('local_ustar_meeting_rooms', ['id' => $roomid, 'active' => 1], '*', MUST_EXIST);
                 if ($room->capacity && count($participants) + 1 > $room->capacity) {
-                    throw new \invalid_parameter_exception('Участников больше, чем мест в переговорной.');
+                    throw new input_error('Участников больше, чем мест в переговорной.');
                 }
                 if (((int)get_config('local_ustar', 'briefing_room') === $roomid && self::overlaps_briefing($start, $end))
                         || $DB->record_exists_select('local_ustar_meetings',
                             'roomid = :room AND cancelled = 0 AND startat < :endtime AND endat > :starttime AND id <> :meeting',
                             ['room' => $roomid, 'endtime' => $end, 'starttime' => $start, 'meeting' => $id])) {
-                    throw new \invalid_parameter_exception('Переговорная занята в выбранное время.');
+                    throw new input_error('Переговорная занята в выбранное время.');
                 }
             }
-            $row = (object)['ownerid' => $actor, 'roomid' => $roomid, 'title' => $title, 'agenda' => trim($agenda),
-                'startat' => $start, 'endat' => $end, 'cancelled' => 0, 'revision' => $revision + 1];
+            self::assert_free($actor, $start, $end, $id);
+            $row = (object)($proposed + ['ownerid' => $actor, 'cancelled' => 0, 'revision' => $revision + 1]);
             if ($previous) {
                 $row->id = $id;
                 $DB->update_record('local_ustar_meetings', $row);
@@ -196,15 +237,21 @@ final class meetings {
                 || (int)$previous['meeting']->endat !== $end || (int)$previous['meeting']->roomid !== $roomid);
             foreach ($participants as $participant) {
                 if (!isset($old[$participant])) {
-                    $DB->insert_record('local_ustar_meeting_members',
-                        (object)['meetingid' => $id, 'userid' => $participant, 'rsvp' => 'pending']);
+                    $removed = self::member($id, $participant);
+                    if ($removed) {
+                        $DB->set_field('local_ustar_meeting_members', 'rsvp', 'pending', ['id' => $removed->id]);
+                    } else {
+                        $DB->insert_record('local_ustar_meeting_members',
+                            (object)['meetingid' => $id, 'userid' => $participant, 'rsvp' => 'pending']);
+                    }
                 } else if ($changedslot) {
                     $DB->set_field('local_ustar_meeting_members', 'rsvp', 'pending', ['id' => $old[$participant]->id]);
                 }
                 self::notify($participant, $id, $row->revision, isset($old[$participant]) ? 'updated' : 'invited');
             }
             foreach (array_diff(array_keys($old), $participants) as $removed) {
-                $DB->delete_records('local_ustar_meeting_members', ['id' => $old[$removed]->id]);
+                $DB->set_field('local_ustar_meeting_members', 'rsvp', 'removed', ['id' => $old[$removed]->id]);
+                self::notify((int)$removed, $id, $row->revision, 'removed');
             }
             return $id;
         });
@@ -215,7 +262,13 @@ final class meetings {
         tasks::actor($actor);
         service::write('bookings', static function() use ($DB, $actor, $id, $revision) {
             $detail = self::detail($actor, $id);
-            if (!$detail['owner'] || $detail['meeting']->cancelled || $detail['meeting']->startat <= time()) {
+            if (!$detail['owner']) {
+                service::deny();
+            }
+            if ($detail['meeting']->cancelled && (int)$detail['meeting']->revision === $revision + 1) {
+                return;
+            }
+            if ($detail['meeting']->cancelled || $detail['meeting']->startat <= time()) {
                 service::deny();
             }
             service::assert_revision($detail['meeting'], $revision);
@@ -226,26 +279,37 @@ final class meetings {
         });
     }
 
-    public static function respond(int $actor, int $id, int $revision, string $response): void {
+    public static function respond(int $actor, int $id, int $revision, string $response, ?string $expected = null): void {
         global $DB;
         tasks::actor($actor);
         if (!in_array($response, ['accepted', 'declined'], true)) {
-            throw new \invalid_parameter_exception('Выберите ответ на приглашение.');
+            throw new input_error('Выберите ответ на приглашение.');
         }
-        service::write('bookings', static function() use ($DB, $actor, $id, $revision, $response) {
+        service::write('bookings', static function() use ($DB, $actor, $id, $revision, $response, $expected) {
             $detail = self::detail($actor, $id);
             if (!$detail['member'] || $detail['meeting']->cancelled || $detail['meeting']->startat <= time()) {
                 service::deny();
             }
             service::assert_revision($detail['meeting'], $revision);
+            if ($detail['member']->rsvp === $response) {
+                return;
+            }
+            if ($expected !== null && $detail['member']->rsvp !== $expected) {
+                throw new conflict();
+            }
+            if ($response === 'accepted') {
+                self::assert_free($actor, (int)$detail['meeting']->startat, (int)$detail['meeting']->endat, $id);
+            }
             $DB->set_field('local_ustar_meeting_members', 'rsvp', $response, ['id' => $detail['member']->id]);
         });
     }
 
     private static function notify(int $participant, int $meeting, int $revision, string $action): void {
-        $label = ['invited' => 'Приглашение на встречу', 'updated' => 'Встреча изменена', 'cancelled' => 'Встреча отменена'][$action];
+        $label = ['invited' => 'Приглашение на встречу', 'updated' => 'Встреча изменена',
+            'cancelled' => 'Встреча отменена', 'removed' => 'Приглашение на встречу отозвано'][$action];
         workflow_notifications::enqueue($participant, 'meeting_' . $action, $label, '',
-            '/local/ustar/tasks.php?view=meetings&meetingid=' . $meeting, 'meeting:' . $meeting . ':' . $revision . ':' . $participant);
+            '/local/ustar/tasks.php?view=meetings' . ($action === 'removed' ? '' : '&meetingid=' . $meeting),
+            'meeting:' . $meeting . ':' . $revision . ':' . $participant);
     }
 
     public static function visible(int $actor, int $from, int $to, bool $includeinactive = false): array {
@@ -256,7 +320,7 @@ final class meetings {
         $active = $includeinactive ? '' : " AND m.cancelled = 0 AND (p.rsvp IS NULL OR p.rsvp <> 'declined')";
         return $DB->get_records_sql("SELECT m.*, p.rsvp, r.name AS roomname
               FROM {local_ustar_meetings} m
-         LEFT JOIN {local_ustar_meeting_members} p ON p.meetingid = m.id AND p.userid = :participant
+         LEFT JOIN {local_ustar_meeting_members} p ON p.meetingid = m.id AND p.userid = :participant AND p.rsvp <> 'removed'
          LEFT JOIN {local_ustar_meeting_rooms} r ON r.id = m.roomid
              WHERE (m.ownerid = :actor OR p.id IS NOT NULL) AND m.startat < :endtime AND m.endat > :starttime
                    $active
@@ -287,11 +351,19 @@ final class meetings {
         return $out;
     }
 
-    public static function calendar_items(int $actor, int $from, int $to): array {
+    public static function calendar_items(int $actor, int $from, int $to, string $timezone = service::ZONE): array {
         $items = [];
+        $zone = calendar::timezone($timezone);
         foreach (self::visible($actor, $from, $to) as $meeting) {
-            $items[] = ['title' => $meeting->title, 'startat' => max((int)$meeting->startat, $from),
-                'params' => ['view' => 'meetings', 'meetingid' => (int)$meeting->id]];
+            $start = max((int)$meeting->startat, $from);
+            $end = min((int)$meeting->endat, $to);
+            $day = (new \DateTimeImmutable('@' . $start))->setTimezone($zone);
+            while ($day->getTimestamp() < $end) {
+                $items[] = ['title' => $meeting->title, 'startat' => $day->getTimestamp(),
+                    'continued' => $day->getTimestamp() > (int)$meeting->startat,
+                    'params' => ['view' => 'meetings', 'meetingid' => (int)$meeting->id]];
+                $day = $day->setTime(0, 0)->modify('+1 day');
+            }
         }
         return $items;
     }

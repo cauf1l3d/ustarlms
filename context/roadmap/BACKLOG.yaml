@@ -939,7 +939,8 @@ tasks:
   - Оператор публикует текст для выбранного отдела, затем отдельно подтверждает получателей Telegram
 - id: TASK-BRIEFING
   title: Отчёты руководителей, переговорные и канбан в Задачах
-  status: source_review_qualification_in_progress
+  status: native_qualified_owner_installation_pending
+  qualification: context/runtime/briefing_review_qualification_20261118.json
   previous_qualification: context/runtime/briefing_qualification_20261118.json
   reference: context/reviews/20261118/BRIEFING_KANBAN_RU.md
   runbook: docs/BRIEFING_REVIEW_INSTALL_RU.md

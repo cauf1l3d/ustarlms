@@ -1,0 +1,70 @@
+{
+  "verified_at_msk": "2026-11-18",
+  "pull_request": 125,
+  "application_and_worker_commit": "17b6141007d65207d9b594138753d28b39ab70bf",
+  "local_ustar": 2026111800,
+  "theme_ustar": 2026110200,
+  "compatible_baselines": {
+    "422fbfb324db3b18447b61bc1c86a8a5481fe3e0": {
+      "local_ustar": 2026111402,
+      "schema_delta": "six briefing-and-meeting tables and unique task briefkey"
+    },
+    "b1df4f2b234b6b79260eb3bbd2423fc0daf7ef79": {
+      "local_ustar": 2026111700,
+      "schema_delta": "version savepoint with no table or record changes"
+    }
+  },
+  "previous_qualification_and_owner_observation": "context/runtime/briefing_qualification_20261118.json",
+  "workflow_run": 44210514078,
+  "jobs": [
+    {"id": 134487354145, "scope": "reproducible_archive_and_permissions", "result": "success"},
+    {
+      "id": 134487353651,
+      "scope": "Moodle 5.1.1 / PostgreSQL 16",
+      "result": "success",
+      "artifact_id": 14385842906,
+      "native_tests": 66,
+      "assertions": 295,
+      "fresh_upgrade_repeat_schema_equal": true,
+      "briefing_baseline_data": "BRIEFING_BASELINE_DATA=OK",
+      "briefing_smoke": "BRIEFING_SMOKE=OK"
+    },
+    {
+      "id": 134487353915,
+      "scope": "Moodle 5.1.8 / PostgreSQL 16.15",
+      "result": "success",
+      "artifact_id": 14385902179,
+      "native_tests": 66,
+      "assertions": 295,
+      "fresh_upgrade_repeat_schema_equal": true,
+      "briefing_baseline_data": "BRIEFING_BASELINE_DATA=OK",
+      "briefing_smoke": "BRIEFING_SMOKE=OK"
+    }
+  ],
+  "package": {
+    "archive": "ustar-briefing-review-17b61410.tar.gz",
+    "sha256": "ecf8eb8ac8be8a6f7f06dddaeff168658dc6170d28bce0a353560a16d356907f",
+    "artifact_id": 14385661873,
+    "artifact_zip_sha256": "e2211fbb148452d079d8cadc065e995f0bbd619e7746880384e8b34941fac2c1",
+    "zip_crc_verified": true,
+    "package_verify": "package_verified",
+    "local_rebuild_matches_ci_bytes": true,
+    "saved_archive_matches_ci_bytes": true,
+    "old_build_reproduced": "1cd5bf68325739912fdb3a23709610026b5e992621763b3482971125da3100e7"
+  },
+  "isolated_local_verification": {
+    "profile": "Moodle 5.1.8 / PHP 8.4 / PostgreSQL 17",
+    "native_tests": 66,
+    "assertions": 295,
+    "fresh_upgrade_repeat_schema_equal": true,
+    "briefing_baseline_data": "BRIEFING_BASELINE_DATA=OK",
+    "briefing_smoke": "BRIEFING_SMOKE=OK",
+    "installer_schema_probe": "pass",
+    "baseline_journal_and_migration_routing_simulation": "pass"
+  },
+  "python_connect_tests": {"total": 57, "skipped": 4, "failures": 0},
+  "review": "context/reviews/20261118/BRIEFING_KANBAN_RU.md",
+  "production_installation": "awaiting_owner_preflight_and_installation",
+  "live_browser_and_telegram_acceptance": "pending",
+  "runbook": "docs/BRIEFING_REVIEW_INSTALL_RU.md"
+}

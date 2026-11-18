@@ -142,9 +142,10 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Briefing and Kanban review targets local_ustar 2026111800 over exact operator
-    422fbfb3 or briefing b1df4f2b baselines. The previous attempt rolled back. This
-    update remains separate from the last owner-confirmed runtime.
+  activity: Briefing and Kanban review release 17b61410 (local_ustar 2026111800) passed
+    both native profiles and archive verification over exact operator 422fbfb3 and
+    briefing b1df4f2b baselines. Owner preflight, installation and live acceptance
+    are pending.
   next_task: TASK-BRIEFING
   ready_tasks: []
   task_statuses:
@@ -202,7 +203,7 @@ current_work:
     STUDIO-CSP-01: awaiting_owner_deployment
     STUDIO-PREVIEW-01: awaiting_owner_deployment
     STUDIO-SCORM-01: in_progress
-    TASK-BRIEFING: source_review_qualification_in_progress
+    TASK-BRIEFING: native_qualified_owner_installation_pending
     TECH-01: planned
 server_facts:
   status: partial

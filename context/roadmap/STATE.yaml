@@ -3,7 +3,7 @@ updated_at: '2026-11-18'
 project: USTAR Academy
 stage: task_briefing
 stage_label: Briefing, meeting rooms and task Kanban
-current_activity: Briefing and Kanban review targets local_ustar 2026111800 over exact operator 422fbfb3 or briefing b1df4f2b baselines. The previous attempt rolled back. This update remains separate from the last owner-confirmed runtime.
+current_activity: Briefing and Kanban review release 17b61410 (local_ustar 2026111800) passed both native profiles and archive verification over exact operator 422fbfb3 and briefing b1df4f2b baselines. Owner preflight, installation and live acceptance are pending.
 entrypoint: START_HERE.md
 next_task: TASK-BRIEFING
 ready_tasks: []
@@ -399,9 +399,12 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: source_review_qualification_in_progress
+  status: native_qualified_owner_installation_pending
   review: context/reviews/20261118/BRIEFING_KANBAN_RU.md
+  qualification: context/runtime/briefing_review_qualification_20261118.json
   previous_qualification: context/runtime/briefing_qualification_20261118.json
+  application_commit: 17b6141007d65207d9b594138753d28b39ab70bf
+  worker_commit: 17b6141007d65207d9b594138753d28b39ab70bf
   deployment_baseline: 422fbfb324db3b18447b61bc1c86a8a5481fe3e0
   compatible_deployment_baseline: b1df4f2b234b6b79260eb3bbd2423fc0daf7ef79
   source_pr: 125

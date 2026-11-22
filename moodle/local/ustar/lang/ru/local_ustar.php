@@ -71,4 +71,11 @@ $string['eventconnectinvitationchanged'] = 'Изменение приглаше�
 
 $string['taskremindbriefing'] = 'Напоминания о брифинге';
 $string['kanbantransitionunavailable'] = 'Переход между этими колонками недоступен. Откройте карточку задачи.';
+$string['workplanbusy'] = 'План сохраняется. Повторите действие.';
+$string['workplanchanged'] = 'План изменился в другой вкладке. Проверьте текущие колонки и повторите действие.';
+$string['workplaninvalid'] = 'Проверьте колонку, её название и цвет.';
+$string['workplancolumnlimit'] = 'В личном плане помещается до {$a} колонок.';
+$string['workplanlimit'] = 'В колонках личного плана можно разместить до {$a} задач.';
+$string['privacy:metadata:workplan'] = 'Личные колонки и распределение рабочих задач по колонкам.';
+$string['privacy:metadata:workchat'] = 'Обсуждения задач хранятся в Moodle вместе с автором, временем и отметкой чтения.';
 $string['privacy:metadata:briefing'] = 'Отчёты, протоколы, организаторы и приглашения на встречи.';

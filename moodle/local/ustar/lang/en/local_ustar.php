@@ -81,4 +81,11 @@ $string['eventconnectinvitationchanged'] = 'Telegram invitation changed';
 
 $string['taskremindbriefing'] = 'Briefing reminders';
 $string['kanbantransitionunavailable'] = 'This move is unavailable. Open the task to see its available actions.';
+$string['workplanbusy'] = 'The plan is being saved. Try again.';
+$string['workplanchanged'] = 'The plan changed in another tab. Review the current columns and try again.';
+$string['workplaninvalid'] = 'Check the column, its name and colour.';
+$string['workplancolumnlimit'] = 'The personal plan supports up to {$a} columns.';
+$string['workplanlimit'] = 'Up to {$a} tasks can be placed in personal columns.';
+$string['privacy:metadata:workplan'] = 'Personal columns and placement of existing work tasks.';
+$string['privacy:metadata:workchat'] = 'Task discussion messages, authors, times and read receipts stored by Moodle.';
 $string['privacy:metadata:briefing'] = 'Reports, meeting minutes, organizers and meeting invitations.';

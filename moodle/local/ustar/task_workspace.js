@@ -9,8 +9,15 @@
             card?.classList.remove('is-dragging');
             card = null;
         };
-        const moveButton = column => {
-            return column && card?.querySelector('button[name="target"][value="' + column.dataset.boardColumn + '"]');
+        const moveAction = column => {
+            if (!column || !card) { return null; }
+            const target = column.dataset.boardColumn;
+            const select = card.querySelector('select[name="column"]');
+            if (select && target !== card.closest('[data-board-column]').dataset.boardColumn) {
+                return {button: select.form.querySelector('button[type="submit"]'), select, target};
+            }
+            const button = Array.from(card.querySelectorAll('button[name="target"]')).find(item => item.value === target);
+            return button ? {button} : null;
         };
         board.addEventListener('dragstart', event => {
             const target = event.target.closest('.uw-board-card[draggable="true"]');
@@ -23,27 +30,77 @@
         board.addEventListener('dragover', event => {
             const column = event.target.closest('[data-board-column]');
             active()?.classList.remove('is-drop-target');
-            if (moveButton(column)) {
+            if (moveAction(column)) {
                 event.preventDefault();
                 event.dataTransfer.dropEffect = 'move';
                 column.classList.add('is-drop-target');
             }
         });
         board.addEventListener('drop', event => {
-            const button = moveButton(event.target.closest('[data-board-column]'));
-            if (button) {
+            const move = moveAction(event.target.closest('[data-board-column]'));
+            if (move) {
                 event.preventDefault();
                 clear();
-                button.form.requestSubmit(button);
+                if (move.select) { move.select.value = move.target; }
+                move.button.form.requestSubmit(move.button);
             }
         });
         board.addEventListener('dragend', clear);
     }
+    function enableAvailability(panel) {
+        const form = panel.closest('form');
+        const button = panel.querySelector('button');
+        const status = panel.querySelector('[role="status"]');
+        let pending = null;
+        button.hidden = false;
+        form.addEventListener('input', () => {
+            if (pending) pending.abort();
+            status.textContent = '';
+        });
+        button.addEventListener('click', async () => {
+            for (const name of ['starttime', 'endtime']) {
+                if (!form.elements[name].reportValidity()) return;
+            }
+            const body = new URLSearchParams({
+                sesskey: form.elements.sesskey.value, meetingid: panel.dataset.meetingId,
+                starttime: form.elements.starttime.value, endtime: form.elements.endtime.value, roomid: form.elements.roomid.value,
+            });
+            form.querySelectorAll('[name="participants[]"]:checked').forEach(input => body.append('participants[]', input.value));
+            const controller = new AbortController();
+            pending = controller;
+            button.disabled = true;
+            status.textContent = 'Проверяем расписание…';
+            const timeout = setTimeout(() => controller.abort('timeout'), 10000);
+            try {
+                const response = await fetch(panel.dataset.meetingCheck, {method: 'POST', credentials: 'same-origin',
+                    signal: controller.signal, headers: {Accept: 'application/json'}, body});
+                const value = await response.json();
+                if (!response.ok || !value.ok) {
+                    status.textContent = value.error || 'Не удалось проверить расписание.';
+                    return;
+                }
+                const conflicts = [];
+                if (!value.organizerfree) conflicts.push('У вас уже есть встреча в это время.');
+                if (!value.roomfree) conflicts.push('Переговорная занята.');
+                if (!value.capacityok) conflicts.push('В переговорной не хватит мест.');
+                if (value.busy.length) conflicts.push('Заняты ' + value.busy.join(', ') + '.');
+                status.textContent = conflicts.length ? conflicts.join(' ') : 'Пересечений по выбранному времени нет.';
+            } catch (error) {
+                if (!controller.signal.aborted || controller.signal.reason === 'timeout') {
+                    status.textContent = 'Не удалось проверить расписание. Повторите попытку.';
+                }
+            } finally {
+                clearTimeout(timeout);
+                pending = null;
+                button.disabled = false;
+            }
+        });
+    }
     function init() {
         const root = document.querySelector('.u-workspace');
         if (!root) { return; }
-        const board = root.querySelector('[data-task-board]');
-        if (board) { enableBoard(board); }
+        root.querySelectorAll('[data-task-board]').forEach(enableBoard);
+        root.querySelectorAll('[data-meeting-check]').forEach(enableAvailability);
         const people = root.querySelector('[data-meeting-person-filter]');
         if (people) {
             people.addEventListener('input', () => {
@@ -111,6 +168,7 @@
         });
         root.querySelectorAll('input[type="file"][accept]').forEach(input => {
             const preview = input.closest('form').querySelector('[data-photo-preview]');
+            if (!preview) { return; }
             let urls = [];
             input.addEventListener('change', () => {
                 urls.forEach(url => URL.revokeObjectURL(url)); urls = []; preview.replaceChildren();
@@ -124,7 +182,7 @@
             window.addEventListener('pagehide', () => urls.forEach(url => URL.revokeObjectURL(url)), {once: true});
         });
         const panel = root.querySelector('#uw-editor') || root.querySelector('#uw-detail');
-        if (panel) { panel.scrollIntoView({block: 'start', behavior: 'auto'}); }
+        if (panel && location.hash !== '#uw-discussion') { panel.scrollIntoView({block: 'start', behavior: 'auto'}); }
     }
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 }());

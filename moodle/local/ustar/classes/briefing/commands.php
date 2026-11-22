@@ -55,8 +55,8 @@ final class commands {
                 $id = meetings::save($actor, $id, required_param('briefrevision', PARAM_INT),
                     required_param('meetingkey', PARAM_ALPHANUM), required_param('meetingtitle', PARAM_TEXT),
                     optional_param('agenda', '', PARAM_RAW), required_param('roomid', PARAM_INT),
-                    self::timestamp(required_param('starttime', PARAM_RAW_TRIMMED)),
-                    self::timestamp(required_param('endtime', PARAM_RAW_TRIMMED)),
+                    self::local_time(required_param('starttime', PARAM_RAW_TRIMMED)),
+                    self::local_time(required_param('endtime', PARAM_RAW_TRIMMED)),
                     optional_param_array('participants', [], PARAM_INT));
                 return $params + ['meetingid' => $id];
 
@@ -74,7 +74,7 @@ final class commands {
         }
     }
 
-    private static function timestamp(string $value): int {
+    public static function local_time(string $value): int {
         if (!preg_match('/\A(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})\z/', $value, $match)) {
             throw new input_error('Укажите дату и время встречи.');
         }

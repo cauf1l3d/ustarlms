@@ -5092,5 +5092,9 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         // Existing reports and meetings stay in place. New report metadata is stored in their JSON snapshots.
         upgrade_plugin_savepoint(true, 2026111800, 'local', 'ustar');
     }
+    if ($oldversion < 2026112200) {
+        // Task discussions and personal layout use existing Moodle messages, files and preferences.
+        upgrade_plugin_savepoint(true, 2026112200, 'local', 'ustar');
+    }
 return true;
 }

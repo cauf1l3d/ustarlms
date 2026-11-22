@@ -75,3 +75,23 @@ html[data-ustar-theme="dark"] .u-workspace{--u-success-fg:#83d7a6;--u-danger-fg:
 }
 .uw-slot-list { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 12px; }
 .uw-slot-list .uw-chip { color: var(--u-success-fg, #277c4f); }
+
+.uw-plan-board {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(min(245px, 80vw), 1fr);
+}
+.uw-plan-board [data-plan-color="blue"] { border-top-color: var(--uw-blue); }
+.uw-plan-board [data-plan-color="gold"] { border-top-color: var(--u-brand, #ebc500); }
+.uw-plan-board [data-plan-color="green"] { border-top-color: var(--u-success-fg, #277c4f); }
+.uw-plan-create { min-width: min(220px, 100%); }
+.uw-plan-create summary,
+.uw-plan-settings summary { cursor: pointer; }
+.uw-plan-settings { margin: 0 4px 8px; font-size: 13px; }
+.uw-plan-settings .uw-field { margin-bottom: 8px; }
+.uw-plan-settings .uw-form { margin: 8px 0; }
+.uw-plan-board .uw-board-card .uw-field { flex: 1; min-width: 110px; margin: 0; }
+.uw-plan-board .uw-board-card .uw-form { align-items: flex-end; }
+.uw-plan-board .uw-board-card .uw-btn { min-height: 42px; }
+.uw-meeting-check { display: flex; align-items: center; gap: 8px 14px; flex-wrap: wrap; margin: 12px 0; }
+.uw-meeting-check-result { font-size: 14px; overflow-wrap: anywhere; }

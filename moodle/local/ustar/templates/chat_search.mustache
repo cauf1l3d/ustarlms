@@ -1,0 +1,7 @@
+<form class="u-chat-thread-search" method="get" action="{{searchurl}}">
+    {{#taskid}}<input type="hidden" name="taskid" value="{{taskid}}">{{/taskid}}
+    {{#id}}<input type="hidden" name="conversationid" value="{{id}}">{{/id}}
+    <input type="search" name="find" value="{{find}}" maxlength="120" placeholder="Поиск в чате" aria-label="Поиск в чате">
+    <button class="u-btn u-btn--small" type="submit">Найти</button>
+    {{#issearch}}<a class="u-btn u-btn--small" href="{{resetfindurl}}">Сбросить поиск</a>{{/issearch}}
+</form>

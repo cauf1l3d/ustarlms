@@ -1,6 +1,9 @@
 <?php
 namespace local_ustar;
 
+use core_message\api as messaging;
+use local_ustar\task_workspace\discussion;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -11,6 +14,8 @@ defined('MOODLE_INTERNAL') || die();
  * presentation layer.
  */
 final class communication {
+    public const ASSET_VERSION = '20261122-workchat';
+
     public static function counts(int $userid): array {
         global $DB;
 
@@ -122,24 +127,53 @@ final class communication {
         return $rows;
     }
 
-    public static function conversation(int $userid, int $conversationid, int $offset = 0): array {
+    public static function groups_by_title(int $userid, string $query, int $offset): array {
         global $DB;
         self::require_actor($userid);
-        if (!\core_message\api::is_user_in_conversation($userid, $conversationid)
+        if (\core_text::strlen($query) < 2) {
+            return [];
+        }
+        $like = $DB->sql_like('c.name', ':grouptitle', false);
+        $groups = $DB->get_records_sql("SELECT c.id, c.name FROM {message_conversations} c
+             WHERE c.type = :grouptype AND c.enabled = :active AND $like AND EXISTS (
+                SELECT 1 FROM {message_conversation_members} m WHERE m.conversationid = c.id AND m.userid = :actor)
+          ORDER BY c.name, c.id", ['grouptype' => messaging::MESSAGE_CONVERSATION_TYPE_GROUP,
+                'active' => messaging::MESSAGE_CONVERSATION_ENABLED, 'actor' => $userid,
+                'grouptitle' => '%' . $DB->sql_like_escape($query) . '%'], $offset, chat_history::PAGE_SIZE + 1);
+        $previews = chat_history::previews($userid, array_keys($groups));
+        $rows = [];
+        foreach ($groups as $group) {
+            $preview = $previews[$group->id] ?? null;
+            $unread = $preview && (int)$preview->useridfrom !== $userid && !$preview->readid;
+            $rows[] = ['id' => (int)$group->id, 'title' => $group->name,
+                'url' => self::conversation_url((int)$group->id)->out(false),
+                'preview' => $preview ? shorten_text(strip_tags($preview->smallmessage), 96) : '',
+                'time' => $preview ? userdate((int)$preview->timecreated, '%d.%m %H:%M') : '',
+                'hasunread' => $unread, 'unread' => 'Новое'];
+        }
+        return $rows;
+    }
+
+    private static function require_conversation(int $userid, int $conversationid): void {
+        global $DB;
+        self::require_actor($userid);
+        if (!messaging::is_user_in_conversation($userid, $conversationid)
                 || !$DB->record_exists('message_conversations', ['id' => $conversationid,
-                    'enabled' => \core_message\api::MESSAGE_CONVERSATION_ENABLED])) {
+                    'enabled' => messaging::MESSAGE_CONVERSATION_ENABLED])) {
             throw new \invalid_parameter_exception('Чат недоступен.');
         }
+    }
+
+    public static function conversation_url(int $conversationid, array $params = []): \moodle_url {
+        return new \moodle_url('/local/ustar/messages.php', $params + ['conversationid' => $conversationid]);
+    }
+
+    public static function conversation(int $userid, int $conversationid, int $offset = 0, int $before = 0,
+            string $query = ''): array {
+        self::require_conversation($userid, $conversationid);
         $offset = max(0, min(100000, $offset));
-        // Latest bounded page; sort by ID too so messages in the same second stay stable.
-        $conversation = \core_message\api::get_conversation($userid, $conversationid,
+        $conversation = messaging::get_conversation($userid, $conversationid,
             false, false, chat_groups::MAX_MEMBERS, 0, 1, 0, true);
-        $page = \core_message\api::get_conversation_messages($userid, $conversationid,
-            $offset, 51, 'timecreated DESC, m.id DESC');
-        $records = array_values($page['messages']);
-        $hasolder = count($records) > 50;
-        $records = array_reverse(array_slice($records, 0, 50));
-        $files = chat_files::for_visible_messages(array_map(static fn($message) => (int)$message->id, $records));
         $members = [];
         foreach ($conversation->members as $member) {
             $members[(int)$member->id] = [
@@ -147,35 +181,33 @@ final class communication {
                 'removable' => (int)$member->id !== $userid,
             ];
         }
-        $rows = [];
-        foreach ($records as $message) {
-            $mine = (int)$message->useridfrom === $userid;
-            $rows[] = [
-                'id' => (int)$message->id, 'mine' => $mine,
-                'sender' => $mine ? 'Вы' : ($members[(int)$message->useridfrom]['fullname'] ?? 'Бывший участник'),
-                'text' => clean_text((string)$message->text, FORMAT_HTML),
-                'time' => userdate((int)$message->timecreated, '%d.%m.%Y %H:%M'),
-                'attachments' => $files[(int)$message->id] ?? [],
-            ];
+        $latest = !$offset && !$before && $query === '';
+        $window = chat_history::window($userid, $conversationid, $before ? 0 : $offset, $before, null, false, false, $query);
+        if ($latest && messaging::can_mark_all_messages_as_read($userid, $conversationid)) {
+            messaging::mark_all_messages_as_read($userid, $conversationid);
         }
-        if ($offset === 0 && \core_message\api::can_mark_all_messages_as_read($userid, $conversationid)) {
-            \core_message\api::mark_all_messages_as_read($userid, $conversationid);
-        }
-        $url = static fn($offset) => (new \moodle_url('/local/ustar/messages.php',
-            ['conversationid' => $conversationid, 'offset' => $offset]))->out(false);
-        return [
+        $params = $query === '' ? [] : ['find' => $query];
+        return $window + [
             'id' => $conversationid, 'title' => self::conversation_title($conversation, $userid),
-            'messages' => $rows, 'hasmessages' => !empty($rows),
             'cansend' => !empty($conversation->cansendmessagetoconversation),
-            'isgroup' => (int)$conversation->type === \core_message\api::MESSAGE_CONVERSATION_TYPE_GROUP,
+            'isgroup' => (int)$conversation->type === messaging::MESSAGE_CONVERSATION_TYPE_GROUP,
             'members' => array_values($members), 'membercount' => (int)$conversation->membercount,
             'canmanage' => chat_groups::can_manage($userid, $conversationid),
-            'hasolder' => $hasolder, 'isolder' => $offset > 0,
-            'olderurl' => $url($offset + 50), 'newerurl' => $url(max(0, $offset - 50)),
+            'isolder' => $offset > 0 || $before > 0, 'issearch' => $query !== '',
+            'olderurl' => self::conversation_url($conversationid, $params + ['before' => $window['oldest']])->out(false),
+            'newerurl' => self::conversation_url($conversationid, $params)->out(false),
         ];
     }
 
-    public static function send(int $userid, int $conversationid, string $message, array $uploads = [], string $requestid = ''): int {
+    public static function update(int $userid, int $conversationid, array $known, bool $read): array {
+        self::require_conversation($userid, $conversationid);
+        $window = chat_history::window($userid, $conversationid, 0, 0, $known, $read);
+        return $window + ['cansend' => messaging::can_send_message_to_conversation($userid, $conversationid),
+            'olderurl' => self::conversation_url($conversationid, ['before' => $window['oldest']])->out(false)];
+    }
+
+    public static function send(int $userid, int $conversationid, string $message, array $uploads = [], string $requestid = '',
+            int $taskid = 0): int {
         global $DB;
         self::require_actor($userid, true);
         $message = trim($message);
@@ -186,21 +218,25 @@ final class communication {
             throw new \invalid_parameter_exception('Некорректный идентификатор отправки.');
         }
         $uploads = chat_files::validate($uploads);
-        $fingerprint = hash('sha256', json_encode([$conversationid, $message,
+        $recipient = $taskid ? 'task:' . $taskid : $conversationid;
+        $fingerprint = hash('sha256', json_encode([$recipient, $message,
             array_map(static fn($file) => [$file['filename'], hash_file('sha256', $file['tmp'])], $uploads)]));
         $factory = \core\lock\lock_config::get_lock_factory('local_ustar');
-        $chatlock = $factory->get_lock('chat:' . $conversationid, 10);
+        $chatlock = $factory->get_lock($taskid ? 'learning-task:' . $taskid : 'chat:' . $conversationid, 10);
         if (!$chatlock) { throw new \invalid_parameter_exception('Чат занят. Повторите отправку.'); }
         $actorlock = null;
         try {
             $actorlock = $factory->get_lock('chat-send:' . $userid, 10);
             if (!$actorlock) { throw new \invalid_parameter_exception('Отправка уже выполняется.'); }
-            if (!$DB->record_exists('message_conversations', ['id' => $conversationid,
-                    'enabled' => \core_message\api::MESSAGE_CONVERSATION_ENABLED])
-                    || !\core_message\api::can_send_message_to_conversation($userid, $conversationid)) {
+            if (!$taskid && (!$DB->record_exists('message_conversations', ['id' => $conversationid,
+                    'enabled' => messaging::MESSAGE_CONVERSATION_ENABLED])
+                    || !messaging::can_send_message_to_conversation($userid, $conversationid))) {
                 throw new \invalid_parameter_exception('Отправка в этот чат недоступна.');
             }
             $transaction = $DB->start_delegated_transaction();
+            if ($taskid) {
+                $conversationid = discussion::prepare_send($userid, $taskid);
+            }
             // A bounded retry receipt is presentation metadata, not a parallel message store.
             $pref = $DB->get_field('user_preferences', 'value', ['userid' => $userid, 'name' => 'ustar_chat_receipts']);
             $receipts = json_decode($pref ?: '{}', true) ?: [];
@@ -212,15 +248,16 @@ final class communication {
                 $transaction->allow_commit();
                 return $id;
             }
-            $sent = \core_message\api::send_message_to_conversation($userid, $conversationid,
-                $message !== '' ? $message : 'Вложения', FORMAT_PLAIN);
-            chat_files::store((int)$sent->id, $userid, $uploads);
+            $body = $message !== '' ? $message : 'Вложения';
+            $id = $taskid ? discussion::send_native($userid, $conversationid, $body)
+                : (int)messaging::send_message_to_conversation($userid, $conversationid, $body, FORMAT_PLAIN)->id;
+            chat_files::store($id, $userid, $uploads);
             if ($requestid !== '') {
-                $receipts[$requestid] = ['id' => (int)$sent->id, 'hash' => $fingerprint];
+                $receipts[$requestid] = ['id' => $id, 'hash' => $fingerprint];
                 set_user_preference('ustar_chat_receipts', json_encode(array_slice($receipts, -30, null, true)), $userid);
             }
             $transaction->allow_commit();
-            return (int)$sent->id;
+            return $id;
         } catch (\Throwable $e) {
             if (isset($transaction)) { $transaction->rollback($e); }
             throw $e;
@@ -266,7 +303,7 @@ final class communication {
 
     public static function search_users(int $userid, string $query): array {
         self::require_actor($userid);
-        $query = trim($query);
+        $query = \core_text::substr(trim($query), 0, 120);
         if (\core_text::strlen($query) < 2) {
             return [];
         }

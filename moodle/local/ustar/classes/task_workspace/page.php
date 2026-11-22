@@ -1,6 +1,6 @@
 <?php
 namespace local_ustar\task_workspace;
-use local_ustar\{learning_tasks, forced_retraining};
+use local_ustar\{chat_view, learning_tasks, forced_retraining, view_as};
 use local_ustar\briefing\{meetings, page as briefing_page, service as briefing};
 defined('MOODLE_INTERNAL') || die();
 
@@ -20,7 +20,9 @@ final class page {
         if ($manage) { $out .= self::link('Создать задачу', ['form' => 'create', 'taskid' => 0], 'uw-btn uw-primary'); }
         $out .= '<a class="uw-btn" href="'.(new \moodle_url('/local/ustar/notebook.php'))->out().'">Личный блокнот</a></div>';
         $out .= '</header><nav class="uw-tabs" aria-label="Разделы задач">';
-        $tabs = ['overview' => $manage ? 'Обзор' : 'Мой день', 'kanban' => 'Канбан', 'calendar' => 'Календарь'];
+        $tabs = ['overview' => $manage ? 'Обзор' : 'Мой день', 'kanban' => 'Канбан'];
+        if (!view_as::active()) { $tabs['plan'] = 'Мой план'; }
+        $tabs['calendar'] = 'Календарь';
         if (briefing::allowed($actor)) { $tabs['briefing'] = 'Брифинг'; }
         if (meetings::allowed($actor)) { $tabs['meetings'] = 'Встречи'; }
         $tabs['checklists'] = 'Чек-листы';
@@ -32,7 +34,7 @@ final class page {
                 'uw-tab' . ($state['view'] === $key ? ' is-active' : ''));
         }
         $out .= '</nav><div class="uw-scope">';
-        if ($manage && !in_array($state['view'], ['briefing', 'meetings'], true)) {
+        if ($manage && !in_array($state['view'], ['briefing', 'meetings', 'plan'], true)) {
             foreach (['mine' => 'Назначено мне', 'team' => 'Область управления', 'outgoing' => 'Мои поручения'] as $key => $label) {
                 $out .= self::link($label, ['scope' => $key, 'pageno' => 0], 'uw-chip' . ($state['scope'] === $key ? ' is-active' : ''));
             }
@@ -43,6 +45,7 @@ final class page {
         else {
             switch ($state['view']) {
                 case 'kanban': $out .= self::kanban(); break;
+                case 'plan': $out .= self::plan(); break;
                 case 'briefing': $out .= '<div class="uw-brief-section">' . (new briefing_page($actor, $state))->briefing() . '</div>'; break;
                 case 'meetings':
                     try { $out .= '<div class="uw-brief-section">' . (new briefing_page($actor, $state))->meetings() . '</div>'; }
@@ -69,9 +72,9 @@ final class page {
         $s = self::$state;
         $params = ['view' => $s['view'], 'scope' => $s['scope'], 'filter' => $s['filter'], 'month' => $s['month'],
             'q' => $s['q'], 'pageno' => $s['page'],
-            'boardstatus' => $s['boardstatus'] ?: null, 'briefreport' => $s['briefreport'] ?: null,
-            'briefweek' => $s['briefweek'] ?: null, 'briefsection' => $s['briefsection'] ?: null,
-            'briefdept' => $s['briefdept'] ?: null];
+            'boardstatus' => ($s['boardstatus'] ?? '') ?: null, 'briefreport' => ($s['briefreport'] ?? 0) ?: null,
+            'briefweek' => ($s['briefweek'] ?? '') ?: null, 'briefsection' => ($s['briefsection'] ?? '') ?: null,
+            'briefdept' => ($s['briefdept'] ?? '') ?: null];
         return new \moodle_url('/local/ustar/tasks.php', array_filter(array_merge($params, $changes), static fn($v) => $v !== null));
     }
     private static function link(string $label, array $params, string $class = 'uw-btn'): string {
@@ -177,6 +180,63 @@ final class page {
         return $out . '</div>';
     }
 
+    private static function plan(): string {
+        $state = self::$state;
+        $layout = personal_plan::layout(self::$actor);
+        $columns = $layout['columns'];
+        $revision = self::hidden('revision', $layout['revision']);
+        $out = '<section class="uw-panel"><div class="uw-panel-head"><div><h2>Мой план</h2>'
+            . '<p>Распределите свои задачи по колонкам. Рабочие статусы и сроки видны на карточках.</p></div>';
+        if (count($columns) < personal_plan::MAX_COLUMNS) {
+            $out .= '<details class="uw-plan-create"><summary class="uw-btn">Добавить колонку</summary>'
+                . self::form('plan_add') . $revision
+                . self::field('Название', 'columntitle', '', 'text', 'required maxlength="60"')
+                . self::select('Цвет', 'columncolor', personal_plan::COLORS, 'neutral') . self::buttons('Добавить')
+                . '</form></details>';
+        }
+        $out .= '</div><form method="get" class="uw-search">' . self::hidden('view', 'plan') . self::hidden('scope', 'mine')
+            . self::field('Поиск по задачам', 'q', $state['q'], 'search') . '<button class="uw-btn">Найти</button></form></section>';
+        $out .= '<div class="uw-board uw-plan-board" data-task-board aria-label="Колонки моего плана">';
+        $choices = array_map(static fn($column) => $column['title'], $columns);
+        $order = array_keys($columns);
+        foreach ($columns as $key => $column) {
+            $position = array_search($key, $order, true);
+            $currentpage = $state['boardstatus'] === $key ? $state['page'] : 0;
+            $rows = personal_plan::cards(self::$actor, $layout, $key, $currentpage, $state['q']);
+            $out .= '<section class="uw-board-column" data-board-column="' . s($key) . '" data-plan-color="' . s($column['color'])
+                . '" aria-label="' . s($column['title']) . '"><header><h3>' . s($column['title']) . '</h3><span class="uw-badge">'
+                . $rows['total'] . '</span></header>';
+            $out .= '<details class="uw-plan-settings"><summary>Настроить колонку</summary>' . self::form('plan_edit')
+                . $revision . self::hidden('column', $key) . self::field('Название', 'columntitle', $column['title'], 'text', 'required maxlength="60"')
+                . self::select('Цвет', 'columncolor', personal_plan::COLORS, $column['color']) . self::buttons('Сохранить') . '</form>'
+                . '<div class="uw-actions">';
+            foreach (['plan_left' => 'Левее', 'plan_right' => 'Правее', 'plan_remove' => 'Удалить'] as $action => $label) {
+                if (($action === 'plan_left' && $position === 0) || ($action === 'plan_right' && $position === count($order) - 1)
+                        || ($action === 'plan_remove' && $key === personal_plan::DEFAULT_COLUMN)) {
+                    continue;
+                }
+                $out .= self::form($action) . $revision . self::hidden('column', $key)
+                    . '<button class="uw-btn" type="submit">' . s($label) . '</button></form>';
+            }
+            $out .= '</div></details>';
+            foreach ($rows['items'] as $item) {
+                $out .= '<article class="uw-board-card" draggable="true">'
+                    . '<a class="uw-board-title" href="' . self::url(['taskid' => $item->id])->out() . '#uw-detail">'
+                    . s($item->title) . '</a>'
+                    . '<span class="uw-task-meta">' . s(self::due(['dueat' => $item->dueat, 'timezone' => $item->timezone ?? 'Europe/Moscow']))
+                    . '</span><span class="uw-badge">' . s(self::$status[$item->status]) . '</span>'
+                    . self::form('plan_move') . $revision . self::hidden('movetaskid', $item->id)
+                    . self::select('Колонка', 'column', $choices, $key)
+                    . '<button class="uw-btn" type="submit">Переместить</button></form></article>';
+            }
+            if (!$rows['items']) { $out .= '<p class="uw-muted uw-board-empty">Нет задач</p>'; }
+            if ($rows['page']) { $out .= self::link('← Назад', ['boardstatus' => $key, 'pageno' => $rows['page'] - 1]); }
+            if ($rows['hasmore']) { $out .= self::link('Ещё задачи →', ['boardstatus' => $key, 'pageno' => $rows['page'] + 1]); }
+            $out .= '</section>';
+        }
+        return $out . '</div>';
+    }
+
     private static function month(): array {
         $value = self::$state['month'];
         if (!preg_match('/^\d{4}-\d{2}$/', $value)) { $value = date('Y-m'); }
@@ -196,11 +256,19 @@ final class page {
                 briefing::calendar_items(self::$actor, $first->getTimestamp(), $end)) as $meeting) {
             $meetings[calendar::date($meeting['startat'], $first->getTimezone()->getName())][] = $meeting;
         }
+        $meetinglinks = '';
+        if (meetings::allowed(self::$actor)) {
+            $meetinglinks = self::link('Переговорные', ['view' => 'meetings']);
+            if (meetings::can_book(self::$actor)) {
+                $meetinglinks .= self::link('Назначить встречу', ['view' => 'meetings', 'meetingsection' => 'edit']);
+            }
+        }
         $out = '<section class="uw-panel"><div class="uw-panel-head"><div><h2>' . s(userdate($first->getTimestamp(), '%B %Y', $first->getTimezone()->getName())) . '</h2>
             <small>Сроки в часовом поясе ' . s($first->getTimezone()->getName()) . '</small></div><div class="uw-actions">'
             . self::link('‹', ['month' => $first->modify('-1 month')->format('Y-m'), 'pageno' => 0])
             . self::link('Сегодня', ['month' => date('Y-m'), 'pageno' => 0])
-            . self::link('›', ['month' => $first->modify('+1 month')->format('Y-m'), 'pageno' => 0]) . '</div></div><div class="uw-calendar">';
+            . self::link('›', ['month' => $first->modify('+1 month')->format('Y-m'), 'pageno' => 0]) . $meetinglinks
+            . '</div></div><div class="uw-calendar">';
         foreach (['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'] as $day) { $out .= '<div class="uw-dayhead">' . $day . '</div>'; }
         $offset = (int)$first->format('N') - 1; $count = (int)(ceil(($offset + (int)$first->format('t')) / 7) * 7);
         for ($i = 0; $i < $count; $i++) {
@@ -410,9 +478,14 @@ final class page {
             <button type="button" class="uw-btn" data-remove-row aria-label="Удалить поле">×</button></div></div>';
     }
     private static function detail(int $id): string {
+        global $CFG, $PAGE;
         $t = service::detail($id,self::$actor); $out='<section class="uw-panel uw-detail" id="uw-detail"><div class="uw-panel-head"><div><small>Задача #'.$id.'</small><h2>'.s($t['title']).'</h2></div>'
             . self::link('Закрыть',['taskid'=>0]).'</div><div class="uw-detail-body"><div class="uw-panel-head">'.self::badge($t).'<span>'.s(self::due($t)).'</span></div>'
             . '<p>'.nl2br(s($t['description'])).'</p><div class="uw-form-grid"><div><small>Исполнитель</small><p>'.s($t['assignee']).'</p></div><div><small>Проверяющий</small><p>'.s($t['reviewer']).'</p></div></div>';
+        $discussion = !empty($CFG->messaging) && !view_as::active() && discussion::readable(self::$actor, $id);
+        if ($discussion) {
+            $out .= '<a class="uw-btn" href="#uw-discussion">Обсуждение</a>';
+        }
         if ($t['parentid']) { $out .= self::link('Родительская задача #'.$t['parentid'],['taskid'=>$t['parentid']]); }
         if ($t['reviewdueat'] && $t['status']==='in_review') { $out.='<div class="uw-notice">Срок проверки: '.s(userdate($t['reviewdueat'],'%d.%m.%Y %H:%M',$t['timezone'])).'</div>'; }
         if ($t['assigneeid']===self::$actor && $t['status']==='assigned') {
@@ -480,6 +553,16 @@ final class page {
             'task_approved'=>'Результат принят','task_returned'=>'Возвращена на доработку','task_cancelled'=>'Отменена','task_revised'=>'Срок / исполнитель изменён',
             'report_draft_saved'=>'Черновик отчёта сохранён','task_reminder'=>'Напоминание исполнителю','task_escalated'=>'Эскалация','task_learning_result'=>'Получен учебный результат'];
         foreach($t['events'] as $event){$out.='<p><span>'.s(userdate($event['time'],'%d.%m %H:%M',$t['timezone'])).'</span> · '.s($labels[$event['event']]??$event['event']).($event['comment']?' · '.s($event['comment']):'').'</p>';}
-        return $out.'</div></div></section>';
+        $out .= '</div>';
+        if ($discussion) {
+            $chat = discussion::thread(self::$actor, $id, 0, null, false);
+            $chat += chat_view::composer(discussion::url($id));
+            if (meetings::can_book(self::$actor)) {
+                $chat['meetingurl'] = (new \moodle_url('/local/ustar/tasks.php',
+                    ['view' => 'meetings', 'meetingsection' => 'edit', 'taskref' => $id]))->out(false);
+            }
+            $out .= $PAGE->get_renderer('local_ustar')->render_from_template('local_ustar/task_discussion', $chat);
+        }
+        return $out . '</div></section>';
     }
 }

@@ -63,7 +63,9 @@ final class service {
         if (!team_access::active_actor($actorid)) { self::deny(); }
         $where = "t.privacy = :privacy";
         $params = ['privacy' => learning_tasks::PRIVACY_ASSIGNED];
-        if ($scope === 'mine') { return [$where . ' AND t.assigneeid = :actor', $params + ['actor' => $actorid]]; }
+        if ($scope === 'mine' || ($scope === 'accessible' && !self::can_manage($actorid))) {
+            return [$where . ' AND t.assigneeid = :actor', $params + ['actor' => $actorid]];
+        }
         if (!self::can_manage($actorid)) { self::deny(); }
         if ($scope === 'outgoing') {
             $where .= ' AND t.assignerid = :creator'; $params['creator'] = $actorid;
@@ -71,6 +73,9 @@ final class service {
         if (!team_access::company($actorid)) {
             global $DB;
             $ids = array_values(array_unique(array_map('intval', organization_model::manager_scope($actorid)['userids'] ?? [])));
+            if ($scope === 'accessible') {
+                $ids[] = $actorid;
+            }
             if (!$ids) { return [$where . ' AND 1=0', $params]; }
             [$insql, $inparams] = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'scope');
             $where .= ' AND t.assigneeid ' . $insql; $params += $inparams;

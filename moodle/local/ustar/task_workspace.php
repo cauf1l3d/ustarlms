@@ -1,15 +1,16 @@
 <?php
 // Included only by the authenticated tasks.php entrypoint.
 defined('MOODLE_INTERNAL') || die();
-use local_ustar\task_workspace\{service, policy, calendar, page};
-use local_ustar\{learning_tasks, task_files};
+use local_ustar\task_workspace\{service, policy, calendar, page, personal_plan};
+use local_ustar\{communication, learning_tasks, task_files};
 use local_ustar\briefing\commands;
 
 $actorid = (int)$USER->id;
 $view = optional_param('view', 'overview', PARAM_ALPHA);
-if (!in_array($view, ['overview', 'kanban', 'calendar', 'briefing', 'meetings', 'checklists', 'control', 'analytics', 'rules'], true)) { $view = 'overview'; }
+if (!in_array($view, ['overview', 'kanban', 'plan', 'calendar', 'briefing', 'meetings', 'checklists', 'control', 'analytics', 'rules'], true)) { $view = 'overview'; }
 $scope = optional_param('scope', service::can_manage($actorid) ? 'team' : 'mine', PARAM_ALPHA);
 if (!in_array($scope, ['mine', 'team', 'outgoing'], true)) { $scope = 'mine'; }
+if ($view === 'plan') { $scope = 'mine'; }
 if ($scope !== 'mine' && !service::can_manage($actorid)
         && in_array($view, ['meetings', 'briefing'], true)) {
     $scope = 'mine';
@@ -35,13 +36,14 @@ $state += [
     'slotend' => optional_param('slotend', 0, PARAM_INT),
     'slotroom' => optional_param('slotroom', 0, PARAM_INT),
     'boardstatus' => optional_param('boardstatus', '', PARAM_ALPHANUMEXT),
+    'taskref' => optional_param('taskref', 0, PARAM_INT),
 ];
 if ($view === 'briefing' && optional_param('briefexport', 0, PARAM_BOOL)) {
     \local_ustar\briefing\service::download($actorid, $state['briefweek']);
 }
 $notice = '';
 $returnparams = ['view' => $view, 'scope' => $scope];
-if ($view === 'kanban') {
+if ($view === 'kanban' || $view === 'plan') {
     $returnparams += ['q' => $state['q'], 'boardstatus' => $state['boardstatus'], 'pageno' => $state['page']];
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -52,6 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (($view === 'briefing' && str_starts_with($action, 'brief_'))
                 || ($view === 'meetings' && str_starts_with($action, 'meeting_'))) {
             redirect(new moodle_url('/local/ustar/tasks.php', commands::run($action, $actorid, $state)));
+        } else if ($view === 'plan' && str_starts_with($action, 'plan_')) {
+            personal_plan::update($actorid, required_param('revision', PARAM_INT), $action,
+                optional_param('column', '', PARAM_ALPHANUMEXT), optional_param('movetaskid', 0, PARAM_INT),
+                optional_param('columntitle', '', PARAM_TEXT), optional_param('columncolor', 'neutral', PARAM_ALPHA));
+            redirect(new moodle_url('/local/ustar/tasks.php', $returnparams));
         } else if ($action === 'create') {
             \local_ustar\task_workspace\recipients::validate($actorid, required_param('assigneeid', PARAM_INT),
                 required_param('departmentid', PARAM_ALPHANUMEXT), required_param('positionid', PARAM_ALPHANUMEXT));
@@ -176,8 +183,12 @@ $PAGE->set_url(new moodle_url('/local/ustar/tasks.php', ['view' => $view, 'scope
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Задачи и контроль | USTAR Academy');
 $PAGE->set_heading('USTAR Academy');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20261117-briefing']));
-$PAGE->requires->js(new moodle_url('/local/ustar/task_workspace.js', ['v' => '20261117-briefing']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => communication::ASSET_VERSION]));
+$PAGE->requires->js(new moodle_url('/local/ustar/task_workspace.js', ['v' => communication::ASSET_VERSION]));
+if ($state['taskid'] && !empty($CFG->messaging)) {
+    $PAGE->requires->css(new moodle_url('/local/ustar/styles/workchat.css', ['v' => communication::ASSET_VERSION]));
+    $PAGE->requires->js(new moodle_url('/local/ustar/messages.js', ['v' => communication::ASSET_VERSION]));
+}
 echo $OUTPUT->header();
 if ($notice !== '') { echo $OUTPUT->notification(s($notice), 'notifyproblem'); }
 if (optional_param('saved', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Изменения сохранены.', 'notifysuccess'); }

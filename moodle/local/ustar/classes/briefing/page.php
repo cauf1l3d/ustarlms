@@ -1,6 +1,7 @@
 <?php
 namespace local_ustar\briefing;
 
+use local_ustar\task_workspace\discussion;
 use local_ustar\task_workspace\{calendar, service as tasks};
 
 defined('MOODLE_INTERNAL') || die();
@@ -398,10 +399,15 @@ final class page {
             (int)(ceil((time() + 1) / (30 * MINSECS)) * 30 * MINSECS));
         $input = $this->state['input'] ?? [];
         $selected = array_map('intval', $input['participants'] ?? array_column($detail['participants'] ?? [], 'userid'));
+        $task = !$row && !empty($this->state['taskref'])
+            ? discussion::readable($this->actor, (int)$this->state['taskref']) : null;
+        if ($task && !$input) {
+            $selected = [(int)$task->assigneeid];
+        }
         $out = '<section class="uw-panel"><div class="uw-panel-head"><h2>' . ($row ? 'Редактировать встречу' : 'Назначить встречу')
             . '</h2></div>' . $this->post('meeting_save', ['meetingsection' => 'edit', 'meetingid' => $row->id ?? 0, 'meetingdate' => $date])
             . self::hidden('briefrevision', $row->revision ?? 0) . self::hidden('meetingkey', $input['meetingkey'] ?? random_string(32))
-            . $this->field('Название', 'meetingtitle', $row->title ?? '', 'text', 'required maxlength="200"')
+            . $this->field('Название', 'meetingtitle', $row->title ?? $task->title ?? '', 'text', 'required maxlength="200"')
             . $this->text('Повестка', 'agenda', $row->agenda ?? '', 12000)
             . '<div class="uw-form-grid">'
             . $this->field('Начало (МСК)', 'starttime', self::local($row->startat ?? ($slotstart ?: $defaultstart)), 'datetime-local', 'required')
@@ -414,7 +420,11 @@ final class page {
             $out .= '<label class="uw-check" data-meeting-person><input type="checkbox" name="participants[]" value="' . $id . '"'
                 . (in_array($id, $selected, true) ? ' checked' : '') . '> ' . s($name) . '</label>';
         }
-        return $out . '</div></fieldset><div class="uw-actions">' . self::button($row ? 'Сохранить встречу' : 'Отправить приглашения')
+        $api = new \moodle_url('/local/ustar/meeting_availability.php');
+        return $out . '</div></fieldset><div class="uw-meeting-check" data-meeting-check="' . $api->out() . '" data-meeting-id="'
+            . (int)($row->id ?? 0) . '"><button type="button" class="uw-btn" hidden>Проверить занятость</button>'
+            . '<div class="uw-meeting-check-result" role="status"></div></div><div class="uw-actions">'
+            . self::button($row ? 'Сохранить встречу' : 'Отправить приглашения')
             . '</div></form></section>';
     }
 

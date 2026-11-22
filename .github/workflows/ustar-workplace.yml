@@ -1,0 +1,92 @@
+name: USTAR workplace migration
+
+on:
+  push:
+    branches: [feat/workplace-migration-20261122]
+    paths:
+      - '.github/workflows/ustar-workplace.yml'
+      - 'moodle/**'
+      - 'tests/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workplace-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native:
+    name: Workplace / ${{ matrix.runtime }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runtime: moodle-511
+            compose: tests/stage/compose.yaml
+          - runtime: moodle-518
+            compose: tests/stage/patch-compose.yaml
+    env:
+      USTAR_WORKPLACE_COMPOSE: ${{ matrix.compose }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: npm ci --prefix tests/mobile
+      - run: cd tests/mobile && npx playwright install --with-deps chromium
+      - name: Build the isolated runtime and seed the previous release
+        run: |
+          mkdir -p .stage-input/workplace-baseline artifacts
+          git archive 17b6141007d65207d9b594138753d28b39ab70bf moodle/local/ustar moodle/theme/ustar \
+            | tar -x -C .stage-input/workplace-baseline
+          docker compose -f "$USTAR_WORKPLACE_COMPOSE" -f tests/stage/browser-compose.yaml build --pull
+      - name: Verify clean install, upgrades and native policies
+        run: |
+          id=$(docker compose -f "$USTAR_WORKPLACE_COMPOSE" -f tests/stage/browser-compose.yaml run -d \
+            --publish 127.0.0.1:8087:8087 --entrypoint bash runner /source/tests/stage/run_workplace.sh)
+          printf '%s\n' "$id" > artifacts/workplace-container-id
+          for attempt in $(seq 1 180); do
+            if test -e artifacts/workplace-browser-ready; then exit 0; fi
+            if test "$(docker inspect -f '{{.State.Running}}' "$id")" != true; then
+              docker logs --tail 100 "$id"
+              exit 1
+            fi
+            sleep 2
+          done
+          exit 1
+      - name: Verify browser flows and access after reassignment
+        env:
+          NODE_PATH: ${{ github.workspace }}/tests/mobile/node_modules
+        run: |
+          set -euo pipefail
+          id=$(cat artifacts/workplace-container-id)
+          node tests/stage/workplace_browser.cjs artifacts/workplace-fixture.json "$RUNNER_TEMP/workplace-browser.json" \
+            | tee artifacts/workplace-browser.log
+          docker exec -e USTAR_DISPOSABLE_FIXTURE=workplace "$id" php /source/tests/stage/workplace_fixture.php inspect \
+            | tee -a artifacts/workplace-browser.log
+          docker exec -e USTAR_DISPOSABLE_FIXTURE=workplace "$id" php /source/tests/stage/workplace_fixture.php reassign \
+            | tee -a artifacts/workplace-browser.log
+          node tests/stage/workplace_browser.cjs artifacts/workplace-fixture.json "$RUNNER_TEMP/workplace-browser.json" reassign \
+            | tee -a artifacts/workplace-browser.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: workplace-${{ matrix.runtime }}
+          path: |
+            artifacts/workplace-*.log
+            artifacts/workplace-*.xml
+            artifacts/workplace-schema-*.json
+      - name: Remove the isolated runtime
+        if: always()
+        run: |
+          if test -f artifacts/workplace-container-id; then
+            id=$(cat artifacts/workplace-container-id)
+            [[ $id =~ ^[a-f0-9]{12,64}$ ]] && docker rm -f "$id" || true
+          fi
+          docker compose -f "$USTAR_WORKPLACE_COMPOSE" -f tests/stage/browser-compose.yaml down --volumes

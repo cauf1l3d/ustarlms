@@ -1,0 +1,12 @@
+<section class="uw-discussion" id="uw-discussion" aria-label="Обсуждение задачи" data-chat-root data-taskid="{{taskid}}"
+    data-api="{{apiurl}}" data-sesskey="{{sesskey}}">
+    <div class="uw-panel-head">
+        <h3>Обсуждение</h3>
+        <div class="uw-actions">
+            {{#meetingurl}}<a class="uw-btn" href="{{meetingurl}}">Назначить встречу</a>{{/meetingurl}}
+            <a class="uw-btn" href="{{posturl}}">Открыть в сообщениях</a>
+        </div>
+    </div>
+    <div class="u-thread-messages" data-chat-messages aria-label="История обсуждения">{{> local_ustar/messages_thread}}</div>
+    {{> local_ustar/chat_composer}}
+</section>

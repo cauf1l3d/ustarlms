@@ -26,7 +26,7 @@ jobs:
           set -euo pipefail
           python3 scripts/infra/build_workplace_review.py --output artifacts
           python3 scripts/infra/build_workplace_review.py --output repeat
-          name=ustar-workplace-review-341bbaed.tar.gz
+          name=ustar-workplace-review-6dd6850d.tar.gz
           cmp "artifacts/$name" "repeat/$name"
           mkdir verify
           tar -xzf "artifacts/$name" -C verify

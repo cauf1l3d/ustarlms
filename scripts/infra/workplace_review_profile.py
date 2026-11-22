@@ -1,7 +1,7 @@
 """Successor profile embedded before the frozen Workplace installer's entry point."""
 
 WORKPLACE = TARGET
-TARGET = '341bbaed1799b4a8de9d5271a0e944efc1cd2e40'
+TARGET = '6dd6850df83398b534f6bbdf586f0409eab7c72f'
 VERSIONS = {BASELINE: 2026111800, WORKPLACE: 2026112200}
 AFTER = 2026112300
 PRIOR_STATE = STATE

@@ -18,8 +18,14 @@ async function login(browser, username, viewport) {
     page.errors = [];
     await page.goto(base + '/login/index.php');
     await page.locator('#username').fill(username);
-    await page.locator('#password').fill(password);
-    await page.locator('#loginbtn').click();
+    // Moodle renders the visibility toggle asynchronously and replaces the password input.
+    await page.locator('.toggle-sensitive-wrapper #password').fill(password);
+    const [submission] = await Promise.all([
+        page.waitForResponse(reply => reply.url() === base + '/login/index.php' && reply.request().method() === 'POST'),
+        page.locator('#loginbtn').click(),
+    ]);
+    assert.match(await submission.headerValue('location') || '', /[?&]testsession=/,
+        `Moodle rejected login for the fixture account ${username}`);
     await page.waitForURL(url => !url.pathname.endsWith('/login/index.php'), {timeout: 15000});
     const response = await page.goto(base + '/local/ustar/messages.php');
     assert.equal(response.status(), 200);

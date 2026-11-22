@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-22'
+updated_at: '2026-11-23'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -143,9 +143,10 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Workplace 1.22.0-rc.1 archive is qualified in PR 126. The owner observed
-    DB plugin versions 2026111800 and 2026110200 on server1. Exact preflight, installation,
-    pilot, production load verification and Bitrix24 data transfer are pending.
+  activity: Workplace 1.22.0-rc.2 covers both local1800 and local2200 in PR 127. The
+    owner observed DB plugin versions 2026111800 and 2026110200 on server1. Exact
+    preflight, installation, pilot, production load verification and Bitrix24 data
+    transfer are pending.
   next_task: WORKPLACE-MIGRATION
   ready_tasks: []
   task_statuses:

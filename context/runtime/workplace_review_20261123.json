@@ -1,0 +1,120 @@
+{
+  "date_msk": "2026-11-23",
+  "scope": "isolated_workplace_review",
+  "source_pr": 127,
+  "application_commit": "6dd6850df83398b534f6bbdf586f0409eab7c72f",
+  "package_builder_commit": "4ce72a16d46c7e18ce2c639b22b694a7e0163be6",
+  "functional_workflow": {
+    "run": 45075790067,
+    "head": "f66015142f0022ce4f7240720c65ac6219deffc1",
+    "application_tree_identical_to_payload": true,
+    "jobs": {
+      "moodle-511": "success",
+      "moodle-518": "success"
+    }
+  },
+  "local_ustar": 2026112300,
+  "theme_ustar": 2026110200,
+  "worker": "17b6141007d65207d9b594138753d28b39ab70bf",
+  "schema_changed": false,
+  "local_phpunit": {
+    "workplace": [
+      5,
+      40
+    ],
+    "communication": [
+      14,
+      43
+    ],
+    "task_workspace": [
+      21,
+      67
+    ],
+    "units": "tests, assertions",
+    "result": "pass"
+  },
+  "directory_measurement": {
+    "fixture_people": 70,
+    "warmed_eligible_participants_sql_reads_before": 495,
+    "warmed_eligible_participants_sql_reads_after": 5
+  },
+  "browser_stage": {
+    "moodle_http": true,
+    "browser_task_chat_group_search_plan_meeting": "ok",
+    "fixture_history_rows": 700,
+    "full_poll": {
+      "requests": 16,
+      "bytes": 28305,
+      "p50_ms": 102,
+      "p95_ms": 185
+    },
+    "delta_poll": {
+      "requests": 16,
+      "bytes": 350,
+      "p50_ms": 58,
+      "p95_ms": 95
+    },
+    "image_original_bytes": 1136241,
+    "preview_bytes": 182683
+  },
+  "additional_fixture_checks": [
+    "parallel_room_booking_one_commit",
+    "two_tab_minutes_conflict_recovery",
+    "retry_minutes_one_revision",
+    "24_MiB_file_integrity",
+    "51_MiB_total_rejected",
+    "task_attachment_access_revoked_after_reassignment",
+    "briefing_smoke_pass_reports_dates_roles_meeting_rsvp"
+  ],
+  "package": {
+    "name": "ustar-workplace-review-6dd6850d.tar.gz",
+    "sha256": "4a9abd0155e89dda0a823db7b09af5d7402b360af9e0351da99448135be09624",
+    "bytes": 260484,
+    "archive_members": 40,
+    "payload_files": 37,
+    "build_workflow_run": 45075609359,
+    "artifact_id": 14774548158,
+    "artifact_zip_sha256": "c285f1d0a3e5fe86e78521701569e9506c28641593482c1ebaaa0d15c1263d5a",
+    "ci_archive_crc_and_byte_identity": "pass",
+    "retained_copy_sha256_verified": true,
+    "operator_tests": 13,
+    "operator_result": "pass"
+  },
+  "native_installs": [
+    {
+      "backup_code_sha_verification": "pass",
+      "backup_postgres_restore": "pass",
+      "from_version": 2026111800,
+      "moodle": "5.1.8",
+      "package_install": "pass",
+      "post_install_login": "http_200",
+      "postgres": "17.11",
+      "preserved_messages": 700,
+      "restored_version": 2026111800,
+      "to_version": 2026112300,
+      "worker_and_cron": "isolated_host_simulation"
+    },
+    {
+      "backup_code_sha_verification": "pass",
+      "backup_postgres_restore": "pass",
+      "from_version": 2026112200,
+      "moodle": "5.1.8",
+      "package_install": "pass",
+      "post_install_login": "http_200",
+      "postgres": "17.11",
+      "preserved_messages": 700,
+      "restored_version": 2026112200,
+      "to_version": 2026112300,
+      "worker_and_cron": "isolated_host_simulation"
+    }
+  ],
+  "server1": {
+    "owner_observed_database_versions": [
+      2026111800,
+      2026110200
+    ],
+    "owner_deployed": false,
+    "runtime_load": "pending",
+    "real_role_pilot": "pending"
+  }
+}

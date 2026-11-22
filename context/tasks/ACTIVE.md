@@ -1,9 +1,8 @@
-# Активная работа · 22.11.2026
+# Активная работа · 23.11.2026
 
-WORKPLACE-MIGRATION, PR126/local2200. [Установка](../../docs/WORKPLACE_INSTALL_RU.md),
-[приёмка](../../docs/WORKPLACE_MIGRATION_RU.md), [проверки](../runtime/workplace_qualification_20261122.json).
-Архив собран и проверен. Владелец подтвердил local1800/theme0200 в БД server1.
-Ожидается сверка файлов, Connect и cron, затем установка и живая приёмка.
+WORKPLACE-MIGRATION, PR127/local2300. [Инженерное ревью](../reviews/20261123/WORKPLACE_REVIEW_RU.md),
+[установка rc.2 с local1800 или 2200](../../docs/WORKPLACE_REVIEW_INSTALL_RU.md).
+На server1 подтверждены версии БД local1800/theme0200. Ожидаются preflight и пилот.
 
 ## Повторная привязка Telegram
 

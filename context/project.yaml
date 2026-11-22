@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-11-22'
+updated_at: '2026-11-23'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -36,11 +36,11 @@ current_operator_handoff:
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
   task: WORKPLACE-MIGRATION
-  workplace_review: context/reviews/20261122/WORKPLACE_MIGRATION_RU.md
+  workplace_review: context/reviews/20261123/WORKPLACE_REVIEW_RU.md
   workplace_runbook: docs/WORKPLACE_MIGRATION_RU.md
-  workplace_install_runbook: docs/WORKPLACE_INSTALL_RU.md
-  workplace_qualification: context/runtime/workplace_qualification_20261122.json
-  workplace_draft_pr: 126
+  workplace_install_runbook: docs/WORKPLACE_REVIEW_INSTALL_RU.md
+  workplace_qualification: context/runtime/workplace_review_20261123.json
+  workplace_draft_pr: 127
   briefing_runbook: docs/BRIEFING_REVIEW_INSTALL_RU.md
   briefing_qualification: context/runtime/briefing_review_qualification_20261118.json
   briefing_source_commit: 17b6141007d65207d9b594138753d28b39ab70bf
@@ -63,7 +63,7 @@ current_work:
   observation_sha256: ee883caff5be0b391db583bb4deeb795c1dbd3c1bba0c4127faa02f9cd444f92
   expected_server_observer: /root/ustar-connect-role-bot-install-9a68246b/observe.py
   observer_path_check_on_server: pending
-  expected_application_version: 2026112200
+  expected_application_version: 2026112300
   expected_worker_commit: 17b6141007d65207d9b594138753d28b39ab70bf
   integrated_PRs:
   - 110

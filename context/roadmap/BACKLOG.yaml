@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-11-22'
+updated_at: '2026-11-23'
 canonical_branch: main
 source_baseline: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -956,11 +956,11 @@ tasks:
   title: Рабочий контур Академии для переезда с Битрикс24
   status: package_qualified_server_preflight_pending
   depends_on: [TASK-BRIEFING]
-  reference: context/reviews/20261122/WORKPLACE_MIGRATION_RU.md
-  qualification: context/runtime/workplace_qualification_20261122.json
+  reference: context/reviews/20261123/WORKPLACE_REVIEW_RU.md
+  qualification: context/runtime/workplace_review_20261123.json
   runbook: docs/WORKPLACE_MIGRATION_RU.md
-  install_runbook: docs/WORKPLACE_INSTALL_RU.md
-  pr: 126
+  install_runbook: docs/WORKPLACE_REVIEW_INSTALL_RU.md
+  pr: 127
   acceptance:
   - Обсуждение и вложения используют текущие права доступа к задаче
   - Личный план применяет раскладку, срок и статус видны со стороны канонической задачи

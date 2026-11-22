@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально 22.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
+Актуально 23.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
 PR110 (RSS2803) и PR111 (ролевой Connect/графика) объединены после единой FullRC.
 [Интеграция](context/runtime/connect_feed_integration_order_20261101.json).
 
@@ -10,9 +10,9 @@ PR110 (RSS2803) и PR111 (ролевой Connect/графика) объедин�
 
 ## Текущая работа
 
-22.11.2026. Чаты задач, «Мой план» и встречи в PR126, local2200 поверх `17b61410`.
-[Установка](docs/WORKPLACE_INSTALL_RU.md), [ревью](context/reviews/20261122/WORKPLACE_MIGRATION_RU.md), [приёмка](docs/WORKPLACE_MIGRATION_RU.md).
-Пилот, замеры рабочего сервера и перенос данных Битрикс24 ожидаются.
+23.11.2026. Ревью чатов, встреч, брифинга и личного плана, PR127/local2300.
+[Ревью](context/reviews/20261123/WORKPLACE_REVIEW_RU.md), [установка](docs/WORKPLACE_REVIEW_INSTALL_RU.md).
+Ожидаются preflight server1, пилот и замеры рабочего дня.
 
 ## Подтверждённое состояние
 

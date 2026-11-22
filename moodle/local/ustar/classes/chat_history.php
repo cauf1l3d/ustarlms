@@ -16,14 +16,16 @@ final class chat_history {
             return [];
         }
         [$in, $params] = $DB->get_in_or_equal($conversationids, SQL_PARAMS_NAMED, 'preview');
-        return $DB->get_records_sql("SELECT m.conversationid, m.useridfrom, m.smallmessage, m.timecreated, a.id AS readid
-              FROM {messages} m
-              JOIN (SELECT v.conversationid, MAX(v.id) AS lastid FROM {messages} v
-                     WHERE v.conversationid $in AND NOT EXISTS (
+        // PostgreSQL can walk Moodle's conversation/time index backwards for each selected chat.
+        return $DB->get_records_sql("SELECT c.id AS conversationid, m.useridfrom, m.smallmessage, m.timecreated, a.id AS readid
+              FROM {message_conversations} c
+              JOIN LATERAL (SELECT v.id, v.useridfrom, v.smallmessage, v.timecreated FROM {messages} v
+                     WHERE v.conversationid = c.id AND NOT EXISTS (
                            SELECT 1 FROM {message_user_actions} d WHERE d.messageid = v.id
                                    AND d.userid = :previewreader AND d.action = :previewdeleted)
-                  GROUP BY v.conversationid) latest ON latest.lastid = m.id
-         LEFT JOIN {message_user_actions} a ON a.messageid = m.id AND a.userid = :actor AND a.action = :readaction",
+                  ORDER BY v.timecreated DESC, v.id DESC LIMIT 1) m ON TRUE
+         LEFT JOIN {message_user_actions} a ON a.messageid = m.id AND a.userid = :actor AND a.action = :readaction
+             WHERE c.id $in",
             $params + ['previewreader' => $userid, 'previewdeleted' => messaging::MESSAGE_ACTION_DELETED,
                 'actor' => $userid, 'readaction' => messaging::MESSAGE_ACTION_READ]);
     }

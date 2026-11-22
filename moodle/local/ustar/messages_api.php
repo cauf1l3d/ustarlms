@@ -66,8 +66,11 @@ try {
         'delta' => true, 'ids' => $thread['ids'], 'olderurl' => $thread['hasolder'] ? $thread['olderurl'] : '',
     ] : ['signature' => hash('sha256', $html)]), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
 } catch (Throwable $e) {
-    http_response_code(400);
     $known = $e instanceof invalid_parameter_exception || $e instanceof required_capability_exception;
+    $scanner = $e instanceof \core\antivirus\scanner_exception;
+    $session = $e instanceof moodle_exception && $e->errorcode === 'invalidsesskey';
+    http_response_code($known || $scanner || $session ? 400 : 500);
     echo json_encode(['ok' => false, 'error' => $known ? $e->getMessage()
-        : 'Действие не выполнено. Проверьте подключение и доступ к чату.']);
+        : ($scanner ? 'Антивирусная проверка не разрешила отправку вложения.'
+            : 'Действие не выполнено. Проверьте подключение и доступ к чату.')]);
 }

@@ -20,6 +20,9 @@ final class chat_files {
     }
 
     public static function validate(array $uploads): array {
+        if (!$uploads) {
+            return [];
+        }
         if (count($uploads) > self::MAX_FILES) {
             throw new \invalid_parameter_exception('К сообщению можно приложить не более 5 файлов.');
         }
@@ -65,6 +68,9 @@ final class chat_files {
             $upload['mimetype'] = $images[$extension] ?? $media[$extension] ?? 'application/octet-stream';
         }
         unset($upload);
+        foreach ($uploads as $upload) {
+            \core\antivirus\manager::scan_file($upload['tmp'], $upload['filename'], true);
+        }
         return $uploads;
     }
 

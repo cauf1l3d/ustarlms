@@ -388,6 +388,19 @@ final class page {
             . self::field('Через минут после срока','levelminutes[]',$level['minutes'],'number','min="1" max="43200"')
             . '<button type="button" class="uw-btn" data-remove-row aria-label="Удалить уровень">×</button></div>';
     }
+    private static function recipient_picker(array $params, array $options, string $department, string $position,
+            int $assignee): string {
+        $out = '<form method="get" class="uw-form" data-recipient-filter>';
+        foreach ($params as $key => $value) {
+            $out .= self::hidden($key, $value);
+        }
+        return $out . '<div class="uw-form-grid">'
+            . self::select('1. Отдел', 'departmentid', ['' => 'Выберите отдел'] + $options['departments'], $department)
+            . self::select('2. Должность', 'positionid', ['' => 'Выберите должность'] + $options['positions'], $position)
+            . self::select('3. Сотрудник', 'assigneeid', [0 => 'Выберите сотрудника'] + $options['people'], $assignee)
+            . '</div><button class="uw-btn">Применить выбор</button></form>';
+    }
+
     private static function create_form(): string {
         $s = self::$state; $p = service::policy_for(self::$actor);
         $assignee = (int)$s['assigneeid'];
@@ -400,18 +413,11 @@ final class page {
                 return '<div class="uw-notice">Отчёт для поручения недоступен.</div>';
             }
         }
+        $filters = ['form' => 'create'] + array_intersect_key($s, array_flip(
+            ['scope', 'view', 'briefreport', 'briefweek', 'briefsection', 'briefdept', 'parentid', 'templateid']));
         $out = '<section class="uw-editor uw-panel" id="uw-editor"><div class="uw-panel-head"><h2>'
             . ($report ? 'Поручение по брифингу' : 'Новая задача') . '</h2>'
-            . self::link('Закрыть', ['form'=>'']) . '</div><form method="get" class="uw-form" data-recipient-filter>'
-            . self::hidden('form','create') . self::hidden('scope',$s['scope']) . self::hidden('view',$s['view'])
-            . self::hidden('briefreport', $s['briefreport']) . self::hidden('briefweek', $s['briefweek'])
-            . self::hidden('briefsection', $s['briefsection']) . self::hidden('briefdept', $s['briefdept'])
-            . self::hidden('parentid',$s['parentid']) . self::hidden('templateid',$s['templateid'])
-            . '<div class="uw-form-grid">'
-            . self::select('1. Отдел', 'departmentid', [''=>'Выберите отдел'] + $options['departments'], $department)
-            . self::select('2. Должность', 'positionid', [''=>'Выберите должность'] + $options['positions'], $position)
-            . self::select('3. Сотрудник', 'assigneeid', [0=>'Выберите сотрудника'] + $options['people'], $assignee)
-            . '</div><button class="uw-btn">Применить выбор</button></form>';
+            . self::link('Закрыть', ['form'=>'']) . '</div>' . self::recipient_picker($filters, $options, $department, $position, $assignee);
         if (!isset($options['people'][$assignee])) {
             return $out . '<div class="uw-empty">Выберите отдел, должность и действующего сотрудника.</div></section>';
         }
@@ -477,6 +483,26 @@ final class page {
             . '<div class="uw-actions"><button type="button" class="uw-btn" data-move-up aria-label="Переместить поле выше">↑</button>
             <button type="button" class="uw-btn" data-remove-row aria-label="Удалить поле">×</button></div></div>';
     }
+    private static function reassign_form(array $task): string {
+        $s = self::$state;
+        $department = $s['departmentid'] ?? '';
+        $position = $s['positionid'] ?? '';
+        $assignee = (int)($s['assigneeid'] ?? 0);
+        $options = recipients::options(self::$actor, $department, $position);
+        unset($options['people'][$task['assigneeid']]);
+        $out = '<section class="uw-panel"><h3>Сменить исполнителя</h3>' . self::recipient_picker([
+            'form' => 'reassign', 'taskid' => $task['id'], 'view' => $s['view'], 'scope' => $s['scope'],
+        ], $options, $department, $position, $assignee);
+        if (isset($options['people'][$assignee])) {
+            $out .= self::form('reassign') . self::hidden('form', 'reassign') . self::hidden('taskid', $task['id'])
+                . self::hidden('version', $task['version']) . self::hidden('departmentid', $department)
+                . self::hidden('positionid', $position) . self::hidden('assigneeid', $assignee)
+                . '<p>Доступ к задаче и её обсуждению пересчитывается после назначения.</p>'
+                . self::buttons('Переназначить') . '</form>';
+        }
+        return $out . '</section>';
+    }
+
     private static function detail(int $id): string {
         global $CFG, $PAGE;
         $t = service::detail($id,self::$actor); $out='<section class="uw-panel uw-detail" id="uw-detail"><div class="uw-panel-head"><div><small>Задача #'.$id.'</small><h2>'.s($t['title']).'</h2></div>'
@@ -528,6 +554,10 @@ final class page {
                 $out.=self::form('revise').self::hidden('taskid',$id).self::hidden('version',$t['version'])
                     .'<h3>Изменить срок</h3><div class="uw-form-grid">'.self::field('Дата','duedate',calendar::date($t['dueat']?:time(),$t['timezone']),'date')
                     .self::field('Время','dueclock',userdate($t['dueat']?:time(),'%H:%M',$t['timezone']),'time').'</div>'.self::buttons('Сохранить срок').'</form>';
+            }
+            if ($t['canreassign']) {
+                $out .= self::$state['form'] === 'reassign' ? self::reassign_form($t)
+                    : self::link('Сменить исполнителя', ['taskid' => $id, 'form' => 'reassign']);
             }
             $out.='<details><summary>Отменить назначение</summary>'.self::form('transition').self::hidden('taskid',$id).self::hidden('version',$t['version'])
                 .self::hidden('taskaction','cancel').self::textarea('Причина отмены','comment').self::buttons('Отменить задачу').'</form></details>';

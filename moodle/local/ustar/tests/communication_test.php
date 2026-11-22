@@ -100,6 +100,7 @@ final class communication_test extends \advanced_testcase {
     }
 
     public function test_delta_changes_only_the_necessary_bodies_and_group_search_respects_membership(): void {
+        global $DB;
         $id = $this->group();
         $sender = (int)$this->users[0]->id;
         $recipient = (int)$this->users[1]->id;
@@ -112,6 +113,8 @@ final class communication_test extends \advanced_testcase {
         $this->assertSame([$second], array_column($update['messages'], 'id'));
         $this->assertSame([], communication::update($recipient, $id, $update['ids'], true)['messages']);
         $this->assertSame([$second], communication::conversation($recipient, $id, 0, 0, 'needle')['ids']);
+        $DB->set_field('messages', 'timecreated', time() - MINSECS, ['id' => $second]);
+        $this->assertSame('First body', communication::groups_by_title($recipient, 'Рабочая', 0)[0]['preview']);
         \core_message\api::delete_message($recipient, $second);
         $this->assertSame([$first], communication::update($recipient, $id, $update['ids'], true)['ids']);
         $this->setUser($this->users[3]);

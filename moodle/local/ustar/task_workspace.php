@@ -1,7 +1,7 @@
 <?php
 // Included only by the authenticated tasks.php entrypoint.
 defined('MOODLE_INTERNAL') || die();
-use local_ustar\task_workspace\{service, policy, calendar, page, personal_plan};
+use local_ustar\task_workspace\{service, policy, calendar, page, personal_plan, recipients};
 use local_ustar\{communication, learning_tasks, task_files};
 use local_ustar\briefing\commands;
 
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 optional_param('columntitle', '', PARAM_TEXT), optional_param('columncolor', 'neutral', PARAM_ALPHA));
             redirect(new moodle_url('/local/ustar/tasks.php', $returnparams));
         } else if ($action === 'create') {
-            \local_ustar\task_workspace\recipients::validate($actorid, required_param('assigneeid', PARAM_INT),
+            recipients::validate($actorid, required_param('assigneeid', PARAM_INT),
                 required_param('departmentid', PARAM_ALPHANUMEXT), required_param('positionid', PARAM_ALPHANUMEXT));
             $p = service::policy_for($actorid);
             $p['timezone'] = required_param('timezone', PARAM_RAW_TRIMMED);
@@ -112,6 +112,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$task['canedit']) { throw new required_capability_exception($context, 'local/ustar:viewteam', 'nopermissions', ''); }
             learning_tasks::revise($task['id'], $actorid, required_param('version', PARAM_INT), $task['assigneeid'],
                 calendar::timestamp(required_param('duedate', PARAM_RAW_TRIMMED), required_param('dueclock', PARAM_RAW_TRIMMED), $task['timezone']));
+        } else if ($action === 'reassign') {
+            $task = service::detail(required_param('taskid', PARAM_INT), $actorid);
+            if (!$task['canreassign']) {
+                service::deny();
+            }
+            $assignee = required_param('assigneeid', PARAM_INT);
+            recipients::validate($actorid, $assignee, required_param('departmentid', PARAM_ALPHANUMEXT),
+                required_param('positionid', PARAM_ALPHANUMEXT));
+            learning_tasks::revise($task['id'], $actorid, required_param('version', PARAM_INT), $assignee, $task['dueat']);
         } else if ($action === 'template') {
             $labels = required_param_array('fieldlabel', PARAM_TEXT);
             $types = required_param_array('fieldtype', PARAM_ALPHA);

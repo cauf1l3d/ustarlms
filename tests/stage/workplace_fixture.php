@@ -39,7 +39,9 @@ if (($argv[1] ?? '') === 'seed') {
         $username = 'work_' . $name;
         $id = user_create_user((object)['username' => $username, 'firstname' => 'Work', 'lastname' => ucfirst($name),
             'email' => $username . '@example.invalid', 'confirmed' => 1, 'auth' => 'manual',
+            'mnethostid' => $CFG->mnet_localhost_id,
             'password' => 'Fixture-Only-Password1!'], true, false);
+        unset_user_preference('auth_forcepasswordchange', $id);
         role_assign($role, $id, context_system::instance()->id);
         $users[$name] = (int)$id;
     }

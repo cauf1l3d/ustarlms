@@ -17,8 +17,8 @@ async function login(browser, username, viewport) {
     page.on('pageerror', error => { page.errors.push(error.message); });
     page.errors = [];
     await page.goto(base + '/login/index.php');
-    await page.locator('input[name="username"]').fill(username);
-    await page.locator('input[name="password"]').fill(password);
+    await page.locator('#username').fill(username);
+    await page.locator('#password').fill(password);
     await page.locator('#loginbtn').click();
     await page.waitForURL(url => !url.pathname.endsWith('/login/index.php'), {timeout: 15000});
     const response = await page.goto(base + '/local/ustar/messages.php');

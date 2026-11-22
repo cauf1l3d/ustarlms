@@ -228,8 +228,17 @@ final class service {
         $out['events'] = learning_tasks::events($taskid, $actorid, 50);
         $out['canreview'] = $out['meta'] ? self::can_review_record($task, $actorid) : (int)$task->assignerid === $actorid;
         $out['canedit'] = self::can_edit($task, $actorid);
+        $out['canreassign'] = $out['canedit'] && $task->status === 'assigned'
+            && self::assignment_can_change($taskid, $out['meta']);
         $out['reviewer'] = self::name($out['meta'] ? self::reviewer($task) : (int)$task->assignerid);
         return $out;
+    }
+
+    /** Revising the assignee must not redirect an existing report, learning assignment or series. */
+    public static function assignment_can_change(int $taskid, ?\stdClass $meta): bool {
+        global $DB;
+        return !$meta || (!$meta->seriesid && $meta->kind !== 'retraining'
+            && !$DB->record_exists('local_ustar_task_reports', ['taskid' => $taskid]));
     }
 
     public static function can_read_result(int $taskid, int $actorid, int $version): bool {

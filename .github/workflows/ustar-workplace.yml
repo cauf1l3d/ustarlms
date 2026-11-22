@@ -70,8 +70,6 @@ jobs:
             | tee artifacts/workplace-browser.log
           docker exec -e USTAR_DISPOSABLE_FIXTURE=workplace "$id" php /source/tests/stage/workplace_fixture.php inspect \
             | tee -a artifacts/workplace-browser.log
-          docker exec -e USTAR_DISPOSABLE_FIXTURE=workplace "$id" php /source/tests/stage/workplace_fixture.php reassign \
-            | tee -a artifacts/workplace-browser.log
           node tests/stage/workplace_browser.cjs artifacts/workplace-fixture.json "$RUNNER_TEMP/workplace-browser.json" reassign \
             | tee -a artifacts/workplace-browser.log
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

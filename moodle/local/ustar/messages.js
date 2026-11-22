@@ -42,6 +42,20 @@
         const atEnd = () => thread.scrollHeight - thread.scrollTop - thread.clientHeight < 85;
         const latest = () => { thread.scrollTop = thread.scrollHeight; };
         const ids = () => Array.from(items.children, item => item.dataset.messageId);
+        if (items) {
+            const replaceThumbnail = image => {
+                const label = document.createElement('span');
+                label.className = 'u-chat-download';
+                label.textContent = 'Открыть изображение';
+                image.replaceWith(label);
+            };
+            items.addEventListener('error', event => {
+                if (event.target.matches('[data-chat-thumbnail]')) replaceThumbnail(event.target);
+            }, true);
+            items.querySelectorAll('[data-chat-thumbnail]').forEach(image => {
+                if (image.complete && !image.naturalWidth) replaceThumbnail(image);
+            });
+        }
         if (canpoll) {
             latest();
             items.addEventListener('load', event => {

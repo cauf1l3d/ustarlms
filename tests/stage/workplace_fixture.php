@@ -7,7 +7,7 @@ define('CLI_SCRIPT', true);
 require '/stage/moodle/config.php';
 require_once($CFG->dirroot . '/user/lib.php');
 
-use local_ustar\{chat_files, chat_groups, learning_tasks};
+use local_ustar\{chat_files, chat_groups};
 use local_ustar\briefing\{meetings, service as briefing};
 use local_ustar\task_workspace\{calendar, discussion, service as tasks};
 
@@ -28,6 +28,7 @@ $PAGE->set_url(new moodle_url('/local/ustar/tasks.php'));
 
 if (($argv[1] ?? '') === 'seed') {
     assert_fixture((int)get_config('local_ustar', 'version') === 2026111800, 'Wrong briefing baseline');
+    set_config('theme', 'ustar');
     set_config('messaging', 1);
     set_config('messagingallusers', 1);
     $role = create_role('Workplace fixture', 'workplace_fixture', 'Disposable work migration role');
@@ -94,12 +95,6 @@ if ($argv[1] === 'inspect') {
             AND m.conversationid = :conversation", ['area' => chat_files::AREA, 'conversation' => $conversation->id]);
     assert_fixture(count($copies) === 2 && count(array_unique(array_column($copies, 'contenthash'))) === 1, 'Blob deduplication');
     echo "WORKPLACE_NATIVE_MESSAGE_AND_FILE_POOL=OK\n";
-    exit;
-}
-if ($argv[1] === 'reassign') {
-    $colleague = (int)$DB->get_field('user', 'id', ['username' => 'work_colleague'], MUST_EXIST);
-    learning_tasks::revise((int)$task->id, $admin, (int)$task->version, $colleague, (int)$task->dueat);
-    echo "WORKPLACE_CANONICAL_REASSIGNMENT=OK\n";
     exit;
 }
 throw new RuntimeException('Unknown fixture action.');

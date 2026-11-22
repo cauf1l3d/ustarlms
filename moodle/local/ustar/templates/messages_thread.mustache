@@ -8,7 +8,7 @@
     <small>{{sender}}</small><div>{{{text}}}</div>
     {{#attachments}}
     <div class="u-chat-attachment">
-        {{#image}}<a href="{{url}}" target="_blank" rel="noopener"><img src="{{previewurl}}" alt="{{name}}" loading="lazy" decoding="async"></a>{{/image}}
+        {{#image}}<a href="{{url}}" target="_blank" rel="noopener"><img src="{{previewurl}}" alt="{{name}}" loading="lazy" decoding="async" data-chat-thumbnail></a>{{/image}}
         {{#openimage}}<a class="u-chat-download" href="{{url}}" target="_blank" rel="noopener">Открыть изображение</a>{{/openimage}}
         {{#video}}<video controls playsinline preload="none" src="{{url}}" aria-label="{{name}}"></video>{{/video}}
         {{#audio}}<audio controls preload="none" src="{{url}}" aria-label="{{name}}"></audio>{{/audio}}

@@ -99,6 +99,25 @@ async function main() {
         const member = await login(browser, 'work_member', {width: 390, height: 844});
         if (afterReassignment) {
             const data = JSON.parse(fs.readFileSync(resultPath, 'utf8'));
+            const admin = await login(browser, 'admin');
+            const taskurl = base + '/local/ustar/tasks.php?taskid=' + fixture.task;
+            await admin.page.goto(taskurl);
+            await Promise.all([
+                admin.page.waitForURL(url => url.searchParams.get('form') === 'reassign'),
+                admin.page.getByRole('link', {name: 'Сменить исполнителя'}).click(),
+            ]);
+            const picker = admin.page.locator('[data-recipient-filter]');
+            for (const [name, value] of [['departmentid', 'retail'], ['positionid', 'retail_seller'],
+                ['assigneeid', String(fixture.colleague)]]) {
+                await Promise.all([
+                    admin.page.waitForURL(url => url.searchParams.get(name) === value),
+                    picker.locator('select[name=' + name + ']').selectOption(value),
+                ]);
+            }
+            await Promise.all([
+                admin.page.waitForURL(url => url.searchParams.get('saved') === '1'),
+                admin.page.getByRole('button', {name: 'Переназначить'}).click(),
+            ]);
             const denied = await post(member, {action: 'poll', taskid: fixture.task, delta: 1});
             assert.equal(denied.status(), 400);
             assert.equal((await member.context.request.get(data.download)).status(), 404);
@@ -116,22 +135,31 @@ async function main() {
         const outsider = await login(browser, 'work_outsider');
         let response = await admin.page.goto(base + '/local/ustar/messages.php?q=Archive+pilot');
         assert.equal(response.status(), 200);
-        await admin.page.getByRole('link', {name: /Archive pilot group/}).click();
+        await Promise.all([
+            admin.page.waitForURL(url => url.searchParams.get('conversationid') === String(fixture.chat)),
+            admin.page.getByRole('link', {name: /Archive pilot group/}).click(),
+        ]);
         const ids = await admin.page.locator('[data-chat-items] > [data-message-id]').evaluateAll(nodes =>
             nodes.map(node => Number(node.dataset.messageId)));
         assert.equal(ids.length, 50);
         const delta = await metrics(admin, {action: 'poll', conversationid: fixture.chat, delta: 1, 'known[]': ids});
         const full = await metrics(admin, {action: 'poll', conversationid: fixture.chat});
         assert.ok(delta.bytes < full.bytes * 0.1, 'Idle polling should not retransmit history');
-        await admin.page.getByRole('link', {name: /Предыдущие сообщения/}).click();
+        await Promise.all([
+            admin.page.waitForURL(url => url.searchParams.has('before')),
+            admin.page.getByRole('link', {name: /Предыдущие сообщения/}).click(),
+        ]);
         const earlier = await admin.page.locator('[data-chat-items] > [data-message-id]').evaluateAll(nodes =>
             nodes.map(node => Number(node.dataset.messageId)));
         assert.equal(earlier.length, 50);
         assert.ok(earlier.every(id => !ids.includes(id)));
         await admin.page.locator('[name=find]').fill('archive-search-key');
-        await admin.page.locator('.u-chat-thread-search').getByRole('button', {name: 'Найти'}).click();
+        await Promise.all([
+            admin.page.waitForURL(url => url.searchParams.get('find') === 'archive-search-key'),
+            admin.page.locator('.u-chat-thread-search').getByRole('button', {name: 'Найти'}).click(),
+        ]);
+        await admin.page.locator('[data-chat-items]').getByText(/History line 700/).waitFor();
         assert.equal(await admin.page.locator('[data-chat-items] > [data-message-id]').count(), 1);
-        await admin.page.getByText(/History line 700/).waitFor();
 
         // A new task discussion reuses the composer and updates an open peer without replacing the previous DOM.
         const taskurl = base + '/local/ustar/tasks.php?taskid=' + fixture.task;

@@ -222,8 +222,8 @@ final class learning_tasks {
                     throw new \required_capability_exception(\context_system::instance(), 'local/ustar:viewteam', 'nopermissions', '');
                 }
                 $meta = \local_ustar\task_workspace\service::meta($taskid);
-                if ($assigneeid !== (int)$task->assigneeid && ($meta->seriesid || $meta->kind === 'retraining'
-                        || $DB->record_exists('local_ustar_task_reports', ['taskid' => $taskid]))) {
+                if ($assigneeid !== (int)$task->assigneeid
+                        && !\local_ustar\task_workspace\service::assignment_can_change($taskid, $meta)) {
                     throw new \invalid_parameter_exception('Серию, учебное назначение или задачу с отчётом нельзя переназначить. Создайте новое поручение.');
                 }
                 if ($dueat && $DB->record_exists_sql("SELECT 1 FROM {local_ustar_task_meta} m JOIN {local_ustar_learning_tasks} child ON child.id=m.taskid

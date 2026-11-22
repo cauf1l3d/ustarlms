@@ -1,6 +1,6 @@
-<div class="u-product-page u-chat-page" data-chat-root data-conversation="{{conversationid}}" data-api="{{apiurl}}" data-sesskey="{{sesskey}}">
+<div class="u-product-page u-chat-page" data-chat-root data-conversation="{{conversationid}}" data-taskid="{{taskid}}" data-api="{{apiurl}}" data-sesskey="{{sesskey}}">
     <header class="u-product-head u-chat-page-head">
-        <div><p class="u-page-kicker">Общение</p><h1>Сообщения</h1><p>Рабочие диалоги, медиа и групповые чаты.</p></div>
+        <div><p class="u-page-kicker">Общение</p><h1>Сообщения</h1></div>
         {{#cancreate}}
         <details class="u-chat-create"><summary class="u-btn u-btn--primary">Новый групповой чат</summary>
             <form method="post" class="u-chat-group-form" data-chat-picker>
@@ -18,8 +18,15 @@
     {{#available}}
     <div class="u-messenger {{#hascurrent}}has-current{{/hascurrent}}">
         <aside class="u-messenger-list" aria-label="Диалоги">
+            <nav class="u-chat-tabs" aria-label="Тип чата">
+                <a class="u-btn u-btn--small" href="{{messagesurl}}" {{^taskmode}}aria-current="page"{{/taskmode}}>Диалоги</a>
+                <a class="u-btn u-btn--small" href="{{tasksurl}}" {{#taskmode}}aria-current="page"{{/taskmode}}>Чаты задач</a>
+            </nav>
             <form class="u-messenger-search" method="get">
-                {{{searchicon}}}<input type="search" name="q" value="{{searchq}}" placeholder="Найти сотрудника…" aria-label="Найти сотрудника">
+                {{{searchicon}}}
+                {{#taskmode}}<input type="hidden" name="taskchats" value="1">{{/taskmode}}
+                <input type="search" name="q" maxlength="120" value="{{searchq}}" placeholder="{{#taskmode}}Название задачи{{/taskmode}}{{^taskmode}}Сотрудник или группа…{{/taskmode}}"
+                    aria-label="{{#taskmode}}Название задачи{{/taskmode}}{{^taskmode}}Сотрудник или группа{{/taskmode}}">
                 <button class="u-btn u-btn--small" type="submit">Найти</button>
             </form>
             {{#searched}}<div class="u-messenger-search-results"><small>Начать диалог</small>
@@ -31,10 +38,14 @@
                 {{^searcherror}}{{^hassearchresults}}<p>Доступные коллеги не найдены. Введите хотя бы две буквы.</p>{{/hassearchresults}}{{/searcherror}}
             </div>{{/searched}}
             <div class="u-conversation-list">
-                {{#conversations}}<a href="{{url}}" data-conversation-id="{{id}}" class="u-conversation-row {{#hasunread}}has-unread{{/hasunread}}">
+                {{#filtered}}{{#hasconversations}}<small class="u-chat-list-label">{{#taskmode}}Задачи{{/taskmode}}{{^taskmode}}Группы{{/taskmode}}</small>{{/hasconversations}}{{/filtered}}
+                {{#conversations}}<a href="{{url}}" {{#taskmode}}data-chat-task-id="{{id}}"{{/taskmode}}{{^taskmode}}data-conversation-id="{{id}}"{{/taskmode}} class="u-conversation-row {{#hasunread}}has-unread{{/hasunread}}">
                     <div><strong>{{title}}</strong><span>{{preview}}</span></div><div><time>{{time}}</time>{{#hasunread}}<b>{{unread}}</b>{{/hasunread}}</div>
                 </a>{{/conversations}}
-                {{^hasconversations}}<div class="u-empty-mini">Диалогов пока нет. Найдите коллегу или создайте групповой чат.</div>{{/hasconversations}}
+                {{^hasconversations}}<div class="u-empty-mini">
+                    {{#filtered}}По этому названию чатов нет.{{/filtered}}
+                    {{^filtered}}{{#taskmode}}Обсуждения появятся после первого сообщения в задаче.{{/taskmode}}{{^taskmode}}Диалогов пока нет.{{/taskmode}}{{/filtered}}
+                </div>{{/hasconversations}}
                 {{#haspreviouschats}}<a class="u-chat-history" href="{{previouschatsurl}}">← Предыдущие диалоги</a>{{/haspreviouschats}}
                 {{#hasmorechats}}<a class="u-chat-history" href="{{morechatsurl}}">Следующие диалоги →</a>{{/hasmorechats}}
             </div>
@@ -44,6 +55,7 @@
             <header class="u-thread-head">
                 <a class="u-chat-back u-btn u-btn--small" href="{{listurl}}" aria-label="Назад к диалогам">← Диалоги</a>
                 <div><h2>{{title}}</h2>{{#isgroup}}<small>{{membercount}} участников</small>{{/isgroup}}</div>
+                {{#taskurl}}<a class="u-btn u-btn--small" href="{{taskurl}}">К задаче</a>{{/taskurl}}
                 {{#isgroup}}<details class="u-chat-members"><summary class="u-btn u-btn--small">Участники</summary><div class="u-chat-members-panel">
                     <p class="u-chat-hint">При добавлении коллеги ему доступна вся история. После удаления доступ к сообщениям и файлам закрывается.</p>
                     <div class="u-chat-member"><strong>Вы</strong></div>
@@ -61,22 +73,13 @@
                     </form>{{/canmanage}}
                 </div></details>{{/isgroup}}
             </header>
-            <div class="u-thread-messages" data-chat-messages data-older="{{isolder}}">{{> local_ustar/messages_thread}}</div>
-            {{#cansend}}
-            <form method="post" enctype="multipart/form-data" class="u-message-compose" data-chat-compose data-maxbytes="{{maxbytes}}" data-maxpostbytes="{{maxpostbytes}}">
-                <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="send"><input type="hidden" name="conversationid" value="{{id}}"><input type="hidden" name="requestid" value="{{requestid}}">
-                <textarea name="message" rows="2" maxlength="4000" placeholder="Написать сообщение…" aria-label="Сообщение">{{draft}}</textarea>
-                <div class="u-chat-uploads" data-chat-uploads></div><progress max="100" value="0" hidden aria-label="Загрузка вложений"></progress>
-                <div class="u-chat-compose-actions"><label class="u-btn u-chat-file-button">＋ Вложение<input type="file" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.mp4,.webm,.mov,.mp3,.m4a,.ogg,.wav,.pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip" aria-label="Прикрепить медиа или файлы"></label>
-                    <button class="u-btn u-btn--primary" type="submit">Отправить</button></div>
-                <p class="u-chat-hint">До 5 файлов по {{maxsize}}, всего до 50 МБ. Ctrl/⌘ + Enter — отправить.</p>
-                <p data-chat-status role="status" aria-live="polite"></p>
-            </form>{{/cansend}}
-            {{^cansend}}<div class="u-inline-notice">Чат доступен для чтения. Отправка сейчас недоступна.</div>{{/cansend}}
+            {{> local_ustar/chat_search}}
+            <div class="u-thread-messages" data-chat-messages data-older="{{isolder}}" data-search="{{issearch}}" aria-label="История чата">{{> local_ustar/messages_thread}}</div>
+            {{^isolder}}{{^issearch}}{{> local_ustar/chat_composer}}{{/issearch}}{{/isolder}}
             {{/current}}
-            {{^hascurrent}}<div class="u-thread-empty">{{{messageicon}}}<h2>Выберите диалог</h2><p>Или найдите коллегу, чтобы начать разговор.</p></div>{{/hascurrent}}
+            {{^hascurrent}}<div class="u-thread-empty">{{{messageicon}}}<h2>Выберите диалог</h2>{{^taskmode}}<p>Или найдите коллегу, чтобы начать разговор.</p>{{/taskmode}}</div>{{/hascurrent}}
         </section>
     </div>
-    <noscript><p>Для загрузки медиа и выбора участников включите JavaScript. Личные текстовые сообщения доступны и без него.</p></noscript>
+    <noscript><p>Включите JavaScript для автоматического обновления чата и выбора участников группы.</p></noscript>
     {{/available}}
 </div>

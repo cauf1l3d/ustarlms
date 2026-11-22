@@ -1,9 +1,9 @@
-# Активная работа · 18.11.2026
+# Активная работа · 22.11.2026
 
-TASK-BRIEFING. Пакет 17b61410, local1800. Обе базы и оба профиля Moodle проверены.
-[Ревью](../reviews/20261118/BRIEFING_KANBAN_RU.md), [установка](../../docs/BRIEFING_REVIEW_INSTALL_RU.md),
-[проверки](../runtime/briefing_review_qualification_20261118.json). Базы 422fbfb3 и b1df4f2b.
-Последняя подтверждённая владельцем база local1402/worker422fbfb3. Живая приёмка ожидается.
+WORKPLACE-MIGRATION, PR126/local2200. [Установка](../../docs/WORKPLACE_INSTALL_RU.md),
+[приёмка](../../docs/WORKPLACE_MIGRATION_RU.md), [проверки](../runtime/workplace_qualification_20261122.json).
+Архив собран и проверен. Владелец подтвердил local1800/theme0200 в БД server1.
+Ожидается сверка файлов, Connect и cron, затем установка и живая приёмка.
 
 ## Повторная привязка Telegram
 

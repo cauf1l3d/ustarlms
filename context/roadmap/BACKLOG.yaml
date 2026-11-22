@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-11-17'
+updated_at: '2026-11-22'
 canonical_branch: main
 source_baseline: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -939,7 +939,8 @@ tasks:
   - Оператор публикует текст для выбранного отдела, затем отдельно подтверждает получателей Telegram
 - id: TASK-BRIEFING
   title: Отчёты руководителей, переговорные и канбан в Задачах
-  status: native_qualified_owner_installation_pending
+  status: database_versions_confirmed_live_acceptance_pending
+  latest_owner_observation: context/runtime/workplace_qualification_20261122.json
   qualification: context/runtime/briefing_review_qualification_20261118.json
   previous_qualification: context/runtime/briefing_qualification_20261118.json
   reference: context/reviews/20261118/BRIEFING_KANBAN_RU.md
@@ -951,6 +952,21 @@ tasks:
   - Поручения из отчётов работают на доске существующих задач
   - Приглашённые видят встречи в календаре. Слоты переговорной, организатора и принятых приглашений проверяются на пересечения
   - Связанный Telegram показывает статусы и открывает авторизованные страницы Академии
+- id: WORKPLACE-MIGRATION
+  title: Рабочий контур Академии для переезда с Битрикс24
+  status: package_qualified_server_preflight_pending
+  depends_on: [TASK-BRIEFING]
+  reference: context/reviews/20261122/WORKPLACE_MIGRATION_RU.md
+  qualification: context/runtime/workplace_qualification_20261122.json
+  runbook: docs/WORKPLACE_MIGRATION_RU.md
+  install_runbook: docs/WORKPLACE_INSTALL_RU.md
+  pr: 126
+  acceptance:
+  - Обсуждение и вложения используют текущие права доступа к задаче
+  - Личный план применяет раскладку, срок и статус видны со стороны канонической задачи
+  - В чате без изменений передаётся компактное окно идентификаторов
+  - Проверка занятости скрывает подробности встреч, запись проверяет конфликт под замком
+  - Пилот проверяет реальные роли, нагрузку, полноту и контроль доступа при переносе
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

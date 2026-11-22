@@ -1,0 +1,22 @@
+{{#cansend}}
+<form method="post" action="{{posturl}}" enctype="multipart/form-data" class="u-message-compose" data-chat-compose
+    data-maxbytes="{{maxbytes}}" data-maxpostbytes="{{maxpostbytes}}">
+    <input type="hidden" name="sesskey" value="{{sesskey}}">
+    <input type="hidden" name="action" value="send">
+    {{#taskid}}<input type="hidden" name="taskid" value="{{taskid}}">{{/taskid}}
+    {{#id}}<input type="hidden" name="conversationid" value="{{id}}">{{/id}}
+    <input type="hidden" name="requestid" value="{{requestid}}">
+    <textarea name="message" rows="2" maxlength="4000" placeholder="Написать сообщение…" aria-label="Сообщение">{{draft}}</textarea>
+    <div class="u-chat-uploads" data-chat-uploads></div>
+    <progress max="100" value="0" hidden aria-label="Загрузка вложений"></progress>
+    <div class="u-chat-compose-actions">
+        <label class="u-btn u-chat-file-button">Вложение<input type="file" name="attachments[]" multiple
+            accept=".jpg,.jpeg,.png,.gif,.webp,.mp4,.webm,.mov,.mp3,.m4a,.ogg,.wav,.pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip"
+            aria-label="Прикрепить файлы"></label>
+        <button class="u-btn u-btn--primary" type="submit">Отправить</button>
+    </div>
+    <p class="u-chat-hint">До 5 файлов по {{maxsize}}, всего до 50 МБ.</p>
+    <p data-chat-status role="status"></p>
+</form>
+{{/cansend}}
+{{^cansend}}<p class="u-inline-notice">Чат доступен для чтения.</p>{{/cansend}}

@@ -106,6 +106,8 @@ final class provider implements
             'timecreated' => 'privacy:metadata:connect:time', 'expires' => 'privacy:metadata:connect:time',
         ], 'privacy:metadata:connect:acktokens');
         $collection->add_user_preference(\local_ustar\connect\notification_preferences::NAME, 'privacy:metadata:connect:preferences');
+        $collection->add_user_preference(\local_ustar\task_workspace\personal_plan::PREF, 'privacy:metadata:workplan');
+        $collection->add_subsystem_link('core_message', [], 'privacy:metadata:workchat');
         $collection->add_database_table('local_ustar_notify_delivery', [
             'notificationid' => 'privacy:metadata:connect:state', 'channel' => 'privacy:metadata:connect:provider',
             'status' => 'privacy:metadata:connect:state', 'attempts' => 'privacy:metadata:connect:state',
@@ -132,6 +134,7 @@ final class provider implements
 
     public static function get_contexts_for_userid(int $userid): contextlist {
         $contexts = new contextlist();
+        workplace::contexts($contexts, $userid);
         $contexts->add_from_sql('SELECT DISTINCT contextid FROM {files} WHERE component=:component AND filearea=:area AND userid=:uid',
             ['component'=>'local_ustar','area'=>'connectbotdraft','uid'=>$userid]);
         $contexts->add_from_sql('SELECT c.id FROM {context} c WHERE c.contextlevel = :level
@@ -173,6 +176,7 @@ final class provider implements
             return;
         }
         if ($userlist->get_context()->contextlevel !== CONTEXT_SYSTEM) { return; }
+        workplace::users($userlist);
         foreach (['local_ustar_conn_links', 'local_ustar_conn_challenges',
                 'local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups', 'local_ustar_conn_acktokens',
                 'local_ustar_conn_dialogs','local_ustar_conn_actions','local_ustar_conn_updates','local_ustar_route_access'] as $table) {
@@ -202,6 +206,7 @@ final class provider implements
 
     public static function export_user_preferences(int $userid): void {
         global $DB;
+        workplace::export_preference($userid);
         $raw = $DB->get_field('user_preferences', 'value', ['userid' => $userid,
             'name' => \local_ustar\connect\notification_preferences::NAME]);
         if ($raw !== false) {
@@ -221,6 +226,7 @@ final class provider implements
         }
         if (!in_array(\context_system::instance()->id, $contextlist->get_contextids())) { return; }
         $userid = (int)$contextlist->get_user()->id;
+        workplace::export($userid);
         foreach (self::BRIEFING_FIELDS as $table => $fields) {
             $rows = $DB->get_records($table, [$fields[0] => $userid], '', 'id,' . implode(',', $fields));
             if ($rows) {
@@ -351,6 +357,7 @@ final class provider implements
                 reward_shop::erase_in_transaction($userids);
                 self::erase_library($userids);
                 self::erase_briefing($userids);
+                workplace::erase($userids);
                 self::erase_bot($userids);
                 if ($userids === null) {
                     $DB->delete_records('local_ustar_workflow_events',['entitytype'=>'route_review_access']);

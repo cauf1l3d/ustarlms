@@ -63,7 +63,9 @@ final class service {
         if (!team_access::active_actor($actorid)) { self::deny(); }
         $where = "t.privacy = :privacy";
         $params = ['privacy' => learning_tasks::PRIVACY_ASSIGNED];
-        if ($scope === 'mine') { return [$where . ' AND t.assigneeid = :actor', $params + ['actor' => $actorid]]; }
+        if ($scope === 'mine' || ($scope === 'accessible' && !self::can_manage($actorid))) {
+            return [$where . ' AND t.assigneeid = :actor', $params + ['actor' => $actorid]];
+        }
         if (!self::can_manage($actorid)) { self::deny(); }
         if ($scope === 'outgoing') {
             $where .= ' AND t.assignerid = :creator'; $params['creator'] = $actorid;
@@ -71,6 +73,9 @@ final class service {
         if (!team_access::company($actorid)) {
             global $DB;
             $ids = array_values(array_unique(array_map('intval', organization_model::manager_scope($actorid)['userids'] ?? [])));
+            if ($scope === 'accessible') {
+                $ids[] = $actorid;
+            }
             if (!$ids) { return [$where . ' AND 1=0', $params]; }
             [$insql, $inparams] = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'scope');
             $where .= ' AND t.assigneeid ' . $insql; $params += $inparams;
@@ -223,8 +228,17 @@ final class service {
         $out['events'] = learning_tasks::events($taskid, $actorid, 50);
         $out['canreview'] = $out['meta'] ? self::can_review_record($task, $actorid) : (int)$task->assignerid === $actorid;
         $out['canedit'] = self::can_edit($task, $actorid);
+        $out['canreassign'] = $out['canedit'] && $task->status === 'assigned'
+            && self::assignment_can_change($taskid, $out['meta']);
         $out['reviewer'] = self::name($out['meta'] ? self::reviewer($task) : (int)$task->assignerid);
         return $out;
+    }
+
+    /** Revising the assignee must not redirect an existing report, learning assignment or series. */
+    public static function assignment_can_change(int $taskid, ?\stdClass $meta): bool {
+        global $DB;
+        return !$meta || (!$meta->seriesid && $meta->kind !== 'retraining'
+            && !$DB->record_exists('local_ustar_task_reports', ['taskid' => $taskid]));
     }
 
     public static function can_read_result(int $taskid, int $actorid, int $version): bool {

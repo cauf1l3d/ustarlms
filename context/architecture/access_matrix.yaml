@@ -625,6 +625,7 @@ capabilities:
   - moodle/local/ustar/classes/route_point_access.php
   - moodle/local/ustar/classes/route_tester.php
   - moodle/local/ustar/classes/target_core.php
+  - moodle/local/ustar/classes/task_workspace/personal_plan.php
   - moodle/local/ustar/cli/audit_feed_roles.php
   - moodle/local/ustar/cli/validate_2725.php
   - moodle/local/ustar/continue.php
@@ -642,6 +643,7 @@ capabilities:
   - moodle/local/ustar/home_layout.php
   - moodle/local/ustar/learning.php
   - moodle/local/ustar/lib.php
+  - moodle/local/ustar/meeting_availability.php
   - moodle/local/ustar/messages.php
   - moodle/local/ustar/messages_api.php
   - moodle/local/ustar/notebook.php
@@ -674,6 +676,7 @@ capabilities:
   - moodle/local/ustar/tests/organization_identity_test.php
   - moodle/local/ustar/tests/recruiter_access_test.php
   - moodle/local/ustar/tests/team_achievements_test.php
+  - moodle/local/ustar/tests/workplace_test.php
   - moodle/local/ustar/user_prefs.php
   - moodle/local/ustar/view.php
   - moodle/local/ustar/workspace.php
@@ -707,6 +710,7 @@ capabilities:
   - moodle/local/ustar/home_layout.php
   - moodle/local/ustar/learning.php
   - moodle/local/ustar/lib.php
+  - moodle/local/ustar/meeting_availability.php
   - moodle/local/ustar/messages.php
   - moodle/local/ustar/messages_api.php
   - moodle/local/ustar/notebook.php

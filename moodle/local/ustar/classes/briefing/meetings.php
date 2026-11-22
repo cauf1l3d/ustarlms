@@ -91,15 +91,24 @@ final class meetings {
         return $start < $anchor + service::MEETING_DURATION && $end > $anchor;
     }
 
-    public static function eligible_participants(int $actor): array {
+    public static function eligible_participants(int $actor, ?array $selected = null): array {
         global $DB;
         if (!self::can_book($actor)) {
             service::deny();
         }
+        if ($selected === []) {
+            return [];
+        }
         $out = [];
         $fields = 'id,' . implode(',', \core_user\fields::get_name_fields());
-        $users = $DB->get_records_select('user', 'id > 1 AND id <> :actor AND deleted = 0 AND suspended = 0',
-            ['actor' => $actor], 'lastname ASC, firstname ASC, id ASC', $fields);
+        $params = ['actor' => $actor];
+        $where = 'id > 1 AND id <> :actor AND deleted = 0 AND suspended = 0';
+        if ($selected !== null) {
+            [$in, $ids] = $DB->get_in_or_equal($selected, SQL_PARAMS_NAMED, 'invitee');
+            $where .= ' AND id ' . $in;
+            $params += $ids;
+        }
+        $users = $DB->get_records_select('user', $where, $params, 'lastname ASC, firstname ASC, id ASC', $fields);
         foreach ($users as $person) {
             if (accounts::participates((int)$person->id) && team_access::active_actor((int)$person->id)) {
                 $out[(int)$person->id] = fullname($person);
@@ -141,17 +150,69 @@ final class meetings {
             && (int)$row->endat === $proposed['endat'] && $saved === $participants;
     }
 
-    private static function assert_free(int $actor, int $start, int $end, int $exclude): void {
+    private static function busy_people(array $userids, int $start, int $end, int $exclude): array {
         global $DB;
-        $busy = $DB->record_exists_sql("SELECT 1
-             FROM {local_ustar_meetings} m
-        LEFT JOIN {local_ustar_meeting_members} p ON p.meetingid = m.id AND p.userid = :participant
-            WHERE (m.ownerid = :owner OR p.rsvp = 'accepted') AND m.cancelled = 0
-                  AND m.startat < :endtime AND m.endat > :starttime AND m.id <> :exclude",
-            ['participant' => $actor, 'owner' => $actor, 'starttime' => $start, 'endtime' => $end, 'exclude' => $exclude]);
-        if ($busy) {
+        [$owners, $ownerids] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'owner');
+        [$members, $memberids] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'member');
+        $busy = $DB->get_fieldset_sql("SELECT m.ownerid AS userid
+              FROM {local_ustar_meetings} m
+             WHERE m.ownerid $owners AND m.cancelled = 0
+                   AND m.startat < :ownerend AND m.endat > :ownerstart AND m.id <> :ownerexclude
+             UNION
+            SELECT p.userid
+              FROM {local_ustar_meeting_members} p
+              JOIN {local_ustar_meetings} m ON m.id = p.meetingid
+             WHERE p.userid $members AND p.rsvp = 'accepted' AND m.cancelled = 0
+                   AND m.startat < :memberend AND m.endat > :memberstart AND m.id <> :memberexclude",
+            $ownerids + $memberids + ['ownerstart' => $start, 'ownerend' => $end, 'ownerexclude' => $exclude,
+                'memberstart' => $start, 'memberend' => $end, 'memberexclude' => $exclude]);
+        return array_fill_keys($busy, true);
+    }
+
+    private static function assert_free(int $actor, int $start, int $end, int $exclude): void {
+        if (self::busy_people([$actor], $start, $end, $exclude)) {
             throw new input_error('В вашем календаре на это время уже есть встреча.');
         }
+    }
+
+    private static function room_busy(int $roomid, int $start, int $end, int $exclude): bool {
+        global $DB;
+        return ((int)get_config('local_ustar', 'briefing_room') === $roomid && self::overlaps_briefing($start, $end))
+            || $DB->record_exists_select('local_ustar_meetings',
+                'roomid = :room AND cancelled = 0 AND startat < :endtime AND endat > :starttime AND id <> :meeting',
+                ['room' => $roomid, 'endtime' => $end, 'starttime' => $start, 'meeting' => $exclude]);
+    }
+
+    private static function validate_interval(int $start, int $end): void {
+        $now = time();
+        if ($start <= $now || $start > $now + YEARSECS || $end <= $start || $end - $start > DAYSECS) {
+            throw new input_error('Выберите будущий интервал до 24 часов в пределах года.');
+        }
+    }
+
+    /** A privacy-preserving preflight. The booking lock still arbitrates all writes. */
+    public static function availability(int $actor, int $meetingid, int $roomid, int $start, int $end, array $selected): array {
+        tasks::actor($actor);
+        if (!self::can_book($actor) || ($meetingid && !self::detail($actor, $meetingid)['owner'])) {
+            service::deny();
+        }
+        self::validate_interval($start, $end);
+        $ids = array_values(array_unique(array_map('intval', $selected)));
+        if (count($ids) > 100) {
+            throw new input_error('Добавьте до 100 участников.');
+        }
+        $eligible = self::eligible_participants($actor, $ids);
+        if (count($eligible) !== count($ids)) {
+            throw new input_error('Проверьте состав участников. Часть сотрудников недоступна.');
+        }
+        $room = $roomid ? (self::rooms($actor)[$roomid] ?? null) : null;
+        if ($roomid && !$room) {
+            throw new input_error('Переговорная больше недоступна.');
+        }
+        $busy = self::busy_people([$actor, ...$ids], $start, $end, $meetingid);
+        return ['organizerfree' => !isset($busy[$actor]), 'busy' => array_values(array_intersect_key($eligible, $busy)),
+            'roomfree' => !$roomid || !self::room_busy($roomid, $start, $end, $meetingid),
+            'capacityok' => !$room || !$room->capacity || count($ids) + 1 <= $room->capacity];
     }
 
     public static function save(int $actor, int $id, int $revision, string $requestkey, string $title, string $agenda,
@@ -202,10 +263,7 @@ final class meetings {
                 }
                 $previous = null;
             }
-            $now = time();
-            if ($start <= $now || $start > $now + YEARSECS || $end <= $start || $end - $start > DAYSECS) {
-                throw new input_error('Выберите будущий интервал до 24 часов в пределах года.');
-            }
+            self::validate_interval($start, $end);
             foreach ($participants as $participant) {
                 if (!accounts::participates($participant) || !team_access::active_actor($participant)) {
                     throw new input_error('Один из участников больше не работает в Академии.');
@@ -216,10 +274,7 @@ final class meetings {
                 if ($room->capacity && count($participants) + 1 > $room->capacity) {
                     throw new input_error('Участников больше, чем мест в переговорной.');
                 }
-                if (((int)get_config('local_ustar', 'briefing_room') === $roomid && self::overlaps_briefing($start, $end))
-                        || $DB->record_exists_select('local_ustar_meetings',
-                            'roomid = :room AND cancelled = 0 AND startat < :endtime AND endat > :starttime AND id <> :meeting',
-                            ['room' => $roomid, 'endtime' => $end, 'starttime' => $start, 'meeting' => $id])) {
+                if (self::room_busy($roomid, $start, $end, $id)) {
                     throw new input_error('Переговорная занята в выбранное время.');
                 }
             }

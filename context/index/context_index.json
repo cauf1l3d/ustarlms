@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 3466,
-      "sha256": "e995c982e199237b0f03eef1a4fcc00e2298d38ef96828833db93cd71be229a6"
+      "size": 3789,
+      "sha256": "d1e57d4a5b72e2e2ad43ab4616d142931fe32887bf171484371905c124c106db"
     },
     {
       "path": "context/agents/astra.md",
@@ -18,8 +18,8 @@
     {
       "path": "context/architecture/access_matrix.yaml",
       "domain": "architecture",
-      "size": 37501,
-      "sha256": "1f5d7c4d840328769a357e86fb15930c41b36f9b94a40ac72267e68a45c21874"
+      "size": 37709,
+      "sha256": "9b5106b51465dee31c1ff0f2edf30b2655c9e1fb5803527082e6b47d23f2389d"
     },
     {
       "path": "context/architecture/boundaries.md",
@@ -558,8 +558,8 @@
     {
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
-      "size": 110661,
-      "sha256": "6588bd96dcdfb80c55bfa74da1fe648ea4f3fc03d93afc691b884d7a4f57879f"
+      "size": 112599,
+      "sha256": "3bee9ad1c0aefb1704d913de9c920a4a8167be73738147a007827b37f46107d4"
     },
     {
       "path": "context/code_map/feed_media_development_source.json",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 13586,
-      "sha256": "0bac79312d6bd77904c8826e5f468e7a7ff1d71ebd234e5c1da0fe345290a950"
+      "size": 13749,
+      "sha256": "f459583d67f3d628f86c85171f86c07573d2c7e13113ae65776a55c5071686a6"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -724,6 +724,12 @@
       "sha256": "907a91be4062304cdcd008546cdb279f6fbdac46c676fac57a8a6aa8e5431156"
     },
     {
+      "path": "context/decisions/0020-workplace-task-discussions.md",
+      "domain": "decisions",
+      "size": 3877,
+      "sha256": "6a108cb76649f45a74ffa3105fd3bd483dcb9e8a92934249aa2b53014f52f613"
+    },
+    {
       "path": "context/decisions/ADR-0001-git-source-of-truth.md",
       "domain": "decisions",
       "size": 156,
@@ -774,8 +780,8 @@
     {
       "path": "context/decisions/README.md",
       "domain": "decisions",
-      "size": 713,
-      "sha256": "c24a4263bbb28dfbbe79986d48e47620aa3547eb4d6a313d8b4cb86ebf527360"
+      "size": 815,
+      "sha256": "0ed7a8636119e5463c6fc088dea1c8ff4ac581abc44d1a7eee1c704d62262b20"
     },
     {
       "path": "context/design/README.md",
@@ -840,8 +846,8 @@
     {
       "path": "context/domains/messaging.yaml",
       "domain": "domains",
-      "size": 898,
-      "sha256": "4241c6d2d535a2572bb1bfa7305d3517fea58183fe163796b9627d971f08c798"
+      "size": 1093,
+      "sha256": "3d019ac9e87f8b5422fe309c86a33a5605b4511fb7177eb1646bab28bcb77e68"
     },
     {
       "path": "context/domains/mobile_web.yaml",
@@ -870,8 +876,8 @@
     {
       "path": "context/domains/work.yaml",
       "domain": "domains",
-      "size": 2369,
-      "sha256": "9791cda37a6730455c16c0167aefadfbc8206ff2d46dec2fd8b8277318c1d9b3"
+      "size": 2554,
+      "sha256": "8706e194ff51a10e8159528e3ab1b3cf55c0c6f7a4fa5afba6b96ff32b1c38f4"
     },
     {
       "path": "context/memory/decisions.log.md",
@@ -894,8 +900,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 4063,
-      "sha256": "58bbc4659ff313571e99e1012609e225c7414211baca2a12d10c73db7acf0741"
+      "size": 4441,
+      "sha256": "e23f7c3dc197c589f0de58d2cb24d28caa16853f86d113b1891f3ee7b098073e"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1594,6 +1600,12 @@
       "sha256": "2237a9de0b50e88566ac860c2c3a38ceaedd0a57ce11da38f16d6bd4152759b6"
     },
     {
+      "path": "context/reviews/20261122/WORKPLACE_MIGRATION_RU.md",
+      "domain": "reviews",
+      "size": 10401,
+      "sha256": "845653521bf9c5891f65a59a582028887ad0c0c9924fa00fc51a67e5791fa7ec"
+    },
+    {
       "path": "context/roadmap/ACCEPTED_RISKS.yaml",
       "domain": "roadmap",
       "size": 983,
@@ -1620,8 +1632,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 56895,
-      "sha256": "cd5c8bfc81d19007e3d794e917e6f40a9428a6d5b0648bec81a35f64bb511efb"
+      "size": 58163,
+      "sha256": "3eaf6614365d1ceb64e60c67a41b1c080873a86239a3b0439a4c00c1fd2d64ab"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1674,8 +1686,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22774,
-      "sha256": "6c65b461d718d216b48c7e70471e70f11526e081d7516c861688e9959923e7c0"
+      "size": 23105,
+      "sha256": "a88ed0bd39be5e2d942012cd38411e687010589b2e81aab413b5a8ea9da98cf4"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1764,8 +1776,8 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 6724,
-      "sha256": "2fb6f7ce7fbf47704043054d060b74b56542029e6453c9e60d902c502a0310ce"
+      "size": 7193,
+      "sha256": "5e2337977a919a9e44f8dc70a8443880d068f16a186c990034e3540da02a3064"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
@@ -4072,6 +4084,12 @@
       "sha256": "a403fd534873b4ea112af3e90db7f020f9d40e460081874fd5fda45954e8a4a5"
     },
     {
+      "path": "context/runtime/workplace_qualification_20261122.json",
+      "domain": "runtime",
+      "size": 4547,
+      "sha256": "ea37e49a8534c29f4e457f9ab5f41c6793f27adbcf029ea29c083302b6ee77c4"
+    },
+    {
       "path": "context/state/platform.yaml",
       "domain": "state",
       "size": 187,
@@ -4140,8 +4158,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3826,
-      "sha256": "5c5693eadcbc1efdda2fddb6d84586b2503bee356b8090d113cc69392b7e5d63"
+      "size": 3798,
+      "sha256": "73da79d4d12102fe44740b17af72bd08f00d2c69caaedc33c5dc91c057096aa3"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

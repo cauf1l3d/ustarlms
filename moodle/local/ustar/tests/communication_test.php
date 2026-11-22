@@ -98,6 +98,28 @@ final class communication_test extends \advanced_testcase {
         \core_message\api::delete_message($this->users[1]->id, $ids[74]);
         $this->assertFalse(chat_files::can_read($this->users[1]->id, $ids[74]));
     }
+
+    public function test_delta_changes_only_the_necessary_bodies_and_group_search_respects_membership(): void {
+        global $DB;
+        $id = $this->group();
+        $sender = (int)$this->users[0]->id;
+        $recipient = (int)$this->users[1]->id;
+        $first = communication::send($sender, $id, 'First body');
+        $second = communication::send($sender, $id, 'Search needle');
+        $this->setUser($this->users[1]);
+        $this->assertSame([$id], array_column(communication::groups_by_title($recipient, 'Рабочая', 0), 'id'));
+        $update = communication::update($recipient, $id, [$first], true);
+        $this->assertSame([$first, $second], $update['ids']);
+        $this->assertSame([$second], array_column($update['messages'], 'id'));
+        $this->assertSame([], communication::update($recipient, $id, $update['ids'], true)['messages']);
+        $this->assertSame([$second], communication::conversation($recipient, $id, 0, 0, 'needle')['ids']);
+        $DB->set_field('messages', 'timecreated', time() - MINSECS, ['id' => $second]);
+        $this->assertSame('First body', communication::groups_by_title($recipient, 'Рабочая', 0)[0]['preview']);
+        \core_message\api::delete_message($recipient, $second);
+        $this->assertSame([$first], communication::update($recipient, $id, $update['ids'], true)['ids']);
+        $this->setUser($this->users[3]);
+        $this->assertSame([], communication::groups_by_title((int)$this->users[3]->id, 'Рабочая', 0));
+    }
     public function test_outsider_cannot_read_even_with_admin_authority(): void {
         $id = $this->group(); $this->setAdminUser();
         $this->expectException(\invalid_parameter_exception::class);

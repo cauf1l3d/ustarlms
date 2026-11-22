@@ -220,6 +220,16 @@ async function main() {
         await edit.locator('[role=status]').filter({hasText: 'Переговорная занята'}).waitFor();
         assert.match(await edit.locator('[role=status]').textContent(), /Заняты Work Member/);
         assert.doesNotMatch(await edit.locator('[role=status]').textContent(), /Private agenda|Private appointment name/);
+        await edit.locator('[name=agenda]').fill('А'.repeat(11999) + 'Я');
+        assert.match(await edit.locator('[role=status]').textContent(), /Переговорная занята/);
+        await Promise.all([
+            admin.page.waitForNavigation({waitUntil: 'domcontentloaded'}),
+            edit.getByRole('button', {name: 'Создать встречу'}).click(),
+        ]);
+        const feedback = admin.page.locator('[role=alert], .alert').filter({hasText: 'Переговорная занята в выбранное время'});
+        await feedback.first().waitFor();
+        assert.equal((await edit.locator('[name=agenda]').inputValue()).length, 12000);
+        await edit.locator('[name=agenda]').fill('');
         const cannotCheck = await post(outsider, {starttime: fixture.date + 'T11:10', endtime: fixture.date + 'T11:40',
             roomid: fixture.room, 'participants[]': [fixture.member]}, 'meeting_availability.php');
         assert.equal(cannotCheck.status(), 403);
@@ -228,7 +238,7 @@ async function main() {
         await edit.locator('[name=endtime]').fill(fixture.date + 'T15:00');
         await edit.getByRole('button', {name: 'Проверить занятость'}).click();
         await edit.locator('[role=status]').filter({hasText: 'Пересечений по выбранному времени нет'}).waitFor();
-        await edit.getByRole('button', {name: 'Отправить приглашения'}).click();
+        await edit.getByRole('button', {name: 'Создать встречу'}).click();
         await admin.page.getByRole('heading', {name: 'New workplace meeting'}).waitFor();
         await member.page.goto(base + '/local/ustar/tasks.php?view=calendar&month=' + fixture.date.slice(0, 7));
         await member.page.locator('.uw-calendar').getByRole('link', {name: /New workplace meeting/}).waitFor();
@@ -248,6 +258,21 @@ async function main() {
         await lane.getByRole('link', {name: 'Workplace review fixture'}).waitFor();
         assert.match(await lane.innerText(), /Назначена/);
         assert.ok(await member.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2), 'Phone page should not overflow');
+        const minutesUrl = base + '/local/ustar/tasks.php?view=briefing&briefsection=minutes';
+        await admin.page.goto(minutesUrl);
+        const secondTab = await admin.context.newPage();
+        await secondTab.goto(minutesUrl);
+        await admin.page.locator('[name=briefminutes]').fill('Согласованный план');
+        await Promise.all([
+            admin.page.waitForURL(url => url.searchParams.get('saved') === '1'),
+            admin.page.getByRole('button', {name: 'Сохранить протокол'}).click(),
+        ]);
+        await secondTab.locator('[name=briefminutes]').fill('Мои заметки со встречи');
+        await secondTab.getByRole('button', {name: 'Сохранить протокол'}).click();
+        await secondTab.getByRole('heading', {name: 'Ваша несохранённая версия'}).waitFor();
+        assert.equal(await secondTab.locator('textarea[readonly]').inputValue(), 'Мои заметки со встречи');
+        assert.equal(await secondTab.locator('[name=briefminutes]').inputValue(), 'Согласованный план');
+        await secondTab.close();
         assert.deepEqual(admin.page.errors, []);
         assert.deepEqual(member.page.errors, []);
 

@@ -38,6 +38,31 @@ final class workplace_test extends \advanced_testcase {
             ['kind' => 'task', 'title' => 'Scoped discussion', 'date' => gmdate('Y-m-d', time() + DAYSECS), 'clock' => '14:00']);
     }
 
+    public function test_meeting_directory_matches_workforce_policy_at_constant_query_count(): void {
+        global $DB;
+        $admin = (int)get_admin()->id;
+        $first = \local_ustar\briefing\meetings::eligible_participants($admin);
+        $start = $DB->perf_get_reads();
+        \local_ustar\briefing\meetings::eligible_participants($admin);
+        $single = $DB->perf_get_reads() - $start;
+        $users = [];
+        foreach (range(1, 12) as $i) {
+            $users[] = $this->getDataGenerator()->create_user();
+        }
+        accounts::set_type($users[0]->id, accounts::TYPE_TEST);
+        accounts::set_type($users[1]->id, accounts::TYPE_SERVICE);
+        employment::register_pending($users[2]->id);
+        $DB->set_field('user', 'suspended', 1, ['id' => $users[3]->id]);
+        $start = $DB->perf_get_reads();
+        $many = \local_ustar\briefing\meetings::eligible_participants($admin);
+        $this->assertLessThanOrEqual($single + 1, $DB->perf_get_reads() - $start);
+        $this->assertCount(count($first) + 8, $many);
+        foreach ($users as $user) {
+            $this->assertSame(accounts::participates($user->id), isset($many[$user->id]));
+        }
+        $this->assertArrayNotHasKey($admin, $many);
+    }
+
     public function test_discussion_is_native_and_revoked_on_reassignment(): void {
         global $DB;
         $admin = (int)get_admin()->id;

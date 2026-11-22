@@ -2,7 +2,7 @@ name: USTAR workplace migration
 
 on:
   push:
-    branches: [feat/workplace-migration-20261122]
+    branches: [feat/workplace-migration-20261122, fix/workplace-review-20261123]
     paths:
       - '.github/workflows/ustar-workplace.yml'
       - 'moodle/**'

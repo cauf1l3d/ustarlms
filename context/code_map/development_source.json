@@ -4,11 +4,11 @@
   "deployment_evidence": null,
   "baseline_commit": "5cc02944e1059ba015afcc7c5e8068ca56c34a92",
   "component_tree_ids": {
-    "moodle/local/ustar": "1633166485cc666f4ec6582517d39b58219b941f",
+    "moodle/local/ustar": "e5f05399176292688f960303fa9ded5d4f382eff",
     "moodle/theme/ustar": "2d25fa0311947fb67eb45d78304bf486f33ad3b2"
   },
   "versions": {
-    "local_ustar": 2026112200,
+    "local_ustar": 2026112300,
     "theme_ustar": 2026110200
   },
   "counts": {
@@ -226,11 +226,11 @@
     },
     {
       "path": "moodle/local/ustar/classes/briefing/meetings.php",
-      "sha256": "24819cad29239603496a2bfd926fc379a8eee9bbb5ec76e3a52003658e65dfae"
+      "sha256": "d95444b1a6c0a710c748d1688067a57d5bd1ca96a9d27a4119c8e11a1ffc3893"
     },
     {
       "path": "moodle/local/ustar/classes/briefing/page.php",
-      "sha256": "9c97eef4318b977a4301f128fa20971528aea6a828481f6da5bdc04ae245d029"
+      "sha256": "b5fea730adba84a39196164fa53a6f5232c0cdc3ab592f2162b58fc8a1e45c62"
     },
     {
       "path": "moodle/local/ustar/classes/briefing/reminders.php",
@@ -238,7 +238,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/briefing/service.php",
-      "sha256": "d603ac9c7139c5312c24d9cac0db64bf01333c9314b2f656f8671b919e32acb0"
+      "sha256": "699a6ba969df8cbdf5f809ce6d77f76ae41a20771154ead00ac2034cd3e403fc"
     },
     {
       "path": "moodle/local/ustar/classes/capabilities.php",
@@ -274,7 +274,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/chat_history.php",
-      "sha256": "0fc0e625844cde9c63745390d97833281e0968b8957c4d065083ca851ceaa39f"
+      "sha256": "cd09567ffdd4f1cdc425a8f5085c200ba3d8beda7368d7f4bff120b5e99d2bbb"
     },
     {
       "path": "moodle/local/ustar/classes/chat_input_error.php",
@@ -294,7 +294,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/communication.php",
-      "sha256": "f8ad96423ef7b19bd6f73489316fd26867c4aafc1e1d429154a9a765a28763ed"
+      "sha256": "69e32ab0a888bcebf84e60a5b23ea334fbf28ead7aa66383a396a4a1de08e90d"
     },
     {
       "path": "moodle/local/ustar/classes/company_hierarchy.php",
@@ -1102,7 +1102,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/task_workspace/page.php",
-      "sha256": "f07814a4dd016e8020de3f160573c33710180aff4480766fee7042f1776edfdb"
+      "sha256": "f966ccc483069d19f07d731466286be5e67f9c565995999ad09f0092268752c1"
     },
     {
       "path": "moodle/local/ustar/classes/task_workspace/personal_plan.php",
@@ -1470,7 +1470,7 @@
     },
     {
       "path": "moodle/local/ustar/db/install.xml",
-      "sha256": "a4a7b47f7ca909eb32cb03f31acd1b0274c518d1aac871ebc5abe79f0debb888"
+      "sha256": "0faac62f7670a1274da14f77d301eee301caf0a49c6b160e0d36c0a8cf5d5c38"
     },
     {
       "path": "moodle/local/ustar/db/library_defaults.php",
@@ -1486,7 +1486,7 @@
     },
     {
       "path": "moodle/local/ustar/db/upgrade.php",
-      "sha256": "c1d16d8d722fdc881c33147d6c0dbc444c444b5f9056553b912b6c55966d3490"
+      "sha256": "2bb45f1e750c6dd85957fae598ec83047b61c2f94f31f769808972da1fe6c537"
     },
     {
       "path": "moodle/local/ustar/development_assessment.php",
@@ -1678,7 +1678,7 @@
     },
     {
       "path": "moodle/local/ustar/messages.js",
-      "sha256": "f84d107a0309abfff9bab014633ba2d4e5aea43732b0101cffec584689807272"
+      "sha256": "9f035561af563029aa9aea513bc2347c32d11105d3cc8079c23b4b387b1f9754"
     },
     {
       "path": "moodle/local/ustar/messages.php",
@@ -1998,11 +1998,11 @@
     },
     {
       "path": "moodle/local/ustar/task_workspace.js",
-      "sha256": "becdf70ff1a2c168f977436ff361f3caa471596c295c9cb9869bc74c31d81153"
+      "sha256": "6675290ed045041b238ccb7121637fe9ebb05c86912e04fdd492cc4570792632"
     },
     {
       "path": "moodle/local/ustar/task_workspace.php",
-      "sha256": "3936cdfb59c9c2759eb2fe62d9f2aa35153f7a47e5addc0e14254004579e4aa9"
+      "sha256": "28aeef3ebb1bf208b2515b21b5729479957753fa669d8b5a0d3743f95947d1f6"
     },
     {
       "path": "moodle/local/ustar/tasks.php",
@@ -2338,7 +2338,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/communication_test.php",
-      "sha256": "a976a95f9bef27a529645a86f255e741ef0ef9a93a9423d652218cf4a31c7e4a"
+      "sha256": "ec72b09c7b0fa77993939666e4ebd6d9a03cd7998c1f1863be4a702f4ccddd75"
     },
     {
       "path": "moodle/local/ustar/tests/competition_studio_test.php",
@@ -2566,7 +2566,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/workplace_test.php",
-      "sha256": "f5827abd3257da473a2cb8d4c4ea771ba6920c8d535056fef09f045e5e52d49c"
+      "sha256": "2933f58cddee43911223e6cf0c4f07e6daf97162432fdf2c2af77db66684c72e"
     },
     {
       "path": "moodle/local/ustar/user_prefs.php",
@@ -2574,7 +2574,7 @@
     },
     {
       "path": "moodle/local/ustar/version.php",
-      "sha256": "082bdbdef735c62f6f0121b8bebd8468df26c9a8492c24f7c0709afa4477d9e3"
+      "sha256": "d6e0c18d3c742d0c06d59ab4df834aadc2691187517a2847037d56cbb0558c7e"
     },
     {
       "path": "moodle/local/ustar/view.php",

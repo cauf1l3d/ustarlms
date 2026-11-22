@@ -120,6 +120,25 @@ final class communication_test extends \advanced_testcase {
         $this->setUser($this->users[3]);
         $this->assertSame([], communication::groups_by_title((int)$this->users[3]->id, 'Рабочая', 0));
     }
+    public function test_search_pages_share_one_visible_history_limit(): void {
+        global $DB;
+        $chat = $this->group();
+        $author = (int)$this->users[0]->id;
+        $batch = [];
+        for ($i = 0; $i < 2002; $i++) {
+            $text = $i < 2 || $i >= 1951 ? 'findme' : 'other';
+            $batch[] = ['useridfrom' => $author, 'conversationid' => $chat, 'fullmessage' => $text,
+                'fullmessageformat' => FORMAT_PLAIN, 'smallmessage' => $text, 'timecreated' => 100];
+        }
+        $DB->insert_records('messages', $batch);
+        $first = chat_history::window($author, $chat, query: 'findme');
+        $this->assertCount(50, $first['ids']);
+        $this->assertTrue($first['hasolder']);
+        $second = chat_history::window($author, $chat, before: $first['oldest'], query: 'findme');
+        $this->assertCount(1, $second['ids']);
+        $this->assertFalse($second['hasolder']);
+    }
+
     public function test_outsider_cannot_read_even_with_admin_authority(): void {
         $id = $this->group(); $this->setAdminUser();
         $this->expectException(\invalid_parameter_exception::class);

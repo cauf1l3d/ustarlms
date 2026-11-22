@@ -53,7 +53,8 @@
         const status = panel.querySelector('[role="status"]');
         let pending = null;
         button.hidden = false;
-        form.addEventListener('input', () => {
+        form.addEventListener('input', event => {
+            if (!['starttime', 'endtime', 'roomid', 'participants[]'].includes(event.target.name)) return;
             if (pending) pending.abort();
             status.textContent = '';
         });
@@ -75,6 +76,7 @@
                 const response = await fetch(panel.dataset.meetingCheck, {method: 'POST', credentials: 'same-origin',
                     signal: controller.signal, headers: {Accept: 'application/json'}, body});
                 const value = await response.json();
+                if (controller.signal.aborted) return;
                 if (!response.ok || !value.ok) {
                     status.textContent = value.error || 'Не удалось проверить расписание.';
                     return;

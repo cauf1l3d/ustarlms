@@ -174,6 +174,7 @@ final class page {
     private function summary(string $week, bool $present): string {
         $departments = service::departments();
         $rows = service::summary($this->actor, $week);
+        $canfollowup = !$present && tasks::can_manage($this->actor);
         $submitted = count(array_filter($rows, static fn($row) => $row['submittedat']));
         $archived = service::week_start($week) + service::MEETING_DURATION <= time();
         $out = '<section class="uw-panel uw-brief-summary' . ($present ? ' is-presentation' : '') . '"><div class="uw-panel-head">'
@@ -201,7 +202,7 @@ final class page {
             if ($row['report']) {
                 $schema = service::decode($row['report']->schemajson);
                 $out .= self::answer_list($schema['fields'], service::decode($row['report']->answersjson));
-                if (!$present && tasks::can_manage($this->actor)) {
+                if ($canfollowup) {
                     $out .= '<div class="uw-actions uw-brief-controls">' . $this->followup((int)$row['report']->id, $week) . '</div>';
                 }
             }
@@ -398,10 +399,10 @@ final class page {
         $defaultstart = max(calendar::timestamp($date, '10:00', service::ZONE),
             (int)(ceil((time() + 1) / (30 * MINSECS)) * 30 * MINSECS));
         $input = $this->state['input'] ?? [];
-        $selected = array_map('intval', $input['participants'] ?? array_column($detail['participants'] ?? [], 'userid'));
+        $selected = array_map('intval', $input ? ($input['participants'] ?? []) : array_column($detail['participants'] ?? [], 'userid'));
         $task = !$row && !empty($this->state['taskref'])
             ? discussion::readable($this->actor, (int)$this->state['taskref']) : null;
-        if ($task && !$input) {
+        if ($task && !$input && (int)$task->assigneeid !== $this->actor) {
             $selected = [(int)$task->assigneeid];
         }
         $out = '<section class="uw-panel"><div class="uw-panel-head"><h2>' . ($row ? 'Редактировать встречу' : 'Назначить встречу')
@@ -424,7 +425,7 @@ final class page {
         return $out . '</div></fieldset><div class="uw-meeting-check" data-meeting-check="' . $api->out() . '" data-meeting-id="'
             . (int)($row->id ?? 0) . '"><button type="button" class="uw-btn" hidden>Проверить занятость</button>'
             . '<div class="uw-meeting-check-result" role="status"></div></div><div class="uw-actions">'
-            . self::button($row ? 'Сохранить встречу' : 'Отправить приглашения')
+            . self::button($row ? 'Сохранить встречу' : 'Создать встречу')
             . '</div></form></section>';
     }
 

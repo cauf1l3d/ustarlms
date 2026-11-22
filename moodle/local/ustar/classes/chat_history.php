@@ -49,6 +49,17 @@ final class chat_history {
         $where = "m.conversationid = :conversation AND NOT EXISTS (
             SELECT 1 FROM {message_user_actions} d
              WHERE d.messageid = m.id AND d.userid = :deleteduser AND d.action = :deleteaction)";
+        $source = '{messages} m';
+        if ($query !== '') {
+            // Keep the same bounded candidate window on every result page.
+            $source = "(SELECT m.id, m.useridfrom, m.timecreated, m.smallmessage, m.fullmessage
+                          FROM {messages} m WHERE $where
+                      ORDER BY m.timecreated DESC, m.id DESC LIMIT 2000) m";
+            $where = '(' . $DB->sql_like('m.smallmessage', ':smallquery', false)
+                . ' OR ' . $DB->sql_like('m.fullmessage', ':fullquery', false) . ')';
+            $pattern = '%' . $DB->sql_like_escape($query) . '%';
+            $params += ['smallquery' => $pattern, 'fullquery' => $pattern];
+        }
         if ($before) {
             $anchor = $DB->get_record('messages', ['id' => $before, 'conversationid' => $conversationid], 'timecreated');
             if (!$anchor) {
@@ -57,24 +68,8 @@ final class chat_history {
             $where .= ' AND (m.timecreated < :older OR (m.timecreated = :same AND m.id < :before))';
             $params += ['older' => $anchor->timecreated, 'same' => $anchor->timecreated, 'before' => $before];
         }
-        if ($query !== '') {
-            // Search only the latest 2,000 visible candidates in this authorized conversation.
-            // Older history is still accessible through the normal cursor.
-            $recent = $DB->get_records_sql("SELECT m.id FROM {messages} m WHERE $where
-                ORDER BY m.timecreated DESC, m.id DESC",
-                array_diff_key($params, ['readuser' => true, 'readaction' => true]), 0, 2000);
-            if (!$recent) {
-                return $empty;
-            }
-            [$insql, $inparams] = $DB->get_in_or_equal(array_keys($recent), SQL_PARAMS_NAMED, 'searched');
-            $where = 'm.id ' . $insql . ' AND (' . $DB->sql_like('m.smallmessage', ':smallquery', false)
-                . ' OR ' . $DB->sql_like('m.fullmessage', ':fullquery', false) . ')';
-            $pattern = '%' . $DB->sql_like_escape($query) . '%';
-            $params = array_intersect_key($params, ['readuser' => true, 'readaction' => true])
-                + $inparams + ['smallquery' => $pattern, 'fullquery' => $pattern];
-        }
         $keys = $DB->get_records_sql("SELECT m.id, m.useridfrom, a.id AS readid
-              FROM {messages} m
+              FROM $source
          LEFT JOIN {message_user_actions} a ON a.messageid = m.id AND a.userid = :readuser AND a.action = :readaction
              WHERE $where
           ORDER BY m.timecreated DESC, m.id DESC", $params, $offset, self::PAGE_SIZE + 1);

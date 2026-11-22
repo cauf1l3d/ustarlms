@@ -14,7 +14,7 @@ defined('MOODLE_INTERNAL') || die();
  * presentation layer.
  */
 final class communication {
-    public const ASSET_VERSION = '20261122-workchat';
+    public const ASSET_VERSION = '20261123-workchat';
 
     public static function counts(int $userid): array {
         global $DB;

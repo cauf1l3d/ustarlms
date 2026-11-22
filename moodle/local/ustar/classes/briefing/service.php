@@ -319,6 +319,10 @@ final class service {
         }
         self::write('minutes:' . $week, static function() use ($DB, $actor, $week, $revision, $content) {
             $old = self::minutes($actor, $week);
+            if ($old && (int)$old->userid === $actor && (int)$old->revision === $revision + 1
+                    && (string)$old->content === trim($content)) {
+                return;
+            }
             self::assert_revision($old, $revision);
             $record = (object)['weekkey' => $week, 'userid' => $actor, 'content' => trim($content),
                 'revision' => $revision + 1, 'timemodified' => time()];

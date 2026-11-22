@@ -3,7 +3,7 @@ updated_at: '2026-11-22'
 project: USTAR Academy
 stage: workplace_migration
 stage_label: Workplace migration pilot for tasks, chats, files and meetings
-current_activity: Workplace 1.22.0-rc.1 with task discussions, personal planning, incremental chat and meeting availability is in draft PR 126. Pilot, production load verification and the Bitrix24 data transfer are pending.
+current_activity: Workplace 1.22.0-rc.1 archive is qualified in PR 126. The owner observed DB plugin versions 2026111800 and 2026110200 on server1. Exact preflight, installation, pilot, production load verification and Bitrix24 data transfer are pending.
 entrypoint: START_HERE.md
 next_task: WORKPLACE-MIGRATION
 ready_tasks: []
@@ -23,6 +23,7 @@ code_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
+  latest_workplace_baseline_observation: context/runtime/workplace_qualification_20261122.json
   latest_operator_and_briefing_owner_observation: context/runtime/briefing_qualification_20261118.json
   latest_connect_invitation_owner_receipt: context/runtime/connect_invitations_owner_install_20261114.json
   latest_connect_checklist_widget_owner_receipt: context/runtime/connect_checklist_widget_owner_pilot_20261114.json
@@ -402,16 +403,18 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: workplace_development_candidate_owner_pilot_pending
+  status: workplace_package_qualified_server_preflight_pending
   review: context/reviews/20261122/WORKPLACE_MIGRATION_RU.md
   qualification: context/runtime/workplace_qualification_20261122.json
   previous_qualification: context/runtime/briefing_review_qualification_20261118.json
   application_commit: 331891426febf692d68598bbcbabe6fa3b7d9e7a
+  installer_commit: d482f58c6962cd2d807506b79c287c61cec676e6
   worker_commit: 17b6141007d65207d9b594138753d28b39ab70bf
   tested_upgrade_baseline: 17b6141007d65207d9b594138753d28b39ab70bf
   source_pr: 126
   predecessor_pr: 125
-  runbook: docs/WORKPLACE_MIGRATION_RU.md
+  runbook: docs/WORKPLACE_INSTALL_RU.md
+  pilot_runbook: docs/WORKPLACE_MIGRATION_RU.md
   branch: feat/workplace-migration-20261122
   deployed: false
   local_ustar_version: 2026112200

@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 3732,
-      "sha256": "f5d1b183080199d5a3710318ff9d0df392ab90b6a87fc3e95bf48b151cb5273f"
+      "size": 3789,
+      "sha256": "d1e57d4a5b72e2e2ad43ab4616d142931fe32887bf171484371905c124c106db"
     },
     {
       "path": "context/agents/astra.md",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 13614,
-      "sha256": "3c815e67032f0774a9959b7a4232aa1f6a7bada7db77e6204d155fc68a889f6a"
+      "size": 13749,
+      "sha256": "f459583d67f3d628f86c85171f86c07573d2c7e13113ae65776a55c5071686a6"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -900,8 +900,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 4327,
-      "sha256": "92278ee27453453c2d7fadf52d59cca550f9b7da2158230a6f84b5e296be9283"
+      "size": 4441,
+      "sha256": "e23f7c3dc197c589f0de58d2cb24d28caa16853f86d113b1891f3ee7b098073e"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1632,8 +1632,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 58024,
-      "sha256": "126fb2b1016e677ce6b8082a9648909cd593ada2527c285e195fb52b67be27a0"
+      "size": 58163,
+      "sha256": "3eaf6614365d1ceb64e60c67a41b1c080873a86239a3b0439a4c00c1fd2d64ab"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1686,8 +1686,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22871,
-      "sha256": "d9d928d6476d86ebf0c0907f7c73495969b33b458db51d0661afdbccd6f5e90b"
+      "size": 23105,
+      "sha256": "a88ed0bd39be5e2d942012cd38411e687010589b2e81aab413b5a8ea9da98cf4"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1776,8 +1776,8 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 6724,
-      "sha256": "2fb6f7ce7fbf47704043054d060b74b56542029e6453c9e60d902c502a0310ce"
+      "size": 7193,
+      "sha256": "5e2337977a919a9e44f8dc70a8443880d068f16a186c990034e3540da02a3064"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
@@ -4086,8 +4086,8 @@
     {
       "path": "context/runtime/workplace_qualification_20261122.json",
       "domain": "runtime",
-      "size": 2655,
-      "sha256": "943a92dccc3e1b075b77cd3fc304a82b3b49df2c0c7b476d30db1f7f4af2a1fd"
+      "size": 4547,
+      "sha256": "ea37e49a8534c29f4e457f9ab5f41c6793f27adbcf029ea29c083302b6ee77c4"
     },
     {
       "path": "context/state/platform.yaml",
@@ -4158,8 +4158,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3830,
-      "sha256": "8a38f2ccb08570a96ef39a263e92d9dbb899bb9223eb370ba6f88aa3997a0d3c"
+      "size": 3798,
+      "sha256": "73da79d4d12102fe44740b17af72bd08f00d2c69caaedc33c5dc91c057096aa3"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

@@ -1,7 +1,8 @@
 # Навигация по контексту
 
 - [Рабочий контур перед переездом с Битрикс24](reviews/20261122/WORKPLACE_MIGRATION_RU.md),
-  [приёмка и данные](../docs/WORKPLACE_MIGRATION_RU.md), [проверки](runtime/workplace_qualification_20261122.json).
+  [установка](../docs/WORKPLACE_INSTALL_RU.md), [приёмка и данные](../docs/WORKPLACE_MIGRATION_RU.md),
+  [проверки](runtime/workplace_qualification_20261122.json).
 
 - [Брифинг и канбан, установка b1df4f2b](../docs/BRIEFING_INSTALL_RU.md), [проверки](runtime/briefing_qualification_20261118.json).
 

@@ -939,7 +939,8 @@ tasks:
   - Оператор публикует текст для выбранного отдела, затем отдельно подтверждает получателей Telegram
 - id: TASK-BRIEFING
   title: Отчёты руководителей, переговорные и канбан в Задачах
-  status: native_qualified_owner_installation_pending
+  status: database_versions_confirmed_live_acceptance_pending
+  latest_owner_observation: context/runtime/workplace_qualification_20261122.json
   qualification: context/runtime/briefing_review_qualification_20261118.json
   previous_qualification: context/runtime/briefing_qualification_20261118.json
   reference: context/reviews/20261118/BRIEFING_KANBAN_RU.md
@@ -953,11 +954,12 @@ tasks:
   - Связанный Telegram показывает статусы и открывает авторизованные страницы Академии
 - id: WORKPLACE-MIGRATION
   title: Рабочий контур Академии для переезда с Битрикс24
-  status: development_candidate_owner_pilot_pending
+  status: package_qualified_server_preflight_pending
   depends_on: [TASK-BRIEFING]
   reference: context/reviews/20261122/WORKPLACE_MIGRATION_RU.md
   qualification: context/runtime/workplace_qualification_20261122.json
   runbook: docs/WORKPLACE_MIGRATION_RU.md
+  install_runbook: docs/WORKPLACE_INSTALL_RU.md
   pr: 126
   acceptance:
   - Обсуждение и вложения используют текущие права доступа к задаче

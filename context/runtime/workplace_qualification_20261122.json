@@ -64,6 +64,51 @@
       "Moodle 5.1.8 / PostgreSQL 16.15": 137230688670
     }
   },
+  "browser_fixture_regression_rerun": {
+    "source_commit": "d9e9fdf4df31c701ad3f428f5754555dc2bea7bb",
+    "run_id": 45053168014,
+    "moodle_5_1_1_job": {"id": 137302546266, "result": "success"},
+    "moodle_5_1_8_job": {"id": 137302545958, "result": "success"},
+    "scope": "native_install_upgrade_policies_and_browser; identical_application_tree_with_login_fixture_timing_fix"
+  },
+  "server1_baseline_observation": {
+    "date_msk": "2026-11-22",
+    "source": "owner_read_only_query_of_mdl_config_plugins",
+    "local_ustar": 2026111800,
+    "theme_ustar": 2026110200,
+    "exact_application_worker_and_cron_preflight": "pending"
+  },
+  "installer": {
+    "source_commit": "d482f58c6962cd2d807506b79c287c61cec676e6",
+    "archive": "ustar-workplace-33189142.tar.gz",
+    "archive_sha256": "4dfb36f02c6f611683c8a52aa95f292d54054efe3c9c986e227b543883ce7c15",
+    "archive_bytes": 225644,
+    "application_files": 36,
+    "members": 39,
+    "build_workflow_run": 45031747297,
+    "build_job": 137236636012,
+    "artifact": 14757826856,
+    "artifact_zip_sha256": "9a012bb42c806d70b21768d9deba006443c1ff0b3fffc7233a5535274d9f41ae",
+    "zip_crc_verified": true,
+    "local_rebuild_matches_ci_bytes": true,
+    "retained_archive_matches_ci_bytes": true,
+    "baseline_app_theme_and_worker_match_delivered_briefing_archive": true,
+    "operator_scenarios_passed": 6,
+    "native_archive_install": {
+      "moodle": "5.1.8",
+      "postgresql": "17.11",
+      "from_local_ustar": 2026111800,
+      "to_local_ustar": 2026112200,
+      "schema_parity": true,
+      "preserved_fixture_messages": 700,
+      "post_install_login_http": 200,
+      "source_backup_sha_verification": "pass",
+      "postgres_restore_to_separate_database": "pass",
+      "restored_local_ustar": 2026111800,
+      "host_service_and_cron_boundary": "simulated"
+    },
+    "runbook": "docs/WORKPLACE_INSTALL_RU.md"
+  },
   "owner_deployed": false,
   "production_measurements": "pending",
   "bitrix_data_import": "pending_scope_and_export"

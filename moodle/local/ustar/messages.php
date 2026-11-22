@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__ . '/../../config.php');
 
-use local_ustar\{chat_groups, chat_history, chat_view, communication, task_files};
+use local_ustar\{chat_groups, chat_history, chat_input_error, chat_view, communication, task_files};
 use local_ustar\task_workspace\discussion;
 
 require_login();
@@ -50,7 +50,7 @@ if ($available && $_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         redirect($taskid ? discussion::url($taskid) : communication::conversation_url($conversationid));
     } catch (invalid_parameter_exception | required_capability_exception $e) {
-        $notice = $e->getMessage();
+        $notice = $e instanceof chat_input_error ? $e->notice : $e->getMessage();
     }
 }
 

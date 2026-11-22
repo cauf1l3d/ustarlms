@@ -24,7 +24,7 @@ final class chat_files {
             return [];
         }
         if (count($uploads) > self::MAX_FILES) {
-            throw new \invalid_parameter_exception('К сообщению можно приложить не более 5 файлов.');
+            throw new chat_input_error('К сообщению можно приложить не более 5 файлов.');
         }
         $total = 0;
         $names = [];
@@ -41,18 +41,18 @@ final class chat_files {
                     || !in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'webm', 'mov',
                         'mp3', 'm4a', 'ogg', 'wav', 'pdf', 'txt', 'csv', 'doc', 'docx', 'xls', 'xlsx',
                         'ppt', 'pptx', 'zip'], true)) {
-                throw new \invalid_parameter_exception('Недопустимый файл или превышен допустимый размер.');
+                throw new chat_input_error('Недопустимый файл или превышен допустимый размер.');
             }
             $total += $size;
             if ($total > self::TOTAL_BYTES) {
-                throw new \invalid_parameter_exception('Общий размер вложений сообщения не должен превышать 50 МБ.');
+                throw new chat_input_error('Общий размер вложений сообщения не должен превышать 50 МБ.');
             }
             $names[$filename] = true;
             $detected = $detector->file($path);
             $images = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png',
                 'gif' => 'image/gif', 'webp' => 'image/webp'];
             if (isset($images[$extension]) && ($detected !== $images[$extension] || !getimagesize($path))) {
-                throw new \invalid_parameter_exception('Изображение повреждено или имеет неверный формат.');
+                throw new chat_input_error('Изображение повреждено или имеет неверный формат.');
             }
             $media = ['mp4' => 'video/mp4', 'webm' => 'video/webm', 'mov' => 'video/quicktime',
                 'mp3' => 'audio/mpeg', 'm4a' => 'audio/mp4', 'ogg' => 'audio/ogg', 'wav' => 'audio/x-wav'];
@@ -63,7 +63,7 @@ final class chat_files {
                         'm4a' => ['audio/mp4', 'audio/x-m4a', 'video/mp4'],
                         default => [$media[$extension]],
                     }, true)) {
-                throw new \invalid_parameter_exception('Медиафайл повреждён или имеет неверный формат.');
+                throw new chat_input_error('Медиафайл повреждён или имеет неверный формат.');
             }
             $upload['mimetype'] = $images[$extension] ?? $media[$extension] ?? 'application/octet-stream';
         }

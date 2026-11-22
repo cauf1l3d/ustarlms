@@ -181,6 +181,12 @@ async function main() {
         await member.page.locator('[data-chat-items]').getByText('Fixture files', {exact: true}).waitFor({timeout: 25000});
         assert.equal(await first.getAttribute('data-fixture-stable'), 'true');
         await compose(admin, 'Fixture duplicate content', [{name: 'workplace-large.txt', mimeType: 'text/plain', buffer: file}]);
+        const invalidImage = await admin.context.request.post(base + '/local/ustar/messages_api.php', {multipart: {
+            sesskey: admin.sesskey, action: 'send', taskid: fixture.task, requestid: 'fixtureinvalidupload00000001',
+            'attachments[]': {name: 'invalid.png', mimeType: 'image/png', buffer: Buffer.from('Synthetic invalid format')},
+        }});
+        assert.equal(invalidImage.status(), 400);
+        assert.match((await invalidImage.json()).error, /Изображение повреждено/);
 
         const thumbnail = new URL(await admin.page.locator('img[alt="preview-fixture.png"]').getAttribute('src'), base).href;
         const download = new URL(await admin.page.getByRole('link', {name: /workplace-large.txt/}).first().getAttribute('href'), base).href;

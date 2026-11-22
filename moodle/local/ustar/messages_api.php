@@ -2,7 +2,7 @@
 define('AJAX_SCRIPT', true);
 require_once(__DIR__ . '/../../config.php');
 
-use local_ustar\{chat_history, communication, task_files};
+use local_ustar\{chat_history, chat_input_error, communication, task_files};
 use local_ustar\task_workspace\discussion;
 
 require_login();
@@ -70,7 +70,11 @@ try {
     $scanner = $e instanceof \core\antivirus\scanner_exception;
     $session = $e instanceof moodle_exception && $e->errorcode === 'invalidsesskey';
     http_response_code($known || $scanner || $session ? 400 : 500);
-    echo json_encode(['ok' => false, 'error' => $known ? $e->getMessage()
-        : ($scanner ? 'Антивирусная проверка не разрешила отправку вложения.'
-            : 'Действие не выполнено. Проверьте подключение и доступ к чату.')]);
+    $message = match (true) {
+        $e instanceof chat_input_error => $e->notice,
+        $scanner => 'Антивирусная проверка не разрешила отправку вложения.',
+        $known => $e->getMessage(),
+        default => 'Действие не выполнено. Проверьте подключение и доступ к чату.',
+    };
+    echo json_encode(['ok' => false, 'error' => $message], JSON_UNESCAPED_UNICODE);
 }

@@ -49,3 +49,8 @@ scenarios:
 coverage_limit: Selected command/read paths only; complete endpoint, file access and
   actor/scope negative-path audit remains open
 source_reconciled_at: '2026-11-01'
+development_extension:
+  reviewed_at: '2026-11-22'
+  pr: 126
+  policy: context/decisions/0020-workplace-task-discussions.md
+  review: context/reviews/20261122/WORKPLACE_MIGRATION_RU.md

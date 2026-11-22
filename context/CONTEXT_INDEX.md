@@ -1,5 +1,8 @@
 # Навигация по контексту
 
+- [Рабочий контур перед переездом с Битрикс24](reviews/20261122/WORKPLACE_MIGRATION_RU.md),
+  [приёмка и данные](../docs/WORKPLACE_MIGRATION_RU.md), [проверки](runtime/workplace_qualification_20261122.json).
+
 - [Брифинг и канбан, установка b1df4f2b](../docs/BRIEFING_INSTALL_RU.md), [проверки](runtime/briefing_qualification_20261118.json).
 
 - [Оператор Академии в Telegram](../docs/CONNECT_OPERATOR_RU.md), [проверки](runtime/connect_operator_qualification_20261115.json).

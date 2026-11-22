@@ -20,3 +20,8 @@ entry_points:
 - moodle/local/ustar/messages_api.php
 - moodle/local/ustar/notifications.php
 source_reconciled_at: '2026-11-01'
+development_extension:
+  reviewed_at: '2026-11-22'
+  pr: 126
+  policy: context/decisions/0020-workplace-task-discussions.md
+  qualification: context/runtime/workplace_qualification_20261122.json

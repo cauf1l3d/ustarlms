@@ -1,0 +1,70 @@
+{
+  "date_msk": "2026-11-22",
+  "classification": "isolated_synthetic_tests",
+  "source_pr": 126,
+  "application_commit": "331891426febf692d68598bbcbabe6fa3b7d9e7a",
+  "upgrade_baseline": "17b6141007d65207d9b594138753d28b39ab70bf",
+  "local_ustar": 2026112200,
+  "theme_ustar": 2026110200,
+  "local_stage": {
+    "moodle": "5.1.8",
+    "php": "8.4.27",
+    "postgresql": "17.11",
+    "phpunit_tests": 104,
+    "phpunit_assertions": 425,
+    "phpunit_result": "pass",
+    "schema_install_upgrade_repeat_parity": "pass",
+    "authenticated_http": {
+      "sample_commit": "bf2299f9504a38dbc8d79f2cf7d0e350968caa2a",
+      "task_chat_multipart_upload": "pass",
+      "message_search_and_personal_plan_render": "pass",
+      "meeting_availability_and_privacy": "pass",
+      "task_reassignment_through_card": "pass",
+      "revocation_for_threads_originals_and_previews": "pass",
+      "fixture_conversation_rows": 700,
+      "poll_window": 50,
+      "samples_per_variant": 16,
+      "full_poll_bytes": 28305,
+      "unchanged_delta_bytes": 350,
+      "full_poll_p50_ms": 101.7,
+      "unchanged_delta_p50_ms": 54.7,
+      "original_image_bytes": 990918,
+      "thumbnail_bytes": 182659
+    },
+    "chromium": {
+      "sample_commit": "331891426febf692d68598bbcbabe6fa3b7d9e7a",
+      "version": "156.0.8078.79",
+      "theme": "ustar",
+      "mobile_and_desktop": "pass",
+      "task_chat_live_update_and_pagination": "pass",
+      "canonical_file_hash_reuse": "pass",
+      "invalid_upload_explained": "pass",
+      "meeting_form_and_calendar": "pass",
+      "personal_plan_does_not_change_task": "pass",
+      "reassignment_filters_and_acl": "pass",
+      "fixture_conversation_rows": 700,
+      "samples_per_variant": 16,
+      "full_poll_bytes": 28305,
+      "unchanged_delta_bytes": 350,
+      "full_poll_p50_ms": 105,
+      "unchanged_delta_p50_ms": 60,
+      "original_image_bytes": 1136241,
+      "thumbnail_bytes": 182683
+    },
+    "connect_python_regression": {"passed": 53, "skipped": 4},
+    "concurrent_room_booking": {"parallel_requests": 2, "committed": 1, "rejected_for_conflict": 1},
+    "file_limit_http": {"uploaded_and_downloaded_sha256_match_mib": 24, "atomic_aggregate_rejection_mib": 51}
+  },
+  "github_actions": {
+    "run_id": 45029794590,
+    "run_url": "https://github.com/cauf1l3d/ustarlms/actions/runs/45029794590",
+    "workflow": ".github/workflows/ustar-workplace.yml",
+    "profiles": {
+      "Moodle 5.1.1 / PostgreSQL 16": 137230688906,
+      "Moodle 5.1.8 / PostgreSQL 16.15": 137230688670
+    }
+  },
+  "owner_deployed": false,
+  "production_measurements": "pending",
+  "bitrix_data_import": "pending_scope_and_export"
+}

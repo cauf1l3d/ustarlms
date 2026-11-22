@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-18'
+updated_at: '2026-11-22'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -142,11 +142,10 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Briefing and Kanban review release 17b61410 (local_ustar 2026111800) passed
-    both native profiles and archive verification over exact operator 422fbfb3 and
-    briefing b1df4f2b baselines. Owner preflight, installation and live acceptance
-    are pending.
-  next_task: TASK-BRIEFING
+  activity: Workplace 1.22.0-rc.1 with task discussions, personal planning, incremental
+    chat and meeting availability is in draft PR 126. Pilot, production load verification
+    and the Bitrix24 data transfer are pending.
+  next_task: WORKPLACE-MIGRATION
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -205,6 +204,7 @@ current_work:
     STUDIO-SCORM-01: in_progress
     TASK-BRIEFING: native_qualified_owner_installation_pending
     TECH-01: planned
+    WORKPLACE-MIGRATION: development_candidate_owner_pilot_pending
 server_facts:
   status: partial
   snapshot: context/runtime/server-facts/20261017T013924Z-285497b0

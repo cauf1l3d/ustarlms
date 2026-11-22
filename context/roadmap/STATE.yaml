@@ -1,11 +1,11 @@
 schema_version: 2
-updated_at: '2026-11-18'
+updated_at: '2026-11-22'
 project: USTAR Academy
-stage: task_briefing
-stage_label: Briefing, meeting rooms and task Kanban
-current_activity: Briefing and Kanban review release 17b61410 (local_ustar 2026111800) passed both native profiles and archive verification over exact operator 422fbfb3 and briefing b1df4f2b baselines. Owner preflight, installation and live acceptance are pending.
+stage: workplace_migration
+stage_label: Workplace migration pilot for tasks, chats, files and meetings
+current_activity: Workplace 1.22.0-rc.1 with task discussions, personal planning, incremental chat and meeting availability is in draft PR 126. Pilot, production load verification and the Bitrix24 data transfer are pending.
 entrypoint: START_HERE.md
-next_task: TASK-BRIEFING
+next_task: WORKPLACE-MIGRATION
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -148,6 +148,9 @@ audit:
     performance or full accessibility certification.
   previous_reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
 next_agent_read:
+- context/reviews/20261122/WORKPLACE_MIGRATION_RU.md
+- docs/WORKPLACE_MIGRATION_RU.md
+- context/runtime/workplace_qualification_20261122.json
 - context/reviews/20261103/AUDIT_RU.md
 - docs/superpowers/plans/2026-11-03-project-audit-remediation.md
 - context/tasks/ACTIVE.md
@@ -399,20 +402,20 @@ latest_source_integration: context/runtime/connect_feed_integration_order_202611
 previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.json
 development_candidate:
   manifest: context/code_map/development_source.json
-  status: native_qualified_owner_installation_pending
-  review: context/reviews/20261118/BRIEFING_KANBAN_RU.md
-  qualification: context/runtime/briefing_review_qualification_20261118.json
-  previous_qualification: context/runtime/briefing_qualification_20261118.json
-  application_commit: 17b6141007d65207d9b594138753d28b39ab70bf
+  status: workplace_development_candidate_owner_pilot_pending
+  review: context/reviews/20261122/WORKPLACE_MIGRATION_RU.md
+  qualification: context/runtime/workplace_qualification_20261122.json
+  previous_qualification: context/runtime/briefing_review_qualification_20261118.json
+  application_commit: 331891426febf692d68598bbcbabe6fa3b7d9e7a
   worker_commit: 17b6141007d65207d9b594138753d28b39ab70bf
-  deployment_baseline: 422fbfb324db3b18447b61bc1c86a8a5481fe3e0
-  compatible_deployment_baseline: b1df4f2b234b6b79260eb3bbd2423fc0daf7ef79
-  source_pr: 125
-  runbook: docs/BRIEFING_REVIEW_INSTALL_RU.md
-  branch: feat/task-briefing-kanban-20261117
+  tested_upgrade_baseline: 17b6141007d65207d9b594138753d28b39ab70bf
+  source_pr: 126
+  predecessor_pr: 125
+  runbook: docs/WORKPLACE_MIGRATION_RU.md
+  branch: feat/workplace-migration-20261122
   deployed: false
-  local_ustar_version: 2026111800
+  local_ustar_version: 2026112200
   theme_ustar_version: 2026110200
-  schema_changed: true
-  worker_rollout: true
-  development_base: c13da3fb383650994c7d20268d72854c70d7767f
+  schema_changed: false
+  worker_rollout: false
+  development_base: 0843d68bdfc54ced18c9d6aaa5c58d4e0be18a3e

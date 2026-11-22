@@ -223,7 +223,8 @@ async function main() {
         await edit.locator('[name=agenda]').fill('А'.repeat(11999) + 'Я');
         assert.match(await edit.locator('[role=status]').textContent(), /Переговорная занята/);
         await edit.getByRole('button', {name: 'Создать встречу'}).click();
-        await admin.page.getByText('Переговорная занята в выбранное время.', {exact: true}).waitFor();
+        assert.match(await admin.page.locator('[role=alert], .alert').allTextContents().then(items => items.join(' ')),
+            /Переговорная занята в выбранное время/);
         assert.equal((await edit.locator('[name=agenda]').inputValue()).length, 12000);
         await edit.locator('[name=agenda]').fill('');
         const cannotCheck = await post(outsider, {starttime: fixture.date + 'T11:10', endtime: fixture.date + 'T11:40',

@@ -222,9 +222,12 @@ async function main() {
         assert.doesNotMatch(await edit.locator('[role=status]').textContent(), /Private agenda|Private appointment name/);
         await edit.locator('[name=agenda]').fill('А'.repeat(11999) + 'Я');
         assert.match(await edit.locator('[role=status]').textContent(), /Переговорная занята/);
-        await edit.getByRole('button', {name: 'Создать встречу'}).click();
-        assert.match(await admin.page.locator('[role=alert], .alert').allTextContents().then(items => items.join(' ')),
-            /Переговорная занята в выбранное время/);
+        await Promise.all([
+            admin.page.waitForNavigation({waitUntil: 'domcontentloaded'}),
+            edit.getByRole('button', {name: 'Создать встречу'}).click(),
+        ]);
+        const feedback = admin.page.locator('[role=alert], .alert').filter({hasText: 'Переговорная занята в выбранное время'});
+        await feedback.first().waitFor();
         assert.equal((await edit.locator('[name=agenda]').inputValue()).length, 12000);
         await edit.locator('[name=agenda]').fill('');
         const cannotCheck = await post(outsider, {starttime: fixture.date + 'T11:10', endtime: fixture.date + 'T11:40',
@@ -260,7 +263,10 @@ async function main() {
         const secondTab = await admin.context.newPage();
         await secondTab.goto(minutesUrl);
         await admin.page.locator('[name=briefminutes]').fill('Согласованный план');
-        await admin.page.getByRole('button', {name: 'Сохранить протокол'}).click();
+        await Promise.all([
+            admin.page.waitForURL(url => url.searchParams.get('saved') === '1'),
+            admin.page.getByRole('button', {name: 'Сохранить протокол'}).click(),
+        ]);
         await secondTab.locator('[name=briefminutes]').fill('Мои заметки со встречи');
         await secondTab.getByRole('button', {name: 'Сохранить протокол'}).click();
         await secondTab.getByRole('heading', {name: 'Ваша несохранённая версия'}).waitFor();

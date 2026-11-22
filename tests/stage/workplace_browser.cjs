@@ -255,6 +255,18 @@ async function main() {
         await lane.getByRole('link', {name: 'Workplace review fixture'}).waitFor();
         assert.match(await lane.innerText(), /Назначена/);
         assert.ok(await member.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2), 'Phone page should not overflow');
+        const minutesUrl = base + '/local/ustar/tasks.php?view=briefing&briefsection=minutes';
+        await admin.page.goto(minutesUrl);
+        const secondTab = await admin.context.newPage();
+        await secondTab.goto(minutesUrl);
+        await admin.page.locator('[name=briefminutes]').fill('Согласованный план');
+        await admin.page.getByRole('button', {name: 'Сохранить протокол'}).click();
+        await secondTab.locator('[name=briefminutes]').fill('Мои заметки со встречи');
+        await secondTab.getByRole('button', {name: 'Сохранить протокол'}).click();
+        await secondTab.getByRole('heading', {name: 'Ваша несохранённая версия'}).waitFor();
+        assert.equal(await secondTab.locator('textarea[readonly]').inputValue(), 'Мои заметки со встречи');
+        assert.equal(await secondTab.locator('[name=briefminutes]').inputValue(), 'Согласованный план');
+        await secondTab.close();
         assert.deepEqual(admin.page.errors, []);
         assert.deepEqual(member.page.errors, []);
 

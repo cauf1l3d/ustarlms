@@ -171,8 +171,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Keep rejected form text in this response only; never persist it or expose uploads.
         $state['input'] = [];
         foreach ($_POST as $key => $value) {
-            if ($e instanceof \local_ustar\briefing\conflict
-                    || in_array($key, ['sesskey', 'action', 'version', 'revision'], true)) { continue; }
+            if ($e instanceof \local_ustar\briefing\conflict) {
+                // Keep the winner in the live form. Echo only this actor's rejected text for copying.
+                if ($action === 'brief_minutes' && $key === 'briefminutes' && is_string($value)) {
+                    $state['conflictcopy']['Протокол'] = \core_text::substr($value, 0, 24000);
+                } else if ($action === 'brief_report' && is_string($value)
+                        && preg_match('/\Abriefanswer_(\d{1,2})\z/', $key, $match)
+                        && (int)$match[1] < \local_ustar\briefing\service::MAX_FIELDS) {
+                    $state['conflictcopy']['Ответ ' . ((int)$match[1] + 1)] = \core_text::substr($value, 0, 12000);
+                }
+                continue;
+            }
+            if (in_array($key, ['sesskey', 'action', 'version', 'revision'], true)) { continue; }
             if (is_string($value)) {
                 $limit = match (true) {
                     $key === 'briefminutes' => 24000,
@@ -201,6 +211,14 @@ if ($state['taskid'] && !empty($CFG->messaging)) {
 }
 echo $OUTPUT->header();
 if ($notice !== '') { echo $OUTPUT->notification(s($notice), 'notifyproblem'); }
+if (!empty($state['conflictcopy'])) {
+    echo '<section class="uw-panel"><h2>Ваша несохранённая версия</h2><p>Скопируйте нужный текст. '
+        . 'В форме ниже открыта последняя сохранённая версия.</p>';
+    foreach ($state['conflictcopy'] as $label => $value) {
+        echo '<label class="uw-field"><span>' . s($label) . '</span><textarea readonly rows="4">' . s($value) . '</textarea></label>';
+    }
+    echo '</section>';
+}
 if (optional_param('saved', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Изменения сохранены.', 'notifysuccess'); }
 echo page::render($actorid, $state);
 echo $OUTPUT->footer();

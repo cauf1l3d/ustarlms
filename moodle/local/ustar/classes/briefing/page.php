@@ -174,6 +174,7 @@ final class page {
     private function summary(string $week, bool $present): string {
         $departments = service::departments();
         $rows = service::summary($this->actor, $week);
+        $canfollowup = !$present && tasks::can_manage($this->actor);
         $submitted = count(array_filter($rows, static fn($row) => $row['submittedat']));
         $archived = service::week_start($week) + service::MEETING_DURATION <= time();
         $out = '<section class="uw-panel uw-brief-summary' . ($present ? ' is-presentation' : '') . '"><div class="uw-panel-head">'
@@ -201,7 +202,7 @@ final class page {
             if ($row['report']) {
                 $schema = service::decode($row['report']->schemajson);
                 $out .= self::answer_list($schema['fields'], service::decode($row['report']->answersjson));
-                if (!$present && tasks::can_manage($this->actor)) {
+                if ($canfollowup) {
                     $out .= '<div class="uw-actions uw-brief-controls">' . $this->followup((int)$row['report']->id, $week) . '</div>';
                 }
             }

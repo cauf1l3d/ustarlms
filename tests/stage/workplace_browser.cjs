@@ -220,6 +220,12 @@ async function main() {
         await edit.locator('[role=status]').filter({hasText: 'Переговорная занята'}).waitFor();
         assert.match(await edit.locator('[role=status]').textContent(), /Заняты Work Member/);
         assert.doesNotMatch(await edit.locator('[role=status]').textContent(), /Private agenda|Private appointment name/);
+        await edit.locator('[name=agenda]').fill('А'.repeat(11999) + 'Я');
+        assert.match(await edit.locator('[role=status]').textContent(), /Переговорная занята/);
+        await edit.getByRole('button', {name: 'Создать встречу'}).click();
+        await admin.page.getByText('Переговорная занята в выбранное время.', {exact: true}).waitFor();
+        assert.equal((await edit.locator('[name=agenda]').inputValue()).length, 12000);
+        await edit.locator('[name=agenda]').fill('');
         const cannotCheck = await post(outsider, {starttime: fixture.date + 'T11:10', endtime: fixture.date + 'T11:40',
             roomid: fixture.room, 'participants[]': [fixture.member]}, 'meeting_availability.php');
         assert.equal(cannotCheck.status(), 403);
@@ -228,7 +234,7 @@ async function main() {
         await edit.locator('[name=endtime]').fill(fixture.date + 'T15:00');
         await edit.getByRole('button', {name: 'Проверить занятость'}).click();
         await edit.locator('[role=status]').filter({hasText: 'Пересечений по выбранному времени нет'}).waitFor();
-        await edit.getByRole('button', {name: 'Отправить приглашения'}).click();
+        await edit.getByRole('button', {name: 'Создать встречу'}).click();
         await admin.page.getByRole('heading', {name: 'New workplace meeting'}).waitFor();
         await member.page.goto(base + '/local/ustar/tasks.php?view=calendar&month=' + fixture.date.slice(0, 7));
         await member.page.locator('.uw-calendar').getByRole('link', {name: /New workplace meeting/}).waitFor();

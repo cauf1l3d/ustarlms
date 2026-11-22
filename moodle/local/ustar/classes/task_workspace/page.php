@@ -148,7 +148,9 @@ final class page {
         $out = '<section class="uw-panel"><div class="uw-panel-head"><div><h2>Канбан задач</h2>'
             . '<p>Перетащите карточку или выберите действие на ней.</p></div></div>'
             . '<form method="get" class="uw-search">' . self::hidden('view', 'kanban') . self::hidden('scope', $state['scope'])
-            . self::field('Поиск по задачам', 'q', $state['q'], 'search') . '<button class="uw-btn">Найти</button></form></section>';
+            . self::field('Поиск по задачам', 'q', $state['q'], 'search') . '<button class="uw-btn">Найти</button>'
+            . ($state['q'] !== '' ? self::link('Сбросить поиск', ['q' => null, 'pageno' => 0, 'boardstatus' => null]) : '')
+            . '</form></section>';
         $out .= '<div class="uw-board" data-task-board>';
         foreach (self::$status as $status => $label) {
             $number = $state['boardstatus'] === $status ? $state['page'] : 0;
@@ -216,6 +218,8 @@ final class page {
                     continue;
                 }
                 $out .= self::form($action) . $revision . self::hidden('column', $key)
+                    . ($action === 'plan_remove' ? '<span class="uw-muted">Задачи вернутся в колонку «'
+                        . s($choices[personal_plan::DEFAULT_COLUMN]) . '».</span>' : '')
                     . '<button class="uw-btn" type="submit">' . s($label) . '</button></form>';
             }
             $out .= '</div></details>';
@@ -229,7 +233,9 @@ final class page {
                     . self::select('Колонка', 'column', $choices, $key)
                     . '<button class="uw-btn" type="submit">Переместить</button></form></article>';
             }
-            if (!$rows['items']) { $out .= '<p class="uw-muted uw-board-empty">Нет задач</p>'; }
+            if (!$rows['items']) {
+                $out .= '<p class="uw-muted uw-board-empty">' . ($state['q'] === '' ? 'Нет задач' : 'По вашему запросу задач нет') . '</p>';
+            }
             if ($rows['page']) { $out .= self::link('← Назад', ['boardstatus' => $key, 'pageno' => $rows['page'] - 1]); }
             if ($rows['hasmore']) { $out .= self::link('Ещё задачи →', ['boardstatus' => $key, 'pageno' => $rows['page'] + 1]); }
             $out .= '</section>';
@@ -239,11 +245,12 @@ final class page {
 
     private static function month(): array {
         $value = self::$state['month'];
-        if (!preg_match('/^\d{4}-\d{2}$/', $value)) { $value = date('Y-m'); }
-        try { $start = calendar::timestamp($value . '-01', '00:00', service::policy_for(self::$actor)['timezone']); }
-        catch (\invalid_parameter_exception $e) { $value = date('Y-m'); $start = calendar::timestamp($value . '-01', '00:00', 'Europe/Moscow'); }
         $tz = calendar::timezone(service::policy_for(self::$actor)['timezone']);
-        $date = (new \DateTimeImmutable('@' . $start))->setTimezone($tz);
+        $today = new \DateTimeImmutable('now', $tz);
+        $date = preg_match('/\A\d{4}-\d{2}\z/', $value) ? \DateTimeImmutable::createFromFormat('!Y-m', $value, $tz) : false;
+        if (!$date || $date->format('Y-m') !== $value) {
+            $date = $today->modify('first day of this month')->setTime(0, 0);
+        }
         return [$date, $date->modify('+1 month')->getTimestamp()];
     }
     private static function calendar(): string {
@@ -266,7 +273,7 @@ final class page {
         $out = '<section class="uw-panel"><div class="uw-panel-head"><div><h2>' . s(userdate($first->getTimestamp(), '%B %Y', $first->getTimezone()->getName())) . '</h2>
             <small>Сроки в часовом поясе ' . s($first->getTimezone()->getName()) . '</small></div><div class="uw-actions">'
             . self::link('‹', ['month' => $first->modify('-1 month')->format('Y-m'), 'pageno' => 0])
-            . self::link('Сегодня', ['month' => date('Y-m'), 'pageno' => 0])
+            . self::link('Сегодня', ['month' => null, 'pageno' => 0])
             . self::link('›', ['month' => $first->modify('+1 month')->format('Y-m'), 'pageno' => 0]) . $meetinglinks
             . '</div></div><div class="uw-calendar">';
         foreach (['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'] as $day) { $out .= '<div class="uw-dayhead">' . $day . '</div>'; }

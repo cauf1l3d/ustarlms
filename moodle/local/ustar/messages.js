@@ -89,9 +89,6 @@
             const nodes = new Map(Array.from(items.children, node => [node.dataset.messageId, node]));
             const added = document.createElement('template');
             added.innerHTML = data.html;
-            if (follow) {
-                added.content.querySelectorAll('img').forEach(img => img.addEventListener('load', latest, {once: true}));
-            }
             added.content.querySelectorAll('[data-message-id]').forEach(node => nodes.set(node.dataset.messageId, node));
             const kept = new Set(wanted);
             Array.from(items.children).forEach(node => { if (!kept.has(node.dataset.messageId)) node.remove(); });
@@ -229,7 +226,7 @@
                         showFiles(); apply(data, true); status.textContent = 'Сообщение отправлено.';
                     } catch (e) { status.textContent = e.message; }
                 };
-                xhr.onerror = xhr.ontimeout = function () { status.textContent = 'Ответ сервера не получен. Черновик сохранён. Можно повторить отправку.'; };
+                xhr.onerror = xhr.ontimeout = function () { status.textContent = 'Ответ сервера не получен. Текст и файлы остаются в этой вкладке. Повторите отправку.'; };
                 xhr.onloadend = function () {
                     busy = false;
                     if (!stopped) { send.disabled = !maySend; files.disabled = false; text.readOnly = false; }

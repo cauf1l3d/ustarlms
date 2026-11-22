@@ -1,7 +1,7 @@
 <?php
 namespace local_ustar\briefing;
 
-use local_ustar\{accounts, team_access, view_as, workflow_notifications};
+use local_ustar\{accounts, employment, team_access, view_as, workflow_notifications};
 use local_ustar\task_workspace\{calendar, service as tasks};
 
 defined('MOODLE_INTERNAL') || die();
@@ -100,17 +100,24 @@ final class meetings {
             return [];
         }
         $out = [];
-        $fields = 'id,' . implode(',', \core_user\fields::get_name_fields());
-        $params = ['actor' => $actor];
-        $where = 'id > 1 AND id <> :actor AND deleted = 0 AND suspended = 0';
+        $fields = 'u.id, u.' . implode(', u.', \core_user\fields::get_name_fields());
+        $params = ['actor' => $actor, 'accountfield' => accounts::FIELD, 'active' => employment::ACTIVE];
+        $where = 'u.id > 1 AND u.id <> :actor AND u.deleted = 0 AND u.suspended = 0';
         if ($selected !== null) {
             [$in, $ids] = $DB->get_in_or_equal($selected, SQL_PARAMS_NAMED, 'invitee');
-            $where .= ' AND id ' . $in;
+            $where .= ' AND u.id ' . $in;
             $params += $ids;
         }
-        $users = $DB->get_records_select('user', $where, $params, 'lastname ASC, firstname ASC, id ASC', $fields);
+        $users = $DB->get_records_sql("SELECT $fields, d.data AS accounttype
+                  FROM {user} u
+             LEFT JOIN {local_ustar_employment} e ON e.userid = u.id
+             LEFT JOIN {user_info_field} f ON f.shortname = :accountfield
+             LEFT JOIN {user_info_data} d ON d.userid = u.id AND d.fieldid = f.id
+                 WHERE $where AND (e.id IS NULL OR e.status = :active)
+              ORDER BY u.lastname, u.firstname, u.id", $params);
         foreach ($users as $person) {
-            if (accounts::participates((int)$person->id) && team_access::active_actor((int)$person->id)) {
+            if (!is_siteadmin($person->id) && !in_array(trim((string)$person->accounttype),
+                    [accounts::TYPE_SERVICE, accounts::TYPE_TEST], true)) {
                 $out[(int)$person->id] = fullname($person);
             }
         }
@@ -264,13 +271,14 @@ final class meetings {
                 $previous = null;
             }
             self::validate_interval($start, $end);
-            foreach ($participants as $participant) {
-                if (!accounts::participates($participant) || !team_access::active_actor($participant)) {
-                    throw new input_error('Один из участников больше не работает в Академии.');
-                }
+            if (count(self::eligible_participants($actor, $participants)) !== count($participants)) {
+                throw new input_error('Один из участников больше не работает в Академии.');
             }
             if ($roomid) {
-                $room = $DB->get_record('local_ustar_meeting_rooms', ['id' => $roomid, 'active' => 1], '*', MUST_EXIST);
+                $room = $DB->get_record('local_ustar_meeting_rooms', ['id' => $roomid, 'active' => 1]);
+                if (!$room) {
+                    throw new input_error('Переговорная больше недоступна. Выберите другую.');
+                }
                 if ($room->capacity && count($participants) + 1 > $room->capacity) {
                     throw new input_error('Участников больше, чем мест в переговорной.');
                 }

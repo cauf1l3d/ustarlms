@@ -18,7 +18,7 @@ if ($scope !== 'mine' && !service::can_manage($actorid)
 service::scope_sql($actorid, $scope);
 $state = ['view' => $view, 'scope' => $scope, 'page' => max(0, optional_param('pageno', 0, PARAM_INT)),
     'filter' => optional_param('filter', 'all', PARAM_ALPHA), 'q' => optional_param('q', '', PARAM_TEXT),
-    'month' => optional_param('month', date('Y-m'), PARAM_RAW_TRIMMED),
+    'month' => optional_param('month', '', PARAM_RAW_TRIMMED),
     'taskid' => optional_param('taskid', 0, PARAM_INT), 'form' => optional_param('form', '', PARAM_ALPHA),
     'departmentid' => optional_param('departmentid', '', PARAM_ALPHANUMEXT),
     'positionid' => optional_param('positionid', '', PARAM_ALPHANUMEXT),
@@ -176,6 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (is_string($value)) {
                 $limit = match (true) {
                     $key === 'briefminutes' => 24000,
+                    $key === 'agenda' => 12000,
                     str_starts_with($key, 'briefanswer_') => 12000,
                     default => 10000,
                 };

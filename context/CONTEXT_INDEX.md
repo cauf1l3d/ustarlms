@@ -1,5 +1,7 @@
 # Навигация по контексту
 
+- [Встречи и задачи на главной](reviews/20261123/WORKPLACE_HOME_RU.md), [проверки](runtime/workplace_home_20261123.json), [установка](../docs/WORKPLACE_HOME_INSTALL_RU.md).
+
 - [Ревью рабочего контура rc.2](reviews/20261123/WORKPLACE_REVIEW_RU.md), [проверки](runtime/workplace_review_20261123.json), [установка](../docs/WORKPLACE_REVIEW_INSTALL_RU.md).
 
 - [Рабочий контур перед переездом с Битрикс24](reviews/20261122/WORKPLACE_MIGRATION_RU.md),

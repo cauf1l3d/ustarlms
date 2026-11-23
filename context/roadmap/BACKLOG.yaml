@@ -956,16 +956,17 @@ tasks:
   title: Рабочий контур Академии для переезда с Битрикс24
   status: package_qualified_server_preflight_pending
   depends_on: [TASK-BRIEFING]
-  reference: context/reviews/20261123/WORKPLACE_REVIEW_RU.md
-  qualification: context/runtime/workplace_review_20261123.json
+  reference: context/reviews/20261123/WORKPLACE_HOME_RU.md
+  qualification: context/runtime/workplace_home_20261123.json
   runbook: docs/WORKPLACE_MIGRATION_RU.md
-  install_runbook: docs/WORKPLACE_REVIEW_INSTALL_RU.md
-  pr: 127
+  install_runbook: docs/WORKPLACE_HOME_INSTALL_RU.md
+  pr: 128
   acceptance:
   - Обсуждение и вложения используют текущие права доступа к задаче
   - Личный план применяет раскладку, срок и статус видны со стороны канонической задачи
   - В чате без изменений передаётся компактное окно идентификаторов
   - Проверка занятости скрывает подробности встреч, запись проверяет конфликт под замком
+  - Встречи показывают приглашения на главной и в списке с быстрым ответом и явным статусом
   - Пилот проверяет реальные роли, нагрузку, полноту и контроль доступа при переносе
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade

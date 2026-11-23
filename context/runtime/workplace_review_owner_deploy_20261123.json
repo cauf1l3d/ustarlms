@@ -1,0 +1,24 @@
+{
+  "date_msk": "2026-11-23",
+  "scope": "owner_supplied_installer_postcheck",
+  "host": "server1",
+  "systemd_unit": "ustar-workplace-20261123.service",
+  "systemd_result": "success",
+  "exit_status": 0,
+  "runtime_seconds": 46.977,
+  "phase": "active",
+  "application_commit": "6dd6850df83398b534f6bbdf586f0409eab7c72f",
+  "local_ustar": 2026112300,
+  "theme_ustar": 2026110200,
+  "worker_commit": "17b6141007d65207d9b594138753d28b39ab70bf",
+  "services_running": {
+    "ustar-connect-notify.service": true,
+    "ustar-connect-receiver.service": true
+  },
+  "announcements_enabled": true,
+  "browser_observations": [
+    "accepted_meeting_keeps_both_rsvp_buttons_visible",
+    "meeting_list_omits_organizer_and_rsvp_actions",
+    "home_shows_tasks_checklists_and_notes_without_meetings"
+  ]
+}

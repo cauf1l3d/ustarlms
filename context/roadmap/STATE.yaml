@@ -3,7 +3,7 @@ updated_at: '2026-11-23'
 project: USTAR Academy
 stage: workplace_migration
 stage_label: Workplace migration pilot for tasks, chats, files and meetings
-current_activity: Workplace 1.22.0-rc.2 covers both local1800 and local2200 in PR 127. The owner observed DB plugin versions 2026111800 and 2026110200 on server1. Exact preflight, installation, pilot, production load verification and Bitrix24 data transfer are pending.
+current_activity: Owner confirmed local2300 active on server1. Workplace Home local2301 introduces direct meeting responses and bounded home task cards in PR 128. Production acceptance and workload measurements for local2301 are pending.
 entrypoint: START_HERE.md
 next_task: WORKPLACE-MIGRATION
 ready_tasks: []
@@ -23,7 +23,7 @@ code_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
-  latest_workplace_baseline_observation: context/runtime/workplace_qualification_20261122.json
+  latest_workplace_baseline_observation: context/runtime/workplace_review_owner_deploy_20261123.json
   latest_operator_and_briefing_owner_observation: context/runtime/briefing_qualification_20261118.json
   latest_connect_invitation_owner_receipt: context/runtime/connect_invitations_owner_install_20261114.json
   latest_connect_checklist_widget_owner_receipt: context/runtime/connect_checklist_widget_owner_pilot_20261114.json
@@ -406,22 +406,22 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   status: workplace_package_qualified_server_preflight_pending
-  review: context/reviews/20261123/WORKPLACE_REVIEW_RU.md
-  qualification: context/runtime/workplace_review_20261123.json
-  previous_qualification: context/runtime/workplace_qualification_20261122.json
-  application_commit: 6dd6850df83398b534f6bbdf586f0409eab7c72f
-  installer_commit: 4ce72a16d46c7e18ce2c639b22b694a7e0163be6
+  review: context/reviews/20261123/WORKPLACE_HOME_RU.md
+  qualification: context/runtime/workplace_home_20261123.json
+  previous_qualification: context/runtime/workplace_review_20261123.json
+  application_commit: 24b304914d51e2cb7d11f76305aa3734a635bfa6
+  installer_commit: d82c3dc9eaea6afcfd61bc25324a59491d8454bc
   worker_commit: 17b6141007d65207d9b594138753d28b39ab70bf
-  tested_upgrade_baseline: 17b6141007d65207d9b594138753d28b39ab70bf
+  tested_upgrade_baseline: 6dd6850df83398b534f6bbdf586f0409eab7c72f
   additional_upgrade_baseline: 331891426febf692d68598bbcbabe6fa3b7d9e7a
-  source_pr: 127
-  predecessor_pr: 126
-  runbook: docs/WORKPLACE_REVIEW_INSTALL_RU.md
+  source_pr: 128
+  predecessor_pr: 127
+  runbook: docs/WORKPLACE_HOME_INSTALL_RU.md
   pilot_runbook: docs/WORKPLACE_MIGRATION_RU.md
-  branch: fix/workplace-review-20261123
+  branch: feat/workplace-home-20261123
   deployed: false
-  local_ustar_version: 2026112300
+  local_ustar_version: 2026112301
   theme_ustar_version: 2026110200
   schema_changed: false
   worker_rollout: false
-  development_base: 4878de81238af4a1e50a92a2cf96ee5718e76e5a
+  development_base: 6c5373c9b7a72ca339513b80693fedaf35a58b0e

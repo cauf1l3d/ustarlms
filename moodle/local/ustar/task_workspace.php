@@ -31,6 +31,7 @@ $state += [
     'briefreport' => optional_param('briefreport', 0, PARAM_INT),
     'meetingsection' => optional_param('meetingsection', '', PARAM_ALPHA),
     'meetingdate' => optional_param('meetingdate', '', PARAM_RAW_TRIMMED),
+    'meetingpage' => max(0, min(10000, optional_param('meetingpage', 0, PARAM_INT))),
     'meetingid' => optional_param('meetingid', 0, PARAM_INT),
     'slotstart' => optional_param('slotstart', 0, PARAM_INT),
     'slotend' => optional_param('slotend', 0, PARAM_INT),
@@ -53,7 +54,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = required_param('action', PARAM_ALPHANUMEXT);
         if (($view === 'briefing' && str_starts_with($action, 'brief_'))
                 || ($view === 'meetings' && str_starts_with($action, 'meeting_'))) {
-            redirect(new moodle_url('/local/ustar/tasks.php', commands::run($action, $actorid, $state)));
+            $result = commands::run($action, $actorid, $state);
+            if ($action === 'meeting_rsvp') {
+                $surface = optional_param('meetingsurface', '', PARAM_ALPHA);
+                $message = optional_param('rsvp', '', PARAM_ALPHA) === 'accepted'
+                    ? 'Вы приняли приглашение.' : 'Вы отклонили приглашение.';
+                if ($surface === 'home') {
+                    redirect(new moodle_url('/local/ustar/home.php', [], 'home-meetings'), $message);
+                }
+                if ($surface === 'list') {
+                    unset($result['meetingid'], $result['saved']);
+                    $result['meetingpage'] = $state['meetingpage'];
+                    redirect(new moodle_url('/local/ustar/tasks.php', $result), $message);
+                }
+            }
+            redirect(new moodle_url('/local/ustar/tasks.php', $result));
         } else if ($view === 'plan' && str_starts_with($action, 'plan_')) {
             personal_plan::update($actorid, required_param('revision', PARAM_INT), $action,
                 optional_param('column', '', PARAM_ALPHANUMEXT), optional_param('movetaskid', 0, PARAM_INT),
@@ -203,7 +218,7 @@ $PAGE->set_url(new moodle_url('/local/ustar/tasks.php', ['view' => $view, 'scope
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Задачи и контроль | USTAR Academy');
 $PAGE->set_heading('USTAR Academy');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => communication::ASSET_VERSION]));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20261123-home-meetings']));
 $PAGE->requires->js(new moodle_url('/local/ustar/task_workspace.js', ['v' => communication::ASSET_VERSION]));
 if ($state['taskid'] && !empty($CFG->messaging)) {
     $PAGE->requires->css(new moodle_url('/local/ustar/styles/workchat.css', ['v' => communication::ASSET_VERSION]));

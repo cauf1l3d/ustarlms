@@ -1,8 +1,8 @@
 # Активная работа · 23.11.2026
 
-WORKPLACE-MIGRATION, PR127/local2300. [Инженерное ревью](../reviews/20261123/WORKPLACE_REVIEW_RU.md),
-[установка rc.2 с local1800 или 2200](../../docs/WORKPLACE_REVIEW_INSTALL_RU.md).
-На server1 подтверждены версии БД local1800/theme0200. Ожидаются preflight и пилот.
+WORKPLACE-MIGRATION, PR128/local2301. [Ревью встреч и главной](../reviews/20261123/WORKPLACE_HOME_RU.md),
+[установка](../../docs/WORKPLACE_HOME_INSTALL_RU.md). На server1 подтверждён local2300.
+Пилот нового экрана и замеры рабочего дня ожидаются.
 
 ## Повторная привязка Telegram
 

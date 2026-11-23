@@ -10,6 +10,7 @@ defined('MOODLE_INTERNAL') || die();
 final class learning_tasks {
     public const PRIVACY_OWNER = 'owner';
     public const PRIVACY_ASSIGNED = 'assigned';
+    private const PAGE_SIZE = 25;
 
     public static function available(): bool {
         global $DB;
@@ -366,9 +367,9 @@ final class learning_tasks {
 
     /** @return array<int,array<string,mixed>> */
     public static function notes_for_owner(int $userid, int $page = 0,
-            string $filter = 'all', string $query = ''): array {
+            string $filter = 'all', string $query = '', int $limit = self::PAGE_SIZE): array {
         return self::list_by('ownerid = :ownerid AND privacy = :privacy',
-            ['ownerid' => $userid, 'privacy' => self::PRIVACY_OWNER], $userid, $page, $filter, $query);
+            ['ownerid' => $userid, 'privacy' => self::PRIVACY_OWNER], $userid, $page, $filter, $query, $limit);
     }
 
     /** @return array<int,array<string,mixed>> */
@@ -432,7 +433,7 @@ final class learning_tasks {
 
     /** @return array<int,array<string,mixed>> */
     private static function list_by(string $where, array $params, int $actorid, int $page,
-            string $filter, string $query): array {
+            string $filter, string $query, int $limit = self::PAGE_SIZE): array {
         global $DB, $USER;
         if ((int)$USER->id !== $actorid || !employment::is_active($actorid)) {
             throw new \required_capability_exception(\context_system::instance(),
@@ -442,7 +443,7 @@ final class learning_tasks {
         [$where, $params] = self::apply_filters($where, $params, $filter, $query);
         $out = [];
         foreach ($DB->get_records_select('local_ustar_learning_tasks', $where, $params,
-                'timemodified DESC, id DESC', '*', max(0, $page) * 25, 25) as $task) {
+                'timemodified DESC, id DESC', '*', max(0, $page) * $limit, $limit) as $task) {
             // The select itself is restrictive, assert_view also guards future callers.
             $out[] = self::view_record($task, $actorid);
         }

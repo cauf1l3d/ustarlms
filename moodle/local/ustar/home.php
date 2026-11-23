@@ -2161,11 +2161,11 @@ $data = [
 ];
 
 
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20260930-rc4']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20261123-home-meetings']));
 $data['cancontrolrewards'] = !\local_ustar\view_as::active() && \local_ustar\reward_control::can_manage((int)$USER->id);
 $data['rewardcontrolurl'] = (new moodle_url('/local/ustar/reward_control.php'))->out(false);
-$data['workflowshtml'] = \local_ustar\task_workspace\home_cards::render((int)$USER->id);
 if ($view==='home') {
+    $data['workflowshtml'] = \local_ustar\task_workspace\home_cards::render((int)$USER->id);
     $data['canpersonalize']=!\local_ustar\view_as::active() && \local_ustar\team_access::active_actor((int)$USER->id);
     $data['homelayoutjson']=json_encode(\local_ustar\home_layout::read((int)$USER->id));
     $data['homelayouturl']=(new moodle_url('/local/ustar/home_layout.php'))->out(false);

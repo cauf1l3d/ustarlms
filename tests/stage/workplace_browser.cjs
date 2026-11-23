@@ -243,6 +243,37 @@ async function main() {
         await member.page.goto(base + '/local/ustar/tasks.php?view=calendar&month=' + fixture.date.slice(0, 7));
         await member.page.locator('.uw-calendar').getByRole('link', {name: /New workplace meeting/}).waitFor();
 
+        await member.page.goto(base + '/local/ustar/home.php');
+        const widget = member.page.locator('#home-meetings');
+        const invitation = widget.locator('article').filter({hasText: 'New workplace meeting'});
+        await invitation.getByRole('button', {name: 'Приму участие'}).waitFor();
+        assert.match(await invitation.innerText(), /Fixture small room[\s\S]+Организатор:/);
+        assert.equal(await member.page.getByRole('link', {name: 'Чаты задач', exact: true}).count(), 1);
+        await Promise.all([
+            member.page.waitForURL('**/local/ustar/home.php#home-meetings'),
+            invitation.getByRole('button', {name: 'Приму участие'}).click(),
+        ]);
+        await invitation.getByText('Принято', {exact: true}).waitFor();
+        assert.equal(await invitation.getByRole('button', {name: 'Приму участие'}).count(), 0);
+        assert.equal(await invitation.getByRole('button', {name: 'Не смогу'}).isVisible(), false);
+        const meetingHref = await invitation.getByRole('link').getAttribute('href');
+        await member.page.goto(meetingHref);
+        const detail = member.page.locator('.uw-meeting-detail');
+        await detail.getByText('Принято', {exact: true}).waitFor();
+        assert.equal(await detail.getByRole('button', {name: 'Не смогу'}).isVisible(), false);
+        await member.page.goto(base + '/local/ustar/tasks.php?view=meetings');
+        const listed = member.page.locator('.uw-meeting-card').filter({hasText: 'New workplace meeting'});
+        await listed.getByText('Изменить ответ', {exact: true}).click();
+        await Promise.all([
+            member.page.waitForURL(url => url.searchParams.get('view') === 'meetings' && !url.searchParams.has('meetingid')),
+            listed.getByRole('button', {name: 'Не смогу'}).click(),
+        ]);
+        await listed.getByText('Отклонено', {exact: true}).waitFor();
+        await outsider.page.goto(base + '/local/ustar/home.php');
+        assert.equal(await outsider.page.locator('#home-meetings').getByText('New workplace meeting').count(), 0);
+        await outsider.page.goto(base + '/local/ustar/tasks.php?view=meetings');
+        assert.equal(await outsider.page.locator('.uw-meeting-list').getByText('Private appointment name').count(), 0);
+
         await member.page.goto(base + '/local/ustar/tasks.php?view=plan');
         const board = member.page.locator('.uw-plan-board');
         await board.getByRole('heading', {name: 'Без плана'}).waitFor();

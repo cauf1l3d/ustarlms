@@ -8,6 +8,10 @@ final class home_layout {
         $blocks = ['hero'=>'Приветствие','next'=>'Следующее действие','tasks'=>'Мои задачи',
             'checklists'=>'Мои чек-листы','notes'=>'Личные заметки','links'=>'Быстрые переходы',
             'achievements'=>'Достижения'];
+        if (\local_ustar\briefing\meetings::allowed($userid)
+                && (has_capability('local/ustar:use', \context_system::instance(), $userid) || team_access::company($userid))) {
+            $blocks = array_slice($blocks, 0, 2, true) + ['meetings' => 'Ближайшие встречи'] + $blocks;
+        }
         if (has_capability('local/ustar:viewteam', \context_system::instance(), $userid)) { $blocks['team']='Моя команда'; }
         if (has_capability('local/ustar:managecompetition', \context_system::instance(), $userid)) { $blocks['competition']='Соревнования'; }
         return $blocks;

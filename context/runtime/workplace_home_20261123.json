@@ -1,0 +1,78 @@
+{
+  "date_msk": "2026-11-23",
+  "scope": "isolated_workplace_home_review",
+  "source_pr": 128,
+  "application_commit": "24b304914d51e2cb7d11f76305aa3734a635bfa6",
+  "package_builder_commit": "d82c3dc9eaea6afcfd61bc25324a59491d8454bc",
+  "known_server_baseline": "context/runtime/workplace_review_owner_deploy_20261123.json",
+  "local_ustar": 2026112301,
+  "theme_ustar": 2026110200,
+  "schema_changed": false,
+  "worker_commit": "17b6141007d65207d9b594138753d28b39ab70bf",
+  "browser_cases": [
+    "accept_from_home_and_return_to_widget",
+    "final_response_collapsed_in_widget_and_detail",
+    "change_response_from_list",
+    "hide_unrelated_meetings_from_outsider",
+    "room_conflict_preserves_agenda",
+    "calendar",
+    "task_chat_and_attachment_access",
+    "personal_plan_on_mobile",
+    "briefing_minutes_revision_conflict"
+  ],
+  "home_card_benchmark": {
+    "fixture_active_tasks": 10,
+    "rendered_task_cards": 5,
+    "warmed_read_queries_before": 479,
+    "warmed_read_queries_after_with_meeting_widget": 32,
+    "scope": "workplace home cards only, Moodle 5.1.8 with PostgreSQL 17.11"
+  },
+  "build": {
+    "run": 45147082165,
+    "artifact": 14805170549,
+    "result": "success",
+    "operator_tests": 20,
+    "archive": "ustar-workplace-home-24b30491.tar.gz",
+    "sha256": "27045d226a6ad9ef11aab308fcaf2821a885414078751ebf02cfd253e7eca50c",
+    "zip_sha256": "ee55d7b9efb9cb012ef0097b78ee6f596e86250dc1fd783a057c4e2509ccccc4",
+    "zip_crc": "verified",
+    "packaged_payload_files": 41,
+    "ci_and_retained_archive_byte_identity": "verified"
+  },
+  "native_install": {
+    "backup_code_sha_verification": "pass",
+    "backup_postgres_restore": "pass",
+    "from_version": 2026112300,
+    "moodle": "5.1.8",
+    "package_install": "pass",
+    "post_install_login": "http_200",
+    "postgres": "17.11",
+    "preserved_messages": 700,
+    "restored_version": 2026112300,
+    "to_version": 2026112301,
+    "worker_and_cron": "isolated_host_simulation"
+  },
+  "server1": {
+    "production_workload": "pending",
+    "owner_deployed_candidate": false,
+    "real_roles_acceptance": "pending"
+  },
+  "local_native_tests": {
+    "runtime": "Moodle 5.1.8",
+    "home_layout": 3,
+    "reward_workspace": 9,
+    "workplace": 5,
+    "organizer_department_and_room": "pass",
+    "meeting_widget_visibility_preference": "pass"
+  },
+  "functional_ci": {
+    "run": 45147082068,
+    "status": "success",
+    "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/45147082068",
+    "head": "d82c3dc9eaea6afcfd61bc25324a59491d8454bc",
+    "jobs": {
+      "moodle-511": "success",
+      "moodle-518": "success"
+    }
+  }
+}

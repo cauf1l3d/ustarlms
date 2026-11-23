@@ -10,8 +10,9 @@ PR110 (RSS2803) и PR111 (ролевой Connect/графика) объедин�
 
 ## Текущая работа
 
-23.11.2026. Встречи и задачи на главной, PR128/local2301. На server1 подтверждён local2300.
-[Ревью](context/reviews/20261123/WORKPLACE_HOME_RU.md), [установка](docs/WORKPLACE_HOME_INSTALL_RU.md).
+23.11.2026. Постановка задач, PR129/local2302. На server1 подтверждён local2301.
+[Ревью](context/reviews/20261123/TASK_ASSIGNMENT_RU.md), [установка](docs/TASK_ASSIGNMENT_INSTALL_RU.md),
+[квитанция server1](context/runtime/workplace_home_owner_deploy_20261123.json).
 Ожидаются preflight server1, пилот и замеры рабочего дня.
 
 ## Подтверждённое состояние

@@ -36,12 +36,12 @@ current_operator_handoff:
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
   task: WORKPLACE-MIGRATION
-  workplace_review: context/reviews/20261123/WORKPLACE_HOME_RU.md
+  workplace_review: context/reviews/20261123/TASK_ASSIGNMENT_RU.md
   workplace_runbook: docs/WORKPLACE_MIGRATION_RU.md
-  workplace_install_runbook: docs/WORKPLACE_HOME_INSTALL_RU.md
-  workplace_qualification: context/runtime/workplace_home_20261123.json
-  workplace_draft_pr: 128
-  workplace_live_baseline: context/runtime/workplace_review_owner_deploy_20261123.json
+  workplace_install_runbook: docs/TASK_ASSIGNMENT_INSTALL_RU.md
+  workplace_qualification: context/runtime/task_assignment_20261123.json
+  workplace_draft_pr: 129
+  workplace_live_baseline: context/runtime/workplace_home_owner_deploy_20261123.json
   briefing_runbook: docs/BRIEFING_REVIEW_INSTALL_RU.md
   briefing_qualification: context/runtime/briefing_review_qualification_20261118.json
   briefing_source_commit: 17b6141007d65207d9b594138753d28b39ab70bf

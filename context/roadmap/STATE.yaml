@@ -406,21 +406,22 @@ previous_source_candidate_receipt: context/runtime/route_scorm_launch_20261101.j
 development_candidate:
   manifest: context/code_map/development_source.json
   status: workplace_package_qualified_server_preflight_pending
-  review: context/reviews/20261123/WORKPLACE_HOME_RU.md
-  qualification: context/runtime/workplace_home_20261123.json
-  previous_qualification: context/runtime/workplace_review_20261123.json
-  application_commit: 24b304914d51e2cb7d11f76305aa3734a635bfa6
-  installer_commit: d82c3dc9eaea6afcfd61bc25324a59491d8454bc
+  review: context/reviews/20261123/TASK_ASSIGNMENT_RU.md
+  qualification: context/runtime/task_assignment_20261123.json
+  previous_qualification: context/runtime/workplace_home_20261123.json
+  application_commit: fdb6dc414e53931d750eb63dbbedb331cee1c7d8
+  installer_commit: ae89ec3ad0eedf1e55d6c7bf04f1422a7f1b75e4
   worker_commit: 17b6141007d65207d9b594138753d28b39ab70bf
-  tested_upgrade_baseline: 6dd6850df83398b534f6bbdf586f0409eab7c72f
-  additional_upgrade_baseline: 331891426febf692d68598bbcbabe6fa3b7d9e7a
-  source_pr: 128
-  predecessor_pr: 127
-  runbook: docs/WORKPLACE_HOME_INSTALL_RU.md
+  tested_upgrade_baseline: 24b304914d51e2cb7d11f76305aa3734a635bfa6
+  additional_upgrade_baseline: 6dd6850df83398b534f6bbdf586f0409eab7c72f
+  owner_baseline_receipt: context/runtime/workplace_home_owner_deploy_20261123.json
+  source_pr: 129
+  predecessor_pr: 128
+  runbook: docs/TASK_ASSIGNMENT_INSTALL_RU.md
   pilot_runbook: docs/WORKPLACE_MIGRATION_RU.md
-  branch: feat/workplace-home-20261123
+  branch: feat/task-assignment-audiences-20261123
   deployed: false
-  local_ustar_version: 2026112301
+  local_ustar_version: 2026112302
   theme_ustar_version: 2026110200
   schema_changed: false
   worker_rollout: false

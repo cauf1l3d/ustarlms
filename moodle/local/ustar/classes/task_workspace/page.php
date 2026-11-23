@@ -41,6 +41,7 @@ final class page {
         } else if (!in_array($state['view'], ['briefing', 'meetings'], true)) { $out .= '<span>Мои задачи</span>'; }
         $out .= '<span class="uw-scope-links"><a href="' . (new \moodle_url('/local/ustar/notebook.php'))->out() . '">Личный блокнот</a>
             <a href="' . (new \moodle_url('/local/ustar/tasks.php', ['tab' => 'checklists']))->out() . '">Адаптационные листы</a></span></div>';
+        if ($state['form'] === 'create' && $manage) { $out .= self::create_form(); }
         if (!isset($tabs[$state['view']])) { $out .= '<div class="uw-panel">Раздел недоступен для вашей роли.</div>'; }
         else {
             switch ($state['view']) {
@@ -59,7 +60,6 @@ final class page {
                 default: $out .= self::overview();
             }
         }
-        if ($state['form'] === 'create' && $manage) { $out .= self::create_form(); }
         if ($state['form'] === 'template' && $manage) { $out .= self::template_form(); }
         if ($state['taskid']) {
             try { $out .= self::detail($state['taskid']); }
@@ -409,51 +409,116 @@ final class page {
     }
 
     private static function create_form(): string {
-        $s = self::$state; $p = service::policy_for(self::$actor);
-        $assignee = (int)$s['assigneeid'];
-        $department = $s['departmentid'] ?? ''; $position = $s['positionid'] ?? '';
-        $options = recipients::options(self::$actor, $department, $position);
+        $s = self::$state;
+        $policy = service::policy_for(self::$actor);
+        $individual = !empty($s['parentid']) || !empty($s['briefreport']);
+        $mode = $individual ? 'person' : ($s['targetmode'] ?? 'person');
+        $mode = isset(recipients::MODES[$mode]) ? $mode : 'person';
+        [$department, $position, $assignee] = [$s['departmentid'], $s['positionid'], (int)$s['assigneeid']];
         $report = null;
         if ($s['briefreport']) {
-            try { $report = briefing::linked_report(self::$actor, $s['briefreport']); }
-            catch (\required_capability_exception | \dml_missing_record_exception $error) {
+            try {
+                $report = briefing::linked_report(self::$actor, $s['briefreport']);
+            } catch (\required_capability_exception | \dml_missing_record_exception $error) {
                 return '<div class="uw-notice">Отчёт для поручения недоступен.</div>';
             }
         }
+        $catalog = recipients::catalog(self::$actor, !$individual);
+        $ids = recipients::selection($catalog, $mode, $department, $position, $assignee);
+        $count = count($ids);
+        $valid = $count > 0 && $count <= recipients::MAX_BATCH;
+        $out = '<section class="uw-editor uw-panel" id="uw-editor" data-task-assignment data-catalog="'
+            . s(service::json($catalog)) . '" data-limit="' . recipients::MAX_BATCH . '"><div class="uw-panel-head"><h2>'
+            . ($report ? 'Поручение по брифингу' : 'Новая задача') . '</h2>'
+            . self::link('Закрыть', ['form' => '']) . '</div>';
         $filters = ['form' => 'create'] + array_intersect_key($s, array_flip(
             ['scope', 'view', 'briefreport', 'briefweek', 'briefsection', 'briefdept', 'parentid', 'templateid']));
-        $out = '<section class="uw-editor uw-panel" id="uw-editor"><div class="uw-panel-head"><h2>'
-            . ($report ? 'Поручение по брифингу' : 'Новая задача') . '</h2>'
-            . self::link('Закрыть', ['form'=>'']) . '</div>' . self::recipient_picker($filters, $options, $department, $position, $assignee);
-        if (!isset($options['people'][$assignee])) {
-            return $out . '<div class="uw-empty">Выберите отдел, должность и действующего сотрудника.</div></section>';
+        $out .= '<form method="get" class="uw-form" action="#uw-editor" data-assignment-picker>';
+        foreach ($filters as $key => $value) {
+            $out .= self::hidden($key, $value);
         }
-        $out .= '<p class="uw-notice">Исполнитель: ' . s($options['people'][$assignee]) . '</p>';
+        $positions = array_filter($catalog['positions'], static fn($row) => !$department || $row['department'] === $department);
+        $people = array_filter($catalog['people'], static fn($row) => (!$department || $row['department'] === $department)
+            && (!$position || $row['position'] === $position));
+        $out .= '<fieldset class="uw-recipient-fields"><legend>Кому назначить</legend><div class="uw-form-grid">'
+            . ($individual ? self::hidden('targetmode', 'person') : self::select('Получатель', 'targetmode', recipients::MODES, $mode))
+            . self::select('Отдел', 'departmentid', ['' => $mode === 'department' ? 'Выберите отдел' : 'Все доступные отделы']
+                + array_map(static fn($row) => $row['name'], $catalog['departments']), $department)
+            . '<div data-assignment-position' . ($mode === 'department' ? ' hidden' : '') . '>'
+            . self::select('Должность', 'positionid', ['' => $mode === 'position' ? 'Выберите должность' : 'Все доступные должности']
+                + array_map(static fn($row) => $row['name'], $positions), $position) . '</div>'
+            . '<div data-assignment-person' . ($mode !== 'person' ? ' hidden' : '') . '>'
+            . '<label class="uw-field" data-assignment-search hidden><span>Поиск по имени</span><input type="search" autocomplete="off"></label>'
+            . self::select('Сотрудник', 'assigneeid', [0 => 'Выберите сотрудника']
+                + array_map(static fn($row) => $row['name'], $people), $assignee) . '</div></div>'
+            . '<div class="uw-actions"><button class="uw-btn" data-assignment-apply>Показать получателей</button></div></fieldset></form>';
+        $summary = match (true) {
+            $count > recipients::MAX_BATCH => get_string('taskassignmentlimit', 'local_ustar', recipients::MAX_BATCH),
+            $mode === 'department' && $valid => 'Получатель — руководитель отдела',
+            $mode === 'department' && $department !== '' => 'У отдела нет однозначного руководителя в ваших полномочиях.',
+            $mode === 'department' => 'Выберите отдел.',
+            $mode === 'position' && $valid => 'Получателей: ' . $count . '. Каждый получит отдельную задачу.',
+            $mode === 'position' => 'Выберите должность.',
+            $valid => 'Получатель',
+            default => 'Выберите сотрудника. Отдел и должность можно использовать как фильтры.',
+        };
+        $out .= '<div class="uw-assignment-preview"><p data-assignment-summary role="status">' . s($summary) . '</p>'
+            . '<details data-assignment-list' . ($valid && $count > 1 ? '' : ' hidden') . '><summary>Посмотреть список</summary><ul>';
+        foreach (array_slice($ids, 0, recipients::MAX_BATCH) as $id) {
+            $out .= '<li>' . s($catalog['people'][$id]['name']) . '</li>';
+        }
+        $out .= '</ul></details><p data-assignment-person-name>'
+            . ($valid && $count === 1 ? s($catalog['people'][$ids[0]]['name']) : '') . '</p></div>';
         $topics = [];
-        try { foreach (forced_retraining::topics_for_user(self::$actor,$assignee) as $t) { $topics[$t['policyid']] = strip_tags($t['label']); } }
-        catch (\required_capability_exception $e) { /* A company read role does not imply remediation authority. */ }
+        if ($mode === 'person' && $valid && !$report) {
+            try {
+                foreach (forced_retraining::topics_for_user(self::$actor, $assignee) as $topic) {
+                    $topics[$topic['policyid']] = strip_tags($topic['label']);
+                }
+            } catch (\required_capability_exception $error) {
+                // Task assignment and repeat-learning permissions are independent.
+            }
+        }
         $templates = [];
-        foreach (service::templates(self::$actor) as $t) { $templates[$t->id] = $t->title . ' · v' . $t->revision; }
-        $out .= self::form('create') . self::hidden('departmentid',$department) . self::hidden('positionid',$position) . self::hidden('assigneeid',$assignee) . self::hidden('parentid',$s['parentid'])
-            . '<div class="uw-notice">Исполнитель: ' . s(service::name($assignee)) . ($s['parentid']?' · связанное поручение #'.$s['parentid']:'') . '</div>'
-            . ($report ? self::hidden('briefkey', $s['input']['briefkey'] ?? random_string(32)) : '')
-            . ($report ? self::hidden('kind', 'task') : self::select('Тип задачи','kind',
-                ['task'=>'Поручение','checklist'=>'Чек-лист','retraining'=>'Повторное обучение'],$s['templateid']?'checklist':'task'))
-            . self::field('Название','title','', 'text','required maxlength="255"')
-            . ($report ? '' : '<div data-kind="checklist">' . self::select('Шаблон','templateid',[0=>'Выберите шаблон']+$templates,$s['templateid']) . '</div>'
-            . '<div data-kind="retraining">' . self::select('Пройденный материал и его аттестация','policyid',[0=>'Выберите тему']+$topics,0)
-            . '<small>Доступны только подтверждённые ранее прохождения выбранного сотрудника. Если список пуст, назначение недоступно.</small></div>')
-            . self::textarea('Описание и критерий результата','description')
-            . '<div class="uw-form-grid">' . self::field('Дата исполнения','duedate',calendar::date(time()+DAYSECS,$p['timezone']),'date','required')
-            . self::field('Время исполнения','dueclock','17:00','time','required') . self::field('Часовой пояс','timezone',$p['timezone'])
-            . self::field('KPI: баллы за принятие','kpiweight',10,'number','min="0" max="10000"') . '</div>'
-            . '<label class="uw-check"><input type="checkbox" name="requirephoto" value="1" ' . (!empty(self::$state['input']['requirephoto'])?'checked':'') . '> Фотоотчёт обязателен</label>'
-            . ($report ? '' : '<div data-repeat-section><label class="uw-check"><input type="checkbox" name="repeat" value="1" ' . (!empty(self::$state['input']['repeat'])?'checked':'') . '> Создать повторяемую серию</label>'
-            . self::field('Завершить серию','enddate',calendar::date(time()+30*DAYSECS,$p['timezone']),'date') . self::weekdays($p['weekdays'])
-            . self::textarea('Исключённые даты серии · по одной на строке','excludedates',implode("\n",$p['excludedates'])) . '</div>')
-            . self::field('Вложения к поручению','attachments[]','','file','multiple')
-            . '<div class="uw-notice">Результат проверяет действующий прямой руководитель. Повторения используют выбранные дни и исключения; график смен сотрудника автоматически не подставляется.</div>'
-            . self::buttons('Назначить задачу') . '</form></section>';
+        foreach (service::templates(self::$actor) as $template) {
+            $templates[$template->id] = $template->title . ' · v' . $template->revision;
+        }
+        $request = $s['input']['assignmentrequest'] ?? '';
+        if (!preg_match('/\A[A-Za-z0-9]{32}\z/', $request)) {
+            $request = random_string(32);
+        }
+        $types = ['task' => 'Поручение', 'checklist' => 'Чек-лист', 'retraining' => 'Повторное обучение'];
+        $out .= '<div data-assignment-body' . ($valid ? '' : ' hidden') . '>' . self::form('create')
+            . self::hidden('targetmode', $mode) . self::hidden('departmentid', $department)
+            . self::hidden('positionid', $position) . self::hidden('assigneeid', $assignee) . self::hidden('parentid', $s['parentid'])
+            . self::hidden('assignmentrequest', $request) . self::hidden('assignmenttoken', $valid ? recipients::token($ids) : '')
+            . ($report ? self::hidden('kind', 'task') : self::select('Тип задачи', 'kind', $types, $s['templateid'] ? 'checklist' : 'task'))
+            . self::field('Название', 'title', '', 'text', 'required maxlength="255"')
+            . ($report ? '' : '<div data-kind="checklist">' . self::select('Шаблон', 'templateid',
+                [0 => 'Выберите шаблон'] + $templates, $s['templateid']) . '</div>'
+            . '<div data-kind="retraining">' . self::select('Пройденный материал и аттестация', 'policyid',
+                [0 => 'Выберите тему'] + $topics, 0)
+            . '<small data-assignment-topics-status>Доступны подтверждённые прохождения выбранного сотрудника.</small></div>')
+            . self::textarea('Описание и критерий результата', 'description')
+            . '<div class="uw-form-grid">'
+            . self::field('Дата исполнения', 'duedate', calendar::date(time() + DAYSECS, $policy['timezone']), 'date', 'required')
+            . self::field('Время исполнения', 'dueclock', '17:00', 'time', 'required')
+            . self::field('Часовой пояс', 'timezone', $policy['timezone'])
+            . self::field('KPI: баллы за принятие', 'kpiweight', 10, 'number', 'min="0" max="10000"') . '</div>'
+            . '<label class="uw-check"><input type="checkbox" name="requirephoto" value="1" '
+            . (!empty($s['input']['requirephoto']) ? 'checked' : '') . '> Фотоотчёт обязателен</label>'
+            . ($report ? '' : '<details class="uw-repeat-options" data-repeat-section' . (!empty($s['input']['repeat']) ? ' open' : '')
+            . '><summary>Повторение задачи</summary><label class="uw-check"><input type="checkbox" name="repeat" value="1" '
+            . (!empty($s['input']['repeat']) ? 'checked' : '') . '> Создать повторяемую серию</label>'
+            . self::field('Завершить серию', 'enddate', calendar::date(time() + 30 * DAYSECS, $policy['timezone']), 'date')
+            . self::weekdays(is_array($s['input']['weekdays'] ?? null) ? array_map('intval', $s['input']['weekdays']) : $policy['weekdays'])
+            . self::textarea('Исключённые даты серии · по одной на строке', 'excludedates', implode("\n", $policy['excludedates']))
+            . '</details>')
+            . self::field('Вложения к поручению', 'attachments[]', '', 'file', 'multiple')
+            . '<p class="uw-muted">Результат проверяет действующий прямой руководитель.</p>'
+            . '<div class="uw-actions"><button type="submit" class="uw-btn uw-primary" data-assignment-send>'
+            . ($mode === 'position' && $valid ? 'Назначить сотрудникам (' . $count . ')' : 'Назначить задачу')
+            . '</button></div></form></div></section>';
         return $out;
     }
     private static function template_form(): string {

@@ -83,7 +83,7 @@ if (($argv[1] ?? '') === 'seed') {
     exit;
 }
 
-assert_fixture((int)get_config('local_ustar', 'version') === 2026112301, 'Wrong workplace version');
+assert_fixture((int)get_config('local_ustar', 'version') === 2026112302, 'Wrong workplace version');
 $task = $DB->get_record('local_ustar_learning_tasks', ['title' => 'Workplace review fixture'], '*', MUST_EXIST);
 if ($argv[1] === 'inspect') {
     assert_fixture($task->status === 'assigned' && (int)$task->version === 1, 'Plan or chat modified the canonical task');

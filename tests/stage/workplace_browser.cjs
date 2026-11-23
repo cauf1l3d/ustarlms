@@ -243,6 +243,25 @@ async function main() {
         await member.page.goto(base + '/local/ustar/tasks.php?view=calendar&month=' + fixture.date.slice(0, 7));
         await member.page.locator('.uw-calendar').getByRole('link', {name: /New workplace meeting/}).waitFor();
 
+        await admin.page.goto(base + '/local/ustar/tasks.php?form=create&scope=team');
+        const composer = admin.page.locator('[data-task-assignment]');
+        const audience = composer.locator('[data-assignment-picker]');
+        await audience.locator('[name=targetmode]').selectOption('position');
+        await audience.locator('[name=positionid]').selectOption('retail_seller');
+        await composer.getByText('Получателей: 3.', {exact: false}).waitFor();
+        await composer.locator('[name=title]').fill('Browser assignment by position');
+        await audience.locator('[name=targetmode]').selectOption('person');
+        await audience.locator('[name=assigneeid]').selectOption(String(fixture.member));
+        assert.equal(await composer.locator('[name=title]').inputValue(), 'Browser assignment by position');
+        await audience.locator('[name=targetmode]').selectOption('position');
+        await audience.locator('[name=positionid]').selectOption('retail_seller');
+        await Promise.all([
+            admin.page.waitForURL(url => url.searchParams.get('scope') === 'outgoing'),
+            composer.getByRole('button', {name: 'Назначить сотрудникам (3)', exact: true}).click(),
+        ]);
+        await admin.page.getByText('Задача назначена. Получателей: 3.', {exact: true}).waitFor();
+        assert.equal(await admin.page.getByText('Browser assignment by position', {exact: true}).count(), 3);
+
         await member.page.goto(base + '/local/ustar/home.php');
         const widget = member.page.locator('#home-meetings');
         const invitation = widget.locator('article').filter({hasText: 'New workplace meeting'});

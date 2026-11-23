@@ -1,12 +1,13 @@
 <?php
 namespace local_ustar;
-use local_ustar\task_workspace\{service, policy, calendar, worker};
+use local_ustar\task_workspace\{service, policy, calendar, worker, recipients};
 defined('MOODLE_INTERNAL') || die();
 
 #[\PHPUnit\Framework\Attributes\CoversClass(service::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(policy::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(calendar::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(worker::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(recipients::class)]
 final class task_workspace_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp(); $this->resetAfterTest(true); $this->setAdminUser();
@@ -26,6 +27,96 @@ final class task_workspace_test extends \advanced_testcase {
         return service::create((int)get_admin()->id, (int)$user->id, $this->input($extra));
     }
     private function version(int $id): int { global $DB; return (int)$DB->get_field('local_ustar_learning_tasks', 'version', ['id' => $id]); }
+
+    /** One director, a direct head, two staff in the same position, and an unrelated branch. */
+    private function audience_fixture(): array {
+        global $DB;
+        $users = [];
+        foreach (['director', 'head', 'first', 'second', 'outsider'] as $key) {
+            $users[$key] = (int)$this->employee()->id;
+        }
+        $parents = [];
+        foreach (['director' => ['corp', 'corp_head', null], 'head' => ['retail', 'retail_head', 'director'],
+                'first' => ['retail', 'retail_seller', 'head'], 'second' => ['retail', 'retail_seller', 'head'],
+                'outsider' => ['opt', 'opt_manager', null]] as $key => [$dept, $position, $parent]) {
+            $parents[$key] = $DB->insert_record('local_ustar_staff_places', (object)[
+                'placecode' => 'audience_' . $key, 'departmentid' => $dept, 'positionid' => $position,
+                'managerplaceid' => $parent ? $parents[$parent] : null,
+            ]);
+            $DB->insert_record('local_ustar_assignments', (object)[
+                'staffplaceid' => $parents[$key], 'userid' => $users[$key], 'assignmenttype' => 'primary',
+            ]);
+        }
+        $this->grant($users['director'], ['local/ustar:viewteam']);
+        $this->grant($users['head'], ['local/ustar:viewteam']);
+        return [$users, $parents];
+    }
+
+    private function audience_target(string $mode, string $department, string $position, int ...$ids): array {
+        return ['mode' => $mode, 'department' => $department, 'position' => $position,
+            'user' => $mode === 'person' ? reset($ids) : 0,
+            'token' => recipients::token($ids), 'request' => random_string(32)];
+    }
+
+    public function test_department_targets_the_head_and_respects_scope(): void {
+        global $DB;
+        [$users] = $this->audience_fixture();
+        $this->setUser($users['director']);
+        $catalog = recipients::catalog($users['director']);
+        $this->assertSame($users['head'], $catalog['departments']['retail']['head']);
+        $target = $this->audience_target('department', 'retail', '', $users['head']);
+        $result = service::create_target($users['director'], $target, $this->input());
+        $this->assertSame(1, $result['count']);
+        $this->assertEquals($users['head'], $DB->get_field('local_ustar_learning_tasks', 'assigneeid', ['id' => $result['first']]));
+        $this->setUser($users['head']);
+        $this->assertArrayNotHasKey('head', recipients::catalog($users['head'])['departments']['retail']);
+        $this->assertArrayNotHasKey('opt_manager', recipients::catalog($users['head'])['positions']);
+    }
+
+    public function test_acting_head_and_ambiguous_department(): void {
+        global $DB;
+        [$users, $places] = $this->audience_fixture();
+        $DB->insert_record('local_ustar_assignments', (object)[
+            'staffplaceid' => $places['head'], 'userid' => $users['first'], 'assignmenttype' => 'acting',
+        ]);
+        $this->setUser($users['director']);
+        $this->assertSame($users['first'], recipients::catalog($users['director'])['departments']['retail']['head']);
+        $DB->insert_record('local_ustar_assignments', (object)[
+            'staffplaceid' => $places['head'], 'userid' => $users['second'], 'assignmenttype' => 'acting',
+        ]);
+        $this->assertArrayNotHasKey('head', recipients::catalog($users['director'])['departments']['retail']);
+    }
+
+    public function test_position_creates_individual_tasks_and_replay_is_idempotent(): void {
+        global $DB;
+        [$users] = $this->audience_fixture();
+        $this->setUser($users['head']);
+        $target = $this->audience_target('position', '', 'retail_seller', $users['first'], $users['second']);
+        $input = $this->input();
+        $result = service::create_target($users['head'], $target, $input);
+        $this->assertSame(2, $result['count']);
+        $this->assertSame($result, service::create_target($users['head'], $target, $input));
+        $tasks = $DB->get_fieldset_select('local_ustar_learning_tasks', 'assigneeid', 'assignerid = ?', [$users['head']]);
+        $this->assertEqualsCanonicalizing([$users['first'], $users['second']], array_map('intval', $tasks));
+        $this->expectException(\moodle_exception::class);
+        $this->expectExceptionMessage(get_string('taskassignmentduplicate', 'local_ustar'));
+        service::create_target($users['head'], $target, $this->input(['title' => 'Different request']));
+    }
+
+    public function test_position_roster_changed_after_preview_leaves_no_tasks(): void {
+        global $DB;
+        [$users] = $this->audience_fixture();
+        $this->setUser($users['head']);
+        $target = $this->audience_target('position', 'retail', 'retail_seller', $users['first'], $users['second']);
+        $DB->set_field('user', 'suspended', 1, ['id' => $users['second']]);
+        try {
+            service::create_target($users['head'], $target, $this->input());
+            $this->fail('Expected the stale audience to be rejected');
+        } catch (\moodle_exception $error) {
+            $this->assertSame('taskassignmentchanged', $error->errorcode);
+            $this->assertFalse($DB->record_exists('local_ustar_learning_tasks', ['assignerid' => $users['head']]));
+        }
+    }
 
     public function test_business_clock_skips_weekends_exclusions_and_dst(): void {
         $p = policy::validate(['timezone' => 'Europe/Berlin', 'excludedates' => ['2026-03-30']]);

@@ -22,8 +22,8 @@ final class service {
     public static function can_manage(int $actorid): bool {
         if (!team_access::active_actor($actorid)) { return false; }
         if (team_access::company($actorid)) { return true; }
-        $scope = organization_model::manager_scope($actorid);
-        return capabilities::has($actorid, capabilities::TEAM_READ) && !empty($scope['allowed']);
+        return capabilities::has($actorid, capabilities::TEAM_READ)
+            && !empty(organization_model::manager_scope($actorid)['allowed']);
     }
 
     public static function is_hrd(int $actorid): bool {
@@ -84,9 +84,9 @@ final class service {
     }
 
     public static function rows(int $actorid, string $scope, string $filter = 'all', int $page = 0,
-            int $from = 0, int $to = 0, string $query = '', string $kind = '', string $status = ''): array {
+            int $from = 0, int $to = 0, string $query = '', string $kind = '', string $status = '', int $limit = 0): array {
         global $DB;
-        $pagesize = $status === '' ? 50 : 20;
+        $pagesize = $limit ?: ($status === '' ? 50 : 20);
         [$where, $params] = self::scope_sql($actorid, $scope);
         $now = time();
         if ($filter === 'active') { $where .= " AND t.status IN ('assigned','in_progress')"; }
@@ -131,6 +131,27 @@ final class service {
             $out[] = $item;
         }
         return ['items' => $out, 'total' => $total, 'page' => $page, 'hasmore' => ($page + 1) * $pagesize < $total];
+    }
+
+    /** Fetch only the draft inputs needed by the assignee's quick report forms. */
+    public static function home_report_inputs(int $actorid, array $taskids): array {
+        global $DB;
+        self::actor($actorid);
+        if (!$taskids) {
+            return [];
+        }
+        [$ids, $params] = $DB->get_in_or_equal($taskids, SQL_PARAMS_NAMED, 'quicktask');
+        return $DB->get_records_sql("SELECT t.id, t.version, m.id AS metaid, m.requirephoto,
+                                            v.definitionjson, r.answersjson, r.commenttext
+                                       FROM {local_ustar_learning_tasks} t
+                                  LEFT JOIN {local_ustar_task_meta} m ON m.taskid = t.id
+                                  LEFT JOIN {local_ustar_task_tpl_versions} v ON v.id = m.templateversionid
+                                  LEFT JOIN {local_ustar_task_reports} r ON r.taskid = t.id AND r.taskversion = (
+                                                    SELECT MAX(previous.taskversion)
+                                                      FROM {local_ustar_task_reports} previous WHERE previous.taskid = t.id)
+                                      WHERE t.id $ids AND t.assigneeid = :actor AND t.privacy = :privacy
+                                            AND t.status IN ('assigned','in_progress')",
+            $params + ['actor' => $actorid, 'privacy' => learning_tasks::PRIVACY_ASSIGNED]);
     }
 
     /** Moves that can start directly or open the normal report/review form. */
@@ -186,7 +207,7 @@ final class service {
         return $out;
     }
 
-    private static function names(array $ids): array {
+    public static function names(array $ids): array {
         global $DB;
         $out = [];
         foreach ($DB->get_records_list('user', 'id', array_values(array_unique($ids)), '',
@@ -218,8 +239,9 @@ final class service {
         learning_tasks::view($taskid, $actorid);
         $task = $DB->get_record('local_ustar_learning_tasks', ['id' => $taskid], '*', MUST_EXIST);
         if ($task->privacy !== learning_tasks::PRIVACY_ASSIGNED) { self::deny(); }
-        $out = self::present($task);
-        $out['meta'] = self::meta($taskid);
+        $meta = self::meta($taskid);
+        $out = self::present($task, $meta, true);
+        $out['meta'] = $meta;
         $out['fields'] = self::fields($out['meta']);
         $reportwhere = ['taskid' => $taskid];
         if ((int)$task->assigneeid !== $actorid) { $reportwhere['status'] = 'final'; }

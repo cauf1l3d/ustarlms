@@ -95,3 +95,18 @@ html[data-ustar-theme="dark"] .u-workspace{--u-success-fg:#83d7a6;--u-danger-fg:
 .uw-plan-board .uw-board-card .uw-btn { min-height: 42px; }
 .uw-meeting-check { display: flex; align-items: center; gap: 8px 14px; flex-wrap: wrap; margin: 12px 0; }
 .uw-meeting-check-result { font-size: 14px; overflow-wrap: anywhere; }
+
+.uw-meeting-list { display: grid; gap: 0; }
+.uw-meeting-card { padding: 16px 20px; border-top: 1px solid var(--uw-line); min-width: 0; overflow-wrap: anywhere; }
+.uw-meeting-card h3 { font-size: 1rem; margin: 0 0 5px; }
+.uw-meeting-card h3 a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.uw-meeting-pending { font-weight: 700; }
+.uw-meeting-response { margin-top: 8px; }
+.uw-meeting-change { margin-top: 8px; }
+.uw-meeting-change summary { width: fit-content; cursor: pointer; }
+.uw-meeting-detail .uw-brief-copy { margin-top: 16px; }
+.uw-home-shortcuts { padding: 0 20px 12px; }
+.u-workspace .uw-meeting-when { margin: 0 0 4px; }
+.u-workspace .uw-meeting-card .uw-footnote,
+.u-workspace .uw-meeting-detail .uw-footnote { margin: 0 0 8px; }
+.uw-meeting-card[id], #home-meetings { scroll-margin-top: 90px; }

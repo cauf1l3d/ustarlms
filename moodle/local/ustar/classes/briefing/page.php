@@ -289,39 +289,67 @@ final class page {
 
     public function meetings(): string {
         $section = $this->state['meetingsection'];
-        $date = $this->state['meetingdate'] ?: calendar::date(time(), service::ZONE);
+        $now = time();
+        $date = $this->state['meetingdate'] ?: calendar::date($now, service::ZONE);
         try {
-            $busy = meetings::busy($this->actor, $date);
+            calendar::timestamp($date, '00:00', service::ZONE);
         } catch (\invalid_parameter_exception $error) {
-            $date = calendar::date(time(), service::ZONE);
-            $busy = meetings::busy($this->actor, $date);
+            $date = calendar::date($now, service::ZONE);
         }
-        $rooms = meetings::rooms($this->actor);
+        $canbook = meetings::can_book($this->actor);
+        $admin = service::admin($this->actor);
         $id = $this->state['meetingid'];
         $detail = $id ? meetings::detail($this->actor, $id) : null;
         $out = '<section class="uw-panel"><div class="uw-panel-head"><div><h2>Встречи</h2><p>Переговорные и приглашения</p></div>'
             . '<div class="uw-actions">' . $this->link('Мои встречи')
+            . $this->link('Занятость переговорных', ['meetingsection' => 'availability'])
             . $this->link('Календарь задач', ['view' => 'calendar']);
-        if (meetings::can_book($this->actor)) {
+        if ($canbook) {
             $out .= $this->link('Назначить встречу', ['meetingsection' => 'edit', 'meetingdate' => $date], 'uw-btn uw-primary');
         }
-        if (service::admin($this->actor)) {
+        if ($admin) {
             $out .= $this->link('Настроить переговорные', ['meetingsection' => 'rooms']);
         }
         $out .= '</div></div></section>';
-        if ($section === 'rooms' && service::admin($this->actor)) {
+        if ($section === 'rooms' && $admin) {
             return $out . $this->rooms();
         }
-        if ($section === 'edit' && meetings::can_book($this->actor)
-                && (!$detail || ($detail['owner'] && !$detail['meeting']->cancelled && $detail['meeting']->startat > time()))) {
-            $out .= $this->meeting_form($detail, $rooms, $date);
-        } else if ($detail) {
-            $out .= $this->meeting_detail($detail);
+        if ($section === 'edit' && $canbook
+                && (!$detail || ($detail['owner'] && !$detail['meeting']->cancelled && $detail['meeting']->startat > $now))) {
+            return $out . $this->meeting_form($detail, meetings::rooms($this->actor), $date);
+        }
+        if ($detail) {
+            return $out . $this->meeting_detail($detail, $now);
+        }
+        if ($section === 'availability' || ($section === '' && $this->state['meetingdate'])) {
+            return $out . $this->room_availability($date, $canbook);
         }
 
-        $out .= '<section class="uw-panel"><div class="uw-panel-head"><h2>Занятость переговорных</h2></div>'
+        $limit = 12;
+        $page = min(10000, $this->state['meetingpage'] ?? 0);
+        $upcoming = meetings::upcoming($this->actor, $now, 90, $page * $limit, $limit + 1);
+        $out .= '<section class="uw-panel"><div class="uw-panel-head"><h2>Мои встречи на ближайшие 90 дней</h2></div>';
+        $out .= meeting_cards::render(array_slice($upcoming, 0, $limit), $now, 'list', $page);
+        if ($page || count($upcoming) > $limit) {
+            $out .= '<nav class="uw-actions" aria-label="Страницы встреч">';
+            if ($page) {
+                $out .= $this->link('Назад', ['meetingpage' => $page - 1]);
+            }
+            if (count($upcoming) > $limit && $page < 10000) {
+                $out .= $this->link('Далее', ['meetingpage' => $page + 1]);
+            }
+            $out .= '</nav>';
+        }
+        return $out . '</section>';
+    }
+
+    private function room_availability(string $date, bool $canbook): string {
+        $rooms = meetings::rooms($this->actor);
+        $busy = meetings::busy($this->actor, $date);
+        $out = '<section class="uw-panel"><div class="uw-panel-head"><h2>Занятость переговорных</h2></div>'
             . '<form method="get" class="uw-form" action="' . (new \moodle_url('/local/ustar/tasks.php'))->out() . '">'
-            . self::hidden('view', 'meetings') . self::hidden('scope', $this->state['scope'])
+            . self::hidden('view', 'meetings') . self::hidden('meetingsection', 'availability')
+            . self::hidden('scope', $this->state['scope'])
             . '<div class="uw-actions">' . $this->field('Дата (МСК)', 'meetingdate', $date, 'date', 'required')
             . self::button('Показать занятость', false) . '</div></form>';
         foreach ($rooms as $room) {
@@ -331,23 +359,12 @@ final class page {
             }
             $out .= '<div class="uw-brief-room"><strong>' . s($room->name) . '</strong><span>'
                 . ($slots ? 'Занято ' . implode(', ', $slots) : 'Свободна весь день') . '</span></div>';
-            if (meetings::can_book($this->actor)) {
+            if ($canbook) {
                 $out .= $this->booking_slots($date, (int)$room->id, $busy[(int)$room->id] ?? []);
             }
         }
         if (!$rooms) {
             $out .= '<div class="uw-empty">Переговорные пока не настроены.</div>';
-        }
-        $upcoming = meetings::visible($this->actor, time(), time() + 90 * DAYSECS, true);
-        $out .= '</section><section class="uw-panel"><div class="uw-panel-head"><h2>Мои встречи на ближайшие 90 дней</h2></div>';
-        foreach ($upcoming as $meeting) {
-            $summary = self::date($meeting->startat) . ' МСК · ' . s($meeting->roomname ?? 'Без переговорной');
-            $out .= '<div class="uw-brief-room">' . $this->link($meeting->title, ['meetingid' => $meeting->id], 'uw-chip')
-                . '<span>' . $summary . '</span><span class="uw-badge">'
-                . s($meeting->cancelled ? 'Отменена' : (meetings::RESPONSES[$meeting->rsvp] ?? 'Организатор')) . '</span></div>';
-        }
-        if (!$upcoming) {
-            $out .= '<div class="uw-empty">Предстоящих встреч пока нет.</div>';
         }
         return $out . '</section>';
     }
@@ -433,34 +450,30 @@ final class page {
         return (new \DateTimeImmutable('@' . $at))->setTimezone(new \DateTimeZone(service::ZONE))->format('Y-m-d\TH:i');
     }
 
-    private function meeting_detail(array $detail): string {
+    private function meeting_detail(array $detail, int $now): string {
+        global $DB;
         $row = $detail['meeting'];
         $params = ['meetingid' => $row->id];
-        $out = '<section class="uw-panel"><div class="uw-panel-head"><div><h2>' . s($row->title) . '</h2><p>'
-            . self::date($row->startat) . ' – ' . self::date($row->endat) . ' МСК · '
-            . s(meetings::rooms($this->actor)[$row->roomid]->name ?? 'Без переговорной')
-            . '</p><p>Организатор: ' . s(tasks::name((int)$row->ownerid)) . '</p></div>'
-            . ($row->cancelled ? '<span class="uw-badge uw-danger">Встреча отменена</span>' : '') . '</div>'
-            . '<div class="uw-brief-copy">' . s($row->agenda) . '</div>';
+        $row->rsvp = $detail['member']->rsvp ?? null;
+        $row->roomname = $row->roomid ? ($DB->get_field('local_ustar_meeting_rooms', 'name', ['id' => $row->roomid]) ?: null) : null;
+        $organizer = meeting_cards::organizers([(int)$row->ownerid])[$row->ownerid] ?? '—';
+        $out = '<section class="uw-panel uw-meeting-detail"><h2>' . s($row->title) . '</h2>'
+            . meeting_cards::metadata($row, $organizer) . meeting_cards::response($row, $now);
+        if ($row->agenda !== '') {
+            $out .= '<div class="uw-brief-copy">' . s($row->agenda) . '</div>';
+        }
         if ($detail['owner'] && $detail['participants']) {
             $out .= '<h3>Приглашённые</h3>';
+            $names = tasks::names(array_column($detail['participants'], 'userid'));
             foreach ($detail['participants'] as $person) {
-                $out .= '<div class="uw-brief-room"><span>' . s(tasks::name((int)$person->userid)) . '</span><span>'
+                $out .= '<div class="uw-brief-room"><span>' . s($names[$person->userid] ?? '—') . '</span><span>'
                     . s(meetings::RESPONSES[$person->rsvp]) . '</span></div>';
             }
         }
-        if (!$row->cancelled && $row->startat > time()) {
-            if ($detail['owner']) {
-                $out .= '<div class="uw-actions">' . $this->link('Редактировать', $params + ['meetingsection' => 'edit'])
-                    . $this->post('meeting_cancel', $params) . self::hidden('briefrevision', $row->revision)
-                    . self::button('Отменить встречу', false) . '</form></div>';
-            } else if ($detail['member']) {
-                $out .= $this->post('meeting_rsvp', $params) . self::hidden('briefrevision', $row->revision)
-                    . self::hidden('expectedrsvp', $detail['member']->rsvp)
-                    . '<p>' . s(meetings::RESPONSES[$detail['member']->rsvp]) . '</p>'
-                    . '<div class="uw-actions"><button class="uw-btn uw-primary" name="rsvp" value="accepted">Приму участие</button>'
-                    . '<button class="uw-btn" name="rsvp" value="declined">Не смогу</button></div></form>';
-            }
+        if ($detail['owner'] && !$row->cancelled && $row->startat > $now) {
+            $out .= '<div class="uw-actions">' . $this->link('Редактировать', $params + ['meetingsection' => 'edit'])
+                . $this->post('meeting_cancel', $params) . self::hidden('briefrevision', $row->revision)
+                . self::button('Отменить встречу', false) . '</form></div>';
         }
         return $out . '</section>';
     }

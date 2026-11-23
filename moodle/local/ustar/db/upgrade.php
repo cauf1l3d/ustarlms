@@ -5099,5 +5099,9 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
     if ($oldversion < 2026112300) {
         upgrade_plugin_savepoint(true, 2026112300, 'local', 'ustar');
     }
+    if ($oldversion < 2026112301) {
+        // Home widgets reuse the existing task, meeting and preference tables.
+        upgrade_plugin_savepoint(true, 2026112301, 'local', 'ustar');
+    }
 return true;
 }

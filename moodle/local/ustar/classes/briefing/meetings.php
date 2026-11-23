@@ -18,7 +18,8 @@ final class meetings {
         return self::allowed($actor) && service::allowed($actor);
     }
 
-    public static function rooms(int $actor, bool $includeinactive = false): array {
+    public static function rooms(int $actor, bool $includeinactive = false,
+            int $offset = 0, int $limit = 0, ?int $priorityat = null): array {
         global $DB;
         if (!self::allowed($actor) || ($includeinactive && !service::admin($actor))) {
             service::deny();
@@ -140,13 +141,13 @@ final class meetings {
             service::deny();
         }
         $row = $DB->get_record('local_ustar_meetings', ['id' => $id]);
-        $member = $row ? self::member($id, $actor) : null;
+        $member = $row && (int)$row->ownerid !== $actor ? self::member($id, $actor) : null;
         if (!$row || ((int)$row->ownerid !== $actor && (!$member || $member->rsvp === 'removed'))) {
             service::deny();
         }
         $owner = (int)$row->ownerid === $actor;
         return ['meeting' => $row, 'member' => $member, 'owner' => $owner,
-            'participants' => self::participants($id)];
+            'participants' => $owner ? self::participants($id) : []];
     }
 
     private static function same_details(\stdClass $row, array $proposed, array $participants): bool {
@@ -375,20 +376,35 @@ final class meetings {
             'meeting:' . $meeting . ':' . $revision . ':' . $participant);
     }
 
-    public static function visible(int $actor, int $from, int $to, bool $includeinactive = false): array {
+    /** Apply the participant scope before sorting or limiting any listing. */
+    public static function upcoming(int $actor, int $now, int $days, int $offset, int $limit,
+            bool $includeinactive = true): array {
+        return self::visible($actor, $now, $now + $days * DAYSECS, $includeinactive, $offset, $limit, $now);
+    }
+
+    public static function visible(int $actor, int $from, int $to, bool $includeinactive = false,
+            int $offset = 0, int $limit = 0, ?int $priorityat = null): array {
         global $DB;
         if (!self::allowed($actor)) {
             return [];
         }
         $active = $includeinactive ? '' : " AND m.cancelled = 0 AND (p.rsvp IS NULL OR p.rsvp <> 'declined')";
-        return $DB->get_records_sql("SELECT m.*, p.rsvp, r.name AS roomname
+        $params = ['participant' => $actor, 'actor' => $actor, 'starttime' => $from, 'endtime' => $to];
+        $order = 'm.startat ASC, m.id ASC';
+        $agenda = $priorityat === null ? 'm.agenda,' : '';
+        if ($priorityat !== null) {
+            $order = "CASE WHEN m.cancelled = 0 AND p.rsvp = 'pending' AND m.startat > :priorityat THEN 0
+                        WHEN m.cancelled = 0 AND (p.rsvp IS NULL OR p.rsvp <> 'declined') THEN 1 ELSE 2 END, " . $order;
+            $params['priorityat'] = $priorityat;
+        }
+        return $DB->get_records_sql("SELECT m.id, m.ownerid, m.title, m.startat, m.endat, m.cancelled,
+                                           m.revision, $agenda p.rsvp, r.name AS roomname
               FROM {local_ustar_meetings} m
          LEFT JOIN {local_ustar_meeting_members} p ON p.meetingid = m.id AND p.userid = :participant AND p.rsvp <> 'removed'
          LEFT JOIN {local_ustar_meeting_rooms} r ON r.id = m.roomid
              WHERE (m.ownerid = :actor OR p.id IS NOT NULL) AND m.startat < :endtime AND m.endat > :starttime
                    $active
-          ORDER BY m.startat ASC, m.id ASC",
-            ['participant' => $actor, 'actor' => $actor, 'starttime' => $from, 'endtime' => $to]);
+          ORDER BY $order", $params, $offset, $limit);
     }
 
     public static function busy(int $actor, string $date): array {

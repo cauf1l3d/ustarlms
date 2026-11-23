@@ -654,7 +654,10 @@ final class page {
         $labels=['task_assigned'=>'Назначена','task_started'=>'Начата','task_sent_for_review'=>'Отчёт отправлен','task_completed'=>'Выполнена',
             'task_approved'=>'Результат принят','task_returned'=>'Возвращена на доработку','task_cancelled'=>'Отменена','task_revised'=>'Срок / исполнитель изменён',
             'report_draft_saved'=>'Черновик отчёта сохранён','task_reminder'=>'Напоминание исполнителю','task_escalated'=>'Эскалация','task_learning_result'=>'Получен учебный результат'];
-        foreach($t['events'] as $event){$out.='<p><span>'.s(userdate($event['time'],'%d.%m %H:%M',$t['timezone'])).'</span> · '.s($labels[$event['event']]??$event['event']).($event['comment']?' · '.s($event['comment']):'').'</p>';}
+        foreach ($t['events'] as $event) {
+            if ($event['event'] === 'task_assignment_receipt') { continue; }
+            $out.='<p><span>'.s(userdate($event['time'],'%d.%m %H:%M',$t['timezone'])).'</span> · '.s($labels[$event['event']]??$event['event']).($event['comment']?' · '.s($event['comment']):'').'</p>';
+        }
         $out .= '</div>';
         if ($discussion) {
             $chat = discussion::thread(self::$actor, $id, 0, null, false);

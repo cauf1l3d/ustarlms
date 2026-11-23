@@ -90,6 +90,17 @@ final class task_files {
         }
     }
 
+    /** Copy files between newly created assignments in the same write transaction. */
+    public static function copy_assignment_attachments(int $sourceid, array $taskids): void {
+        $contextid = \context_system::instance()->id;
+        $storage = get_file_storage();
+        foreach ($storage->get_area_files($contextid, 'local_ustar', self::ATTACHMENT, $sourceid, 'id', false) as $file) {
+            foreach ($taskids as $id) {
+                $storage->create_file_from_storedfile(['itemid' => $id], $file);
+            }
+        }
+    }
+
     /** Only the selected task loads its file list. ACL is checked again by pluginfile. */
     public static function list_for(int $taskid, int $actorid): array {
         learning_tasks::view($taskid, $actorid);

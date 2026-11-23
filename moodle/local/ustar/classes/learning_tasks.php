@@ -159,7 +159,6 @@ final class learning_tasks {
 
     /** @param array<string,mixed> $input @return array<string,mixed> */
     public static function assign(int $actorid, int $assigneeid, array $input, array $uploads = []): array {
-        global $DB;
         self::assert_available();
         if (!self::can_assign($actorid, $assigneeid)) {
             throw new \required_capability_exception(
@@ -186,7 +185,11 @@ final class learning_tasks {
         try {
             $ids = [];
             foreach ($assignees as $assigneeid) {
-                $ids[$assigneeid] = self::insert_assignment($actorid, $assigneeid, $input, $uploads);
+                $ids[$assigneeid] = self::insert_assignment($actorid, $assigneeid, $input, $ids ? [] : $uploads);
+            }
+            if ($uploads && count($ids) > 1) {
+                $taskids = array_values($ids);
+                task_files::copy_assignment_attachments($taskids[0], array_slice($taskids, 1));
             }
             $tx->allow_commit();
             return $ids;

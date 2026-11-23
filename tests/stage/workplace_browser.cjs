@@ -255,12 +255,23 @@ async function main() {
         assert.equal(await composer.locator('[name=title]').inputValue(), 'Browser assignment by position');
         await audience.locator('[name=targetmode]').selectOption('position');
         await audience.locator('[name=positionid]').selectOption('retail_seller');
+        await composer.locator('input[type=file]').setInputFiles({name: 'assignment.txt', mimeType: 'text/plain',
+            buffer: Buffer.from('Shared task instructions')});
         await Promise.all([
             admin.page.waitForURL(url => url.searchParams.get('scope') === 'outgoing'),
             composer.getByRole('button', {name: 'Назначить сотрудникам (3)', exact: true}).click(),
         ]);
-        await admin.page.getByText('Задача назначена. Получателей: 3.', {exact: true}).waitFor();
+        await admin.page.locator('.alert-success').filter({hasText: /Задача назначена\. Получателей: 3\.|Task assigned\. Recipients: 3\./}).waitFor();
         assert.equal(await admin.page.getByText('Browser assignment by position', {exact: true}).count(), 3);
+        const colleague = await login(browser, 'work_colleague');
+        for (const recipient of [member, colleague, outsider]) {
+            await recipient.page.goto(base + '/local/ustar/tasks.php?scope=mine');
+            await recipient.page.getByRole('link', {name: /Browser assignment by position/}).click();
+            const attachment = recipient.page.getByRole('link', {name: /assignment\.txt/});
+            await attachment.waitFor();
+            const fileURL = new URL(await attachment.getAttribute('href'), base).href;
+            assert.equal(await (await recipient.context.request.get(fileURL)).text(), 'Shared task instructions');
+        }
 
         await member.page.goto(base + '/local/ustar/home.php');
         const widget = member.page.locator('#home-meetings');

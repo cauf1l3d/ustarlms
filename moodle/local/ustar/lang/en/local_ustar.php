@@ -95,3 +95,5 @@ $string['taskassignmentduplicate'] = 'This form was already submitted. Open a ne
 $string['taskassignmentlimit'] = 'You can assign a task to no more than {$a} employees at a time.';
 $string['taskassignmentindividual'] = 'Choose one employee for this type of task. Retraining does not support recurring schedules.';
 $string['taskassignmentcreated'] = 'Task assigned. Recipients: {$a}.';
+$string['positionprofileinvalid'] = '{$a}';
+$string['privacy:metadata:positionprofiles'] = 'Development models, their editors and employee assignments.';

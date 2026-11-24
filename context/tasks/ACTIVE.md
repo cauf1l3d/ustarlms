@@ -1,9 +1,9 @@
 # Активная работа · 24.11.2026
 
-WORKPLACE-MIGRATION, PR129/local2302. [Ревью назначения](../reviews/20261123/TASK_ASSIGNMENT_RU.md),
-[установка](../../docs/TASK_ASSIGNMENT_INSTALL_RU.md). На server1 подтверждён local2302.
-[Квитанция](../runtime/task_assignment_owner_deploy_20261124.json).
-Пилот нового экрана и замеры рабочего дня ожидаются.
+POSITION-PERSONAL-01, PR130/local2400. [Ревью](../reviews/20261124/POSITION_PROFILES_RU.md),
+[установка](../../docs/POSITION_PROFILES_INSTALL_RU.md).
+На server1 подтверждён local2302. [Квитанция](../runtime/task_assignment_owner_deploy_20261124.json).
+Приёмка рабочих ролей и измерения рабочего дня ожидаются.
 
 ## Повторная привязка Telegram
 

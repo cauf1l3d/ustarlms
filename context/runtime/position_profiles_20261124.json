@@ -1,0 +1,78 @@
+{
+  "date_msk": "2026-11-24",
+  "scope": "isolated_position_model_qualification",
+  "source_pr": 130,
+  "application_commit": "2d88d505c2c0b17ad4385bef009f98740f4d23f5",
+  "package_builder_commit": "0d136df0ad059cfb1f3f97f3d41c38f5b96f4a2a",
+  "known_server_baseline": "context/runtime/task_assignment_owner_deploy_20261124.json",
+  "local_ustar": 2026112400,
+  "theme_ustar": 2026110200,
+  "worker_commit": "17b6141007d65207d9b594138753d28b39ab70bf",
+  "schema_changes": [
+    "local_ustar_pos_profiles",
+    "local_ustar_pos_profile_users"
+  ],
+  "checks": [
+    "shared_base_and_distinct_private_steps_for_two_employees_on_one_position",
+    "personal_steps_follow_common_route",
+    "historical_points_survive_removing_an_assignment",
+    "staffing_revision_stops_old_selection",
+    "foreign_position_assignment_rejected",
+    "employee_cannot_impersonate_editor",
+    "actual_grade_unchanged_by_goal_assignment",
+    "learning_tab_main_sections_at_390px",
+    "create_two_models_and_assign_through_browser",
+    "employee_can_see_own_model",
+    "visible_source_selector_in_collapsed_evidence_editor",
+    "employee_browses_assigned_moodle_quiz_and_foreign_link_returns_to_own_route"
+  ],
+  "build": {
+    "run": 45383841554,
+    "artifact": 14913984211,
+    "result": "success",
+    "operator_tests": 10,
+    "archive": "ustar-position-profiles-2d88d505.tar.gz",
+    "bytes": 465293,
+    "sha256": "6046f0f04bd2a29477aa5216f4ec488244bb78101a5d36297dd0032b17acc123",
+    "zip_sha256": "76b032ea8d9c2da4d43a056afd8fb85110f9b82a95e3cc833799bafcd9877bb8",
+    "zip_crc": "verified",
+    "packaged_payload_files": 61,
+    "ci_and_retained_archive_byte_identity": "verified"
+  },
+  "native_install": {
+    "moodle": "5.1.8",
+    "postgres": "17.11",
+    "from_version": 2026112302,
+    "to_version": 2026112400,
+    "restored_version": 2026112302,
+    "package_install": "pass",
+    "preserved_messages": 700,
+    "backup_code_sha_verification": "pass",
+    "backup_postgres_restore": "pass",
+    "post_install_login": "http_200",
+    "additive_schema_only": "pass",
+    "worker_and_cron": "isolated_host_simulation",
+    "focused_phpunit_tests": 70,
+    "focused_phpunit_assertions": 284
+  },
+  "functional_ci": {
+    "run": 45383841996,
+    "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/45383841996",
+    "head": "0d136df0ad059cfb1f3f97f3d41c38f5b96f4a2a",
+    "status": "success",
+    "jobs": {
+      "moodle-511": {
+        "job_id": 138409661651,
+        "status": "success"
+      },
+      "moodle-518": {
+        "job_id": 138409662023,
+        "status": "success"
+      }
+    }
+  },
+  "server1": {
+    "owner_deployed_candidate": false,
+    "real_roles_acceptance": "pending"
+  }
+}

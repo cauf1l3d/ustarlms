@@ -41,3 +41,6 @@ scenarios:
 coverage_limit: Selected command/read paths only; complete endpoint, file access and
   actor/scope negative-path audit remains open
 source_reconciled_at: '2026-11-01'
+personal_development_goal:
+  review: context/reviews/20261124/POSITION_PROFILES_RU.md
+  rule: HR assigns a goal tied to the published ladder version. Actual grades use the regular grade workflow.

@@ -1,5 +1,7 @@
 # Навигация по контексту
 
+- [Персональные модели должностей](reviews/20261124/POSITION_PROFILES_RU.md), [проверки](runtime/position_profiles_20261124.json), [установка](../docs/POSITION_PROFILES_INSTALL_RU.md).
+
 - [Постановка задач по оргструктуре](reviews/20261123/TASK_ASSIGNMENT_RU.md), [проверки](runtime/task_assignment_20261123.json), [установка на server1](runtime/task_assignment_owner_deploy_20261124.json), [установка](../docs/TASK_ASSIGNMENT_INSTALL_RU.md), [квитанция предыдущего выпуска](runtime/workplace_home_owner_deploy_20261123.json).
 - [Встречи и задачи на главной](reviews/20261123/WORKPLACE_HOME_RU.md), [проверки](runtime/workplace_home_20261123.json), [установка](../docs/WORKPLACE_HOME_INSTALL_RU.md).
 

@@ -5107,5 +5107,18 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         // Recipient audiences write through the existing task aggregate and event log.
         upgrade_plugin_savepoint(true, 2026112302, 'local', 'ustar');
     }
+    if ($oldversion < 2026112400) {
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) {
+            throw new coding_exception('Cannot load personal position model schema');
+        }
+        foreach (['local_ustar_pos_profiles', 'local_ustar_pos_profile_users'] as $tablename) {
+            $table = $schema->getStructure()->getTable($tablename);
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026112400, 'local', 'ustar');
+    }
 return true;
 }

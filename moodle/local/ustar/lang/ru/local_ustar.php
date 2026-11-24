@@ -85,3 +85,5 @@ $string['taskassignmentduplicate'] = 'Эта форма уже отправле�
 $string['taskassignmentlimit'] = 'За один раз можно назначить задачу не более чем {$a} сотрудникам.';
 $string['taskassignmentindividual'] = 'Для этого вида задачи выберите одного сотрудника. Для повторного обучения серия недоступна.';
 $string['taskassignmentcreated'] = 'Задача назначена. Получателей: {$a}.';
+$string['positionprofileinvalid'] = '{$a}';
+$string['privacy:metadata:positionprofiles'] = 'Модели развития, их редакторы и персональные назначения сотрудникам.';

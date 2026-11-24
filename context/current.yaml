@@ -143,9 +143,9 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Owner confirmed task assignment local2302 active on server1 with a successful
-    installer postcheck. Role pilot and workload measurements remain open.
-  next_task: WORKPLACE-MIGRATION
+  activity: Personal position models and learning editor in draft PR 130 for local2400.
+    Owner confirmed local2302 active on server1.
+  next_task: POSITION-PERSONAL-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -193,6 +193,7 @@ current_work:
     OPS-02: waiting_external
     PERF-01: in_progress
     PLAT-01: deferred
+    POSITION-PERSONAL-01: source_and_package_candidate_owner_preflight_pending
     PRIVACY-01: deferred
     REWARD-SHOP-01: owner_ui_accepted
     REWARD-SHOP-UX: native_qualified_owner_install_pending

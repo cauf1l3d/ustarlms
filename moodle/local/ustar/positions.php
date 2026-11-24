@@ -16,6 +16,7 @@ require_capability(
 \local_ustar\hr_access::require_structure_manager();
 
 $canmanage = true;
+$formerror = '';
 
 
 $structure =
@@ -57,7 +58,7 @@ $positionid =
     );
 
 $tab = optional_param('tab', 'overview', PARAM_ALPHA);
-if (!in_array($tab, ['overview', 'requirements', 'learning', 'grades', 'application', 'graph'], true)) {
+if (!in_array($tab, ['overview', 'requirements', 'learning', 'personal', 'grades', 'application', 'graph'], true)) {
     $tab = 'overview';
 }
 
@@ -114,6 +115,29 @@ if (
 
 
     try {
+
+        if (in_array($action, ['saveprofile', 'assignprofile', 'changeprofileroute'], true)) {
+            $tab = 'personal';
+            $profileid = optional_param('profileid', 0, PARAM_INT);
+            $actor = (int)$USER->id;
+            if ($action === 'saveprofile') {
+                $profileid = \local_ustar\position_profiles::save($positionid, $profileid, required_param('revision', PARAM_INT),
+                    required_param('profilename', PARAM_TEXT), optional_param('targetgrade', '', PARAM_ALPHANUMEXT),
+                    optional_param_array('skilllevels', [], PARAM_INT), $actor);
+            } else if ($action === 'assignprofile') {
+                \local_ustar\position_profiles::assign($positionid, required_param('employeeid', PARAM_INT),
+                    required_param('assignedprofileid', PARAM_INT), required_param('revision', PARAM_INT),
+                    required_param('staffassignment', PARAM_INT), $actor);
+            } else {
+                $change = required_param('routechange', PARAM_ALPHA);
+                $target = required_param($change === 'add' ? 'cmid' : 'stepid', PARAM_INT);
+                \local_ustar\position_profiles::change_route($positionid, $profileid,
+                    required_param('routerevision', PARAM_ALPHANUM), $change, $target, $actor);
+            }
+            redirect(new moodle_url('/local/ustar/positions.php', [
+                'positionid' => $positionid, 'tab' => 'personal', 'profileid' => $profileid,
+            ]));
+        }
 
         if ($action === 'savegrade') {
             \local_ustar\career_grades::save($positionid,
@@ -307,9 +331,19 @@ if (
 
     } catch (\Throwable $e) {
 
-        \core\notification::error(
-            $e->getMessage()
-        );
+        if (in_array($tab, ['personal', 'learning'], true)) {
+            if ($e instanceof \invalid_parameter_exception) {
+                $formerror = (string)($e->debuginfo ?: $e->getMessage());
+            } else if ($e instanceof \moodle_exception && $e->errorcode === 'positionprofileinvalid') {
+                $formerror = $e->getMessage();
+            } else if ($e instanceof \dml_missing_record_exception) {
+                $formerror = 'Эта модель или запись больше недоступна. Обновите страницу.';
+            } else {
+                throw $e;
+            }
+        } else {
+            \core\notification::error($e->getMessage());
+        }
     }
 }
 
@@ -856,368 +890,84 @@ foreach ($skills as $skill) {
 }
 
 
-/*
- * ------------------------------------------------------------
- * CURRENT LEARNING ASSIGNMENT
- * ------------------------------------------------------------
- */
-
 $learningcourses = [];
+$commonroute = [];
 $mandatoryknowledge = [];
 $evidencerows = [];
 $sourceoptions = [];
 $requiredskilloptions = [];
-$typeoptions = [];
 if ($tab === 'learning') {
-$assignment =
-    \local_ustar\assignment::required_courses(
-        $positionid
-    );
-
-$learningcourses = [];
-
-foreach (
-    $assignment['courses'] ?? []
-    as $course
-) {
-
-    $learningcourses[] = [
-
-        'id' =>
-            (int)$course['id'],
-
-        'name' =>
-            $course['name'],
-
-        'published' =>
-            !empty(
-                $course['visible']
-            ),
-
-        'draft' =>
-            empty(
-                $course['visible']
-            ),
-
-        'url' =>
-            (
-                new moodle_url(
-                    '/local/ustar/home.php',
-                    [
-                        'view' =>
-                            'learning',
-
-                        'courseid' =>
-                            (int)$course['id'],
-                    ]
-                )
-            )->out(false),
-    ];
-}
-
-
-/*
- * ------------------------------------------------------------
- * MANDATORY KNOWLEDGE
- * ------------------------------------------------------------
- *
- * Derived from the same live content access rules employees use.
- * There is no duplicated per-position document mapping.
- */
-
-$mandatoryknowledge =
-    \local_ustar\compliance::for_position(
-        $positionid
-    );
-
-
-/*
- * ------------------------------------------------------------
- * EVIDENCE
- * ------------------------------------------------------------
- */
-
-$evidencerows = [];
-
-if (!empty($required)) {
-
-    [$insql, $params] =
-        $DB->get_in_or_equal(
-            array_keys($required),
-            SQL_PARAMS_NAMED,
-            'skill'
-        );
-
-    $params['positionid'] =
-        $positionid;
-
-    $sql = "
-        SELECT *
-          FROM {local_ustar_skill_evidence}
-         WHERE active = 1
-           AND skillid {$insql}
-           AND (
-                positionid = :positionid
-                OR positionid IS NULL
-                OR positionid = ''
-           )
-         ORDER BY
-             skillid,
-             pathkey,
-             sortorder,
-             id
-    ";
-
-    foreach (
-        $DB->get_records_sql(
-            $sql,
-            $params
-        )
-        as $definition
-    ) {
-
-        $evaluated =
-            \local_ustar\evidence::evaluate_definition(
-                $definition,
-                (int)$USER->id
-            );
-
-        $skillname =
-            $definition->skillid;
-
-        foreach ($skills as $skill) {
-            if (
-                $skill['id']
-                ===
-                $definition->skillid
-            ) {
-                $skillname =
-                    $skill['name'];
-
-                break;
+    $route = \local_ustar\route_scope::base_route($positionid);
+    if ($route) {
+        $points = $route->routekind === \local_ustar\route_family::KIND_PARENT
+            ? \local_ustar\route_scope::points_for_position((int)$route->id, $positionid)
+            : \local_ustar\route_model::points((int)$route->id);
+        foreach ($points as $point) {
+            $version = \local_ustar\route_model::current_published_version((int)$point->id);
+            if ($version) {
+                $commonroute[] = ['title' => format_string($version->title)];
             }
         }
-
-        $typelabels = [
-            'learning' =>
-                'Обучение',
-
-            'assessment' =>
-                'Аттестация',
-
-            'practice' =>
-                'Практика',
-
-            'manager_review' =>
-                'Оценка руководителя',
-
-            'checklist' =>
-                'Чек-лист',
-
-            'certification' =>
-                'Сертификация',
-        ];
-
-        $specific =
-            trim(
-                (string)(
-                    $definition->positionid
-                    ?? ''
-                )
-            ) !== '';
-
-        $evidencerows[] = [
-
-            'id' =>
-                (int)$definition->id,
-
-            'skillname' =>
-                $skillname,
-
-            'type' =>
-                $typelabels[
-                    $definition->evidencetype
-                ]
-                ??
-                $definition->evidencetype,
-
-            'activityname' =>
-                $evaluated[
-                    'activityname'
-                ] ?? 'Источник',
-
-            'modname' =>
-                $evaluated[
-                    'modname'
-                ] ?? '',
-
-            'pathkey' =>
-                $definition->pathkey
-                ?: 'default',
-
-            'weight' =>
-                (int)$definition->weight,
-
-            'required' =>
-                !empty(
-                    $definition->required
-                ),
-
-            'validdays' =>
-                (int)$definition->validdays,
-
-            'hasvalidity' =>
-                !empty(
-                    $definition->validdays
-                ),
-
-            'specific' =>
-                $specific,
-
-            'shared' =>
-                !$specific,
-        ];
-    }
-}
-
-
-/*
- * ------------------------------------------------------------
- * ACTIVITY SOURCE OPTIONS
- * ------------------------------------------------------------
- */
-
-$sourceoptions = [];
-
-$sourcequery = "
-    SELECT
-        cm.id AS cmid,
-        cm.course AS courseid,
-        cm.instance,
-        m.name AS modname,
-        c.fullname AS coursename,
-        c.visible AS coursevisible
-      FROM {course_modules} cm
-      JOIN {modules} m
-        ON m.id = cm.module
-      JOIN {course} c
-        ON c.id = cm.course
-     WHERE c.id <> :siteid
-       AND m.name NOT IN ('qbank', 'label')
-     ORDER BY
-         c.fullname,
-         cm.course,
-         cm.id
-";
-
-foreach (
-    $DB->get_records_sql(
-        $sourcequery,
-        ['siteid' => SITEID]
-    )
-    as $row
-) {
-
-    try {
-
-        $activityname =
-            (string)$DB->get_field(
-                $row->modname,
-                'name',
-                [
-                    'id' =>
-                        $row->instance,
-                ]
-            );
-
-    } catch (\Throwable $e) {
-
-        $activityname =
-            $row->modname
-            .
-            ' #'
-            .
-            $row->cmid;
     }
 
-    if ($activityname === '') {
-        continue;
+    $assignment = \local_ustar\assignment::required_courses($positionid);
+    foreach ($assignment['courses'] ?? [] as $course) {
+        $learningcourses[] = ['name' => $course['name'], 'published' => !empty($course['visible']),
+            'url' => (new moodle_url('/course/view.php', ['id' => $course['id']]))->out(false)];
     }
+    $mandatoryknowledge = \local_ustar\compliance::for_position($positionid);
 
-    $sourceoptions[] = [
+    if ($required) {
+        [$insql, $params] = $DB->get_in_or_equal(array_keys($required), SQL_PARAMS_NAMED, 'skill');
+        $params['positionid'] = $positionid;
+        $definitions = $DB->get_records_sql(
+            "SELECT * FROM {local_ustar_skill_evidence}
+              WHERE active = 1 AND skillid $insql
+                AND (positionid = :positionid OR positionid IS NULL OR positionid = '')
+           ORDER BY skillid, pathkey, sortorder, id",
+            $params
+        );
+        $typelabels = ['learning' => 'Завершение обучения', 'assessment' => 'Успешная аттестация', 'practice' => 'Практика',
+            'manager_review' => 'Оценка руководителя', 'checklist' => 'Чек-лист', 'certification' => 'Сертификация'];
+        foreach ($definitions as $definition) {
+            $specific = trim((string)$definition->positionid) !== '';
+            $course = $DB->get_record('course', ['id' => $definition->courseid], 'id,fullname', IGNORE_MISSING);
+            $cm = $course && (int)$definition->cmid > 0
+                ? get_fast_modinfo((int)$course->id)->get_cms()[(int)$definition->cmid] ?? null : null;
+            $evidencerows[] = ['id' => (int)$definition->id, 'skillname' => $skillmap[$definition->skillid]['name'] ?? $definition->skillid,
+                'type' => $typelabels[$definition->evidencetype] ?? $definition->evidencetype,
+                'activityname' => $cm?->name ?? ($course && !$definition->cmid ? $course->fullname : 'Источник удалён или не настроен'),
+                'coursename' => $cm ? $course->fullname : '', 'pathkey' => $definition->pathkey ?: 'main',
+                'weight' => (int)$definition->weight, 'required' => (bool)$definition->required,
+                'validdays' => (int)$definition->validdays, 'hasvalidity' => (bool)$definition->validdays,
+                'specific' => $specific, 'shared' => !$specific];
+        }
 
-        'value' =>
-            $row->courseid
-            .
-            ':'
-            .
-            $row->cmid,
-
-        'name' =>
-            $row->coursename
-            .
-            ' → '
-            .
-            $activityname
-            .
-            ' ['
-            .
-            strtoupper(
-                $row->modname
-            )
-            .
-            ']'
-            .
-            (
-                empty(
-                    $row->coursevisible
-                )
-                    ? ' · Черновик'
-                    : ''
-            ),
-    ];
-}
-
-
-/*
- * Only required skills may receive evidence.
- */
-$requiredskilloptions = [];
-
-foreach ($skills as $skill) {
-
-    if (
-        !isset(
-            $required[
-                $skill['id']
-            ]
-        )
-    ) {
-        continue;
+        $courses = $DB->get_records_sql(
+            "SELECT DISTINCT c.id, c.fullname, c.visible
+               FROM {course} c JOIN {course_modules} cm ON cm.course = c.id
+              WHERE c.id <> :site AND cm.deletioninprogress = 0 AND cm.completion > 0
+           ORDER BY c.fullname, c.id",
+            ['site' => SITEID]
+        );
+        foreach ($courses as $course) {
+            $options = [];
+            foreach (get_fast_modinfo((int)$course->id)->get_cms() as $cm) {
+                if ($cm->completion > 0 && !$cm->deletioninprogress && !in_array($cm->modname, ['label','qbank'], true)) {
+                    $options[] = ['value' => $cm->course . ':' . $cm->id, 'name' => $cm->name];
+                }
+            }
+            if ($options) {
+                $sourceoptions[] = ['name' => $course->fullname . ($course->visible ? '' : ' · скрыт'), 'sources' => $options];
+            }
+        }
+        foreach ($required as $skillid => $level) {
+            if (isset($skillmap[$skillid])) {
+                $requiredskilloptions[] = ['id' => $skillid, 'name' => $skillmap[$skillid]['name']];
+            }
+        }
     }
-
-    $requiredskilloptions[] = [
-        'id' =>
-            $skill['id'],
-
-        'name' =>
-            $skill['name'],
-    ];
 }
-
-
-$typeoptions = [
-    [
-        'id' => 'learning',
-        'name' => 'Обучение',
-    ],
-    [
-        'id' => 'assessment',
-        'name' => 'Аттестация',
-    ],
-];
-}
-
 
 /*
  * ------------------------------------------------------------
@@ -1320,6 +1070,7 @@ $tabnames = [
     'overview' => 'О должности',
     'requirements' => 'Требования',
     'learning' => 'Обучение и проверка',
+    'personal' => 'Персональные модели',
     'grades' => 'Грейды',
     'application' => 'Применение и история',
     'graph' => 'Граф связей',
@@ -1339,6 +1090,14 @@ $data = [
     'showoverview' => $tab === 'overview',
     'showrequirements' => $tab === 'requirements',
     'showlearning' => $tab === 'learning',
+    'showpersonal' => $tab === 'personal',
+    'profileformerror' => $formerror,
+    'learningformerror' => $tab === 'learning' ? $formerror : '',
+    'personalprofiles' => $tab === 'personal' ? \local_ustar\position_profile_view::editor(
+        $positionid, optional_param('profileid', 0, PARAM_INT), optional_param('newprofile', false, PARAM_BOOL)
+            || ($action === 'saveprofile' && empty($profileid)),
+        $directoryusers, $skillmap, $required
+    ) : [],
     'showgrades' => $tab === 'grades',
     'showapplication' => $tab === 'application',
     'showgraph' => $tab === 'graph',
@@ -1448,8 +1207,9 @@ $data = [
     'sourceoptions' =>
         $sourceoptions,
 
-    'typeoptions' =>
-        $typeoptions,
+    'commonroute' => $commonroute,
+    'hascommonroute' => !empty($commonroute),
+    'hassources' => !empty($sourceoptions),
 
     'canmanage' =>
         $canmanage,

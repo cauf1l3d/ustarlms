@@ -1,0 +1,139 @@
+<section class="u-pos-section">
+    <header class="u-pos-section__head">
+        <div>
+            <h3>Общий маршрут должности</h3>
+            <p>Опубликованные шаги, которые видят все сотрудники этой должности.</p>
+        </div>
+        {{#canmanage}}<a class="u-btn u-btn--small" href="{{routestudiourl}}">Открыть студию маршрутов</a>{{/canmanage}}
+    </header>
+    {{#hascommonroute}}
+    <ol class="u-pos-route-list">{{#commonroute}}<li>{{title}}</li>{{/commonroute}}</ol>
+    {{/hascommonroute}}
+    {{^hascommonroute}}<div class="u-hr-empty">У должности пока нет опубликованных шагов.</div>{{/hascommonroute}}
+    <p><a href="{{taburls.personal}}">Настроить дополнительный маршрут для отдельных сотрудников</a></p>
+</section>
+
+<section class="u-pos-section" id="u-position-evidence">
+    <header class="u-pos-section__head">
+        <div>
+            <h3>Как подтверждаются навыки</h3>
+            <p>Свяжите навык с активностью Moodle. Её результат используется при проверке навыка.</p>
+        </div>
+    </header>
+    {{#learningformerror}}<p class="u-hr-empty" role="alert">{{learningformerror}}</p>{{/learningformerror}}
+    {{#hasevidence}}
+    <div class="u-evidence-editor-list">
+        {{#evidence}}
+        <article class="u-evidence-edit-row">
+            <div class="u-evidence-edit-row__main">
+                <small>{{skillname}} · {{type}}</small>
+                <strong>{{activityname}}</strong>
+                {{#coursename}}<span>{{coursename}}</span>{{/coursename}}
+                <span>Вариант «{{pathkey}}» · вес {{weight}}%
+                    {{#required}}· обязательно{{/required}}
+                    {{#hasvalidity}}· действует {{validdays}} дн.{{/hasvalidity}}
+                </span>
+            </div>
+            {{#shared}}<span class="u-state">Общее для должностей</span>{{/shared}}
+            {{#specific}}{{#canmanage}}
+            <form method="post">
+                <input type="hidden" name="action" value="deleteevidence">
+                <input type="hidden" name="tab" value="learning">
+                <input type="hidden" name="positionid" value="{{position.id}}">
+                <input type="hidden" name="evidenceid" value="{{id}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <button class="u-btn u-btn--quiet" type="submit">Убрать связь</button>
+            </form>
+            {{/canmanage}}{{/specific}}
+        </article>
+        {{/evidence}}
+    </div>
+    {{/hasevidence}}
+    {{^hasevidence}}<div class="u-hr-empty">Связей для навыков этой должности пока нет.</div>{{/hasevidence}}
+
+    {{#canmanage}}
+    {{#hasrequiredskills}}
+    {{#hassources}}
+    <details class="u-pos-disclosure u-pos-evidence-form" {{#learningformerror}}open{{/learningformerror}}>
+        <summary>Добавить способ подтверждения</summary>
+        <form method="post">
+            <input type="hidden" name="action" value="addevidence">
+            <input type="hidden" name="tab" value="learning">
+            <input type="hidden" name="positionid" value="{{position.id}}">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <div class="u-pos-input-grid">
+                <label><span>Навык должности</span>
+                    <select name="skillid" required>
+                        <option value="">Выберите навык</option>
+                        {{#requiredskilloptions}}<option value="{{id}}">{{name}}</option>{{/requiredskilloptions}}
+                    </select>
+                </label>
+                <label><span>Что считается результатом</span>
+                    <select name="evidencetype">
+                        <option value="learning">Завершил обучение</option>
+                        <option value="assessment">Успешно прошёл аттестацию</option>
+                    </select>
+                </label>
+            </div>
+            <label><span>Курс и учебная активность</span>
+                <select name="source" required>
+                    <option value="">Выберите активность Moodle</option>
+                    {{#sourceoptions}}
+                    <optgroup label="{{name}}">
+                        {{#sources}}<option value="{{value}}">{{name}}</option>{{/sources}}
+                    </optgroup>
+                    {{/sourceoptions}}
+                </select>
+            </label>
+            <details class="u-pos-disclosure">
+                <summary>Срок и варианты подтверждения</summary>
+                <div class="u-pos-input-grid">
+                    <label><span>Срок действия в днях</span>
+                        <input type="number" name="validdays" min="0" max="3650" value="0">
+                        <small>0 — без ограничения срока.</small>
+                    </label>
+                    <label><span>Вес в варианте, %</span>
+                        <input type="number" name="weight" min="1" max="100" value="100">
+                        <small>Определяет вклад в прогресс этого варианта.</small>
+                    </label>
+                    <label><span>Код варианта</span>
+                        <input name="pathkey" value="main" maxlength="64" pattern="[A-Za-z0-9_-]+">
+                        <small>Условия с одинаковым кодом образуют один вариант. Другой код задаёт альтернативу.</small>
+                    </label>
+                    <label class="u-pos-checkbox"><input type="checkbox" name="required" value="1" checked>
+                        Обязательно для завершения варианта
+                    </label>
+                </div>
+            </details>
+            <button class="u-btn u-btn--primary" type="submit">Добавить связь</button>
+        </form>
+    </details>
+    {{/hassources}}
+    {{^hassources}}<p>Для добавления связи настройте отслеживание завершения хотя бы одной активности Moodle.</p>{{/hassources}}
+    {{/hasrequiredskills}}
+    {{^hasrequiredskills}}<p>Сначала добавьте навыки во вкладке <a href="{{taburls.requirements}}">«Требования»</a>.</p>{{/hasrequiredskills}}
+    {{/canmanage}}
+
+    {{#haslearning}}
+    <details class="u-pos-disclosure">
+        <summary>Курсы, связанные с требованиями должности</summary>
+        <p>Академия использует эту подборку для зачисления в Moodle.</p>
+        <ul>{{#learningcourses}}<li><a href="{{url}}">{{name}}</a>{{^published}} · скрыт в Moodle{{/published}}</li>{{/learningcourses}}</ul>
+    </details>
+    {{/haslearning}}
+</section>
+
+<section class="u-pos-section">
+    <header class="u-pos-section__head">
+        <div><h3>Обязательные документы</h3><p>Опубликованные материалы, назначенные сотрудникам этой должности.</p></div>
+    </header>
+    {{#hasknowledge}}
+    <div class="u-pos-learning">
+        {{#mandatoryknowledge}}
+        <article><div><strong>{{title}}</strong> <span class="u-state">{{versionlabel}}</span></div>
+            <a href="{{url}}">Открыть материал</a></article>
+        {{/mandatoryknowledge}}
+    </div>
+    {{/hasknowledge}}
+    {{^hasknowledge}}<div class="u-hr-empty">Обязательные документы пока не назначены.</div>{{/hasknowledge}}
+</section>

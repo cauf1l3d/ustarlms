@@ -971,6 +971,19 @@ tasks:
   - Отдел получает задачу через действующего руководителя, должность через индивидуальные назначения в управленческой области
   - Состав назначения виден до отправки и повторно проверяется при записи. Повтор запроса сохраняет один комплект задач
   - Пилот проверяет реальные роли, нагрузку, полноту и контроль доступа при переносе
+- id: POSITION-PERSONAL-01
+  title: Персональные модели должностей и настройка обучения
+  status: source_and_package_candidate_owner_preflight_pending
+  depends_on: [WORKPLACE-MIGRATION]
+  reference: context/reviews/20261124/POSITION_PROFILES_RU.md
+  runbook: docs/POSITION_PROFILES_INSTALL_RU.md
+  qualification: context/runtime/position_profiles_20261124.json
+  pr: 130
+  acceptance:
+  - Два сотрудника одной должности видят общий маршрут и разные дополнения
+  - Целевой грейд и навыки показаны отдельно от фактической квалификации
+  - Снятие модели возвращает общий маршрут и сохраняет историю
+  - Вкладка показывает маршрут, правила подтверждения и документы понятными блоками
 remediation_plan: context/roadmap/AUDIT_REMEDIATION_20261103_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261103/AUDIT_RU.md

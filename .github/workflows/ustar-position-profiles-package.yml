@@ -1,0 +1,40 @@
+name: USTAR personal position profiles package
+on:
+  push:
+    branches: [feat/personal-position-models-20261124]
+    paths:
+      - '.github/workflows/ustar-position-profiles-package.yml'
+      - 'scripts/infra/*position_profiles*.py'
+      - 'tests/position_profiles_release_test.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Verify additive migration and recovery from the exact baseline
+        run: |
+          set -euo pipefail
+          python3 scripts/infra/build_position_profiles.py --output artifacts
+          python3 scripts/infra/build_position_profiles.py --output repeat
+          name=ustar-position-profiles-2d88d505.tar.gz
+          cmp "artifacts/$name" "repeat/$name"
+          mkdir verify
+          tar -xzf "artifacts/$name" -C verify
+          (cd verify && sha256sum --check --strict SHA256SUMS && python3 -I -B update.py --verify)
+          python3 tests/position_profiles_release_test.py "artifacts/$name" -v
+          (cd artifacts && sha256sum "$name" > "$name.sha256")
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ustar-position-profiles
+          path: artifacts/
+          if-no-files-found: error

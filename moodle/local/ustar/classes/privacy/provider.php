@@ -25,7 +25,14 @@ final class provider implements
         'local_ustar_meeting_members' => ['userid', 'meetingid', 'rsvp'],
     ];
 
+    private const PROFILE_EVENTS = ['position_profile_saved', 'position_profile_assigned', 'position_profile_route_changed'];
+
     public static function get_metadata(collection $collection): collection {
+        $collection->add_database_table('local_ustar_pos_profiles', ['usermodified' => 'privacy:metadata:positionprofiles'],
+            'privacy:metadata:positionprofiles');
+        $collection->add_database_table('local_ustar_pos_profile_users', array_fill_keys(
+            ['userid', 'positionid', 'profileid', 'staffassignmentid', 'revision', 'timemodified'], 'privacy:metadata:positionprofiles'),
+            'privacy:metadata:positionprofiles');
         foreach (self::BRIEFING_FIELDS as $table => $fields) {
             $collection->add_database_table($table, array_fill_keys($fields, 'privacy:metadata:briefing'), 'privacy:metadata:briefing');
         }
@@ -166,6 +173,13 @@ final class provider implements
             $contexts->add_from_sql("SELECT id FROM {context} WHERE contextlevel = :level AND
                 EXISTS (SELECT id FROM {{$table}} WHERE $column = :userid)", ['level' => CONTEXT_SYSTEM, 'userid' => $userid]);
         }
+        global $DB;
+        [$insql, $events] = $DB->get_in_or_equal(self::PROFILE_EVENTS, SQL_PARAMS_NAMED, 'event');
+        $contexts->add_from_sql("SELECT id FROM {context} WHERE contextlevel = :level AND (
+            EXISTS (SELECT id FROM {local_ustar_pos_profile_users} WHERE userid = :user)
+            OR EXISTS (SELECT id FROM {local_ustar_pos_profiles} WHERE usermodified = :editor)
+            OR EXISTS (SELECT id FROM {local_ustar_hr_actions} WHERE action $insql AND (actorid = :actor OR targetuserid = :target)))",
+            $events + ['level' => CONTEXT_SYSTEM, 'user' => $userid, 'editor' => $userid, 'actor' => $userid, 'target' => $userid]);
         return $contexts;
     }
 
@@ -177,6 +191,14 @@ final class provider implements
         }
         if ($userlist->get_context()->contextlevel !== CONTEXT_SYSTEM) { return; }
         workplace::users($userlist);
+        global $DB;
+        $userlist->add_from_sql('userid', 'SELECT userid FROM {local_ustar_pos_profile_users}', []);
+        $userlist->add_from_sql('usermodified', 'SELECT usermodified FROM {local_ustar_pos_profiles} WHERE usermodified > 0', []);
+        [$insql, $events] = $DB->get_in_or_equal(self::PROFILE_EVENTS, SQL_PARAMS_NAMED, 'event');
+        foreach (['actorid', 'targetuserid'] as $field) {
+            $userlist->add_from_sql($field, "SELECT $field FROM {local_ustar_hr_actions} WHERE action $insql AND $field > 0", $events);
+        }
+
         foreach (['local_ustar_conn_links', 'local_ustar_conn_challenges',
                 'local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups', 'local_ustar_conn_acktokens',
                 'local_ustar_conn_dialogs','local_ustar_conn_actions','local_ustar_conn_updates','local_ustar_route_access'] as $table) {
@@ -227,6 +249,15 @@ final class provider implements
         if (!in_array(\context_system::instance()->id, $contextlist->get_contextids())) { return; }
         $userid = (int)$contextlist->get_user()->id;
         workplace::export($userid);
+        [$insql, $events] = $DB->get_in_or_equal(self::PROFILE_EVENTS, SQL_PARAMS_NAMED, 'event');
+        $profilelog = $DB->get_records_select('local_ustar_hr_actions', "action $insql AND (actorid = :actor OR targetuserid = :target)",
+            $events + ['actor' => $userid, 'target' => $userid], 'id', 'id,action,detailsjson,timecreated');
+        writer::with_context(\context_system::instance())->export_data(['Personal development models'], (object)[
+            'assignment' => $DB->get_record('local_ustar_pos_profile_users', ['userid' => $userid]) ?: null,
+            'edited_models' => array_values($DB->get_records('local_ustar_pos_profiles', ['usermodified' => $userid])),
+            'actions' => array_values($profilelog),
+        ]);
+
         foreach (self::BRIEFING_FIELDS as $table => $fields) {
             $rows = $DB->get_records($table, [$fields[0] => $userid], '', 'id,' . implode(',', $fields));
             if ($rows) {
@@ -324,6 +355,23 @@ final class provider implements
         }
     }
 
+    private static function erase_position_profiles(?array $userids): void {
+        global $DB;
+        [$insql, $events] = $DB->get_in_or_equal(self::PROFILE_EVENTS, SQL_PARAMS_NAMED, 'event');
+        if ($userids === null) {
+            $DB->delete_records('local_ustar_pos_profile_users');
+            $DB->set_field('local_ustar_pos_profiles', 'usermodified', 0);
+            $DB->delete_records_select('local_ustar_hr_actions', "action $insql", $events);
+            return;
+        }
+        foreach ($userids as $userid) {
+            $DB->delete_records('local_ustar_pos_profile_users', ['userid' => $userid]);
+            $DB->set_field('local_ustar_pos_profiles', 'usermodified', 0, ['usermodified' => $userid]);
+            $DB->delete_records_select('local_ustar_hr_actions', "action $insql AND (actorid = :actor OR targetuserid = :target)",
+                $events + ['actor' => $userid, 'target' => $userid]);
+        }
+    }
+
     private static function erase_briefing(?array $userids): void {
         global $DB;
         if ($userids === null) {
@@ -357,6 +405,7 @@ final class provider implements
                 reward_shop::erase_in_transaction($userids);
                 self::erase_library($userids);
                 self::erase_briefing($userids);
+                self::erase_position_profiles($userids);
                 workplace::erase($userids);
                 self::erase_bot($userids);
                 if ($userids === null) {

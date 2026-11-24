@@ -991,6 +991,15 @@ final class route_model {
             return;
         }
 
+        if ((string)$route->routekind === position_profiles::ROUTE_KIND) {
+            foreach ($requirements as $requirement) {
+                if ($requirement['type'] !== 'cm') {
+                    throw new \invalid_parameter_exception('Дополнительный маршрут состоит из активностей Moodle.');
+                }
+            }
+            return;
+        }
+
         self::ensure_route_content_access(
             (int)$route->id,
             $requirements,
@@ -2268,18 +2277,7 @@ final class route_model {
     ): array {
         global $DB;
 
-        $route = null;
-
-        if (\local_ustar\route_scope::available()) {
-            $route =
-                \local_ustar\route_scope::parent_for_position(
-                    $positionid
-                );
-        }
-
-        if (!$route) {
-            $route = self::get_route($positionid);
-        }
+        [$route, $points, $personalmodel] = route_scope::runtime($positionid, $userid);
 
         if (!$route) {
             return [
@@ -2293,24 +2291,6 @@ final class route_model {
                 'currentpoint' => null,
                 'lastprogressat' => 0,
             ];
-        }
-
-        $isparent =
-            (string)($route->routekind ?? '') ===
-            \local_ustar\route_family::KIND_PARENT;
-
-        if (
-            $isparent
-            &&
-            \local_ustar\route_scope::available()
-        ) {
-            $points =
-                \local_ustar\route_scope::points_for_position(
-                    (int)$route->id,
-                    $positionid
-                );
-        } else {
-            $points = self::points((int)$route->id);
         }
 
         // Read all persisted completions for the visible route in one query.
@@ -2473,6 +2453,7 @@ final class route_model {
 
         return [
             'ok' => true,
+            'personalmodel' => $personalmodel ? format_string((string)$personalmodel->name) : '',
             'routeid' => (int)$route->id,
             'name' =>
                 format_string(
@@ -2520,52 +2501,9 @@ final class route_model {
         $scope = content::user_scope($userid);
         $positionid = (string)($scope['positionid'] ?? '');
 
-        $point = $DB->get_record(
-            'local_ustar_route_points',
-            ['id' => $pointid, 'active' => 1],
-            '*',
-            MUST_EXIST
-        );
-
-        $route = $DB->get_record(
-            'local_ustar_routes',
-            ['id' => (int)$point->routeid, 'active' => 1],
-            '*',
-            MUST_EXIST
-        );
-
-        if (
-            (string)($route->routekind ?? '') ===
-            \local_ustar\route_family::KIND_PARENT
-        ) {
-            $parent = \local_ustar\route_scope::parent_for_position(
-                $positionid
-            );
-
-            if (
-                !$parent ||
-                (int)$parent->id !== (int)$route->id ||
-                !\local_ustar\route_scope::point_applies(
-                    $pointid,
-                    $positionid
-                )
-            ) {
-                throw new \required_capability_exception(
-                    \context_system::instance(),
-                    'local/ustar:use',
-                    'nopermissions',
-                    ''
-                );
-            }
-        } else if (
-            (string)($route->positionid ?? '') !== $positionid
-        ) {
+        if (!route_scope::applies_to_user($pointid, $positionid, $userid)) {
             throw new \required_capability_exception(
-                \context_system::instance(),
-                'local/ustar:use',
-                'nopermissions',
-                ''
-            );
+                \context_system::instance(), 'local/ustar:use', 'nopermissions', '');
         }
 
         $version = self::current_published_version($pointid);
@@ -2647,17 +2585,7 @@ final class route_model {
                 $storedpoints[(int)$stored['id']] = $stored;
             }
         }
-        $route = null;
-
-        if (\local_ustar\route_scope::available()) {
-            $route = \local_ustar\route_scope::parent_for_position(
-                $positionid
-            );
-        }
-
-        if (!$route) {
-            $route = self::get_route($positionid);
-        }
+        [$route, $points, $personalmodel] = route_scope::runtime($positionid, $userid);
 
         if (!$route) {
             return [
@@ -2665,19 +2593,6 @@ final class route_model {
                 'reason' => 'route_missing',
                 'positionid' => $positionid,
             ];
-        }
-
-        $isparent =
-            (string)($route->routekind ?? '') ===
-            \local_ustar\route_family::KIND_PARENT;
-
-        if ($isparent && \local_ustar\route_scope::available()) {
-            $points = \local_ustar\route_scope::points_for_position(
-                (int)$route->id,
-                $positionid
-            );
-        } else {
-            $points = self::points((int)$route->id);
         }
 
         $viewpoints = [];
@@ -2932,6 +2847,7 @@ final class route_model {
 
         return [
             'ok' => true,
+            'personalmodel' => $personalmodel ? format_string((string)$personalmodel->name) : '',
             'routeid' => (int)$route->id,
             'positionid' => $positionid,
             'name' => format_string((string)$route->name),

@@ -4,7 +4,10 @@
             <p class="u-page-kicker">Мой маршрут развития</p>
             {{#hasroute}}<h1>{{route.name}}</h1>{{/hasroute}}
             {{^hasroute}}<h1>Учебный маршрут</h1>{{/hasroute}}
-            <p>Один последовательный маршрут для вашей должности. Обновления добавляются в него без потери уже пройденной истории.</p>
+            {{#route.personalmodel}}
+            <p>Модель развития «{{route.personalmodel}}». Дополнительные шаги идут после общего маршрута должности.</p>
+            {{/route.personalmodel}}
+            {{^route.personalmodel}}<p>Шаги общего маршрута вашей должности идут по порядку.</p>{{/route.personalmodel}}
         </div>
 
         <div class="u-route2-hero__actions">

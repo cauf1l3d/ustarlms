@@ -539,8 +539,8 @@ final class forced_retraining {
             return null;
         }
         if (route_scope::available()
-            && (!route_scope::point_applies((int)$policy->pointid, $positionid)
-                || !route_scope::point_applies($remediationpointid, $positionid))) {
+            && (!route_scope::applies_to_user((int)$policy->pointid, $positionid, $userid)
+                || !route_scope::applies_to_user($remediationpointid, $positionid, $userid))) {
             return null;
         }
         $remediationversion = route_model::current_published_version($remediationpointid);

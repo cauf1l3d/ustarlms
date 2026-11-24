@@ -214,6 +214,8 @@ $careergradeview['nextgradename'] = (string)($stage6eligibility['nextlabel'] ?? 
 $data = [
     'consultantcurrent' => \local_ustar\consultant_career::is_consultant((string)($current['name'] ?? '')),
     'retailgrades' => !empty($careergradeview['hasgrade']),
+    'personalmodel' => \local_ustar\position_profile_view::for_user($currentid, (int)$USER->id,
+        \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE)),
     'careergrades' => $careergradeview,
     'gradesurl' => (new moodle_url('/local/ustar/grades.php'))->out(false),
     'gradeeligible' => !empty($stage6eligibility['eligible']),

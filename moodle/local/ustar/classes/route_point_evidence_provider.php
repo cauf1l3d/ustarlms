@@ -63,7 +63,7 @@ final class route_point_evidence_provider {
             ];
         }
 
-        if (route_scope::available() && !route_scope::point_applies($pointid, $positionid)) {
+        if (route_scope::available() && !route_scope::applies_to_user($pointid, $positionid, $userid)) {
             return [
                 'configured' => false,
                 'satisfied' => false,

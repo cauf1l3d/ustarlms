@@ -1,0 +1,134 @@
+{{#personalprofiles}}
+<section class="u-pos-section u-pos-personal">
+    <header class="u-pos-section__head">
+        <div>
+            <h3>Персональные модели</h3>
+            <p>Соберите модель развития и назначьте её сотрудникам этой должности. Дополнительное обучение начнётся после общего маршрута.</p>
+        </div>
+        <a class="u-btn u-btn--small" href="{{newurl}}">Новая модель</a>
+    </header>
+    {{#profileformerror}}<p class="u-hr-empty" role="alert">{{profileformerror}}</p>{{/profileformerror}}
+    {{#hasmodels}}
+    <nav class="u-pos-profile-tabs" aria-label="Персональные модели должности">
+        {{#models}}<a class="u-btn u-btn--small {{#selected}}u-btn--primary{{/selected}}" {{#selected}}aria-current="page"{{/selected}}
+            href="{{url}}">{{name}}</a>{{/models}}
+    </nav>
+    {{/hasmodels}}
+
+    <form method="post" class="u-pos-profile-form">
+        <input type="hidden" name="action" value="saveprofile">
+        <input type="hidden" name="tab" value="personal">
+        <input type="hidden" name="positionid" value="{{position.id}}">
+        <input type="hidden" name="profileid" value="{{selectedid}}">
+        <input type="hidden" name="revision" value="{{revision}}">
+        <input type="hidden" name="sesskey" value="{{sesskey}}">
+        <h4>{{#hasselected}}Настройки модели{{/hasselected}}{{^hasselected}}Новая модель{{/hasselected}}</h4>
+        <div class="u-pos-input-grid">
+            <label><span>Название модели</span>
+                <input name="profilename" value="{{editname}}" maxlength="120" placeholder="Например, IT-специалист · Самостоятельный" required>
+            </label>
+            {{#hasgoals}}
+            <label><span>Целевой грейд</span>
+                <select name="targetgrade">
+                    <option value="">Без цели по грейду</option>
+                    {{#goals}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/goals}}
+                </select>
+            </label>
+            {{/hasgoals}}
+        </div>
+        {{^hasgoals}}
+        <p>Для выбора целевого грейда <a href="{{gradeurl}}">привяжите опубликованную лестницу</a>.</p>
+        {{/hasgoals}}
+        {{#gradechanged}}
+        <p role="status">Прежняя цель — «{{oldgoal}}». Лестница должности изменилась. Сверьте цель перед сохранением.</p>
+        {{/gradechanged}}
+        <details class="u-pos-disclosure">
+            <summary>Целевые навыки</summary>
+            <p>Добавьте навык или повысьте целевой уровень. Обязательные требования должности действуют для всех.</p>
+            <div class="u-pos-profile-skills">
+                {{#skillrows}}
+                <label><span>{{name}}{{#base}} · по должности {{base}}{{/base}}</span>
+                    <select name="skilllevels[{{id}}]">
+                        {{#levels}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/levels}}
+                    </select>
+                </label>
+                {{/skillrows}}
+            </div>
+        </details>
+        <button type="submit" class="u-btn u-btn--primary">Сохранить модель</button>
+    </form>
+
+    {{#hasselected}}
+    <section class="u-pos-profile-form" aria-label="Дополнительный маршрут">
+        <h4>Дополнительный маршрут</h4>
+        <p>Выберите SCORM или тест с автоматическим завершением. Изменения применяются ко всем сотрудникам с этой моделью. Пройденные шаги остаются в истории.</p>
+        {{#hassteps}}
+        <ol class="u-pos-profile-steps">
+            {{#steps}}
+            <li>
+                <span>{{title}}</span>
+                <form method="post">
+                    <input type="hidden" name="action" value="changeprofileroute">
+                    <input type="hidden" name="tab" value="personal">
+                    <input type="hidden" name="positionid" value="{{position.id}}">
+                    <input type="hidden" name="profileid" value="{{selectedid}}">
+                    <input type="hidden" name="routerevision" value="{{routerevision}}">
+                    <input type="hidden" name="stepid" value="{{id}}">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    {{#hasprev}}<button type="submit" class="u-btn u-btn--small" name="routechange" value="up" aria-label="Выше: {{title}}">↑</button>{{/hasprev}}
+                    {{#hasnext}}<button type="submit" class="u-btn u-btn--small" name="routechange" value="down" aria-label="Ниже: {{title}}">↓</button>{{/hasnext}}
+                    <button type="submit" class="u-btn u-btn--small" name="routechange" value="remove">Убрать</button>
+                </form>
+            </li>
+            {{/steps}}
+        </ol>
+        {{/hassteps}}
+        {{^hassteps}}<p class="u-hr-empty">Дополнительные шаги пока не добавлены.</p>{{/hassteps}}
+        {{#hassources}}
+        <form method="post" class="u-pos-input-grid">
+            <input type="hidden" name="action" value="changeprofileroute">
+            <input type="hidden" name="routechange" value="add">
+            <input type="hidden" name="tab" value="personal">
+            <input type="hidden" name="positionid" value="{{position.id}}">
+            <input type="hidden" name="profileid" value="{{selectedid}}">
+            <input type="hidden" name="routerevision" value="{{routerevision}}">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <label><span>Учебная активность</span>
+                <select name="cmid" required><option value="">Выберите активность</option>
+                    {{#sources}}<option value="{{id}}">{{name}}</option>{{/sources}}
+                </select>
+            </label>
+            <button type="submit" class="u-btn u-btn--small">Добавить шаг</button>
+        </form>
+        {{/hassources}}
+        {{^hassources}}<p>В списке появятся доступные активности Moodle с настроенным завершением.</p>{{/hassources}}
+    </section>
+    {{/hasselected}}
+
+    {{#hasmodels}}
+    <section class="u-pos-profile-form">
+        <h4>Назначение сотрудникам</h4>
+        <p>Сверьте текущий грейд сотрудника и выберите модель. Чтобы снять назначение, выберите «Только общий маршрут».</p>
+        {{#members}}
+        <form method="post" class="u-pos-member-row">
+            <input type="hidden" name="action" value="assignprofile">
+            <input type="hidden" name="tab" value="personal">
+            <input type="hidden" name="positionid" value="{{position.id}}">
+            <input type="hidden" name="profileid" value="{{selectedid}}">
+            <input type="hidden" name="employeeid" value="{{id}}">
+            <input type="hidden" name="staffassignment" value="{{staffassignment}}">
+            <input type="hidden" name="revision" value="{{revision}}">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <div><strong>{{name}}</strong><small>{{grade}}</small></div>
+            <select name="assignedprofileid" aria-label="Модель сотрудника {{name}}">
+                <option value="0">Только общий маршрут</option>
+                {{#options}}<option value="{{id}}" {{#current}}selected{{/current}}>{{name}}</option>{{/options}}
+            </select>
+            <button type="submit" class="u-btn u-btn--small">Применить</button>
+        </form>
+        {{/members}}
+        {{^hasmembers}}<p class="u-hr-empty">Сейчас на этой должности нет действующих сотрудников.</p>{{/hasmembers}}
+    </section>
+    {{/hasmodels}}
+</section>
+{{/personalprofiles}}

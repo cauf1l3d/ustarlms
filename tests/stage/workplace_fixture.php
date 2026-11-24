@@ -27,7 +27,7 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_url(new moodle_url('/local/ustar/tasks.php'));
 
 if (($argv[1] ?? '') === 'seed') {
-    assert_fixture((int)get_config('local_ustar', 'version') === 2026111800, 'Wrong briefing baseline');
+    assert_fixture((int)get_config('local_ustar', 'version') === 2026112302, 'Wrong Workplace Assignment baseline');
     set_config('theme', 'ustar');
     set_config('messaging', 1);
     set_config('messagingallusers', 1);
@@ -83,7 +83,7 @@ if (($argv[1] ?? '') === 'seed') {
     exit;
 }
 
-assert_fixture((int)get_config('local_ustar', 'version') === 2026112302, 'Wrong workplace version');
+assert_fixture((int)get_config('local_ustar', 'version') === 2026112400, 'Wrong workplace version');
 $task = $DB->get_record('local_ustar_learning_tasks', ['title' => 'Workplace review fixture'], '*', MUST_EXIST);
 if ($argv[1] === 'inspect') {
     assert_fixture($task->status === 'assigned' && (int)$task->version === 1, 'Plan or chat modified the canonical task');

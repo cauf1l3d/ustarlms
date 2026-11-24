@@ -24,7 +24,13 @@ rm -rf public/local/ustar
 cp -a /source/moodle/local/ustar public/local/
 php admin/cli/upgrade.php --non-interactive > /artifacts/workplace-upgrade.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/workplace-schema-upgrade.json
-cmp /artifacts/workplace-schema-before.json /artifacts/workplace-schema-upgrade.json
+php -r '
+    $before = json_decode(file_get_contents($argv[1]), true, 512, JSON_THROW_ON_ERROR);
+    $after = json_decode(file_get_contents($argv[2]), true, 512, JSON_THROW_ON_ERROR);
+    $added = ["local_ustar_pos_profile_users", "local_ustar_pos_profiles"];
+    if (array_keys(array_diff_key($after, $before)) !== $added) { exit(1); }
+    if (array_diff_key($after, array_flip($added)) !== $before) { exit(1); }
+' /artifacts/workplace-schema-before.json /artifacts/workplace-schema-upgrade.json
 php admin/cli/upgrade.php --non-interactive > /artifacts/workplace-repeat.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/workplace-schema-repeat.json
 cmp /artifacts/workplace-schema-upgrade.json /artifacts/workplace-schema-repeat.json
@@ -34,7 +40,7 @@ cmp /artifacts/workplace-schema-upgrade.json /artifacts/workplace-schema-fresh.j
 echo 'WORKPLACE_FRESH_UPGRADE_REPEAT_SCHEMA=OK'
 
 php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/workplace-phpunit-init.log 2>&1
-for suite in workplace communication task_workspace connect_bot connect_identity connect_invitation connect_notification; do
+for suite in workplace communication task_workspace connect_bot connect_identity connect_invitation connect_notification position_profiles route_studio_commands scorm_route_launch route_point_access grade_rules grade_initial_assignment assessment_authoring_review; do
     php vendor/bin/phpunit --display-warnings --fail-on-warning --display-notices --fail-on-notice --fail-on-empty-test-suite \
         --log-junit "/artifacts/workplace-$suite.xml" "public/local/ustar/tests/${suite}_test.php" \
         2>&1 | tee "/artifacts/workplace-$suite.log"

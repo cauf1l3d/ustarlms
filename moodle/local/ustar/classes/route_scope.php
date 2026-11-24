@@ -56,6 +56,52 @@ final class route_scope {
         ) ?: null;
     }
 
+    /** The common path stays defined by the position and its family. */
+    public static function base_route(string $positionid): ?\stdClass {
+        return (self::available() ? self::parent_for_position($positionid) : null)
+            ?? route_model::get_route($positionid);
+    }
+
+    public static function runtime(string $positionid, int $userid): array {
+        global $DB;
+        $base = self::base_route($positionid);
+        $points = [];
+        if ($base) {
+            $points = $base->routekind === route_family::KIND_PARENT && self::available()
+                ? self::points_for_position((int)$base->id, $positionid)
+                : route_model::points((int)$base->id);
+        }
+        $model = position_profiles::for_user($positionid, $userid);
+        if ($model) {
+            $personalpoints = route_model::points((int)$model->routeid);
+            $points = array_merge($points, $personalpoints);
+            if (!$base && $personalpoints) {
+                $base = $DB->get_record('local_ustar_routes', ['id' => $model->routeid], '*', MUST_EXIST);
+            }
+        }
+        return [$base, $points, $model];
+    }
+
+    /** Authorize a point without relying on a caller-supplied route or employee profile ID. */
+    public static function applies_to_user(int $pointid, string $positionid, int $userid): bool {
+        global $DB;
+        $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid, 'active' => 1], 'id,routeid');
+        $route = $point ? $DB->get_record('local_ustar_routes', ['id' => $point->routeid, 'active' => 1],
+            'id,routekind,positionid') : null;
+        if (!$route) {
+            return false;
+        }
+        if ($route->routekind === position_profiles::ROUTE_KIND) {
+            $model = position_profiles::for_user($positionid, $userid);
+            return $model && (int)$model->routeid === (int)$route->id;
+        }
+        if ($route->routekind === route_family::KIND_PARENT && self::available()) {
+            $parent = self::parent_for_position($positionid);
+            return $parent && (int)$parent->id === (int)$route->id && self::point_applies($pointid, $positionid);
+        }
+        return $positionid !== '' && $route->positionid === $positionid;
+    }
+
     /** A point is editable in-place only while all active scopes name this position. */
     public static function exclusive_to(int $pointid, string $positionid): bool {
         global $DB;

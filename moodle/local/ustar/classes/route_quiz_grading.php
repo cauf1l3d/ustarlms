@@ -183,31 +183,13 @@ final class route_quiz_grading {
             throw new \moodle_exception('Не удалось определить должность сотрудника для аттестации.');
         }
 
-        $route = null;
-        if (route_scope::available()) {
-            $route = route_scope::parent_for_position($positionid);
-        }
-        if (!$route) {
-            $route = route_model::get_route($positionid);
-        }
+        [$route, $points] = route_scope::runtime($positionid, (int)$attempt->userid);
         if (!$route) {
             throw new \moodle_exception('Для должности сотрудника не найден текущий маршрут USTAR.');
         }
 
-        $matched = [];
-        foreach ($candidates as $candidate) {
-            if ((int)$candidate['routeid'] !== (int)$route->id) {
-                continue;
-            }
-            if (
-                (string)($route->routekind ?? '') === route_family::KIND_PARENT
-                && route_scope::available()
-                && !route_scope::point_applies((int)$candidate['pointid'], $positionid)
-            ) {
-                continue;
-            }
-            $matched[] = $candidate;
-        }
+        $ids = array_fill_keys(array_column($points, 'id'), true);
+        $matched = array_values(array_filter($candidates, static fn($candidate) => isset($ids[$candidate['pointid']])));
 
         if (count($matched) === 1) {
             return $matched[0];

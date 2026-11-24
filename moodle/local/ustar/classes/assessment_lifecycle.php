@@ -989,19 +989,7 @@ final class assessment_lifecycle {
     }
 
     private static function policy_applies_to_user(\stdClass $policy, int $userid, string $positionid): bool {
-        global $DB;
-        $point = $DB->get_record('local_ustar_route_points', ['id' => (int)$policy->pointid, 'active' => 1], 'id,routeid', IGNORE_MISSING);
-        if (!$point) {
-            return false;
-        }
-        $route = $DB->get_record('local_ustar_routes', ['id' => (int)$point->routeid, 'active' => 1], '*', IGNORE_MISSING);
-        if (!$route) {
-            return false;
-        }
-        if ((string)($route->routekind ?? '') === route_family::KIND_PARENT && route_scope::available()) {
-            return route_scope::point_applies((int)$point->id, $positionid);
-        }
-        return (string)($route->positionid ?? '') === $positionid;
+        return route_scope::applies_to_user((int)$policy->pointid, $positionid, $userid);
     }
 
     private static function direct_manager_id(int $userid): int {

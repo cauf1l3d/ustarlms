@@ -23,6 +23,20 @@
 
 {{#hasposition}}
 
+{{#personalmodel}}
+<section class="u-career-native">
+    <header class="u-career-native__head">
+        <div>
+            <p class="u-page-kicker">Персональное развитие</p>
+            <h2>{{name}}</h2>
+            {{#goal}}<p>Целевой грейд — {{goal}}</p>{{/goal}}
+        </div>
+        <a class="u-btn" href="{{routeurl}}">Мой маршрут</a>
+    </header>
+    {{#targets}}<p>{{name}} · целевой уровень {{level}}{{#base}} · по должности {{base}}{{/base}}</p>{{/targets}}
+</section>
+{{/personalmodel}}
+
 {{^retailgrades}}
 <section class="u-career-native">
 

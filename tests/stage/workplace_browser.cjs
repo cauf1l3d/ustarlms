@@ -243,6 +243,36 @@ async function main() {
         await member.page.goto(base + '/local/ustar/tasks.php?view=calendar&month=' + fixture.date.slice(0, 7));
         await member.page.locator('.uw-calendar').getByRole('link', {name: /New workplace meeting/}).waitFor();
 
+        await admin.page.goto(base + '/local/ustar/tasks.php?form=create&scope=team');
+        const composer = admin.page.locator('[data-task-assignment]');
+        const audience = composer.locator('[data-assignment-picker]');
+        await audience.locator('[name=targetmode]').selectOption('position');
+        await audience.locator('[name=positionid]').selectOption('retail_seller');
+        await composer.getByText('Получателей: 3.', {exact: false}).waitFor();
+        await composer.locator('[name=title]').fill('Browser assignment by position');
+        await audience.locator('[name=targetmode]').selectOption('person');
+        await audience.locator('[name=assigneeid]').selectOption(String(fixture.member));
+        assert.equal(await composer.locator('[name=title]').inputValue(), 'Browser assignment by position');
+        await audience.locator('[name=targetmode]').selectOption('position');
+        await audience.locator('[name=positionid]').selectOption('retail_seller');
+        await composer.locator('input[type=file]').setInputFiles({name: 'assignment.txt', mimeType: 'text/plain',
+            buffer: Buffer.from('Shared task instructions')});
+        await Promise.all([
+            admin.page.waitForURL(url => url.searchParams.get('scope') === 'outgoing'),
+            composer.getByRole('button', {name: 'Назначить сотрудникам (3)', exact: true}).click(),
+        ]);
+        await admin.page.locator('.alert-success').filter({hasText: /Задача назначена\. Получателей: 3\.|Task assigned\. Recipients: 3\./}).waitFor();
+        assert.equal(await admin.page.getByText('Browser assignment by position', {exact: true}).count(), 3);
+        const colleague = await login(browser, 'work_colleague');
+        for (const recipient of [member, colleague, outsider]) {
+            await recipient.page.goto(base + '/local/ustar/tasks.php?scope=mine');
+            await recipient.page.getByRole('link', {name: /Browser assignment by position/}).click();
+            const attachment = recipient.page.getByRole('link', {name: /assignment\.txt/});
+            await attachment.waitFor();
+            const fileURL = new URL(await attachment.getAttribute('href'), base).href;
+            assert.equal(await (await recipient.context.request.get(fileURL)).text(), 'Shared task instructions');
+        }
+
         await member.page.goto(base + '/local/ustar/home.php');
         const widget = member.page.locator('#home-meetings');
         const invitation = widget.locator('article').filter({hasText: 'New workplace meeting'});

@@ -98,6 +98,148 @@
             }
         });
     }
+    function enableAssignment(editor) {
+        const catalog = JSON.parse(editor.dataset.catalog);
+        const limit = Number(editor.dataset.limit);
+        const picker = editor.querySelector('[data-assignment-picker]');
+        const body = editor.querySelector('[data-assignment-body]');
+        const form = body.querySelector('form');
+        const {targetmode, departmentid, positionid, assigneeid} = picker.elements;
+        const summary = editor.querySelector('[data-assignment-summary]');
+        const list = editor.querySelector('[data-assignment-list]');
+        const personName = editor.querySelector('[data-assignment-person-name]');
+        const search = editor.querySelector('[data-assignment-search]');
+        const send = form.querySelector('[data-assignment-send]');
+        const topics = form.elements.policyid;
+        let currentTopicUser = topics?.options.length > 1 ? form.elements.assigneeid.value : '';
+        let pending = null;
+
+        function options(select, entries, placeholder) {
+            const selected = select.value;
+            select.replaceChildren(new Option(placeholder, ''), ...entries.map(([id, label]) => new Option(label, id)));
+            if (entries.some(([id]) => id === selected)) {
+                select.value = selected;
+            }
+        }
+
+        function updateTopics() {
+            if (!topics || form.elements.kind.value !== 'retraining' || !form.elements.assignmenttoken.value) {
+                pending?.abort();
+                pending = null;
+                return;
+            }
+            const user = assigneeid.value;
+            if (currentTopicUser === user || pending?.user === user) {
+                send.disabled = pending?.user === user || !topics.value || topics.value === '0';
+                return;
+            }
+            pending?.abort();
+            const controller = new AbortController();
+            const request = {user, abort: () => controller.abort()};
+            pending = request;
+            currentTopicUser = '';
+            options(topics, [], 'Загружаем материалы…');
+            const status = editor.querySelector('[data-assignment-topics-status]');
+            status.textContent = 'Проверяем, какие материалы уже пройдены.';
+            send.disabled = true;
+            const params = new URLSearchParams({
+                action: 'assignment_topics', sesskey: form.elements.sesskey.value, assigneeid: user,
+            });
+            fetch(form.action, {method: 'POST', body: params, signal: controller.signal, credentials: 'same-origin'})
+                .then(response => {
+                    if (!response.ok) { throw new Error('Topics request failed'); }
+                    return response.json();
+                }).then(data => {
+                    if (pending !== request) { return; }
+                    const entries = Object.entries(data.topics);
+                    options(topics, entries, 'Выберите тему');
+                    status.textContent = entries.length ? 'Выберите подтверждённое прохождение.'
+                        : 'Нет доступных ранее пройденных материалов.';
+                    currentTopicUser = user;
+                }).catch(() => {
+                    if (pending !== request) { return; }
+                    status.textContent = 'Материалы не загрузились. Выберите «Поручение» и вернитесь к повторному обучению.';
+                    options(topics, [], 'Материалы недоступны');
+                }).finally(() => {
+                    if (pending === request) { pending = null; }
+                });
+        }
+
+        function update() {
+            const mode = targetmode.value;
+            const dept = departmentid.value;
+            const matchDept = row => !dept || row.department === dept;
+            options(positionid, Object.entries(catalog.positions).filter(([, row]) => matchDept(row))
+                .map(([id, row]) => [id, row.name]), mode === 'position' ? 'Выберите должность' : 'Все доступные должности');
+            const position = positionid.value;
+            const query = search.querySelector('input').value.toLocaleLowerCase('ru').trim();
+            options(assigneeid, Object.entries(catalog.people).filter(([id, row]) =>
+                matchDept(row) && (!position || row.position === position)
+                && (id === assigneeid.value || row.name.toLocaleLowerCase('ru').includes(query)))
+                .map(([id, row]) => [id, row.name]), 'Выберите сотрудника');
+            editor.querySelector('[data-assignment-position]').hidden = mode === 'department';
+            editor.querySelector('[data-assignment-person]').hidden = mode !== 'person';
+            const selected = mode === 'department' ? catalog.departments[dept]
+                : mode === 'position' ? catalog.positions[position] : catalog.people[assigneeid.value];
+            const ids = mode === 'position' ? (selected?.members ?? [])
+                : selected?.token ? [mode === 'department' ? selected.head : assigneeid.value] : [];
+            const count = ids.length;
+            const valid = count > 0 && count <= limit;
+            list.hidden = !valid || count < 2;
+            list.querySelector('ul').replaceChildren(...(valid && count > 1 ? ids.map(id => {
+                const item = document.createElement('li');
+                item.textContent = catalog.people[id].name;
+                return item;
+            }) : []));
+            summary.textContent = count > limit ? 'За один раз можно назначить задачу не более чем ' + limit + ' сотрудникам.'
+                : mode === 'department' ? (valid ? 'Получатель — руководитель отдела'
+                    : dept ? 'У отдела нет однозначного руководителя в ваших полномочиях.' : 'Выберите отдел.')
+                : mode === 'position' ? (valid ? 'Получателей: ' + count + '. Каждый получит отдельную задачу.'
+                    : 'Выберите должность.')
+                : valid ? 'Получатель' : 'Выберите сотрудника. Отдел и должность можно использовать как фильтры.';
+            personName.textContent = valid && count === 1 ? catalog.people[ids[0]].name : '';
+            personName.hidden = !personName.textContent;
+            body.hidden = !valid;
+            form.elements.targetmode.value = mode;
+            form.elements.departmentid.value = dept;
+            form.elements.positionid.value = mode === 'department' ? '' : position;
+            form.elements.assigneeid.value = mode === 'person' ? assigneeid.value : '0';
+            form.elements.assignmenttoken.value = valid ? selected.token : '';
+            send.textContent = mode === 'position' && valid ? 'Назначить сотрудникам (' + count + ')' : 'Назначить задачу';
+            send.disabled = !valid;
+            const option = form.querySelector('select[name="kind"] option[value="retraining"]');
+            if (option) {
+                option.disabled = mode !== 'person';
+                if (option.disabled && option.selected) {
+                    form.elements.kind.value = 'task';
+                    form.elements.kind.dispatchEvent(new Event('change'));
+                }
+            }
+            updateTopics();
+        }
+
+        picker.querySelector('[data-assignment-apply]').hidden = true;
+        search.hidden = false;
+        picker.addEventListener('submit', event => { event.preventDefault(); update(); });
+        picker.addEventListener('change', update);
+        search.addEventListener('input', update);
+        form.elements.kind.addEventListener('change', update);
+        topics?.addEventListener('change', updateTopics);
+        let submitting = false;
+        form.addEventListener('submit', event => {
+            if (submitting || send.disabled || !form.elements.assignmenttoken.value) {
+                event.preventDefault();
+                return;
+            }
+            submitting = true;
+            send.disabled = true;
+        });
+        window.addEventListener('pageshow', event => {
+            if (event.persisted) { submitting = false; update(); }
+        });
+        update();
+    }
+
     function init() {
         const root = document.querySelector('.u-workspace');
         if (!root) { return; }
@@ -131,6 +273,7 @@
             }
         }
         if (type) { type.addEventListener('change', updateKind); updateKind(); }
+        root.querySelectorAll('[data-task-assignment]').forEach(enableAssignment);
         root.addEventListener('click', event => {
             const button = event.target.closest('button');
             if (!button) { return; }

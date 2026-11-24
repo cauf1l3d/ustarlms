@@ -20,6 +20,7 @@ $state = ['view' => $view, 'scope' => $scope, 'page' => max(0, optional_param('p
     'filter' => optional_param('filter', 'all', PARAM_ALPHA), 'q' => optional_param('q', '', PARAM_TEXT),
     'month' => optional_param('month', '', PARAM_RAW_TRIMMED),
     'taskid' => optional_param('taskid', 0, PARAM_INT), 'form' => optional_param('form', '', PARAM_ALPHA),
+    'targetmode' => optional_param('targetmode', 'person', PARAM_ALPHA),
     'departmentid' => optional_param('departmentid', '', PARAM_ALPHANUMEXT),
     'positionid' => optional_param('positionid', '', PARAM_ALPHANUMEXT),
     'lookup' => optional_param('lookup', '', PARAM_TEXT), 'assigneeid' => optional_param('assigneeid', 0, PARAM_INT),
@@ -52,6 +53,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     service::actor($actorid);
     try {
         $action = required_param('action', PARAM_ALPHANUMEXT);
+        if ($action === 'assignment_topics') {
+            $user = required_param('assigneeid', PARAM_INT);
+            $topics = [];
+            if (learning_tasks::can_assign($actorid, $user)) {
+                try {
+                    foreach (\local_ustar\forced_retraining::topics_for_user($actorid, $user) as $topic) {
+                        $topics[(int)$topic['policyid']] = strip_tags($topic['label']);
+                    }
+                } catch (\required_capability_exception $error) {
+                    // Task assignment and repeat-learning permissions are independent.
+                }
+            }
+            header('Content-Type: application/json; charset=UTF-8');
+            header('Cache-Control: no-store');
+            echo service::json(['topics' => (object)$topics]);
+            exit;
+        }
         if (($view === 'briefing' && str_starts_with($action, 'brief_'))
                 || ($view === 'meetings' && str_starts_with($action, 'meeting_'))) {
             $result = commands::run($action, $actorid, $state);
@@ -75,8 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 optional_param('columntitle', '', PARAM_TEXT), optional_param('columncolor', 'neutral', PARAM_ALPHA));
             redirect(new moodle_url('/local/ustar/tasks.php', $returnparams));
         } else if ($action === 'create') {
-            recipients::validate($actorid, required_param('assigneeid', PARAM_INT),
-                required_param('departmentid', PARAM_ALPHANUMEXT), required_param('positionid', PARAM_ALPHANUMEXT));
             $p = service::policy_for($actorid);
             $p['timezone'] = required_param('timezone', PARAM_RAW_TRIMMED);
             if (optional_param('repeat', 0, PARAM_BOOL)) {
@@ -84,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $p['excludedates'] = array_values(array_filter(array_map('trim', preg_split('/\R/u',
                     optional_param('excludedates', '', PARAM_RAW)) ?: [])));
             }
-            $taskid = service::create($actorid, required_param('assigneeid', PARAM_INT), [
+            $input = [
                 'kind' => required_param('kind', PARAM_ALPHA), 'title' => required_param('title', PARAM_TEXT),
                 'description' => optional_param('description', '', PARAM_TEXT),
                 'date' => required_param('duedate', PARAM_RAW_TRIMMED), 'clock' => required_param('dueclock', PARAM_RAW_TRIMMED),
@@ -93,9 +109,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'requirephoto' => optional_param('requirephoto', 0, PARAM_BOOL), 'policy' => $p,
                 'briefreport' => $state['briefreport'], 'briefkey' => optional_param('briefkey', '', PARAM_ALPHANUM),
                 'repeat' => optional_param('repeat', 0, PARAM_BOOL), 'enddate' => optional_param('enddate', '', PARAM_RAW_TRIMMED),
-            ], task_files::uploaded());
-            redirect(new moodle_url('/local/ustar/tasks.php', ['taskid' => $taskid, 'scope' => $scope, 'saved' => 1,
-                'view' => $view, 'briefweek' => $state['briefweek']]));
+            ];
+            $uploads = task_files::uploaded();
+            $result = service::create_target($actorid, [
+                'mode' => $state['targetmode'], 'department' => $state['departmentid'], 'position' => $state['positionid'],
+                'user' => $state['assigneeid'], 'token' => required_param('assignmenttoken', PARAM_ALPHANUM),
+                'request' => required_param('assignmentrequest', PARAM_ALPHANUM),
+            ], $input, $uploads);
+            if ($result['count'] > 1) {
+                $SESSION->ustar_task_assignment_count = $result['count'];
+                redirect(new moodle_url('/local/ustar/tasks.php', ['scope' => 'outgoing']));
+            }
+            redirect(new moodle_url('/local/ustar/tasks.php', ['taskid' => $result['first'], 'scope' => $scope, 'saved' => 1,
+                'view' => $view, 'briefweek' => $state['briefweek']], 'uw-detail'));
         } else if ($view === 'kanban' && $action === 'kanban_move') {
             $taskid = required_param('movetaskid', PARAM_INT);
             $task = service::detail($taskid, $actorid);
@@ -218,8 +244,8 @@ $PAGE->set_url(new moodle_url('/local/ustar/tasks.php', ['view' => $view, 'scope
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Задачи и контроль | USTAR Academy');
 $PAGE->set_heading('USTAR Academy');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20261123-home-meetings']));
-$PAGE->requires->js(new moodle_url('/local/ustar/task_workspace.js', ['v' => communication::ASSET_VERSION]));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20261123-assignment']));
+$PAGE->requires->js(new moodle_url('/local/ustar/task_workspace.js', ['v' => '20261123-assignment']));
 if ($state['taskid'] && !empty($CFG->messaging)) {
     $PAGE->requires->css(new moodle_url('/local/ustar/styles/workchat.css', ['v' => communication::ASSET_VERSION]));
     $PAGE->requires->js(new moodle_url('/local/ustar/messages.js', ['v' => communication::ASSET_VERSION]));
@@ -235,5 +261,10 @@ if (!empty($state['conflictcopy'])) {
     echo '</section>';
 }
 if (optional_param('saved', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Изменения сохранены.', 'notifysuccess'); }
+if ($view === 'overview' && $scope === 'outgoing' && isset($SESSION->ustar_task_assignment_count)) {
+    $count = $SESSION->ustar_task_assignment_count;
+    unset($SESSION->ustar_task_assignment_count);
+    echo $OUTPUT->notification(get_string('taskassignmentcreated', 'local_ustar', $count), 'notifysuccess');
+}
 echo page::render($actorid, $state);
 echo $OUTPUT->footer();

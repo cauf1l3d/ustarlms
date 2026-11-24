@@ -1,0 +1,82 @@
+{
+  "date_msk": "2026-11-23",
+  "scope": "isolated_task_assignment_review",
+  "source_pr": 129,
+  "application_commit": "fdb6dc414e53931d750eb63dbbedb331cee1c7d8",
+  "package_builder_commit": "ae89ec3ad0eedf1e55d6c7bf04f1422a7f1b75e4",
+  "known_server_baseline": "context/runtime/workplace_home_owner_deploy_20261123.json",
+  "local_ustar": 2026112302,
+  "theme_ustar": 2026110200,
+  "schema_changed": false,
+  "worker_commit": "17b6141007d65207d9b594138753d28b39ab70bf",
+  "audience_tests": [
+    "department_routes_to_head",
+    "acting_head_takes_precedence",
+    "ambiguous_acting_heads_are_refused",
+    "hierarchy_filters_recipients",
+    "position_snapshot_creates_individual_tasks",
+    "identical_replay_preserves_task_count",
+    "changed_replay_is_refused",
+    "changed_roster_leaves_no_partial_tasks",
+    "changing_the_picker_preserves_the_draft",
+    "position_recipients_download_attachment_via_own_task",
+    "mobile_viewport_keyboard_submission_with_javascript_disabled"
+  ],
+  "build": {
+    "run": 45163762558,
+    "artifact": 14812872632,
+    "result": "success",
+    "operator_tests": 27,
+    "archive": "ustar-workplace-assignment-fdb6dc41.tar.gz",
+    "bytes": 349846,
+    "sha256": "ada75f355a481eca54c25bbc7090a67d4bdbd392e9fa809b4a3290a43025c103",
+    "zip_sha256": "71d6900754fd5ea044024c03a44815e515422848a113840b180ce80cda9b1dc5",
+    "zip_crc": "verified",
+    "packaged_payload_files": 44,
+    "ci_and_retained_archive_byte_identity": "verified"
+  },
+  "native_install": {
+    "moodle": "5.1.8",
+    "postgres": "17.11",
+    "from_version": 2026112301,
+    "to_version": 2026112302,
+    "restored_version": 2026112301,
+    "package_install": "pass",
+    "preserved_messages": 700,
+    "backup_code_sha_verification": "pass",
+    "backup_postgres_restore": "pass",
+    "post_install_login": "http_200",
+    "database_schema_parity": "pass",
+    "worker_and_cron": "isolated_host_simulation",
+    "task_workspace_tests": 25,
+    "task_workspace_assertions": 81
+  },
+  "functional_ci": {
+    "run": 45163762488,
+    "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/45163762488",
+    "head": "ae89ec3ad0eedf1e55d6c7bf04f1422a7f1b75e4",
+    "status": "success",
+    "jobs": {
+      "moodle-511": {
+        "status": "success",
+        "job_id": 137655552146
+      },
+      "moodle-518": {
+        "status": "success",
+        "job_id": 137655552459
+      }
+    }
+  },
+  "server1": {
+    "owner_deployed_candidate": false,
+    "real_roles_acceptance": "pending",
+    "production_workload": "pending"
+  },
+  "recipient_benchmark": {
+    "scope": "warmed chooser only",
+    "runtime": "Moodle 5.1.8 PostgreSQL 17.11",
+    "manager_scope_size": 20,
+    "legacy_reads": 12478,
+    "new_catalog_reads": 742
+  }
+}

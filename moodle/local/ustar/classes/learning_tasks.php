@@ -36,6 +36,16 @@ final class learning_tasks {
             && in_array($assigneeid, array_map('intval', $scope['userids'] ?? []), true);
     }
 
+    /** Eligibility and the acting-manager hierarchy are resolved once per audience. */
+    public static function assignment_recipients(int $actorid): array {
+        if (!team_access::active_actor($actorid)) {
+            return [];
+        }
+        $scope = access_context::scope($actorid);
+        return array_values(array_filter(array_map('intval', $scope['userids'] ?? []),
+            static fn(int $id) => $id > 1 && $id !== $actorid));
+    }
+
     /** Bounded, scoped recipient search; the final assign() checks scope again. */
     public static function candidates(int $actorid, string $query): array {
         global $DB;
@@ -149,13 +159,47 @@ final class learning_tasks {
 
     /** @param array<string,mixed> $input @return array<string,mixed> */
     public static function assign(int $actorid, int $assigneeid, array $input, array $uploads = []): array {
-        global $DB;
         self::assert_available();
         if (!self::can_assign($actorid, $assigneeid)) {
             throw new \required_capability_exception(
                 \context_system::instance(), 'local/ustar:viewteam', 'nopermissions', ''
             );
         }
+        $id = self::insert_assignment($actorid, $assigneeid, $input, $uploads);
+        return self::view($id, $actorid);
+    }
+
+    /** Batch writer on the same task aggregate and permission boundary as single assignment. */
+    public static function assign_many(int $actorid, array $assignees, array $input, array $uploads = []): array {
+        global $DB;
+        \local_ustar\task_workspace\service::actor($actorid);
+        self::assert_available();
+        $assignees = array_values(array_unique(array_map('intval', $assignees)));
+        $allowed = count($assignees) === 1
+            ? self::can_assign($actorid, $assignees[0])
+            : $assignees && !array_diff($assignees, self::assignment_recipients($actorid));
+        if (!$allowed) {
+            throw new \required_capability_exception(\context_system::instance(), 'local/ustar:viewteam', 'nopermissions', '');
+        }
+        $tx = $DB->start_delegated_transaction();
+        try {
+            $ids = [];
+            foreach ($assignees as $assigneeid) {
+                $ids[$assigneeid] = self::insert_assignment($actorid, $assigneeid, $input, $ids ? [] : $uploads);
+            }
+            if ($uploads && count($ids) > 1) {
+                $taskids = array_values($ids);
+                task_files::copy_assignment_attachments($taskids[0], array_slice($taskids, 1));
+            }
+            $tx->allow_commit();
+            return $ids;
+        } catch (\Throwable $error) {
+            $tx->rollback($error);
+        }
+    }
+
+    private static function insert_assignment(int $actorid, int $assigneeid, array $input, array $uploads): int {
+        global $DB;
         $title = trim(clean_param((string)($input['title'] ?? ''), PARAM_TEXT));
         if ($title === '') {
             throw new \invalid_parameter_exception('Укажите задачу.');
@@ -186,7 +230,7 @@ final class learning_tasks {
         self::notify($assigneeid, 'task_assigned', 'Новая задача', $title,
             '/local/ustar/tasks.php?tab=assigned', 'task-assigned:' . $id);
         $tx->allow_commit();
-        return self::view($id, $actorid);
+        return $id;
     }
 
     /** The creator may adjust the deadline; reassignment is limited to a task not started. */

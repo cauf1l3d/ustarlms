@@ -110,3 +110,13 @@ html[data-ustar-theme="dark"] .u-workspace{--u-success-fg:#83d7a6;--u-danger-fg:
 .u-workspace .uw-meeting-card .uw-footnote,
 .u-workspace .uw-meeting-detail .uw-footnote { margin: 0 0 8px; }
 .uw-meeting-card[id], #home-meetings { scroll-margin-top: 90px; }
+
+.uw-recipient-fields { border: 1px solid var(--uw-line); border-radius: 12px; padding: 16px; min-width: 0; }
+.uw-recipient-fields legend { float: none; width: auto; padding: 0 6px; margin: 0; font-size: 1rem; font-weight: 650; }
+.uw-assignment-preview { margin: 12px 0 20px; padding: 12px 16px; border-radius: 10px; background: var(--uw-soft); }
+.uw-assignment-preview p { margin: 0; }
+.uw-assignment-preview [data-assignment-person-name]:not([hidden]) { margin-top: 4px; font-weight: 650; }
+.uw-assignment-preview ul { margin-block: 6px 0; padding-inline-start: 20px; max-height: 14em; overflow: auto; }
+.uw-assignment-preview summary, .uw-repeat-options summary { cursor: pointer; }
+.uw-repeat-options[open] summary { margin-bottom: 12px; }
+[data-task-assignment] [hidden] { display: none !important; }

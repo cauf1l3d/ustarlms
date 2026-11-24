@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально 23.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
+Актуально 24.11.2026. Канонический код — main: app2900/source5cc02944, theme2700.
 PR110 (RSS2803) и PR111 (ролевой Connect/графика) объединены после единой FullRC.
 [Интеграция](context/runtime/connect_feed_integration_order_20261101.json).
 
@@ -10,9 +10,10 @@ PR110 (RSS2803) и PR111 (ролевой Connect/графика) объедин�
 
 ## Текущая работа
 
-23.11.2026. Встречи и задачи на главной, PR128/local2301. На server1 подтверждён local2300.
-[Ревью](context/reviews/20261123/WORKPLACE_HOME_RU.md), [установка](docs/WORKPLACE_HOME_INSTALL_RU.md).
-Ожидаются preflight server1, пилот и замеры рабочего дня.
+23.11.2026. Постановка задач, PR129/local2302. На server1 подтверждён local2302.
+[Ревью](context/reviews/20261123/TASK_ASSIGNMENT_RU.md), [установка](docs/TASK_ASSIGNMENT_INSTALL_RU.md),
+[квитанция server1](context/runtime/task_assignment_owner_deploy_20261124.json).
+Пилот реальных ролей и замеры рабочего дня открыты.
 
 ## Подтверждённое состояние
 

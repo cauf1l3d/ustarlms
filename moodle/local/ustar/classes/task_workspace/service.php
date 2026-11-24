@@ -364,17 +364,83 @@ final class service {
                     return $existing;
                 }
             }
-            return self::create_locked($actorid, $assigneeid, $input, $uploads, $key);
+            $created = self::create_assignments($actorid, [$assigneeid], $input, $uploads, $key);
+            return $created[$assigneeid];
         } finally {
             if ($lock) { $lock->release(); }
         }
     }
 
-    private static function create_locked(int $actorid, int $assigneeid, array $input, array $uploads,
-            ?string $briefkey): int {
+    /** One preview, one transaction and one replay receipt for the entire submission. */
+    public static function create_target(int $actorid, array $target, array $input, array $uploads = []): array {
         global $DB;
         self::actor($actorid);
-        if (!learning_tasks::can_assign($actorid, $assigneeid)) { self::deny(); }
+        $mode = $target['mode'];
+        if (!isset(recipients::MODES[$mode]) || !preg_match('/\A[A-Za-z0-9]{32}\z/', $target['request'])) {
+            throw new \moodle_exception('taskassignmentchanged', 'local_ustar');
+        }
+        $reportid = (int)($input['briefreport'] ?? 0);
+        $parentid = (int)($input['parentid'] ?? 0);
+        $kind = $input['kind'] ?? 'task';
+        if (($mode !== 'person' && ($reportid || $parentid || $kind === 'retraining'))
+                || ($reportid && ($parentid || $kind !== 'task' || !empty($input['repeat'])))) {
+            throw new \moodle_exception('taskassignmentindividual', 'local_ustar');
+        }
+        if ($reportid) {
+            \local_ustar\briefing\service::linked_report($actorid, $reportid);
+        }
+        $key = hash('sha256', 'workspace-create:' . $actorid . ':' . $target['request']);
+        $filehashes = array_map(static fn($file) => [$file['filename'], hash_file('sha256', $file['tmp'])], $uploads);
+        $fingerprint = hash('sha256', self::json([$target, $input, $filehashes]));
+        $lock = self::lock('workspace-create:' . $key);
+        $parentlock = null;
+        try {
+            // The historical indexed request key keeps old briefing requests and new form submits separate.
+            $first = (int)$DB->get_field('local_ustar_task_meta', 'taskid', ['briefkey' => $key]);
+            if ($first) {
+                $event = $DB->get_field('local_ustar_learning_task_events', 'datajson',
+                    ['taskid' => $first, 'actorid' => $actorid, 'eventtype' => 'task_assignment_receipt'], MUST_EXIST);
+                $receipt = json_decode($event, true, 512, JSON_THROW_ON_ERROR);
+                if (!hash_equals($receipt['fingerprint'], $fingerprint)) {
+                    throw new \moodle_exception('taskassignmentduplicate', 'local_ustar');
+                }
+                return ['first' => $first, 'count' => (int)$receipt['count']];
+            }
+            if ($parentid) {
+                $parentlock = self::lock('learning-task:' . $parentid);
+            }
+            $catalog = recipients::catalog($actorid, $mode === 'department');
+            $ids = recipients::selection($catalog, $mode, $target['department'], $target['position'], $target['user']);
+            if (!$ids || !hash_equals(recipients::token($ids), $target['token'])) {
+                throw new \moodle_exception('taskassignmentchanged', 'local_ustar');
+            }
+            if (count($ids) > recipients::MAX_BATCH) {
+                throw new \moodle_exception('taskassignmentlimit', 'local_ustar', '', recipients::MAX_BATCH);
+            }
+
+            sort($ids, SORT_NUMERIC);
+            $tx = $DB->start_delegated_transaction();
+            try {
+                $created = self::create_assignments($actorid, $ids, $input, $uploads, $key);
+                $first = reset($created);
+                $count = count($created);
+                self::event($first, $actorid, 'task_assignment_receipt', ['fingerprint' => $fingerprint, 'count' => $count]);
+                $tx->allow_commit();
+                return ['first' => $first, 'count' => $count];
+            } catch (\Throwable $error) {
+                $tx->rollback($error);
+            }
+        } finally {
+            if ($parentlock) {
+                $parentlock->release();
+            }
+            $lock->release();
+        }
+    }
+
+    private static function create_assignments(int $actorid, array $assignees, array $input, array $uploads,
+            ?string $briefkey): array {
+        global $DB;
         $title = self::title((string)($input['title'] ?? ''));
         $kind = (string)($input['kind'] ?? 'task');
         if (!in_array($kind, ['task', 'checklist', 'retraining'], true)) { throw new \invalid_parameter_exception('Неизвестный тип задачи.'); }
@@ -400,44 +466,54 @@ final class service {
             $templateversionid = (int)$v->id; $weight = (int)$v->kpiweight; $photo = !empty($v->requirephoto);
         }
         self::weight($weight);
-        $tx = $DB->start_delegated_transaction();
-        $relatedid = (int)($input['briefreport'] ?? 0);
-        $relatedtype = $relatedid ? 'briefing' : '';
-        if ($kind === 'retraining') {
-            if (!empty($input['repeat'])) { throw new \invalid_parameter_exception('Переобучение назначается отдельной задачей, без автоматической серии.'); }
-            $policyid = (int)($input['policyid'] ?? 0);
-            $eligible = forced_retraining::topics_for_user($actorid, $assigneeid);
-            if (!in_array($policyid, array_map(static fn($t) => (int)$t['policyid'], $eligible), true)) {
-                throw new \invalid_parameter_exception('Выберите ранее пройденный материал, доступный для переобучения сотрудника.');
-            }
-            $ids = forced_retraining::assign($actorid, $assigneeid, [$policyid], $title);
-            $relatedid = (int)$ids[0]; $relatedtype = 'forced_retraining'; $photo = false;
-        }
-        $task = learning_tasks::assign($actorid, $assigneeid, ['title' => $title,
-            'description' => (string)($input['description'] ?? ''), 'requirereview' => $kind === 'retraining' ? 0 : 1,
-            'dueat' => $dueat, 'relatedtype' => $relatedtype, 'relatedid' => $relatedid], $uploads);
-        $DB->insert_record('local_ustar_task_meta', (object)['taskid' => $task['id'], 'kind' => $kind,
-            'parentid' => $parentid, 'templateversionid' => $templateversionid, 'seriesid' => 0, 'occurdate' => '',
-            'timezone' => $p['timezone'], 'kpiweight' => $weight, 'requirephoto' => $photo ? 1 : 0,
-            'submittedat' => 0, 'reviewdueat' => 0, 'reviewedat' => 0, 'policyjson' => self::json($p), 'briefkey' => $briefkey]);
+        $series = null;
         if (!empty($input['repeat'])) {
             $enddate = (string)($input['enddate'] ?? '');
             calendar::timestamp($enddate, '00:00', $p['timezone']);
             if ($enddate < $input['date'] || $enddate > calendar::date($dueat + 366 * DAYSECS, $p['timezone'])) {
                 throw new \invalid_parameter_exception('Серия должна завершаться в пределах года от начала.');
             }
-            $seriesid = $DB->insert_record('local_ustar_task_series', (object)['assignerid' => $actorid,
-                'assigneeid' => $assigneeid, 'templateversionid' => $templateversionid, 'title' => $title,
+            $series = ['assignerid' => $actorid, 'templateversionid' => $templateversionid, 'title' => $title,
                 'description' => (string)($input['description'] ?? ''), 'nextdate' => calendar::next_date($input['date'], $p['timezone']),
                 'enddate' => $enddate, 'dueclock' => $input['clock'], 'timezone' => $p['timezone'],
                 'weekdaysjson' => self::json($p['weekdays']), 'policyjson' => self::json($p), 'kpiweight' => $weight,
                 'requirephoto' => $photo ? 1 : 0, 'revision' => 1, 'status' => 'active',
-                'timecreated' => time(), 'timemodified' => time()]);
-            $DB->set_field('local_ustar_task_meta', 'seriesid', $seriesid, ['taskid' => $task['id']]);
-            $DB->set_field('local_ustar_task_meta', 'occurdate', $input['date'], ['taskid' => $task['id']]);
+                'timecreated' => time(), 'timemodified' => time()];
         }
-        $tx->allow_commit();
-        return (int)$task['id'];
+        $tx = $DB->start_delegated_transaction();
+        try {
+            $relatedid = (int)($input['briefreport'] ?? 0);
+            $relatedtype = $relatedid ? 'briefing' : '';
+            if ($kind === 'retraining') {
+                if ($series || count($assignees) !== 1) {
+                    throw new \moodle_exception('taskassignmentindividual', 'local_ustar');
+                }
+                $assigneeid = reset($assignees);
+                $policyid = (int)($input['policyid'] ?? 0);
+                $eligible = forced_retraining::topics_for_user($actorid, $assigneeid);
+                if (!in_array($policyid, array_map(static fn($t) => (int)$t['policyid'], $eligible), true)) {
+                    throw new \invalid_parameter_exception('Выберите ранее пройденный материал, доступный для переобучения сотрудника.');
+                }
+                $ids = forced_retraining::assign($actorid, $assigneeid, [$policyid], $title);
+                $relatedid = (int)$ids[0]; $relatedtype = 'forced_retraining'; $photo = false;
+            }
+            $created = learning_tasks::assign_many($actorid, $assignees, ['title' => $title,
+                'description' => (string)($input['description'] ?? ''), 'requirereview' => $kind === 'retraining' ? 0 : 1,
+                'dueat' => $dueat, 'relatedtype' => $relatedtype, 'relatedid' => $relatedid], $uploads);
+            foreach ($created as $assigneeid => $id) {
+                $seriesid = $series ? $DB->insert_record('local_ustar_task_series', (object)($series + ['assigneeid' => $assigneeid])) : 0;
+                $DB->insert_record('local_ustar_task_meta', (object)['taskid' => $id, 'kind' => $kind,
+                    'parentid' => $parentid, 'templateversionid' => $templateversionid, 'seriesid' => $seriesid,
+                    'occurdate' => $seriesid ? $input['date'] : '', 'timezone' => $p['timezone'],
+                    'kpiweight' => $weight, 'requirephoto' => $photo ? 1 : 0, 'submittedat' => 0,
+                    'reviewdueat' => 0, 'reviewedat' => 0, 'policyjson' => self::json($p), 'briefkey' => $briefkey]);
+                $briefkey = null;
+            }
+            $tx->allow_commit();
+            return $created;
+        } catch (\Throwable $error) {
+            $tx->rollback($error);
+        }
     }
 
     public static function can_edit(\stdClass $task, int $actorid): bool {

@@ -89,3 +89,9 @@ $string['workplanlimit'] = 'Up to {$a} tasks can be placed in personal columns.'
 $string['privacy:metadata:workplan'] = 'Personal columns and placement of existing work tasks.';
 $string['privacy:metadata:workchat'] = 'Task discussion messages, authors, times and read receipts stored by Moodle.';
 $string['privacy:metadata:briefing'] = 'Reports, meeting minutes, organizers and meeting invitations.';
+
+$string['taskassignmentchanged'] = 'The recipients changed or are unavailable. Review the current selection and submit again.';
+$string['taskassignmentduplicate'] = 'This form was already submitted. Open a new task to make a different assignment.';
+$string['taskassignmentlimit'] = 'You can assign a task to no more than {$a} employees at a time.';
+$string['taskassignmentindividual'] = 'Choose one employee for this type of task. Retraining does not support recurring schedules.';
+$string['taskassignmentcreated'] = 'Task assigned. Recipients: {$a}.';

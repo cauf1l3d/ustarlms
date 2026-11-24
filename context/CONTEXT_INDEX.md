@@ -1,5 +1,6 @@
 # Навигация по контексту
 
+- [Постановка задач по оргструктуре](reviews/20261123/TASK_ASSIGNMENT_RU.md), [проверки](runtime/task_assignment_20261123.json), [установка на server1](runtime/task_assignment_owner_deploy_20261124.json), [установка](../docs/TASK_ASSIGNMENT_INSTALL_RU.md), [квитанция предыдущего выпуска](runtime/workplace_home_owner_deploy_20261123.json).
 - [Встречи и задачи на главной](reviews/20261123/WORKPLACE_HOME_RU.md), [проверки](runtime/workplace_home_20261123.json), [установка](../docs/WORKPLACE_HOME_INSTALL_RU.md).
 
 - [Ревью рабочего контура rc.2](reviews/20261123/WORKPLACE_REVIEW_RU.md), [проверки](runtime/workplace_review_20261123.json), [установка](../docs/WORKPLACE_REVIEW_INSTALL_RU.md).

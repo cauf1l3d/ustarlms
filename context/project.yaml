@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-11-23'
+updated_at: '2026-11-24'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -36,12 +36,12 @@ current_operator_handoff:
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
   task: WORKPLACE-MIGRATION
-  workplace_review: context/reviews/20261123/WORKPLACE_HOME_RU.md
+  workplace_review: context/reviews/20261123/TASK_ASSIGNMENT_RU.md
   workplace_runbook: docs/WORKPLACE_MIGRATION_RU.md
-  workplace_install_runbook: docs/WORKPLACE_HOME_INSTALL_RU.md
-  workplace_qualification: context/runtime/workplace_home_20261123.json
-  workplace_draft_pr: 128
-  workplace_live_baseline: context/runtime/workplace_review_owner_deploy_20261123.json
+  workplace_install_runbook: docs/TASK_ASSIGNMENT_INSTALL_RU.md
+  workplace_qualification: context/runtime/task_assignment_20261123.json
+  workplace_draft_pr: 129
+  workplace_live_baseline: context/runtime/task_assignment_owner_deploy_20261124.json
   briefing_runbook: docs/BRIEFING_REVIEW_INSTALL_RU.md
   briefing_qualification: context/runtime/briefing_review_qualification_20261118.json
   briefing_source_commit: 17b6141007d65207d9b594138753d28b39ab70bf
@@ -53,7 +53,7 @@ current_work:
   invitation_draft_pr: 123
   invitation_qualification: context/runtime/connect_invitations_qualification_20261114.json
   related_task: CONNECT-CHECKLIST-WIDGET
-  status: workplace_package_qualified_server_preflight_pending
+  status: workplace_owner_deployed_role_pilot_pending
   operator_qualification: context/runtime/connect_operator_qualification_20261115.json
   owner_receipt: context/runtime/connect_invitations_owner_install_20261114.json
   previous_qualification: context/runtime/connect_checklist_widget_qualification_20261113.json
@@ -64,7 +64,7 @@ current_work:
   observation_sha256: ee883caff5be0b391db583bb4deeb795c1dbd3c1bba0c4127faa02f9cd444f92
   expected_server_observer: /root/ustar-connect-role-bot-install-9a68246b/observe.py
   observer_path_check_on_server: pending
-  expected_application_version: 2026112301
+  expected_application_version: 2026112302
   expected_worker_commit: 17b6141007d65207d9b594138753d28b39ab70bf
   integrated_PRs:
   - 110

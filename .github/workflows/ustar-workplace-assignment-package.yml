@@ -1,0 +1,40 @@
+name: USTAR workplace assignment package
+on:
+  push:
+    branches: [feat/task-assignment-audiences-20261123]
+    paths:
+      - '.github/workflows/ustar-workplace-assignment-package.yml'
+      - 'scripts/infra/*workplace_assignment*.py'
+      - 'tests/workplace_assignment_release_test.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Verify cumulative delivery from each supported baseline
+        run: |
+          set -euo pipefail
+          python3 scripts/infra/build_workplace_assignment.py --output artifacts
+          python3 scripts/infra/build_workplace_assignment.py --output repeat
+          name=ustar-workplace-assignment-fdb6dc41.tar.gz
+          cmp "artifacts/$name" "repeat/$name"
+          mkdir verify
+          tar -xzf "artifacts/$name" -C verify
+          (cd verify && sha256sum --check --strict SHA256SUMS && python3 -I -B update.py --verify)
+          python3 tests/workplace_assignment_release_test.py "artifacts/$name" -v
+          (cd artifacts && sha256sum "$name" > "$name.sha256")
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ustar-workplace-assignment
+          path: artifacts/
+          if-no-files-found: error

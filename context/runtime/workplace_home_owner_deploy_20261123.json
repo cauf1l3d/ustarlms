@@ -1,0 +1,22 @@
+{
+  "date_msk": "2026-11-23",
+  "scope": "owner_supplied_installer_postcheck",
+  "host": "server1",
+  "systemd_unit": "ustar-workplace-home-20261123.service",
+  "systemd_result": "success",
+  "exit_status": 0,
+  "runtime_seconds": 29.126,
+  "phase": "active",
+  "application_commit": "24b304914d51e2cb7d11f76305aa3734a635bfa6",
+  "local_ustar": 2026112301,
+  "theme_ustar": 2026110200,
+  "schema_changed": false,
+  "worker_changed": false,
+  "worker_commit": "17b6141007d65207d9b594138753d28b39ab70bf",
+  "services_running": {
+    "ustar-connect-notify.service": true,
+    "ustar-connect-receiver.service": true
+  },
+  "announcements_enabled": true,
+  "owner_observation": "initial_functions_appear_operational"
+}

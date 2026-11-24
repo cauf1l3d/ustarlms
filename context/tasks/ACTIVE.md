@@ -1,8 +1,8 @@
-# Активная работа · 23.11.2026
+# Активная работа · 24.11.2026
 
 WORKPLACE-MIGRATION, PR129/local2302. [Ревью назначения](../reviews/20261123/TASK_ASSIGNMENT_RU.md),
-[установка](../../docs/TASK_ASSIGNMENT_INSTALL_RU.md). На server1 подтверждён local2301.
-[Квитанция](../runtime/workplace_home_owner_deploy_20261123.json).
+[установка](../../docs/TASK_ASSIGNMENT_INSTALL_RU.md). На server1 подтверждён local2302.
+[Квитанция](../runtime/task_assignment_owner_deploy_20261124.json).
 Пилот нового экрана и замеры рабочего дня ожидаются.
 
 ## Повторная привязка Telegram

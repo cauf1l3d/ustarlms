@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-11-23'
+updated_at: '2026-11-24'
 canonical_branch: main
 source_baseline: 5cc02944e1059ba015afcc7c5e8068ca56c34a92
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -954,7 +954,8 @@ tasks:
   - Связанный Telegram показывает статусы и открывает авторизованные страницы Академии
 - id: WORKPLACE-MIGRATION
   title: Рабочий контур Академии для переезда с Битрикс24
-  status: package_qualified_server_preflight_pending
+  status: owner_deployed_role_pilot_pending
+  owner_receipt: context/runtime/task_assignment_owner_deploy_20261124.json
   depends_on: [TASK-BRIEFING]
   reference: context/reviews/20261123/TASK_ASSIGNMENT_RU.md
   qualification: context/runtime/task_assignment_20261123.json

@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 4558,
-      "sha256": "bcefcc1ec6601c2fe5514b3b4e62dc4366069a0987a6b666c9ce8c9d7e6bb5e7"
+      "size": 4645,
+      "sha256": "465ae50ae7d5f2468f9245719a1f523ca061eeea58bdfd6cb4e99c56c61d167a"
     },
     {
       "path": "context/agents/astra.md",
@@ -654,8 +654,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 13738,
-      "sha256": "448288271ae5f300d99a027edeb3fc306dcc3aae47ff26553d1e306abfa16b33"
+      "size": 13653,
+      "sha256": "139e3dcc8fd4f7ecf744ec4592335889d59605788c0ae4b395d616f19a5b1370"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -900,8 +900,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 4520,
-      "sha256": "a6666319822f3e3fa1a5a28e326d790d62799087456a593b6f08ef1a074c752b"
+      "size": 4512,
+      "sha256": "4309ff054480a65cca540d4bceafa42bdca3662a7e206029f0e07e479a7180f4"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1650,8 +1650,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 58776,
-      "sha256": "74114afedee62f751767c9538f7332a30ca4d9cc828fb2ace4674f3ec771fc1a"
+      "size": 58843,
+      "sha256": "ba31b305b116cc9c1d9ef93ffd572f8161b9b005552c8c312a3c3c06bff99c63"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1704,8 +1704,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 23334,
-      "sha256": "1fbcf974a4f59a130fcde1b5362cb2b96abef9d06a4a841b5e8cbe7c0e9c8ca7"
+      "size": 23335,
+      "sha256": "56ed09046ca497a0e74c61b8b711abcbeecf499a8ceeddaec690c72afe0999dc"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -4108,6 +4108,12 @@
       "sha256": "62179140bafbe9943a699ed2a6cf3b33bd15b029d4462f5a27d40e534008be94"
     },
     {
+      "path": "context/runtime/task_assignment_owner_deploy_20261124.json",
+      "domain": "runtime",
+      "size": 817,
+      "sha256": "1b6d4881c1fd0cf8d0f84987a5121a3a51878a5e4fcf0d992ad33ceae629d8cc"
+    },
+    {
       "path": "context/runtime/workplace_home_20261123.json",
       "domain": "runtime",
       "size": 2627,
@@ -4206,8 +4212,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3733,
-      "sha256": "03e9ec1e9a40c6eb80ee7b099b95aab8200b6d8f29dc9dfb2042250694ee3d3a"
+      "size": 3734,
+      "sha256": "358d016a2b233d1318c8ec9bbf9cd4c7d0e6956a853fbd2a44c49e3de0ad8190"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

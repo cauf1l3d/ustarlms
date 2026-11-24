@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-11-23'
+updated_at: '2026-11-24'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -25,7 +25,7 @@ application_baseline:
   previous_baseline_commit: 22607c69a27c9be65d78fd407ce240f9dc2b8c8b
   previous_integration_receipt: context/runtime/perf2802_integration_20261028.json
 production:
-  latest_workplace_baseline_observation: context/runtime/workplace_review_owner_deploy_20261123.json
+  latest_workplace_baseline_observation: context/runtime/task_assignment_owner_deploy_20261124.json
   latest_operator_and_briefing_owner_observation: context/runtime/briefing_qualification_20261118.json
   latest_connect_invitation_owner_receipt: context/runtime/connect_invitations_owner_install_20261114.json
   latest_connect_checklist_widget_owner_receipt: context/runtime/connect_checklist_widget_owner_pilot_20261114.json
@@ -143,9 +143,8 @@ production:
   latest_library_marketplace_owner_receipt: context/runtime/library_marketplace_owner_deploy_20261103.json
   latest_studio_scorm_owner_receipt: context/runtime/studio_scorm_edit_owner_deploy_20261103.json
 current_work:
-  activity: Owner confirmed local2300 active on server1. Workplace Home local2301
-    introduces direct meeting responses and bounded home task cards in PR 128. Production
-    acceptance and workload measurements for local2301 are pending.
+  activity: Owner confirmed task assignment local2302 active on server1 with a successful
+    installer postcheck. Role pilot and workload measurements remain open.
   next_task: WORKPLACE-MIGRATION
   ready_tasks: []
   task_statuses:
@@ -205,7 +204,7 @@ current_work:
     STUDIO-SCORM-01: in_progress
     TASK-BRIEFING: database_versions_confirmed_live_acceptance_pending
     TECH-01: planned
-    WORKPLACE-MIGRATION: package_qualified_server_preflight_pending
+    WORKPLACE-MIGRATION: owner_deployed_role_pilot_pending
 server_facts:
   status: partial
   snapshot: context/runtime/server-facts/20261017T013924Z-285497b0

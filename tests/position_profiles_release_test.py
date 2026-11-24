@@ -3,17 +3,17 @@
 import json
 import os
 import unittest
-from workplace_release_test import REPO, WorkplaceReleaseTest as _InstallerFixture
+import workplace_release_test as installer_fixture
 
 
-class PositionProfilesReleaseTest(_InstallerFixture):
+class PositionProfilesReleaseTest(installer_fixture.WorkplaceReleaseTest):
     def setUp(self):
         super().setUp()
         release = self.release
         for key in ('ASSIGNMENT_STATE', 'HOME_STATE', 'REVIEW_STATE', 'PRIOR_STATE'):
             self.addCleanup(setattr, release, key, getattr(release, key))
             setattr(release, key, self.lab / key.lower())
-        self.host.core.archive(REPO, release.ASSIGNMENT, self.lab)
+        self.host.core.archive(installer_fixture.REPO, release.ASSIGNMENT, self.lab)
         self.baseline = self.host.manifest['before'][release.ASSIGNMENT]
         release.ASSIGNMENT_STATE.mkdir(mode=0o700)
         self.predecessor = release.ASSIGNMENT_STATE / 'state.json'

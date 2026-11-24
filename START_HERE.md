@@ -10,10 +10,9 @@ PR110 (RSS2803) и PR111 (ролевой Connect/графика) объедин�
 
 ## Текущая работа
 
-23.11.2026. Постановка задач, PR129/local2302. На server1 подтверждён local2302.
-[Ревью](context/reviews/20261123/TASK_ASSIGNMENT_RU.md), [установка](docs/TASK_ASSIGNMENT_INSTALL_RU.md),
-[квитанция server1](context/runtime/task_assignment_owner_deploy_20261124.json).
-Пилот реальных ролей и замеры рабочего дня открыты.
+24.11.2026. Персональные модели должностей, PR130/local2400.
+[Ревью](context/reviews/20261124/POSITION_PROFILES_RU.md), [установка](docs/POSITION_PROFILES_INSTALL_RU.md).
+На server1 подтверждён local2302. [Квитанция](context/runtime/task_assignment_owner_deploy_20261124.json).
 
 ## Подтверждённое состояние
 

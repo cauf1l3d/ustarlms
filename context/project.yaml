@@ -35,7 +35,11 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: WORKPLACE-MIGRATION
+  task: POSITION-PERSONAL-01
+  personal_models_review: context/reviews/20261124/POSITION_PROFILES_RU.md
+  personal_models_install: docs/POSITION_PROFILES_INSTALL_RU.md
+  personal_models_qualification: context/runtime/position_profiles_20261124.json
+  personal_models_draft_pr: 130
   workplace_review: context/reviews/20261123/TASK_ASSIGNMENT_RU.md
   workplace_runbook: docs/WORKPLACE_MIGRATION_RU.md
   workplace_install_runbook: docs/TASK_ASSIGNMENT_INSTALL_RU.md
@@ -53,7 +57,7 @@ current_work:
   invitation_draft_pr: 123
   invitation_qualification: context/runtime/connect_invitations_qualification_20261114.json
   related_task: CONNECT-CHECKLIST-WIDGET
-  status: workplace_owner_deployed_role_pilot_pending
+  status: personal_position_models_candidate; server1_workplace_local2302_confirmed
   operator_qualification: context/runtime/connect_operator_qualification_20261115.json
   owner_receipt: context/runtime/connect_invitations_owner_install_20261114.json
   previous_qualification: context/runtime/connect_checklist_widget_qualification_20261113.json

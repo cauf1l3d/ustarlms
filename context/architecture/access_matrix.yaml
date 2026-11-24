@@ -248,6 +248,7 @@ capabilities:
   - moodle/local/ustar/classes/position_access.php
   - moodle/local/ustar/classes/position_application.php
   - moodle/local/ustar/classes/position_model.php
+  - moodle/local/ustar/classes/position_profiles.php
   - moodle/local/ustar/classes/registration_service.php
   - moodle/local/ustar/classes/route_commands.php
   - moodle/local/ustar/classes/route_tester.php
@@ -344,6 +345,7 @@ capabilities:
   - moodle/local/ustar/classes/organization_structure_editor.php
   - moodle/local/ustar/classes/position_access.php
   - moodle/local/ustar/classes/position_model.php
+  - moodle/local/ustar/classes/position_profiles.php
   - moodle/local/ustar/classes/registration_service.php
   - moodle/local/ustar/classes/route_commands.php
   - moodle/local/ustar/classes/route_tester.php
@@ -401,6 +403,7 @@ capabilities:
   - moodle/local/ustar/classes/learning_route.php
   - moodle/local/ustar/classes/organization_model.php
   - moodle/local/ustar/classes/position_model.php
+  - moodle/local/ustar/classes/position_profiles.php
   - moodle/local/ustar/classes/registration_service.php
   - moodle/local/ustar/classes/staffing_requests.php
   - moodle/local/ustar/classes/target_core.php

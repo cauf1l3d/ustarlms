@@ -44,3 +44,9 @@ coverage_limit: Selected command/read paths only; complete endpoint, file access
 source_reconciled_at: '2026-11-01'
 current_review: context/reviews/20261105/ROUTE_EDITOR_REVIEW_RU.md
 next_fix_spec: docs/superpowers/specs/2026-11-05-route-editor-design.md
+personal_models:
+  review: context/reviews/20261124/POSITION_PROFILES_RU.md
+  command: moodle/local/ustar/classes/position_profiles.php
+  resolver: moodle/local/ustar/classes/route_scope.php
+  tables: [local_ustar_pos_profiles, local_ustar_pos_profile_users]
+  rule: A profile appends private development points after the active common position route.
